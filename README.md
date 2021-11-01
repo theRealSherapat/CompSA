@@ -1,2 +1,2 @@
 # Computational Self -Awareness (& -Expression)
-MSc project code for the thesis 'Computational Self-Awareness in Musical Robotic Systems'
+Project code, as well as LaTeX-documents, for the MSc thesis 'Computational Self-Awareness in Musical Robotic Systems'
