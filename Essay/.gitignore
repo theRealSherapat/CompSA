@@ -1,0 +1,8 @@
+# Generated files for continuous LaTeX-saving-PDF-updating (through "latexmk -pdf -pvc main" and MikTex for Windows 10)
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.toc
