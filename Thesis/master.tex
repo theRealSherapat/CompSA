@@ -1,0 +1,87 @@
+% GENERAL REMARKS / COMMENTS
+	% Dette er 'THE MAIN Master Document'.
+	% Den skal ha en fin forside, god struktur, og \include{} alle kapitlene etterhvert som de skrives.
+	% Husk målene som står i karaktersettingen når du ser på strukturen og oppbygningen. Det skal være ryddig og originalt, og en god skriftlig presentasjon.
+
+	% Inspirasjons-maler:
+		% (M1) i Overleaf: "UiO, Department of Informatics: Master's Thesis Template 2020"
+		% (M2) i Overleaf: "UiO Master Thesis"
+		% Gode eksemplel-thesis'er
+			% E.g. Tønnes Nygaard sin
+	% Følger foreløpig (M1) (foruten alle \usepackage'r og \titleformat'er).
+
+
+
+
+
+
+
+
+% DECLARATIONS & INITIALIZATIONS
+\PassOptionsToPackage{,T1}{url} % JEG VIL FJERNE DENNE (OG FORSÅVIDT ALLE "option-clash errors") <---------------------------------
+
+\documentclass[a4paper, english]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{csquotes}
+\usepackage[backend=biber,sortcites]{biblatex}
+\usepackage{Assets/DUO/duomasterforside}
+
+\addbibresource{Assets/Bibliography/reference_database.bib}
+
+
+
+
+
+
+
+% BODY
+\begin{document}
+	% HEAD
+	\title{Computational Self-Awareness in Musical Robotic Systems}
+	\subtitle{Endowing Musical Agent Swarms with Self-Awareness — An experimental study}
+	\author{David Thorvaldsen}
+	\duoforside[dept={Institute for Informatics}, program={Informatics: Robotics and Intelligent Systems}, long]
+
+	\pagenumbering{roman}
+	\section*{Abstract}
+	\newpage
+
+	\section*{Acknowledgements}
+	\newpage
+
+	\tableofcontents
+	\newpage
+
+	\listoftables
+	\newpage
+
+	\listoffigures
+	\newpage
+
+	\pagenumbering{arabic}
+	\setcounter{page}{1}
+
+
+
+
+
+
+
+
+
+	% MAIN
+	\section{Introduction}
+	% Here's where my journey begins. I have Lucas Paruch and Viktoria Stray's wish of "good and best of luck!"
+
+	Her er en artikkel: \cite{nymoen_synch}.
+
+
+
+
+
+
+
+	% FOOTER
+	\newpage
+	\printbibliography
+\end{document}
