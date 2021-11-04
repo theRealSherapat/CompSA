@@ -1,33 +1,39 @@
-using System.Collections;
+//using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Squiggles : MonoBehaviour {
+    // TODO: Clean up in variables.
     public float adjustedTimeScale = 1.0f;
     public float frequency = 0.5f; // Hz
-    public float alpha = 0.1f; // pulse coupling constant, denoting coupling strength between nodes
-    public float colorLerpUntilPhase = 0.15f;
-    public bool useNymoen;
+    public float alpha = 0.05f; // pulse coupling constant, denoting coupling strength between nodes
+    public float colorLerpUntilPhase = 0.25f;
+    public bool useNymoen = true;
     public bool useSound = true;
-    public bool useVisuals = true;
-    public Color fireColor = Color.yellow;
+    public bool useVisuals = false;
 
-    private Color originalColor;
     private List<Squiggles> otherSquiggles = new List<Squiggles>();
     private AudioSource source; // reference to Audio Source component on the Musical Node that is told to play the fire sound
     private float phase;
     private Renderer corpsOfAgentRenderer;
     private Transform yellowEye;
     private Transform pupil;
+    private Color bodyColor;
+    private Color fireColor = Color.yellow;
 
     void Start() {
+        // TODO: Clean up in variables.
         // Initializing variables
         corpsOfAgentRenderer = transform.GetChild(1).transform.GetChild(1).GetComponent<Renderer>();
-        originalColor = corpsOfAgentRenderer.material.color;
-        source = GetComponent<AudioSource>();
-        Time.timeScale = adjustedTimeScale;
         yellowEye = transform.GetChild(0).transform.GetChild(3);
         pupil = transform.GetChild(0).transform.GetChild(4);
+        bodyColor = corpsOfAgentRenderer.material.color;
+        //tentacleColor = transform.GetChild(2).transform.GetChild(0).GetComponent<Renderer>().material.color;
+
+        // TODO: Clean up in function-calls.
+        source = GetComponent<AudioSource>();
+        Time.timeScale = adjustedTimeScale;
 
         FillUpOtherSquigglesList();
 
@@ -36,10 +42,13 @@ public class Squiggles : MonoBehaviour {
         phase = Random.Range(0.0f, 1.0f);
     }
 
-    // BARE FOR Å KUNNE RESTARTE PROSESSEN LETT
+    // TODO: Clean up in functions.
     void Update() {
+        // Allowing phase-restarts for quick demonstrationS (MEN BØR DENNE VÆRE I Squiggles.cs OG IKKE AgentSpawner.cs DA?)
         if (Input.GetKeyDown(KeyCode.Space)) {
-            phase = Random.Range(0.0f, 1.0f);
+            //phase = Random.Range(0.0f, 1.0f);
+            string currentScene = SceneManager.GetActiveScene().name;
+            SceneManager.LoadScene(currentScene); // IKKE GJØRE DETTE HVIS DET FORTSETTER Å LAGE ERROR!
         }
     }
 
@@ -53,7 +62,7 @@ public class Squiggles : MonoBehaviour {
 
     private void FineTuneTheSquiggles() {
         source.volume = 1f / (otherSquiggles.Count + 1);
-        transform.position = new Vector3(transform.position.x, -0.96f, transform.position.z);
+        //transform.position = new Vector3(transform.position.x, -0.96f, transform.position.z);
     }
 
     private void FillUpOtherSquigglesList() {
@@ -68,7 +77,7 @@ public class Squiggles : MonoBehaviour {
     void SetLerpedColor() {
         float t = Mathf.Clamp(phase / colorLerpUntilPhase, 0, 1); // a percentage going from 0 when phase=0, to 1 when phase=colorLerpUntilPhase
         t = Mathf.Sin(t * Mathf.PI * 0.5f); // Lerping like a pro
-        corpsOfAgentRenderer.material.color = Color.Lerp(fireColor, originalColor, t);
+        corpsOfAgentRenderer.material.color = Color.Lerp(fireColor, bodyColor, t);
     }
 
     void FireNode() {

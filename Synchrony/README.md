@@ -2,6 +2,7 @@
 This folder is partly an image of a Unity project, having some project-files (mostly Unity-generated, binary and large) _.gitignored_.
 
 ## Future work TODOs:
+* Implement the Squiggle/Agent Spawner (Unity C# script with comments); and most importantly, DE-CREEPIFY.
 * Implement Frequency-adjustment
 * Implement the same functionality in Unity with Python through 'ML-agents', with necessary Python-packages automatically downloaded according to a requirements-file in a virtual environment (pyenv).
 * Produce and record synchrony-plots/-figures/-statistics from the simulations (Cf. the 'Essay ferdig Recall'-note on the reMarkable)
