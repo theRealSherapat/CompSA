@@ -38,9 +38,9 @@
 
 % BODY
 \begin{document}
-% HEAD
+% HEADER
 	\title{Computational Self-Awareness in Musical Robotic Systems} % med eller uten \\ før "in"
-	\subtitle{\tcol{Endowing musical robots with self-awareness — }An experimental study}
+	% \subtitle{\tcol{Endowing musical robots with self-awareness — }An experimental study}	INKLUDER?
 	\author{David Thorvaldsen}
 	\duoforside[dept={Institute for Informatics}, program={Informatics: Robotics and Intelligent Systems}, long]
 
@@ -70,41 +70,39 @@
 
 
 
-% MAIN
-	\section{Introduction}
-	% Here's where my journey begins. I have Lucas Paruch and Viktoria Stray's wish of "good and best of luck!"
-	
-	% Motivation:
-	\tcol{Engineering a computing system for a certain environment often requires some knowledge of said environement — both on the end of the creator of the computing system, as well as for the computing system in turn. This is at least the case in autonomous computing, where computing systems are supposed to be able to observe, learn, adapt, and act on their own — independently from their creator.}
-	\nl
-	
-	However, predicting all possible future states of complex, dynamic, and ever-changing environments is hard, and at times impossible. \tcol{This calls for online and continuous learning, don't you think? How to best tackle this problem? Glad you asked. — With Self-Awareness of course. Because ...}
-	\nl
-	
-	\tcol[blue]{TEKST KOPLET OPP MOT RESEARCH-SPØRSMÅLENE MINE}
+% MAIN (ALL THE SECTIONS INPUT)
+	% INTRODUCTION, CHAPTER 1
+	\input{Assets/Chapters/introduction_chapter.tex}
 
-
-	\section{Background (-theory)/ Related work}
-	\tcol[blue]{BULLETPOINTS FRA MULIGE INSPIRASJONER OG REFERANSER}
+	% BACKGROUND, CHAPTER 2
+	\input{Assets/Chapters/background_chapter.tex}
 	
+	% TOOLS & ENGINEERING ?
+	\input{Assets/Chapters/tools_and_engineering_chapter.tex}
 	
-	\section{Tools and engineering?}
-	THAT'S AT LEAST WHAT TØNNES HAD IN HIIIIS
-
-	\section{Implementation}
+	% PROPOSED ALGORITHM ?
+	\input{Assets/Chapters/proposed_algorithm_chapter.tex}
 	
-	\tcol[blue]{WORKLOG-MATERIALE DANDERT I HENHOLD TIL GODE MASTER-THESES}
+	% BENCHMARK ?
+	\input{Assets/Chapters/benchmark_chapter.tex}
+
+	% IMPLEMENTATION (METHOD-EQUIVALENT)
+	\input{Assets/Chapters/implementation_chapter.tex}
 	
+	% EXPERIMENTS AND RESULTS
+	\input{Assets/Chapters/experiments_and_results_chapter.tex}
 	
-	\section{Experiments and Results}
-	ER DETTE $\uparrow$ ET BRA SEKSJONS-KAPITTEL-NAVN DA?
-
-
-
+	% DISCUSSION
+	\input{Assets/Chapters/discussion_chapter.tex}
 
 
 
 % FOOTER
+	% BIBLIOGRAPHY
 	\newpage
 	\printbibliography
+	
+	% APPENDICES (A, B, C, D, ...)
+	% APPENDIX A HERE
+	% APPENDIX B HERE
 \end{document}
