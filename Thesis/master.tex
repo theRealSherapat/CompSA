@@ -27,6 +27,9 @@
 
 	% ADDING BIBLIOGRAPHY REFERENCE-DATABASE
 	\addbibresource{Assets/Bibliography/reference_database.bib}
+	
+	% SETTING PAGE (CONFIGURATION-) PARAMETERS
+	\input{Assets/Declarations/set_these_page_parameters.tex}
 
 
 
@@ -42,7 +45,7 @@
 	\duoforside[dept={Institute for Informatics}, program={Informatics: Robotics and Intelligent Systems}, long]
 
 	\pagenumbering{roman}
-	\section*{Abstract}
+	\input{Assets/Chapters/abstract.tex}
 	\newpage
 
 	\section*{Acknowledgements}
@@ -63,7 +66,8 @@
 
 
 
-% MAIN (ALL THE SECTIONS INPUT). CHECK WITH JIM TØRRESEN'S TIPS FOR SECTIONS TO INCLUDE.
+% MAIN (ALL THE SECTIONS INPUT). 
+% CONSIDER: JIM TØRRESEN'S TIPS FOR SECTIONS TO INCLUDE.
 	% INTRODUCTION, CHAPTER 1
 	\input{Assets/Chapters/introduction_chapter.tex}
 
@@ -98,4 +102,5 @@
 	% APPENDICES (A, B, C, D, ...)
 	% APPENDIX A HERE
 	% APPENDIX B HERE
+	
 \end{document}
