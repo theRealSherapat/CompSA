@@ -15,8 +15,6 @@ Possibly a good workflow is preparing the set-up:
 	+ View your resulting MSc-PDF in the bottom right corner of the window
 
 ## Specific TODOs:
-* Get Section-headlines as big and nice-looking as in the 'good-masters-thesis'-examples (get familiar with and use the titlesec-package, and compare it with the Overleaf-IFI-standard-document and the formerly-mentioned MSc-thesises).
-* Klargjøre for meg selv og forenkle så mye som mulig fargekodingen innad i MSc-dokumentet (rød vs. blå skrift osv.)
-	+ Kanskje lage egendefinerte funksjoner som gjør det klart for meg hva de forskjellige avsnittene og setningene og ordene betyr.
-		- Opphøy tekst eller paragraf for å ha noe i mente ang. det som nettop sto.
-* Fix citation-links (throughout the thesis document when references are cited)
+* Get Section-headlines (not anything in the duo-frontpage atm at least) as big and nice-looking as in the 'good-masters-thesis'-examples (get familiar with and use the titlesec-package, and compare it with the Overleaf-IFI-standard-document and the formerly-mentioned MSc-thesises).
+* Fix citation-links (throughout the thesis document when references are cited).
+* 'GJØR: []'-clauses possible to execute now.
