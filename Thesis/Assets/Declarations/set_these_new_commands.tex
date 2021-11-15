@@ -1,13 +1,21 @@
+% Commands = Macros.
+
 % Text-editing
-\newcommand{\tit}[1]{\textit{#1}}
-\newcommand{\tbf}[1]{\textbf{#1}}
+	\newcommand{\tit}[1]{\textit{#1}}
+	\newcommand{\tbf}[1]{\textbf{#1}}
 
 % Colors
-\newcommand{\tcol}[2][red]{\textcolor{#1}{#2}} % default-color is red
+	\newcommand{\tcol}[2][red]{\textcolor{#1}{#2}} % default-color is red
 
 % Page-Spacing, -Margins, and -Padding
-\newcommand{\nl}{\newline}
-\newcommand{\np}{\newpage}
+	\newcommand{\nl}{\newline}
+	\newcommand{\np}{\newpage}
+	\newcommand{\separate}{\vspace{15px}}
 
 % Lists
-\newcommand{\subdash}[1]{\begin{itemize} \item{#1} \end{itemize}}
+	\newcommand{\subdash}[1]{\begin{itemize} \item{#1} \end{itemize}}
+
+% Document-marking/-identifiers for quick classification of semantics of text
+	\newcommand{\question}[1]{\tbf{\tcol{INKL.: \Big[}} #1 \tbf{\tcol{\Big]{\Large ?}}}} % Question the Inclusion of Sentence(s).
+	\newcommand{\godo}[1]{\tbf{\tcol[blue]{GJØR: \Big[}} #1 \tbf{\tcol[blue]{\Big].}} \nl} % Execute/do the Sentence(s).
+	\newcommand{\describe}[1]{\tbf{\tcol[ForestGreen]{BESKR.: \Big[}} #1 \tbf{\tcol[ForestGreen]{\Big].}} \nl} % Sentence(s) Explaining/describing the Section.
