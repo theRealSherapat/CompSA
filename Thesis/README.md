@@ -17,4 +17,4 @@ Possibly a good workflow is preparing the set-up:
 ## Specific TODOs:
 * Get Section-headlines (not anything in the duo-frontpage atm at least) as big and nice-looking as in the 'good-masters-thesis'-examples (get familiar with and use the titlesec-package, and compare it with the Overleaf-IFI-standard-document and the formerly-mentioned MSc-thesises).
 * Fix citation-links (throughout the thesis document when references are cited).
-* 'GJØR: []'-clauses possible to execute now.
+* 'GJØR: []'-clauses possible to execute now (remember Abe Lincoln).
