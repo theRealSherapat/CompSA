@@ -12,6 +12,7 @@ public class Squiggles : MonoBehaviour {
     public bool useNymoen = true;
     public bool useSound = true;
     public bool useVisuals = false;
+    public int m = 5; // running median-filter length
 
     private List<Squiggles> otherSquiggles = new List<Squiggles>();
     private AudioSource source; // reference to Audio Source component on the Musical Node that is told to play the fire sound
@@ -21,6 +22,9 @@ public class Squiggles : MonoBehaviour {
     private Transform pupil;
     private Color bodyColor;
     private Color fireColor = Color.yellow;
+
+    // FOR FREQUENCY-ADJUSTMENT:
+    private List<float> errorBuffer = new List<float>();
 
     void Start() {
         // TODO: Clean up in variables.
@@ -39,6 +43,9 @@ public class Squiggles : MonoBehaviour {
 
         FineTuneTheSquiggles();
 
+        // FOR FREQUENCY-ADJUSTMENT:
+        InitializeErrorBuffer();
+
         phase = Random.Range(0.0f, 1.0f);
     }
 
@@ -49,6 +56,12 @@ public class Squiggles : MonoBehaviour {
             //phase = Random.Range(0.0f, 1.0f);
             string currentScene = SceneManager.GetActiveScene().name;
             SceneManager.LoadScene(currentScene); // IKKE GJØRE DETTE HVIS DET FORTSETTER Å LAGE ERROR!
+        } 
+        // FOR FREQUENCY-ADJUSTMENT:
+        else if (Input.GetKeyDown(KeyCode.P)) {
+            print("errorBuffer[0] = " + errorBuffer[0]);
+
+            //print("errorBuffer.Median(): " + errorBuffer.Median()); FINN DENNE!                                               >>>>>>>>> FORTSETT HER <<<<<<<<<
         }
     }
 
@@ -110,16 +123,30 @@ public class Squiggles : MonoBehaviour {
 
     void AdjustOtherNodePhases() {
         foreach (Squiggles oscillator in otherSquiggles) { // "giving away a signal" all other nodes can hear
-            oscillator.AdjustPhase();
+            oscillator.AdjustPhase(); // Invoke this after a physical-realistic-constrained time-period?
         }
     }
 
     void AdjustPhase() {
+        // Recording the n'th error-score (since the agent is "hearing" a fire-signal)
+        float errorScore = Mathf.Pow(Mathf.Sin(Mathf.PI * phase), 2);
+        ShiftErrorBufferWith(errorScore);
+
         if (!useNymoen) {
             phase *= (1 + alpha); // using Phase Update Function (1); "standard" Mirollo-Strogatz
         } else {
             float wave = Mathf.Sin(2 * Mathf.PI * phase);
             phase -= alpha * wave * Mathf.Abs(wave); // using Phase Update Function (2); Nymoen et al.'s Bi-Directional
         }
+    }
+
+    // FOR FREQUENCY-ADJUSTMENT:
+    void InitializeErrorBuffer() {
+        for (int i = 0; i < m; i++) errorBuffer.Add(1f);
+    }
+
+    void ShiftErrorBufferWith(float thisInput) {
+        errorBuffer.Add(thisInput);
+        errorBuffer.RemoveAt(0);
     }
 }

@@ -170,6 +170,8 @@ MonoBehaviour:
   squigglePrefabs:
   - {fileID: 7619773679480578012, guid: 80b6bc4a677099a41b9e98ea3171fe5b, type: 3}
   - {fileID: 5265853759463539796, guid: b0a214ab0f14dd44a9b52086730980e6, type: 3}
+  - {fileID: 2285719835394980754, guid: c314eb5130117ec42b02442ea979e2a7, type: 3}
+  - {fileID: 8768706482228693545, guid: 99dff3106accb1b46a953f4ffd8d9d57, type: 3}
   collectiveSize: 5
   spawnRadius: 10
 --- !u!1 &1150399571
