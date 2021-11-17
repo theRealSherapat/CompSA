@@ -1,107 +1,31 @@
-% GENERAL REMARKS / COMMENTS
-	% Dette er 'THE MAIN Master Document'.
-	% Her skal jeg fortelle om det jeg har gjort/funnet ut av på den måten jeg ville fortalt det til et familie-medlem eller noen andre (jf. skrive-tips i master-uka) — og skrive så den er "standalone", der jeg—som tante Kjersti sa—utdyper veldig tydelig hva jeg har gjort (hente fisken tilbake til land som Jim sa).
-	% Den skal ha en fin forside, god struktur, og \include{} alle kapitlene etterhvert som de skrives.
-	% Husk målene som står i karaktersettingen når du ser på strukturen og oppbygningen. Det skal være ryddig og originalt, og en god skriftlig presentasjon.
+% Generelle Bemerkninger og Kommentarer:
+	% * Dette er 'THE MAIN Master Document'.
+	% * Her skal jeg fortelle om det jeg har gjort/funnet ut av på den måten jeg ville fortalt det til et familie-medlem eller noen andre (jf. skrive-tips i master-uka) — og skrive så den er "standalone", der jeg—som tante Kjersti sa—utdyper veldig tydelig hva jeg har gjort (hente fisken tilbake til land som Jim sa).
+	% * Den skal ha en fin forside, god struktur, og \include{} alle kapitlene etterhvert som de skrives.
+	% * Husk målene som står i karaktersettingen når du ser på strukturen og oppbygningen. Det skal være ryddig og originalt, og en god skriftlig presentasjon.
 
-	% Inspirasjons-maler:
-		% (M1) i Overleaf: "UiO, Department of Informatics: Master's Thesis Template 2020"
-		% (M2) i Overleaf: "UiO Master Thesis"
+	% * Inspirasjons-maler:
+		% (Mal1) i Overleaf: "UiO, Department of Informatics: Master's Thesis Template 2020"
+		% (Mal2) i Overleaf: "UiO Master Thesis"
 		% Gode eksemplel-thesis'er
 			% E.g. Tønnes Nygaard sin
-	% Følger foreløpig (M1) (foruten alle \usepackage'r og \titleformat'er => men kanskje jeg bør bruke de?).
+	% * Følger foreløpig (Mal1) (foruten alle \usepackage'r og \titleformat'er => men kanskje jeg bør bruke de?).
 
 
+% Preamble: Declarations & Initializations
+\input{Assets/DocumentSegments/preamble.tex}
 
 
-
-
-% DECLARATIONS & INITIALIZATIONS / PREAMBLE
-	% DEFINING DOCUMENT CLASS
-	\documentclass[a4paper, english]{article}
-
-	% USING PACKAGES
-	\input{Assets/Declarations/use_these_packages.tex}
-
-	% SETTING NEW COMMANDS AND FUNCTIONS
-	\input{Assets/Declarations/set_these_new_commands.tex}
-
-	% ADDING BIBLIOGRAPHY REFERENCE-DATABASE
-	\addbibresource{Assets/Bibliography/reference_database.bib}
-	
-	% SETTING PAGE (CONFIGURATION-) PARAMETERS
-	\input{Assets/Declarations/set_these_page_parameters.tex}
-
-
-
-
-
-
-% BODY
+% The Document
 \begin{document}
-% HEADER
-	\title{Computational Self-Awareness in Musical Robotic Systems} % med eller uten \\ før "in"
-		% \subtitle{\tcol{Endowing musical robots with self-awareness — }An experimental study}	INKLUDER?
-	\author{David Thorvaldsen}
-	\duoforside[dept={Institute for Informatics}, program={Informatics: Robotics and Intelligent Systems}, long]
-
-	\pagenumbering{roman}
-	\input{Assets/Chapters/abstract.tex}
-	\newpage
-
-	\section*{Acknowledgements}
-	\newpage
-
-	\tableofcontents
-	\newpage
-
-	\listoftables
-	\newpage
-
-	\listoffigures
-	\newpage
-
-	\pagenumbering{arabic}
-	\setcounter{page}{1}
+	% Document Header (Front Page, Abstract, Acknowledgement(s?), and Tables of Contents etc.).
+	\input{Assets/DocumentSegments/document_header.tex}
 
 
+	% Document Body (all my self-written Sections).
+	\input{Assets/DocumentSegments/document_body.tex}
 
 
-% MAIN (ALL THE SECTIONS INPUT). 
-% CONSIDER: JIM TØRRESEN'S TIPS FOR SECTIONS TO INCLUDE.
-	% INTRODUCTION, CHAPTER 1.
-	\input{Assets/Chapters/introduction_chapter.tex}
-
-	% BACKGROUND, CHAPTER 2.
-	\input{Assets/Chapters/background_chapter.tex}
-	
-	% TOOLS & ENGINEERING ?
-	\input{Assets/Chapters/tools_and_engineering_chapter.tex}
-	
-	% PROPOSED ALGORITHM ?
-	\input{Assets/Chapters/proposed_algorithm_chapter.tex}
-	
-	% BENCHMARK ?
-	\input{Assets/Chapters/benchmark_chapter.tex}
-
-	% IMPLEMENTATION (METHOD-EQUIVALENT).
-	\input{Assets/Chapters/implementation_chapter.tex}
-	
-	% EXPERIMENTS AND RESULTS.
-	\input{Assets/Chapters/experiments_and_results_chapter.tex}
-	
-	% DISCUSSION.
-	\input{Assets/Chapters/discussion_chapter.tex}
-
-
-
-% FOOTER
-	% BIBLIOGRAPHY
-	\newpage
-	\printbibliography
-	
-	% APPENDICES (A, B, C, D, ...)
-	% APPENDIX A HERE
-	% APPENDIX B HERE
-	
+	% Document Footer (Bibliography, Appendices etc.).
+	\input{Assets/DocumentSegments/document_footer.tex}
 \end{document}
