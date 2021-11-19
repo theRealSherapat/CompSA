@@ -1,5 +1,9 @@
 # MSc Thesis writing
 
+Remember:
+* "Less is more." — experience and William Strunk Jr.
+* "Don't overkill it." — experience (crazy and many color-codes)
+
 ### While having displayable writing-inspirations:
 Possibly a good workflow is preparing the set-up:
 1) BIG SCREEN AVAILABLE:
