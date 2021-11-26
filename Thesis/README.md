@@ -19,7 +19,8 @@ Possibly a good workflow is preparing the set-up:
 	+ View your resulting MSc-PDF in the bottom right corner of the window
 
 ## Specific TODOs
-* Make Section-headlines (and possibly the 2nd thesis-title, like in the Overleaf-IFI-standard-document) bold-face (by still using the package 'sectsty' if possible).
+* Make Section-headlines (and possibly the 2nd thesis-title, like in the Overleaf-IFI-standard-document) bold-face (by still using the package 'sectsty' if possible). And ensure that the Thesis-title isn't inferior and smaller perhaps than the Chapter/Section-headlines.
 * Create Chapters (like in the 'good-masters-thesis'-examples), looking more or less like these examples.
 * Fix citation-links (throughout the thesis document when references are cited).
-* 'GJØR: []'-clauses possible to execute now (remember Abe Lincoln).
+* Execute 'GJØR: []'-clauses possible to execute now (remember Abe Lincoln).
+* Gå igjennom Essay .tex-fila og hent kritikk, INKL.:[]?'s, og concerns.

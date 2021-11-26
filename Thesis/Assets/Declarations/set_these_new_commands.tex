@@ -1,9 +1,5 @@
 % Commands = Macros.
 
-% Text-editing:
-	\newcommand{\tit}[1]{\textit{#1}} % to italize text.
-	\newcommand{\tbf}[1]{\textbf{#1}} % to make text bold face.
-
 % Colors:
 	\newcommand{\tcol}[2][red]{\textcolor{#1}{#2}} % to colorize text. Args.: #1=textcolor (default-color is red), #2=text.
 
@@ -17,10 +13,10 @@
 
 % Sentences-marking/-identifiers for quick classification of semantics of text:
 % TODO: Incorporate a better \nl-looking spacing/margin/padding above the classification-objects.
-	\newcommand{\inkl}[1]{\tbf{\tcol{INKL.: \Big[}} #1 \tbf{\tcol{\Big]{\Large ?}}}} % to question the Inclusion of Sentence(s). Args.: #1=sentence(s).
-	\newcommand{\gjor}[1]{\tbf{\tcol[blue]{GJØR: \Big[}} #1 \tbf{\tcol[blue]{\Big].}} \nl} % to mark the Sentence(s) for execution. Args.: #1=sentence(s).
-	\newcommand{\besk}[1]{\tbf{\tcol[ForestGreen]{BESKR.: \Big[}} #1 \tbf{\tcol[ForestGreen]{\Big].}} \nl} % to explain/describe the Section with sentence(s). Args.: #1=sentence(s).
+	\newcommand{\inkl}[1]{\textbf{\tcol{INKL.: \Big[}} #1 \textbf{\tcol{\Big]{\Large ?}}}} % to question the Inclusion of Sentence(s). Args.: #1=sentence(s).
+	\newcommand{\gjor}[1]{\textbf{\tcol[blue]{GJØR: \Big[}} #1 \textbf{\tcol[blue]{\Big].}} \nl} % to mark the Sentence(s) for execution. Args.: #1=sentence(s).
+	\newcommand{\besk}[1]{\textbf{\tcol[ForestGreen]{BESKR.: \Big[}} #1 \textbf{\tcol[ForestGreen]{\Big].}} \nl} % to explain/describe the Section with sentence(s). Args.: #1=sentence(s).
 	
-	\newcommand{\lab}[2]{\tbf{\tcol[gray]{{\Large "#1":} \Large[}} \nl #2 \tbf{\tcol[gray]{\Large].}} \nl} % to generically label/caption a document segment. Args.: #1=label/caption, #2=document segment.
+	\newcommand{\lab}[2]{\textbf{\tcol[gray]{{\Large "#1":} \Large[}} \nl #2 \textbf{\tcol[gray]{\Large].}} \nl} % to generically label/caption a document segment. Args.: #1=label/caption, #2=document segment.
 	
 	\newcommand{\powof}[2][?]{#2\textsuperscript{#1}} % to raise text #2 to the power of #1 (default-power-of #1 is '?').
