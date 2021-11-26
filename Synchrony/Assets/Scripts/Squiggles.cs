@@ -1,12 +1,13 @@
-//using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+using static DavidsUtils;
+
 public class Squiggles : MonoBehaviour {
     // TODO: Clean up in variables.
     public float adjustedTimeScale = 1.0f;
-    public float frequency = 0.5f; // Hz
+    public float frequency = 0.5f; // Hz                                                    // <--------------------- FORTSETT HER! DU HAR FUNNET SELF-ASSESSED SYNCHRONY SCORE
     public float alpha = 0.05f; // pulse coupling constant, denoting coupling strength between nodes
     public float colorLerpUntilPhase = 0.25f;
     public bool useNymoen = true;
@@ -45,6 +46,7 @@ public class Squiggles : MonoBehaviour {
 
         // FOR FREQUENCY-ADJUSTMENT:
         InitializeErrorBuffer();
+        // frequency = Random.Range(0.5f, 8f);                                            // <--------------------- FORTSETT HER! DU HAR FUNNET SELF-ASSESSED SYNCHRONY SCORE
 
         phase = Random.Range(0.0f, 1.0f);
     }
@@ -59,18 +61,45 @@ public class Squiggles : MonoBehaviour {
         } 
         // FOR FREQUENCY-ADJUSTMENT:
         else if (Input.GetKeyDown(KeyCode.P)) {
-            print("errorBuffer[0] = " + errorBuffer[0]);
-
-            //print("errorBuffer.Median(): " + errorBuffer.Median()); FINN DENNE!                                               >>>>>>>>> FORTSETT HER <<<<<<<<<
+            float s_n = ListMedian(errorBuffer);                                           // <--------------------- FORTSETT HER! DU HAR FUNNET SELF-ASSESSED SYNCHRONY SCORE
+            print("Median av errorBuffer til " + gameObject.name + ": " + s_n);
         }
     }
 
     void FixedUpdate() {
         if (useVisuals) SetLerpedColor();
 
-        if (phase > 1) FireNode();
+        if (phase > 1) {
+            FireNode();
+            //AdjustOwnFrequency();                                                        // <--------------------- FORTSETT HER! DU HAR FUNNET SELF-ASSESSED SYNCHRONY SCORE
+        }
 
         phase += frequency * Time.fixedDeltaTime;
+    }
+
+    void AdjustPhase() {
+        // Recording the n'th error-score (since the agent is "hearing" a fire-signal)
+        float errorScore = Mathf.Pow(Mathf.Sin(Mathf.PI * phase), 2);
+        errorBuffer = ShiftFloatListRightWith(errorBuffer, errorScore);
+
+        if (!useNymoen) {
+            phase *= (1 + alpha); // using Phase Update Function (1); "standard" Mirollo-Strogatz
+        } else {
+            float wave = Mathf.Sin(2 * Mathf.PI * phase);
+            phase -= alpha * wave * Mathf.Abs(wave); // using Phase Update Function (2); Nymoen et al.'s Bi-Directional
+        }
+    }
+
+    private void AdjustOwnFrequency() {
+        // IMPLEMENTER FORMELEN ØVERST I “UiO/MSc/Logs/Simulations/Frequency adjustment”-notatet på reMarkable'n.
+        // Nå har jeg verdiene s(n), og kan lett finne rho(n), og da altså H(n).
+        // Da mangler jeg å ha en beta, en y, og å summe med alle disse verdiene — og til slutt sette den resulterende frekvens-verdien som min nye/nåværende/oppdaterte frekvens.
+
+        // F_n = beta * sum_0^{y-1}(H(n-x)/y);,       der beta er frequency coupling constant, y er antall hørte/mottatte "fire-events",
+        //                                           H(n) = rho(n) * s(n), og rho(n)=-sin(2*PI*phase)
+
+        // new_frequency = old_frequency * 2^F_n;
+        // frequency = new_frequency;
     }
 
     private void FineTuneTheSquiggles() {
@@ -98,7 +127,7 @@ public class Squiggles : MonoBehaviour {
 
         if (useSound) source.Play();
         
-        AdjustOtherNodePhases();
+        TransmitSignalToEnvironment();
 
         if (useVisuals) corpsOfAgentRenderer.material.color = fireColor; // signalizing, visually, to the observer a firing-event
         
@@ -121,32 +150,14 @@ public class Squiggles : MonoBehaviour {
         yellowEye.localScale += yellowEyeScaleChange;
     }
 
-    void AdjustOtherNodePhases() {
+    void TransmitSignalToEnvironment() {
         foreach (Squiggles oscillator in otherSquiggles) { // "giving away a signal" all other nodes can hear
             oscillator.AdjustPhase(); // Invoke this after a physical-realistic-constrained time-period?
-        }
-    }
-
-    void AdjustPhase() {
-        // Recording the n'th error-score (since the agent is "hearing" a fire-signal)
-        float errorScore = Mathf.Pow(Mathf.Sin(Mathf.PI * phase), 2);
-        ShiftErrorBufferWith(errorScore);
-
-        if (!useNymoen) {
-            phase *= (1 + alpha); // using Phase Update Function (1); "standard" Mirollo-Strogatz
-        } else {
-            float wave = Mathf.Sin(2 * Mathf.PI * phase);
-            phase -= alpha * wave * Mathf.Abs(wave); // using Phase Update Function (2); Nymoen et al.'s Bi-Directional
         }
     }
 
     // FOR FREQUENCY-ADJUSTMENT:
     void InitializeErrorBuffer() {
         for (int i = 0; i < m; i++) errorBuffer.Add(1f);
-    }
-
-    void ShiftErrorBufferWith(float thisInput) {
-        errorBuffer.Add(thisInput);
-        errorBuffer.RemoveAt(0);
     }
 }
