@@ -4,20 +4,21 @@ using UnityEngine.SceneManagement;
 
 using static DavidsUtils;
 
-public class Squiggles : MonoBehaviour {
+public class SquiggleScript : MonoBehaviour {
     // TODO: Clean up in variables.
     public float adjustedTimeScale = 1.0f;
-    public float frequency = 0.5f; // Hz                                                    // <--------------------- FORTSETT HER! DU HAR FUNNET SELF-ASSESSED SYNCHRONY SCORE
     public float alpha = 0.05f; // pulse coupling constant, denoting coupling strength between nodes
-    public float colorLerpUntilPhase = 0.25f;
+    public float beta = 0.8f; // frequency coupling constant
+    public float colorLerpUntilPhase = 0.15f;
     public bool useNymoen = true;
     public bool useSound = true;
     public bool useVisuals = false;
     public int m = 5; // running median-filter length
 
-    private List<Squiggles> otherSquiggles = new List<Squiggles>();
+    private List<SquiggleScript> otherSquiggles = new List<SquiggleScript>();
     private AudioSource source; // reference to Audio Source component on the Musical Node that is told to play the fire sound
-    private float phase;
+    private float phase; // a number between 0 and 1
+    private float frequency; // Hz
     private Renderer corpsOfAgentRenderer;
     private Transform yellowEye;
     private Transform pupil;
@@ -26,6 +27,8 @@ public class Squiggles : MonoBehaviour {
 
     // FOR FREQUENCY-ADJUSTMENT:
     private List<float> errorBuffer = new List<float>();
+    private List<float> HBuffer = new List<float>();
+    private bool cycleTraversedOnce = false;
 
     void Start() {
         // TODO: Clean up in variables.
@@ -44,11 +47,11 @@ public class Squiggles : MonoBehaviour {
 
         FineTuneTheSquiggles();
 
+        phase = Random.Range(0.0f, 1.0f);
+
         // FOR FREQUENCY-ADJUSTMENT:
         InitializeErrorBuffer();
-        // frequency = Random.Range(0.5f, 8f);                                            // <--------------------- FORTSETT HER! DU HAR FUNNET SELF-ASSESSED SYNCHRONY SCORE
-
-        phase = Random.Range(0.0f, 1.0f);
+        frequency = Random.Range(0.1f, 1.5f); // initializing frequency in range Random.Range(0.5f, 8f) found useful by Nymoen et al ('Decentralized Synchronization', 2014)
     }
 
     // TODO: Clean up in functions.
@@ -61,7 +64,7 @@ public class Squiggles : MonoBehaviour {
         } 
         // FOR FREQUENCY-ADJUSTMENT:
         else if (Input.GetKeyDown(KeyCode.P)) {
-            float s_n = ListMedian(errorBuffer);                                           // <--------------------- FORTSETT HER! DU HAR FUNNET SELF-ASSESSED SYNCHRONY SCORE
+            float s_n = ListMedian(errorBuffer);
             print("Median av errorBuffer til " + gameObject.name + ": " + s_n);
         }
     }
@@ -70,18 +73,20 @@ public class Squiggles : MonoBehaviour {
         if (useVisuals) SetLerpedColor();
 
         if (phase > 1) {
-            FireNode();
-            //AdjustOwnFrequency();                                                        // <--------------------- FORTSETT HER! DU HAR FUNNET SELF-ASSESSED SYNCHRONY SCORE
+            if (cycleTraversedOnce) { 
+                FireNode();          // HVIS DETTE ER ANDRE FASE-KLIMAKSET, IKKE HVERT ENESTE
+                cycleTraversedOnce = false;
+            }
+
+            RFAAdjustFrequency();
+
+            cycleTraversedOnce = true;
         }
 
         phase += frequency * Time.fixedDeltaTime;
     }
 
     void AdjustPhase() {
-        // Recording the n'th error-score (since the agent is "hearing" a fire-signal)
-        float errorScore = Mathf.Pow(Mathf.Sin(Mathf.PI * phase), 2);
-        errorBuffer = ShiftFloatListRightWith(errorBuffer, errorScore);
-
         if (!useNymoen) {
             phase *= (1 + alpha); // using Phase Update Function (1); "standard" Mirollo-Strogatz
         } else {
@@ -90,7 +95,10 @@ public class Squiggles : MonoBehaviour {
         }
     }
 
-    private void AdjustOwnFrequency() {
+    private void RFAAdjustFrequency() {
+        // Adjusting frequency according to the reachback firefly algorithm (RFA) with the values calculated since the start of previous oscillator cycle until now.
+
+        // OLD COMMENTS:
         // IMPLEMENTER FORMELEN ØVERST I “UiO/MSc/Logs/Simulations/Frequency adjustment”-notatet på reMarkable'n.
         // Nå har jeg verdiene s(n), og kan lett finne rho(n), og da altså H(n).
         // Da mangler jeg å ha en beta, en y, og å summe med alle disse verdiene — og til slutt sette den resulterende frekvens-verdien som min nye/nåværende/oppdaterte frekvens.
@@ -98,8 +106,59 @@ public class Squiggles : MonoBehaviour {
         // F_n = beta * sum_0^{y-1}(H(n-x)/y);,       der beta er frequency coupling constant, y er antall hørte/mottatte "fire-events",
         //                                           H(n) = rho(n) * s(n), og rho(n)=-sin(2*PI*phase)
 
-        // new_frequency = old_frequency * 2^F_n;
-        // frequency = new_frequency;
+        float averageCycleH = 0;
+        int HBufferLength = HBuffer.Count;
+        foreach (float H in HBuffer) {
+            averageCycleH += H/(float)HBufferLength;
+        }
+        float F_n = beta * averageCycleH;
+
+        float newFrequency = frequency * Mathf.Pow(2, F_n);
+        frequency = newFrequency;
+    }
+
+    void FireNode() {
+        // ONLY FIRE EVERY SECOND PHASE-CLIMAX?
+
+        BlinkWithEyes();
+
+        if (useSound) source.Play();
+
+        TransmitSignalToEnvironment();
+
+        // Signalizing a "fire"-event visually to the observer watching the Unity simulation
+        if (useVisuals) corpsOfAgentRenderer.material.color = fireColor;
+
+        phase = 0; // resetting phase
+    }
+
+    void TransmitSignalToEnvironment() {
+        foreach (SquiggleScript oscillator in otherSquiggles) { // "giving away a signal" all other nodes can hear
+            //oscillator.AdjustPhase(); // Invoke this after a physical-realistic-constrained time-period?
+            oscillator.JustHeardFireEvent();
+        }
+    }
+
+    void JustHeardFireEvent() {
+        AddNthFireEventsHToList();
+        AdjustPhase();
+    }
+
+    private void AddNthFireEventsHToList() {
+        // KALKULERER MEG OPP TIL EN LISTE MED H(n)-VERDIER (SOM JEG GJORDE NEDENFRA OG OPP I DET KOMPILERTE reMarkable-NOTATET MITT) (since the agent is "hearing" a fire-signal)
+
+        // Recording the n'th error-score, capturing whether the node itself is in synch with the node it hears the "fire"-event from or not
+        float epsilon_n = Mathf.Pow(Mathf.Sin(Mathf.PI * phase), 2);
+        errorBuffer = ShiftFloatListRightToLeftWith(errorBuffer, epsilon_n);
+
+        // Calculating the median of the errorBuffer, being the self-assessed synch-score and public self-awareness component
+        float s_n = ListMedian(errorBuffer);
+
+        // Calculating the measure capturing the amplitude and sign of the frequency-modification of the n-th "fire"-event received
+        float rho_n = -Mathf.Sin(2 * Mathf.PI * phase); // negative for phase < 1/2, and positive for phase > 1/2, and element in [-1, 1]
+
+        float H_n = rho_n * s_n;
+        HBuffer.Add(H_n); // H(n)-values appended to the end of the list
     }
 
     private void FineTuneTheSquiggles() {
@@ -113,25 +172,13 @@ public class Squiggles : MonoBehaviour {
         this.gameObject.tag = "temp";
         allSquiggleObjs.AddRange(GameObject.FindGameObjectsWithTag("Player"));
         this.gameObject.tag = "Player";
-        foreach (GameObject squigObj in allSquiggleObjs) { otherSquiggles.Add(squigObj.GetComponent<Squiggles>()); }
+        foreach (GameObject squigObj in allSquiggleObjs) { otherSquiggles.Add(squigObj.GetComponent<SquiggleScript>()); }
     }
 
     void SetLerpedColor() {
         float t = Mathf.Clamp(phase / colorLerpUntilPhase, 0, 1); // a percentage going from 0 when phase=0, to 1 when phase=colorLerpUntilPhase
         t = Mathf.Sin(t * Mathf.PI * 0.5f); // Lerping like a pro
         corpsOfAgentRenderer.material.color = Color.Lerp(fireColor, bodyColor, t);
-    }
-
-    void FireNode() {
-        BlinkWithEyes();
-
-        if (useSound) source.Play();
-        
-        TransmitSignalToEnvironment();
-
-        if (useVisuals) corpsOfAgentRenderer.material.color = fireColor; // signalizing, visually, to the observer a firing-event
-        
-        phase = 0; // resetting phase
     }
 
     void BlinkWithEyes() {
@@ -148,12 +195,6 @@ public class Squiggles : MonoBehaviour {
         pupil.localScale += pupilScaleChange;
         Vector3 yellowEyeScaleChange = new Vector3(0, 0, 0.4465f);
         yellowEye.localScale += yellowEyeScaleChange;
-    }
-
-    void TransmitSignalToEnvironment() {
-        foreach (Squiggles oscillator in otherSquiggles) { // "giving away a signal" all other nodes can hear
-            oscillator.AdjustPhase(); // Invoke this after a physical-realistic-constrained time-period?
-        }
     }
 
     // FOR FREQUENCY-ADJUSTMENT:

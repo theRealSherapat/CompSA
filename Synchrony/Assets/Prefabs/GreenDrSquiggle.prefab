@@ -204,9 +204,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2285719835394980755}
-  - component: {fileID: 2285719835394980764}
   - component: {fileID: 1253686064006578817}
   - component: {fileID: 6619244997265073573}
+  - component: {fileID: -5902048247298437266}
   m_Layer: 0
   m_Name: GreenDrSquiggle
   m_TagString: Player
@@ -232,25 +232,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2285719835394980764
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2285719835394980754}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4db8b444f864bf479ad5b4eaa527a7b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  adjustedTimeScale: 1
-  frequency: 0.5
-  alpha: 0.05
-  colorLerpUntilPhase: 0.15
-  useNymoen: 1
-  useSound: 1
-  useVisuals: 1
 --- !u!82 &1253686064006578817
 AudioSource:
   m_ObjectHideFlags: 0
@@ -361,6 +342,26 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -8123466094988443445, guid: 3eac66f505a7b7f4aa8f76bb5f4d93ed, type: 3}
+--- !u!114 &-5902048247298437266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2285719835394980754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4db8b444f864bf479ad5b4eaa527a7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  adjustedTimeScale: 1
+  alpha: 0.05
+  beta: 0.8
+  colorLerpUntilPhase: 0.15
+  useNymoen: 1
+  useSound: 1
+  useVisuals: 1
+  m: 5
 --- !u!1001 &2285719833623400587
 PrefabInstance:
   m_ObjectHideFlags: 0

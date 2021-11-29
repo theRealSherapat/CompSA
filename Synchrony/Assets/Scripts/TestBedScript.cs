@@ -4,7 +4,7 @@ using static DavidsUtils;
 
 // ER ENTRIESA/VALUESA I ET C# ARRAY VERDIER ELLER REFERANSER?
 
-public class ArrayShifting : MonoBehaviour {
+public class TestBedScript : MonoBehaviour {
     private List<float> errorBuffer = new List<float>();
 
     void Start() {
