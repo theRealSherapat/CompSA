@@ -4,7 +4,7 @@ Remember:
 * "Less is more." — experience and William Strunk Jr.
 * "Don't overkill it." — experience (crazy and many color-codes)
 
-### While having displayable writing-inspirations:
+### SETUP While having displayable writing-inspirations in mind:
 Possibly a good workflow is preparing the set-up:
 1) BIG SCREEN AVAILABLE:
 * On the big screen opening and having on the right or left side:
@@ -19,8 +19,19 @@ Possibly a good workflow is preparing the set-up:
 	+ View your resulting MSc-PDF in the bottom right corner of the window
 
 ## Specific TODOs
-* Make Section-headlines (and possibly the 2nd thesis-title, like in the Overleaf-IFI-standard-document) bold-face (by still using the package 'sectsty' if possible). And ensure that the Thesis-title isn't inferior and smaller perhaps than the Chapter/Section-headlines.
-* Create Chapters (like in the 'good-masters-thesis'-examples), looking more or less like these examples.
-* Fix citation-links (throughout the thesis document when references are cited), and the [NOR04]-style (first author(s), Normann e.g.) instead of [3]-style.
 * Execute 'GJØR: []'-clauses possible to execute now (remember Abe Lincoln).
+	+ Spesielt den første innunder 'Implementation' og 4.1 (Worklog til Implementation)
+	
 * Gå igjennom Essay .tex-fila og hent kritikk, INKL.:[]?'s, og concerns.
+
+## Polishing / Finishing TODOs
+* Polish/finish font-families, -styles, and -sizes (by e.g. using the packages 'sectsty' or 'titlesec' — but preferably just LaTeX's standard font-manipulation if possible):
+	+ Make Section- & Chapter-headlines (and possibly the 2nd thesis-title, like in the Overleaf-IFI-standard-document) bold-face. 
+	+ Ensure that the Thesis-title isn't inferior and smaller perhaps than the Chapter/Section-headlines.
+	+ Use a good-looking font-family. Previously looked at font-families are:
+		- 'Aldus Nova Book' by Linotype (found through myfonts.com/WhatTheFont with a sample from Tønnes's master).
+		- 'bold Adobe Times' a.k.a. '\fontfamily{ptm}'  (found through the 'sectsty'-package docs on page 3).
+		- 'Libre Baskerville' a.k.a. '\usepackage{librebaskerville} \usepackage[T1]{fontenc}' (found at tug.org/FontCatalogue/seriffonts.html).
+* Polish/finish citations and references throughout the master's report:
+	+ Add citation-links on citations (throughout the thesis document when references are cited), 
+	+ Change to using the [NOR04]-style (first author(s), Normann e.g.) instead of [3]-style.
