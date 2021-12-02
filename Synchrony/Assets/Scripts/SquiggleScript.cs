@@ -8,12 +8,15 @@ public class SquiggleScript : MonoBehaviour {
     // TODO: Clean up in variables.
     public float adjustedTimeScale = 1.0f;
     public float alpha = 0.05f; // pulse coupling constant, denoting coupling strength between nodes
-    public float beta = 0.8f; // frequency coupling constant
     public float colorLerpUntilPhase = 0.15f;
     public bool useNymoen = true;
     public bool useSound = true;
     public bool useVisuals = false;
+
+    // FOR FREQUENCY-ADJUSTMENT:
     public int m = 5; // running median-filter length
+    public float beta = 0.8f; // frequency coupling constant
+
 
     private List<SquiggleScript> otherSquiggles = new List<SquiggleScript>();
     private AudioSource source; // reference to Audio Source component on the Musical Node that is told to play the fire sound
@@ -29,6 +32,8 @@ public class SquiggleScript : MonoBehaviour {
     private List<float> errorBuffer = new List<float>();
     private List<float> HBuffer = new List<float>();
     private bool cycleTraversedOnce = false;
+    //private bool inRefractoryPeriod = false; // if this is true, no (neither phase- or frequency-) adjustment should happen (?) - <--------------- DIDN'T SOLVE THE ISSUE
+    //private float t_ref = 0.09f; // ISH LENGDEN I TID PÅ digitalQuickTone er 0.4s. Nymoen BRUKTE 50ms I SIN IMPLEMENTASJON.
 
     void Start() {
         // TODO: Clean up in variables.
@@ -51,21 +56,23 @@ public class SquiggleScript : MonoBehaviour {
 
         // FOR FREQUENCY-ADJUSTMENT:
         InitializeErrorBuffer();
-        frequency = Random.Range(0.1f, 1.5f); // initializing frequency in range Random.Range(0.5f, 8f) found useful by Nymoen et al ('Decentralized Synchronization', 2014)
+        frequency = Random.Range(0.1f, 1.5f); // Initializing frequency in range Random.Range(0.5f, 8f) was found useful by Nymoen et al.
     }
 
     // TODO: Clean up in functions.
     void Update() {
         // Allowing phase-restarts for quick demonstrationS (MEN BØR DENNE VÆRE I Squiggles.cs OG IKKE AgentSpawner.cs DA?)
         if (Input.GetKeyDown(KeyCode.Space)) {
-            //phase = Random.Range(0.0f, 1.0f);
             string currentScene = SceneManager.GetActiveScene().name;
-            SceneManager.LoadScene(currentScene); // IKKE GJØRE DETTE HVIS DET FORTSETTER Å LAGE ERROR!
+            SceneManager.LoadScene(currentScene); // Stop doing this if errors occur because of it.
         } 
         // FOR FREQUENCY-ADJUSTMENT:
         else if (Input.GetKeyDown(KeyCode.P)) {
             float s_n = ListMedian(errorBuffer);
             print("Median av errorBuffer til " + gameObject.name + ": " + s_n);
+        }
+        else if (Input.GetKeyDown(KeyCode.H)) {
+            DebugLogMyFloatList(HBuffer);
         }
     }
 
@@ -73,8 +80,8 @@ public class SquiggleScript : MonoBehaviour {
         if (useVisuals) SetLerpedColor();
 
         if (phase > 1) {
-            if (cycleTraversedOnce) { 
-                FireNode();          // HVIS DETTE ER ANDRE FASE-KLIMAKSET, IKKE HVERT ENESTE
+            if (cycleTraversedOnce) { // only run this clause every other check
+                FireNode();
                 cycleTraversedOnce = false;
             }
 
@@ -84,6 +91,25 @@ public class SquiggleScript : MonoBehaviour {
         }
 
         phase += frequency * Time.fixedDeltaTime;
+    }
+
+    void FireNode() {
+        //BlinkWithEyes(); PRØVER Å KOMMENTERE UT FOR Å SE OM BOXCOLLIDER-WARNINGSA FORSVINNER
+
+        // Signalizing a "fire"-event to the observer watching the Unity simulation through audio
+        if (useSound) source.Play();
+
+        //Invoke("ToggleOffRefractoryMode", 0.6f); // 
+
+        // Signalizing a "fire"-event visually to the observer watching the Unity simulation
+        if (useVisuals) corpsOfAgentRenderer.material.color = fireColor;
+
+        CallOnOtherAgents();
+
+        phase = 0; // resetting phase
+
+        //inRefractoryPeriod = true;
+        //Invoke("CallOnOtherAgents", t_ref); // ISH LENGDEN I TID PÅ digitalQuickTone er 0.4s. Nymoen BRUKTE 50ms I SIN IMPLEMENTASJON.
     }
 
     void AdjustPhase() {
@@ -113,35 +139,25 @@ public class SquiggleScript : MonoBehaviour {
         }
         float F_n = beta * averageCycleH;
 
+        // Clear the buffer of H-values and make it ready for the next cycle
+        HBuffer.Clear();
+
         float newFrequency = frequency * Mathf.Pow(2, F_n);
         frequency = newFrequency;
     }
 
-    void FireNode() {
-        // ONLY FIRE EVERY SECOND PHASE-CLIMAX?
-
-        BlinkWithEyes();
-
-        if (useSound) source.Play();
-
-        TransmitSignalToEnvironment();
-
-        // Signalizing a "fire"-event visually to the observer watching the Unity simulation
-        if (useVisuals) corpsOfAgentRenderer.material.color = fireColor;
-
-        phase = 0; // resetting phase
-    }
-
-    void TransmitSignalToEnvironment() {
+    private void CallOnOtherAgents() {
         foreach (SquiggleScript oscillator in otherSquiggles) { // "giving away a signal" all other nodes can hear
             //oscillator.AdjustPhase(); // Invoke this after a physical-realistic-constrained time-period?
             oscillator.JustHeardFireEvent();
         }
+
+        //inRefractoryPeriod = false;
     }
 
-    void JustHeardFireEvent() {
-        AddNthFireEventsHToList();
-        AdjustPhase();
+    public void JustHeardFireEvent() {
+        AdjustPhase(); // for immediate Phase-adjustment when hearing a fire-event
+        AddNthFireEventsHToList(); // for the later Frequency-adjustment at each phase-climax
     }
 
     private void AddNthFireEventsHToList() {
@@ -149,6 +165,12 @@ public class SquiggleScript : MonoBehaviour {
 
         // Recording the n'th error-score, capturing whether the node itself is in synch with the node it hears the "fire"-event from or not
         float epsilon_n = Mathf.Pow(Mathf.Sin(Mathf.PI * phase), 2);
+        //if (!inRefractoryPeriod) {
+        //    epsilon_n = Mathf.Pow(Mathf.Sin(Mathf.PI * phase), 2);
+        //}
+        //else {
+        //    epsilon_n = 0f;
+        //}
         errorBuffer = ShiftFloatListRightToLeftWith(errorBuffer, epsilon_n);
 
         // Calculating the median of the errorBuffer, being the self-assessed synch-score and public self-awareness component
@@ -159,6 +181,7 @@ public class SquiggleScript : MonoBehaviour {
 
         float H_n = rho_n * s_n;
         HBuffer.Add(H_n); // H(n)-values appended to the end of the list
+        Debug.Log("HBuffer with .Count=" + HBuffer.Count + " added with value <" + H_n + ">.");
     }
 
     private void FineTuneTheSquiggles() {
