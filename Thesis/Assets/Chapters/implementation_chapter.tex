@@ -1,35 +1,37 @@
 \chapter{Implementation}
-% Implementation-introtekst
-This chapter gives an overview of the developed musical multi-robot system. The main goal of the implemented system is to allow for a multi-robot (musical) collective to interact with each other in order to achieve emergent and co-ordinating/co-operative behaviour—synchronization specifically in our case—with varying degrees of difficulty and certainty in the environment and communication. More specifically, the goal with the design is to enable the robot collective to achieve so-called \textit{harmonic synchronization} \inkl{within a relatively short time, much depending on the design parameters and environment conditions}. What is meant by \textit{harmonic synchronization} will be expounded in Subsection \ref{subsec:harmonic_synchrony}. These goals firstly require of the agents/nodes the modelling of oscillators with their properties, like phase and frequency, as explained further in Subsection \ref{subsec:node}. To allow for interaction and communication between the agents, mechanisms so that the agents can transmit "fire"-signals, as well as listen for other agents's "fire"-signals, is necessary as well, and is presented in Subsection \ref{subsec:fire_signal}.
-
-
-
-
-
-
-% Fake seksjon med alle relevante concerns (FJERN HVIS DU SKAL FÅ FEEDBACK FRA KYRRE)
-\tcol[gray]{\section{(Fake seksjon) Betraktninger:}}
-\besk{"Det man har utviklet" — Kyrre}
-\besk{"Det er her man henter fisken tilbake på land (blant andre steder — som f.eks. der man dokumenterer eksperimentene sine godt)."ish — Jim}
-
-\gjor{Skriv opp Worklog-materiale (under ``muy bien so far''-bokmerket) dandert i henhold til gode master-theses}
-
+% Relevante concerns (FJERN HVIS DU SKAL FÅ FEEDBACK FRA KYRRE)
 \gjor{
 	\textbf{Svar på disse spørsmålene (kompilert fra Tønnes sin masteroppgave):}
 	What does the chapter do? What's the main goal of the design/implementation/developed system? What do these goals require? Why did you make the design-choices you made? What advantages do these choices ensure/enable? Give a short chapter-outline (perhaps first about the design, my additional Self-Awareness component, manual choice of initial parameters, and then the benchmark or målestokk or performance measure I use to evaluate with).
 }
 
+\besk{"Det man har utviklet" — Kyrre}
+
+\gjor{Skriv opp Worklog-materiale (under ``muy bien so far''-bokmerket) dandert i henhold til gode master-theses}
+
 \gjor{Se på Tønnes sin Masteroppgave og 'Archive History'-kommentarene nederst i .tex-fila for inspirasjon}
 
 
+% Implementation-introtekst
+This chapter gives an overview of the developed musical multi-robot system. The main goal of the implemented system is to allow for a multi-robot (musical) collective to interact with each other in order to achieve emergent and co-ordinating/co-operative behaviour—synchronization specifically in our case—with varying degrees of difficulty and certainty in the environment and communication. More specifically, the goal with the design is to enable the robot collective to achieve so-called \textit{harmonic synchronization} within a relatively short time. What is meant by \textit{harmonic synchronization} will be expounded in Subsection \ref{subsec:harmonic_synchrony}. These goals firstly require of the agents/nodes the modelling of oscillators with their properties, like phase and frequency, as explained further in Subsection \ref{subsec:node}. To allow for interaction and communication between the agents, mechanisms so that the agents can transmit "fire"-signals, as well as listen for other agents's "fire"-signals, is necessary as well, and is presented in Subsection \ref{subsec:fire_signal}.
 
 
 
 
 
-% Seksjon om baselinen (hva jeg baserer min implementasjon på, forskjellig fra mitt eget bidrag)
+
+
+
+
+
+
+
+
+
+% Om baselinen (hva jeg baserer min implementasjon på, forskjellig fra mitt eget bidrag)
 \section{The baseline: Achieving Decentralized Harmonic Synchronization in (Oscillators $\vee$ Musical Robot Collectives)}
-	\label{sec:baseline}
+\label{sec:baseline}
+
 	\besk{Nymoens ideer og algoritmer implementert i mitt system i Unity}
 
 	Envision that we have a multi-agent collective scenario consisting of musical robots modelled as oscillators, solely communicating through brief ``fire''-like audio-signals|greatly inspired by K. Nymoen et al.'s approach for achieving \textit{decentralized harmonic synchronization in mobile music systems} \cite{nymoen_synch}. These agents are initially not synchronized in their firing of audio-signals, but as time goes, they are entraining to synchronize to each other by adjusting their phases and frequencies when or after hearing each other's audio-signals. An illustration of this is given in Figure \ref{fig:initial}.
@@ -61,36 +63,71 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 
 	% SUBSEKSJONER TIL BASELINE-SEKSJONEN:
 
-	% Subseksjon om den enkelte noden/agenten med alle egenskaper den har osv.
+	% Om den enkelte noden/agenten med alle egenskaper den har osv.
 	\subsection{The node: the musical robot individual}
 	\label{subsec:node}
-	\besk{Subseksjon om den enkelte noden/agenten med alle egenskaper den har osv. (som f.eks. en oscillator-komponent (jf. Nymoens Implementation-seksjon))}
+		\besk{Om den enkelte noden/agenten med alle egenskaper den har osv. (som f.eks. en oscillator-komponent (jf. Nymoens Implementation-seksjon))}
 
-	% Subseksjon om kommunikasjonsmetoden til agentene: audio-/``fire''-signalet
+
+	% Om kommunikasjonsmetoden til agentene: audio-/``fire''-signalet
 	\subsection{Robot communication: the ``fire''-signal}
 	\label{subsec:fire_signal}
-	\besk{Subseksjon om kommunikasjonsmetoden til agentene: audio-/``fire''-signalet}
+		\besk{Om kommunikasjonsmetoden til agentene: audio-/``fire''-signalet}
 
-	% Subseksjon om target-staten til systemet: harmonisk synkroni
+
+	% Om target-staten til systemet: harmonisk synkroni
 	\subsection{System target state: Harmonic Synchrony}
 	\label{subsec:harmonic_synchrony}
-	\besk{Subseksjon om target-staten til systemet: harmonisk synkroni}
-	The goal and target state of the system is \textit{harmonic synchrony}, as K. Nymoen et al. \cite{nymoen_synch} coined it when ...
+		\besk{Om target-staten til systemet: harmonisk synkroni}
+		The goal and target state of the system is \textit{harmonic synchrony}, as K. Nymoen et al. \cite{nymoen_synch} coined it when ...
 	
-	% Subseksjon om update-functions for frekvens- og fase-oppdateringene
-	\subsection{Update functions: Phase- \& Frequency-Adjustment}
+	
+	% Om Update-functions for frekvens- og fase-oppdateringene
+	\subsection{Update/Adjustment functions: Phase- \& Frequency-Adjustment}
 	\label{subsec:update_functions}
 		\subsubsection{Phase Adjustment}
-		If we assume constant and equal oscillator frequencies in our agents, we can first take a look at how the agents adjust their phase in order to synchronize to each other.
+		\label{subsubsec:phase_adj}
+			If we first assume constant and equal oscillator-frequencies in our agents, we can take a look at how the agents adjust their phase in order to synchronize to each other. This is in contrast to the case in \ref{subsubsec:freq_adj} where heterogenous, often randomly initialized, oscillator-frequencies in the musical agents are implemented and utilized.
+			
+			Two approaches were attempted in Unity, as presented in Nymoen et al.'s ``\textit{Firefly-paper}'' \cite{nymoen_synch}:
+			
+			\myparagraph{1) Mirollo-Strogatz's ``standard'' Phase Shifts}
+			
+			Each musical node updates its phase $\phi$ accoring to the \textbf{phase update function \eqref{strog_phase}} when hearing a ``fire''-event from one of the other musical nodes:
+			
+			\begin{equation}\label{strog_phase}
+			P(\phi) = (1 + \alpha)\phi	,
+			\end{equation}
+			
+			where ``\textit{$\alpha$ is the pulse coupling constant, denoting the strength between nodes}'' \cite{nymoen_synch}. So, if $\alpha = 0.1$ e.g., then a musical node's new and updated phase, immediately after hearing a ``fire''-signal from another node, will be equal to $P(\phi) = (1 + 0.1)\phi = 1.1\phi$. 110\% of its old phase $\phi$, that is. Hence, and in this way, the node would be ``pushed'' to fire sooner than it would otherwise.
+			
+			\sep
+			
+			\gjor{Legg inn en figur liknende Nymoens om ``standard'' fase-justering}
+			
+			
+			\myparagraph{2) Nymoen et al.'s Bi-Directional Phase Shifts}
+			
+			This Phase-adjustment works very similarly to the one in the \textbf{\textit{Mirollo-Strogatz}} approach; The only difference being that now, nodes update their phase with the slightly more complex \textbf{phase update function \eqref{nymoen_phase}} when hearing a ``fire''-event from one of the other musical nodes:
+			
+			\begin{equation}\label{nymoen_phase}
+			P(\phi) = \phi - \alpha \cdot sin(2\pi\phi) \cdot | sin(2\pi\phi) |	,
+			\end{equation}
+			
+			leading to the new and updated phases both being larger, but also smaller, compared to the old phases. This is what's meant by the Phase-Adjustment being \textbf{\textit{Bi-Directional}}, or as the authors call it in the paper as using ``\textit{both excitatory and inhibitory phase couplings between oscillators}'' \cite{nymoen_synch}.
+			
+			The effects then of adjusting phases, upon hearing ``fire''-events, according to this update-function \eqref{nymoen_phase} are that the nodes's phases now get decreased if $\phi$ is lower than 0.5, increased if $\phi$ is higher than 0.5, and neither—at least almost—if the phases are close to $0.5 = \frac{1}{2}$. This is due to the negative and positive sign of the sinewave-component in \eqref{nymoen_phase}, as well as the last factor in \eqref{nymoen_phase} of $| sin(2\pi\phi) | \approx | sin(2\pi \frac{1}{2}) | = | sin(\pi) | = | 0 | = 0.$
+			
+			\sep
+			
+			\gjor{Legg inn en figur liknende den i Paragraph'en over (med Mirollo-Strogatz), bare med positive OG negative (evt. bare et negativt) fase-justeringer/-bidrag}
 		
-		\gjor{1) Insert det om ``standard'' phase-adjustment, sånn som Mirollo \& Strogatz gjorde det \cite{}, med passende figurer og illustrasjoner}
-		
-		\gjor{2) Insert det om ``bi-directional'' phase-adjustment, sånn som K. Nymoen et al. gjorde det \cite{nymoen_synch}, med passende figurer og illustrasjoner}
 		
 		
 		
 		\subsubsection{Frequency Adjustment}
-		\gjor{Presenter hva Frequency-adjustment er (hvis det ikke ble tydelig nok i slutten av Seksjon-\ref{sec:baseline}), bygg opp fremgangsmåten på hvordan man oppnår Frequency-adjustment (som i reMarkable-notatet 'Logs' $\rightarrow$ 'Simulations' $\rightarrow$ 'Frequency adjustment', og Worklog'en) | med passende figurer og illustrasjoner}
+		\label{subsubsec:freq_adj}
+			\gjor{Presenter hva Frequency-adjustment er (hvis det ikke ble tydelig nok i slutten av Seksjon-\ref{sec:baseline}), bygg opp fremgangsmåten på hvordan man oppnår Frequency-adjustment (som i reMarkable-notatet 'Logs' $\rightarrow$ 'Simulations' $\rightarrow$ 'Frequency adjustment', og Worklog'en) | med passende figurer og illustrasjoner}
 
 
 
@@ -100,29 +137,5 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 
 
 
-% Seksjon om mitt bidrag (skill tydelig på mine bidrag og det jeg ikke har gjort noe med)
+% Om mitt bidrag (skill tydelig på mine bidrag og det jeg ikke har gjort noe med)
 \section{The new proposed algorithm: an additional Self-Awareness component}
-
-
-
-
-
-
-
-
-
-% Archive History:
-
-	% \section{Benchmark}
-		% \besk{Her jeg beskriver Nymoens algoritmer og formler (originalt), men \opphoy{sånn jeg har implementert det i Unity}}
-	
-		% \gjor{Vurder om 'Benchmark' bør deles opp i sin egen sub-seksjon i det hele tatt — eller f.eks. slås sammen med 'Proposed Algorithm'}
-	
-		% \besk{(Hentet fra Samuelsens master?) Presentering av metoden brukt til å evaluere ytelsen av den foreslåtte/proposed'e algoritmen. Først er kanskje en referanse-algoritme brukt for sammenlikning beskrevet. Deretter er (f.eks. objektiv-) funksjoner brukt i testene forklart. Endelig (til slutt) er kanskje miljøene/environments'a og parameterne brukt presentert}
-		
-		
-	% \section{Proposed Algorithm}
-		% \besk{Evt. her jeg skriver om Self-Awareness-komponenten(e) jeg legger til ang. Belief-awareness og/eller Expectation-awareness (jf. det jeg og Kyrre snakka om Mid-November på 'reMarkable -> Møter -> ROBIN -> Kyrre')}
-	
-		% \gjor{Vurder om 'Proposed Algorithm' bør deles opp i sin egen sub-seksjon i det hele tatt — eller f.eks. slås sammen med 'Benchmark'}
-	

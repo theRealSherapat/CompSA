@@ -32,6 +32,7 @@ Possibly a good workflow is preparing the set-up:
 		- 'Aldus Nova Book' by Linotype (found through myfonts.com/WhatTheFont with a sample from Tønnes's master).
 		- 'bold Adobe Times' a.k.a. '\fontfamily{ptm}'  (found through the 'sectsty'-package docs on page 3).
 		- 'Libre Baskerville' a.k.a. '\usepackage{librebaskerville} \usepackage[T1]{fontenc}' (found at tug.org/FontCatalogue/seriffonts.html).
+	+ Use italization on variables and words of emphasis, but not on operators (in equations).
 * Polish/finish citations and references throughout the master's report:
 	+ Add citation-links on citations (throughout the thesis document when references are cited), 
 	+ Change to using the [NOR04]-style (first author(s), Normann e.g.) instead of [3]-style.
