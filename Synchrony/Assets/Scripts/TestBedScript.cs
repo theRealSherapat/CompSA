@@ -7,11 +7,19 @@ using static DavidsUtils;
 public class TestBedScript : MonoBehaviour {
     private List<float> errorBuffer = new List<float>();
 
+    List<float> squiggleIDer = new List<float> {2f,1f,3f,4f}; // N = 4
+
     void Start() {
+        // FOR Å TESTE LIST-SHIFTEREN:
         errorBuffer.Add(0.01f);
         errorBuffer.Add(0.02f);
         errorBuffer.Add(0.03f);
         errorBuffer.Add(0.04f);
+
+        // FOR Å TESTE CSV-LAGRINGEN:
+        string path = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "minForsteDataFil.csv";
+        List<int> CSVHeaderEntries = new List<int> { 2, 1, 3, 4};
+        CreateCSVWithHeader(path, CSVHeaderEntries);
     }
 
     void Update() {
@@ -22,14 +30,25 @@ public class TestBedScript : MonoBehaviour {
         } 
         else if (Input.GetKeyDown(KeyCode.P)) 
         {
-            DebugLogMyFloatList(errorBuffer);
+            // FOR Å TESTE LIST-SHIFTEREN:
+            //DebugLogMyFloatList(errorBuffer);
+
+            // FOR Å TESTE CSV-LAGRINGEN:
+            //Debug.Log(System.IO.Directory.GetCurrentDirectory() + "\\" + "minForsteDataFil.csv");
+            //foreach (int squig in squiggleIDer) {
+            //    Debug.Log(squig);
+            //}
         } 
         else if (Input.GetKeyDown(KeyCode.S)) 
         {
-            List<float> sortertListe = GetMyDarnSortedList(errorBuffer);
-            DebugLogMyFloatList(sortertListe);
-        }
-        else if (Input.GetKeyDown(KeyCode.M)) 
+            // FOR Å TESTE LIST-SHIFTEREN:
+            //List<float> sortertListe = GetMyDarnSortedList(errorBuffer);
+            //DebugLogMyFloatList(sortertListe);
+
+            // FOR Å TESTE CSV-LAGRINGEN:
+            string path = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "minForsteDataFil.csv";
+            FloatUpdateCSV(path, squiggleIDer);
+        } else if (Input.GetKeyDown(KeyCode.M)) 
         {
             float beTheMedianPls = ListMedian(errorBuffer);
             print("Medianen er forhåpentligvis: " + beTheMedianPls);

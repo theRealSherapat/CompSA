@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 public static class DavidsUtils {
     public static List<float> ShiftFloatListRightToLeftWith(List<float> thisList, float thisInput) {
@@ -43,5 +44,37 @@ public static class DavidsUtils {
             Debug.Log("List-entry " + i + " sin verdi: " + listo[i]);
         }
         Debug.Log("END.");
+    }
+
+    public static void CreateCSVWithHeader(string path, List<int> headerEntries) {
+        // Summary: creates a .CSV-file at arg1, <path>, with the top-line/header according to arg2, <headerEntries>.
+        TextWriter tw = new StreamWriter(path, false);
+        string firstLine = "";
+
+        // Fyller inn firstLine med IDene til Dr. Squigglene f.eks.:
+        for (int i = 0; i < headerEntries.Count; i++) {
+            firstLine += headerEntries[i];
+
+            if (i != headerEntries.Count - 1) firstLine += ";";
+        }
+
+        tw.WriteLine(firstLine);
+        tw.Close();
+        Debug.Log(".CSV-file Created.");
+    }
+
+    public static void FloatUpdateCSV(string path, List<float> lineEntries) {
+        TextWriter tw = new StreamWriter(path, true);
+        string newLine = "";
+
+        for (int i = 0; i < lineEntries.Count; i++) {
+            newLine += lineEntries[i];
+
+            if (i != lineEntries.Count - 1) newLine += ";";
+        }
+
+        tw.WriteLine(newLine);
+        tw.Close();
+        Debug.Log(".CSV-file Updated.");
     }
 }

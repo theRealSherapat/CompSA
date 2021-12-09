@@ -27,6 +27,7 @@ public class SquiggleScript : MonoBehaviour {
     private Transform pupil;
     private Color bodyColor;
     private Color fireColor = Color.yellow;
+    private int agentID;
 
     // FOR FREQUENCY-ADJUSTMENT:
     private List<float> errorBuffer = new List<float>();
@@ -91,6 +92,22 @@ public class SquiggleScript : MonoBehaviour {
         }
 
         phase += frequency * Time.fixedDeltaTime;
+    }
+
+    public float GetFrequency() {
+        return frequency;
+    }
+
+    public float GetPhase() {
+        return phase;
+    }
+
+    public void SetAgentID(int idNumber) {
+        agentID = idNumber;
+    }
+
+    public int GetAgentID() {
+        return agentID;
     }
 
     void FireNode() {
@@ -181,7 +198,9 @@ public class SquiggleScript : MonoBehaviour {
 
         float H_n = rho_n * s_n;
         HBuffer.Add(H_n); // H(n)-values appended to the end of the list
-        Debug.Log("HBuffer with .Count=" + HBuffer.Count + " added with value <" + H_n + ">.");
+
+        // GAMMEL DEBUG
+            //Debug.Log("HBuffer with .Count=" + HBuffer.Count + " added with value <" + H_n + ">.");
     }
 
     private void FineTuneTheSquiggles() {
