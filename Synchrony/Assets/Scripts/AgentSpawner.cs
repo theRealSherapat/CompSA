@@ -5,8 +5,10 @@ using static DavidsUtils;
 
 public class AgentSpawner : MonoBehaviour {
     public GameObject[] squigglePrefabs;
-    public int collectiveSize = 6;
-    public float spawnRadius = 8.0f; // units in radius from origo to the outermost Dr. Squiggle spawn-point
+    public int collectiveSize = 3;
+    public float spawnRadius = 10.0f; // units in radius from origo to the outermost Dr. Squiggle spawn-point
+    public float samplingRate = 50f; // Hz for phase- and freq.-data collection
+    public float startupTime = 0.3f;
 
     public string frequencyCSVPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Frequencies" + "\\" + "freqs_over_time.csv";
     public string phaseCSVPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Phases" + "\\" + "phases_over_time.csv";
@@ -26,7 +28,12 @@ public class AgentSpawner : MonoBehaviour {
 
     void FixedUpdate() {
         // Updating relevant .CSV-files at 2Hz
-        if ((Time.time % 0.5f == 0f) && (Time.time > 0.0f)) UpdateAllCSVFilesWithAConstantInterval(); // skipping the first time the condition would be true (due to non-initialized phases and frequencies)
+        //Debug.Log("Condition-part1 (relating to sampling rate): " + (Mathf.Approximately(Mathf.Repeat(Time.time, 1.0f/samplingRate), 0f) || Mathf.Approximately(Mathf.Repeat(Time.time, 1.0f/samplingRate), 1.0f/samplingRate)) + ", fordi Mathf.Repeat(Time.time, 1.0f/samplingRate): " + Mathf.Repeat(Time.time, 1.0f / samplingRate) + ", returverdien av diff approx= 0: " + Mathf.Approximately(Mathf.Repeat(Time.time, 1.0f / samplingRate), 0f) + ", og returverdien av diff approx= 0.02: " + Mathf.Approximately(Mathf.Repeat(Time.time, 1.0f / samplingRate), 1.0f / samplingRate));
+        //if ((Time.time % (1.0f/samplingRate) == 0f) && (Time.time > startupTime)) UpdateAllCSVFilesWithAConstantInterval(); // skipping the first time the condition would be true (due to non-initialized phases and frequencies)
+
+        //Debug.Log("Time.time: " + Time.time + ", 1/samplingsRate: " + 1.0f/samplingRate + ", Mathf.Repeat(Time.time, 1.0f / samplingRate): " + Mathf.Repeat(Time.time, 1.0f / samplingRate));
+
+        UpdateAllCSVFilesWithAConstantInterval();
     }
 
     private void CreateAllCSVFiles() {

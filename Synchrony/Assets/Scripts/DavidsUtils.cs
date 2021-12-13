@@ -75,6 +75,6 @@ public static class DavidsUtils {
 
         tw.WriteLine(newLine);
         tw.Close();
-        Debug.Log(".CSV-file Updated.");
+        //Debug.Log(".CSV-file Updated.");
     }
 }
