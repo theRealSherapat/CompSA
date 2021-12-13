@@ -28,7 +28,7 @@ def main():
    signal2 = 1*np.sin(2*x2)
    plt.subplot(2,2,3)
    plt.title("a '2 Hz sinusoidal'")
-   plt.xticks(np.linspace(np.pi/4, 9/4 * np.pi, 5), ["0", "π", "2π", "3π", "4π"]) # np.linspace(np.pi/4, 9/4 *np.pi, 9), ["1/4 π", "1/2 π", "3/4 π", "π", "5/4 π", "3/2 π", "7/4 π", "2π", "9/4 π"]
+   plt.xticks(np.linspace(np.pi/4, 9/4 * np.pi, 5), ["0", "1/2 π", " π", "3/2 π" ,"2π"]) # np.linspace(np.pi/4, 9/4 *np.pi, 9), ["1/4 π", "1/2 π", "3/4 π", "π", "5/4 π", "3/2 π", "7/4 π", "2π", "9/4 π"]
    plt.yticks(np.arange(-1, 2, 1))
    plt.plot(x2, signal2)
    
@@ -38,7 +38,7 @@ def main():
    np.append(phase2, 1)
    plt.subplot(2,2,4)
    plt.title("Phase of a '2 Hz sinusoidal'")
-   plt.xticks([0, 1/2, 1, 3/2, 2], ["0", "π", "2π", "3π", "4π"])
+   plt.xticks([0, 1/2, 1, 3/2, 2], ["0", "1/2 π", " π", "3/2 π" ,"2π"])
    plt.yticks(np.arange(0, 1.25, 0.25))
    plt.plot(xp2, phase2)
    
