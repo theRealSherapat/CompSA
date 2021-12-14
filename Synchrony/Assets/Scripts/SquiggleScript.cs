@@ -14,6 +14,7 @@ public class SquiggleScript : MonoBehaviour {
     // Frequency-adjustment variables:
     public float beta = 0.8f; // frequency coupling constant
     public int m = 5; // "running median-filter" length
+    public Vector2 minMaxInitialFreqs = new Vector2(0.2f, 4f);
     
     // Meta environment-variables:
     public bool useSound = true;
@@ -67,7 +68,7 @@ public class SquiggleScript : MonoBehaviour {
 
         // Setting up for Frequency-Adjustment
         InitializeInPhaseErrorBuffer();
-        frequency = Random.Range(0.2f, 2f); // Initializing frequency in range Random.Range(0.5f, 8f) was found useful by Nymoen et al.
+        frequency = Random.Range(minMaxInitialFreqs.x, minMaxInitialFreqs.y); // Initializing frequency in range Random.Range(0.5f, 8f) was found useful by Nymoen et al.                                                                                                       (BRUK '1f;' ISTEDET HVIS DU BARE FIL FASE-JUSTERE)
     }
 
     void Update() {
@@ -106,7 +107,7 @@ public class SquiggleScript : MonoBehaviour {
             firedLastClimax = false;
         }
 
-        RFAAdjustFrequency(); // adjust frequency at phase-climax regardless of if the node fired or not last climax
+        RFAAdjustFrequency(); // adjust frequency at phase-climax regardless of if the node fired or not last climax         (KOMMENTER UT HVIS DU BARE FIL FASE-JUSTERE)
     }
 
     void FireNode() {
@@ -147,7 +148,7 @@ public class SquiggleScript : MonoBehaviour {
         }
 
         // FOR REFRACTORY PERIOD:
-        //inRefractoryPeriod = false;
+            //inRefractoryPeriod = false;
     }
 
     public void OnHeardFireEvent() {

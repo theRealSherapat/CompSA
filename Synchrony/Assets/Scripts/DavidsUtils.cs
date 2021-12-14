@@ -60,7 +60,6 @@ public static class DavidsUtils {
 
         tw.WriteLine(firstLine);
         tw.Close();
-        Debug.Log(".CSV-file Created.");
     }
 
     public static void FloatUpdateCSV(string path, List<float> lineEntries) {
@@ -75,6 +74,5 @@ public static class DavidsUtils {
 
         tw.WriteLine(newLine);
         tw.Close();
-        //Debug.Log(".CSV-file Updated.");
     }
 }

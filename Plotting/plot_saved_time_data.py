@@ -1,3 +1,4 @@
+import os
 import sys
 import numpy as np
 import csv
@@ -60,11 +61,17 @@ def parseDataFrom(csv_filename, no_of_agents):
     return t, arrayOfDatapoints[2:,:] # Slicing due to initialization values (being huuuuge).
     
 if __name__ == "__main__":
-    """ Python-script takes in command-line arguments: 1st: (string) file-name/-path to .CSV 
-                                                       2nd: (int)    amount of agents collected data for 
-                                                       3rd: (string) the type of data that is plotted (and its unit of measurement) """
-    filepath = sys.argv[1]
+    """ Python-script takes in command-line arguments: 1st: (string) "phase" or "freq" for 'frequency', and
+                                                       2nd: (int)    amount of agents collected data for """
+    
+    if sys.argv[1] == "phase":
+        filepath = "../Synchrony/SavedData/Phases/phases_over_time.csv"
+        dataToBePlotted = "Phase (signal-cycle/-period progression)"
+    elif sys.argv[1] == "freq":
+        filepath = "../Synchrony/SavedData/Frequencies/freqs_over_time.csv"
+        dataToBePlotted = "Frequency (Hz)"
+        
     numberOfAgents = sys.argv[2]
-    dataToBePlotted = sys.argv[3]
+    
     
     main(filepath, int(numberOfAgents), dataToBePlotted)
