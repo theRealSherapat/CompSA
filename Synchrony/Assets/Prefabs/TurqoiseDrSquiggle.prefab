@@ -159,14 +159,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4db8b444f864bf479ad5b4eaa527a7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adjustedTimeScale: 1
   alpha: 0.05
-  beta: 0.8
-  colorLerpUntilPhase: 0.15
   useNymoen: 1
-  useSound: 1
-  useVisuals: 1
+  beta: 0.8
   m: 5
+  useSound: 0
+  useVisuals: 1
+  adjustedTimeScale: 1
 --- !u!1 &7619773679695212229
 GameObject:
   m_ObjectHideFlags: 0

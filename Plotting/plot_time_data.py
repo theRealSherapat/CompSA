@@ -55,9 +55,9 @@ def parseDataFrom(csv_filename, no_of_agents):
             numOfRows += 1
             
     
-    t = np.linspace(0, numOfRows*(1/samplingRate), numOfRows) # In reality we start sampling after a split-second long startup-phase in Unity.
+    t = np.linspace(0, numOfRows*(1/samplingRate), numOfRows-1) # In reality we start sampling after a split-second long startup-phase in Unity.
     
-    return t, arrayOfDatapoints[1:,:] # Slicing due to initialization values (being huuuuge).
+    return t, arrayOfDatapoints[2:,:] # Slicing due to initialization values (being huuuuge).
     
 if __name__ == "__main__":
     """ Python-script takes in two command-line argument: 1st: (string) file-name/-path to .CSV 
