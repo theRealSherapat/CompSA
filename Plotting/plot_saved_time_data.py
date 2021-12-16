@@ -12,7 +12,9 @@ def main(csv_filename, agent_no, dataPlotted):
         
         It first extracts the data from the .CSV into an np.array, as well as getting the corresponding vertical time-axis.
         
-        It then plots all of the columns (corresponding to an agents's data each) over the vertical time-axis in the same figure. """
+        It then plots all of the columns (corresponding to an agents's data each) over the vertical time-axis in the same figure.
+
+        Before it shows the final plot, it saves this as a PDF with a filename 'mySavedPDF.pdf'. """
         
     times, datapointArray = parseDataFrom(csv_filename, agent_no)
     
@@ -31,8 +33,9 @@ def plotAllColsVsTime(t, dataMatrix, dataPlotted):
     # for arrayOfDatapoints in arraysOfDatapoints:
     
     plt.ylabel(dataPlotted)
-    plt.xlabel("Time (seconds)")
+    plt.xlabel("$t$ (seconds)")
     plt.legend(loc='upper right')
+    plt.savefig("mySavedPDF.pdf", format="pdf", bbox_inches="tight")
     plt.show()
 
 def parseDataFrom(csv_filename, no_of_agents):
@@ -66,10 +69,10 @@ if __name__ == "__main__":
     
     if sys.argv[1] == "phase":
         filepath = "../Synchrony/SavedData/Phases/phases_over_time.csv"
-        dataToBePlotted = "Phase (signal-cycle/-period progression)"
+        dataToBePlotted = "Phase $\phi(t)$"
     elif sys.argv[1] == "freq":
         filepath = "../Synchrony/SavedData/Frequencies/freqs_over_time.csv"
-        dataToBePlotted = "Frequency (Hz)"
+        dataToBePlotted = "Frequency $\omega(t)$ (Hz)"
         
     numberOfAgents = sys.argv[2]
     

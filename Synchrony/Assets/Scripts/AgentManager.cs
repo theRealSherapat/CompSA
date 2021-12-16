@@ -9,8 +9,8 @@ public class AgentManager : MonoBehaviour {
     public float runDuration = 10f;
 
     // Spawning variables:
-    public GameObject[] squigglePrefabs;
     public int collectiveSize = 3;
+    public GameObject[] squigglePrefabs;
     public float spawnRadius = 10.0f; // units in radius from origo to the outermost Dr. Squiggle spawn-point
 
     // CSV-Serialization variables:

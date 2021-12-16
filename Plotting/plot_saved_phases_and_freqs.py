@@ -51,14 +51,13 @@ def plotPhasesAndFrequencies(t, phaseDataMatrix, frequencyDataMatrix):
     plt.show()
     
 def scatterPlotLegalMultiples(timeArray, freqsDataMatrix):
+    numOfLegalTimes = 15 # The amount of times we want legal harmonic frequencies to be calculated for
     finalTime = timeArray[-1]
-    xCoordinate = 0
+    xCoordinates = np.linspace(0, finalTime, numOfLegalTimes)
 
-    while xCoordinate < finalTime:
-        plotValidFrequenciesForX(xCoordinate, freqsDataMatrix)
-        
-        xCoordinate += 1
-    
+    for xCoordinate in xCoordinates[:-1]:
+        plotValidFrequenciesForX(int(round(xCoordinate)), freqsDataMatrix)
+
 def plotValidFrequenciesForX(x, freqsDataMatrix):
     # Finding the smallest frequency (aka. the fundamental frequency) in the last row of the freqsDataMatrix
     if x == 0:
