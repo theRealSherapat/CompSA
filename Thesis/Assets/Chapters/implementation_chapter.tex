@@ -1,39 +1,16 @@
 \chapter{Implementation}
-% Relevante concerns (FJERN HVIS DU SKAL FÅ FEEDBACK FRA KYRRE)
-\gjor{
-	\textbf{Svar på disse spørsmålene (kompilert fra Tønnes sin masteroppgave):}
-	What does the chapter do? What's the main goal of the design/implementation/developed system? What do these goals require? Why did you make the design-choices you made? What advantages do these choices ensure/enable? Give a short chapter-outline (perhaps first about the design, my additional Self-Awareness component, manual choice of initial parameters, and then the benchmark or målestokk or performance measure I use to evaluate with).
-}
-
-\besk{"Det man har utviklet" — Kyrre}
-
 \gjor{Skriv opp Worklog-materiale (under ``muy bien so far''-bokmerket) dandert i henhold til gode master-theses}
 
-\gjor{Se på Tønnes sin Masteroppgave og 'Archive History'-kommentarene nederst i .tex-fila for inspirasjon}
 
-
-% Implementation-introtekst
+% Introducing the Chapter
 This chapter gives an overview of the developed musical multi-robot system. The main goal of the implemented system is to allow for a multi-robot (musical) collective to interact with each other in order to achieve emergent and co-ordinating/co-operative behaviour—synchronization specifically in our case—with varying degrees of difficulty and certainty in the environment and communication. More specifically, the goal with the design is to enable the robot collective to achieve so-called \textit{harmonic synchronization} within a relatively short time. What is meant by \textit{harmonic synchronization} will be expounded in Subsection \ref{subsec:harmonic_synchrony}. These goals firstly require of the agents/nodes the modelling of oscillators with their properties, like phase and frequency, as explained further in Subsection \ref{subsec:node}. To allow for interaction and communication between the agents, mechanisms so that the agents can transmit "fire"-signals, as well as listen for other agents's "fire"-signals, is necessary as well, and is presented in Subsection \ref{subsec:fire_signal}.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-% Om baselinen (hva jeg baserer min implementasjon på, forskjellig fra mitt eget bidrag)
+% Om baselinen (hva jeg baserer min implementasjon på, forskjellig fra mitt eget bidrag).
+% Introducing the System:
 \section{The baseline: Achieving Decentralized Harmonic Synchronization in (Oscillators $\vee$ Musical Robot Collectives)}
 \label{sec:baseline}
-
-	\besk{Nymoens ideer og algoritmer implementert i mitt system i Unity}
-
 	Envision that we have a multi-agent collective scenario consisting of musical robots modelled as oscillators, solely communicating through brief ``fire''-like audio-signals|greatly inspired by K. Nymoen et al.'s approach for achieving \textit{decentralized harmonic synchronization in mobile music systems} \cite{nymoen_synch}. These agents are initially not synchronized in their firing of audio-signals, but as time goes, they are entraining to synchronize to each other by adjusting their phases and frequencies when or after hearing each other's audio-signals. An illustration of this is given in Figure \ref{fig:initial}.
 
 	% First Intro-illustration figure to easily get a quick idea of what the system/design does/consists of:
@@ -51,35 +28,59 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 				\caption{Seconds later, after having listened to each other's fire-event signals and adapted themselves accordingly, the agents are here firing synchronously.}
 				\label{fig:initial:synch}
 			\end{subfigure}
-		\caption{Decentralized Synchronization of phases achieved in a musical robot collective, consisting of M. J. Krzyzaniak and RITMO's Dr. Squiggles. \tcol{(NB! Dette skaper kanskje en misoppfatning om at alle noder må fyre samtidig for å være synkroniserte.. Husk at dette ikke er tilfellet med \textit{harmonisk synkronisering}. \inkl{denne figuren} Husk også tvetydigheten med den orange Dr. Squiggle'n og den gule ``fire''-color'en, og at du nå bruker .JPG (æsj))}}	% Gammel caption: "The musical agents, also known as M. J. Krzyzaniak's Dr. Squiggles, are actively listening for signals from each other's fire-events, entraining to synchronize to each other accordingly." Cite Pierre her? Nevne Phase-adjustments også her?
+		\caption{Decentralized Synchronization of phases achieved in a musical robot collective, consisting of M. J. Krzyzaniak and RITMO's Dr. Squiggles.}
 		\label{fig:initial}
 	\end{figure}
 
 	These aforementioned audio-signals to be expounded further in Subsection \ref{subsec:fire_signal}, also referred to as ``fire''-signals, are transmitted whenever an agent's oscillator \textit{peaks} (i.e. after its cycle or period is finished, having phase $\phi(t)=1$)|or actually every second \textit{peak}, due to the target system goal of \textit{harmonic synchrony}. All agents have the ability to listen for such transmitted ``fire''-signals from their neighbours, which they then will use as a trigger to adjust themselves according to some well-designed update-functions to be elaborated in Subsection \ref{subsec:update_functions}.
 
-	\gjor{Insert a phase-/time-plot Figure with two Subplots. Subplot 1: phase-/time-plot when oscillators are unsynchronized. Subplot 2: phase-/time-plot when oscillators are synchronized}
-	\gjor{Insert a frequency-/time-plot Figure with two Subplots. Subplot 1: frequency-/time-plot when oscillators are unsynchronized. Subplot 2: frequency-/time-plot when oscillators are synchronized}
+	% INCLUDE? See 'Relevant MSc-thesis Concerns'.
+		% % Phase-/time-plot Figure with two Subplots. Subplot 1: phase-/time-plot when oscillators are unsynchronized. Subplot 2: phase-/time-plot when oscillators are synchronized
+		% \begin{figure}[h]
+			% \centering
+				% \begin{subfigure}[t]{.5\textwidth}
+					% \centering\captionsetup{width=.9\linewidth}%
+					% \includegraphics[width=0.9\linewidth]{Assets/Figures/phases_unsynched.png}
+					% \caption{Oscillators are initially not (phase-) synchronized.}
+					% \label{fig:phases_unsynched}
+				% \end{subfigure}%
+				% \begin{subfigure}[t]{.5\textwidth}
+					% \centering\captionsetup{width=.9\linewidth}%
+					% \includegraphics[width=0.9\linewidth]{Assets/Figures/phases_synched.png}
+					% \caption{Oscillators are now, seconds later, (phase-) synchronized.}
+					% \label{fig:phases_synched}
+				% \end{subfigure}
+			% \caption{Phase-plots for the agents}
+			% \label{fig:initial}
+		% \end{figure}
 
 
-	% SUBSEKSJONER TIL BASELINE-SEKSJONEN:
 
+	% Sub-Introducing the System:
+	
 	% Om den enkelte noden/agenten med alle egenskaper den har osv.
-	\subsection{The node: the musical robot individual}
+	\subsection{The Node: the musical robot individual}
 	\label{subsec:node}
-		\besk{Om den enkelte noden/agenten med alle egenskaper den har osv. (som f.eks. en oscillator-komponent (jf. Nymoens Implementation-seksjon))}
+		\besk{Om den enkelte noden/agenten med alle egenskaper den har osv. (som f.eks. en oscillator-komponent (jf. I.A., III.Intro., og 'Implementation' i Nymoens Firefly-paper))}
 
 
-	% Om kommunikasjonsmetoden til agentene: audio-/``fire''-signalet
+	% Om kommunikasjonen til agentene: audio-/``fire''-signalet
 	\subsection{Robot communication: the ``fire''-signal}
 	\label{subsec:fire_signal}
-		\besk{Om kommunikasjonsmetoden til agentene: audio-/``fire''-signalet}
+		\begin{itemize}
+			\item Short and impulsive audio sound/signal, representing a node's phase-climax and ``fire''-/``flash''-event.
+			\item The only means of communication — allowing for stigmergic co-ordination.
+			\item Facilitating PCO (pulse-coupled oscillators), different from phase-coupled oscillators with their differences.
+		\end{itemize}
 
 
 	% Om target-staten til systemet: harmonisk synkroni
 	\subsection{System target state: Harmonic Synchrony}
 	\label{subsec:harmonic_synchrony}
-		\besk{Om target-staten til systemet: harmonisk synkroni}
-		The goal and target state of the system is \textit{harmonic synchrony}, as K. Nymoen et al. \cite{nymoen_synch} coined it when ...
+		\begin{itemize}
+			\item The goal and target state of the system
+			\item All agents/node having integer-relation frequencies, so that given a fundamental frequency $\omega_{i,0}$ for the agent $i$ with the lowest frequency in the collective — all other agents have "legal" harmonic frequencies; meaning, all nodes have frequencies in the \tcol{mengde} $\omega_{i,0} \cdot 2^{\mathbb{N}_0}$.
+		\end{itemize}
 	
 	
 	% Om Update-functions for frekvens- og fase-oppdateringene
@@ -137,18 +138,13 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 		
 		
 		
-		
 		\subsubsection{Frequency Adjustment}
 		\label{subsubsec:freq_adj}
-			\gjor{Presenter hva Frequency-adjustment er (hvis det ikke ble tydelig nok i slutten av Seksjon-\ref{sec:baseline}), bygg opp fremgangsmåten på hvordan man oppnår Frequency-adjustment (som i reMarkable-notatet 'Logs' $\rightarrow$ 'Simulations' $\rightarrow$ 'Frequency adjustment', og Worklog'en) | med passende figurer og illustrasjoner}
-
-
-
-
+			\gjor{Presenter hva Frequency-adjustment er (hvis det ikke ble tydelig nok i slutten av Seksjon-\ref{sec:baseline}), bygg opp fremgangsmåten på hvordan man oppnår Frequency-adjustment (som i reMarkable-notatet 'Logs' $\rightarrow$ 'Simulations' $\rightarrow$ 'Frequency adjustment', Worklog'en, og Mattermost-chatten med Kyrre evt.) | med passende figurer og illustrasjoner}
 
 
 
 
 
 % Om mitt bidrag (skill tydelig på mine bidrag og det jeg ikke har gjort noe med)
-\section{The new proposed algorithm: an additional Self-Awareness component}
+\section{My new proposed algorithm: an additional Self-Awareness component}
