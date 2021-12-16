@@ -85,13 +85,27 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 	% Om Update-functions for frekvens- og fase-oppdateringene
 	\subsection{Update/Adjustment functions: Phase- \& Frequency-Adjustment}
 	\label{subsec:update_functions}
+	
+	\lab{Sigmund Stue-(post IN3190-eksamen)Recall}{
+		\textbf{S}: Oppdateres først faser helt ferdig først — og så begynner frekvenser å oppdatere seg? Eller hvordan oppdateres egentlig frekvensen (hva er formelen for det, sammenliknet med den nokså enkle formelen til fase-oppdateringen)? \nl
+		
+		\textbf{D}: Nei, fase og frekvens oppdateres samtidig, men en nodes fase oppdateres umiddelbart når noden hører et ``fire''/``flash''-signal — til forskjell fra nodens frekvens. For frekvens-justering, samler noden opp (akkumulerer) (error-) scores gjennom hele sin periode/syklus. Hver (error-) score sier noe om hvor mye \textit{ute av synch} noden er, og da altså hvor mye frekvensen dens bør oppdateres for å komme inn i synch (små error-scores fører da til lite behov for justering, og frekvensen oppdateres kun litt). Noen tilleggs-operasjoner på frekvens-oppdaterings-funksjonen forteller også noe om hvilket fortegn denne frekvens-oppdateringen bør ha (da frekvens-justeringen, i likhet med fase-justeringen, også er bi-direksjonell). Gjennomsnittet av disse error-scoresene multiplisert med fortegns-og amplitude-faktorene $\rho(n)$, vektet av en \textit{frekvens-koplings konstant} $\beta$, blir da brukt i kalkuleringen for hva den nye og oppdaterte frekvensen $\omega_i(t^+)$ blir, for agent $i$, der $t^+$ er tidssteget umiddelbart etter frekvensjusteringen er gjennomført
+	}
+	
 		\subsubsection{Phase Adjustment}
 		\label{subsubsec:phase_adj}
 			If we first assume constant and equal oscillator-frequencies in our agents, we can take a look at how the agents adjust their phase in order to synchronize to each other. This is in contrast to the case in \ref{subsubsec:freq_adj} where heterogenous, often randomly initialized, oscillator-frequencies in the musical agents are implemented and utilized.
 			
 			Two approaches were attempted in Unity, as presented in Nymoen et al.'s ``\textit{Firefly-paper}'' \cite{nymoen_synch}:
 			
-			\myparagraph{1) Mirollo-Strogatz's ``standard'' Phase Shifts}
+			\myparagraph{1) Mirollo-Strogatz's ``standard'' Phase Adjustment}
+			
+			\begin{figure}[h]
+				\centering
+				\includegraphics[width=0.9\linewidth]{Assets/Figures/MirolloStrogatzPhaseAdjustment.pdf}
+				\caption{``Standard'' Phase-Adjustment with Mirrollo-Strogatz's approach}
+				\label{fig:strog_phase}
+			\end{figure}
 			
 			Each musical node updates its phase $\phi$ accoring to the \textbf{phase update function \eqref{strog_phase}} when hearing a ``fire''-event from one of the other musical nodes:
 			
@@ -99,28 +113,27 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 			P(\phi) = (1 + \alpha)\phi	,
 			\end{equation}
 			
-			where ``\textit{$\alpha$ is the pulse coupling constant, denoting the strength between nodes}'' \cite{nymoen_synch}. So, if $\alpha = 0.1$ e.g., then a musical node's new and updated phase, immediately after hearing a ``fire''-signal from another node, will be equal to $P(\phi) = (1 + 0.1)\phi = 1.1\phi$. 110\% of its old phase $\phi$, that is. Hence, and in this way, the node would be ``pushed'' to fire sooner than it would otherwise.
-			
-			\sep
-			
-			\gjor{Legg inn en figur liknende Nymoens om ``standard'' fase-justering}
+			where ``\textit{$\alpha$ is the pulse coupling constant, denoting the strength between nodes}'' \cite{nymoen_synch}. So, if $\alpha = 0.1$ e.g., then a musical node's new and updated phase, immediately after hearing a ``fire''-signal from another node, will be equal to $P(\phi) = (1 + 0.1)\phi = 1.1\phi$. 110\% of its old phase $\phi$, that is. Hence, and in this way, the node would be ``pushed'' to fire sooner than it would otherwise. An illustration of this is given in Figure \ref{fig:strog_phase}.
 			
 			
 			\myparagraph{2) Nymoen et al.'s Bi-Directional Phase Shifts}
 			
-			This Phase-adjustment works very similarly to the one in the \textbf{\textit{Mirollo-Strogatz}} approach; The only difference being that now, nodes update their phase with the slightly more complex \textbf{phase update function \eqref{nymoen_phase}} when hearing a ``fire''-event from one of the other musical nodes:
+			\begin{figure}[h]
+				\centering
+				\includegraphics[width=0.9\linewidth]{Assets/Figures/NymoenPhaseAdjustment.pdf}
+				\caption{Bi-directional Phase-Adjustment with K. Nymoen et al.'s approach}
+				\label{fig:nymoen_phase}
+			\end{figure}
+			
+			This Phase-adjustment, as in Figure \ref{fig:nymoen_phase}, works very similarly to the Phase-adjustment performed in the \textbf{\textit{Mirollo-Strogatz}} approach; The only difference being that now, nodes update their phase with the slightly more complex \textbf{phase update function \eqref{nymoen_phase}} when hearing a ``fire''-event from one of the other musical nodes — allowing for both larger, but also smaller, updated phases:
 			
 			\begin{equation}\label{nymoen_phase}
-			P(\phi) = \phi - \alpha \cdot sin(2\pi\phi) \cdot | sin(2\pi\phi) |	,
+			P(\phi) = \phi - \alpha \cdot sin(2\pi\phi) \cdot | sin(2\pi\phi) |
 			\end{equation}
 			
-			leading to the new and updated phases both being larger, but also smaller, compared to the old phases. This is what's meant by the Phase-Adjustment being \textbf{\textit{Bi-Directional}}, or as the authors call it in the paper as using ``\textit{both excitatory and inhibitory phase couplings between oscillators}'' \cite{nymoen_synch}.
+			The fact that new and updated phases can both be larger, but also smaller, compared to the old phases, is exactly what's meant by the Phase-adjustment being \textbf{\textit{Bi-Directional}}, or as the authors call it in the paper as using ``\textit{both excitatory and inhibitory phase couplings between oscillators}'' \cite{nymoen_synch}.
 			
-			The effects then of adjusting phases, upon hearing ``fire''-events, according to this update-function \eqref{nymoen_phase} are that the nodes's phases now get decreased if $\phi$ is lower than 0.5, increased if $\phi$ is higher than 0.5, and neither—at least almost—if the phases are close to $0.5 = \frac{1}{2}$. This is due to the negative and positive sign of the sinewave-component in \eqref{nymoen_phase}, as well as the last factor in \eqref{nymoen_phase} of $| sin(2\pi\phi) | \approx | sin(2\pi \frac{1}{2}) | = | sin(\pi) | = | 0 | = 0.$
-			
-			\sep
-			
-			\gjor{Legg inn en figur liknende den i Paragraph'en over (med Mirollo-Strogatz), bare med positive OG negative (evt. bare et negativt) fase-justeringer/-bidrag}
+			The effects then of adjusting phases, upon hearing ``fire''-events, according to this newest update-function \eqref{nymoen_phase} are that the nodes's phases now get decreased if $\phi$ is lower than 0.5, increased if $\phi$ is higher than 0.5, and neither—at least almost—if the phases are close to $0.5 = \frac{1}{2}$. This is due to the negative and positive sign of the sinewave-component in Equation \eqref{nymoen_phase}, as well as the last attenuating factor in it of $| sin(2\pi\phi) | \approx | sin(2\pi \frac{1}{2}) | = | sin(\pi) | = | 0 | = 0.$
 		
 		
 		
