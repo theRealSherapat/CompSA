@@ -4,7 +4,7 @@ import numpy as np
 import csv
 import matplotlib.pyplot as plt
 
-samplingRate = 50 # Hz
+samplingRate = 100 # Hz
 
 def main(phase_filename, freqs_filename, agent_no):
     """ It first extracts the data from the .CSVs into two np.arrays, as well as getting the corresponding vertical time-axis.
@@ -57,11 +57,43 @@ def scatterPlotLegalMultiples(timeArray, freqsDataMatrix):
 
     for xCoordinate in xCoordinates[:-1]:
         plotValidFrequenciesForX(int(round(xCoordinate)), freqsDataMatrix)
+    
+    plotLastValidFrequencies(xCoordinates[-1], freqsDataMatrix)
+
+def plotLastValidFrequencies(x, freqsDataMatrix):
+    lastRowIndex = freqsDataMatrix.shape[0]-1
+    fundamentalFrequency = freqsDataMatrix[lastRowIndex,:].min()
+    
+    highestFrequency = freqsDataMatrix.max(axis=1)[lastRowIndex]
+    
+    # Adding legal (x,y)-points (where x is the last t-value and y is a legal frequency to lie on) to yCoordinates
+    yCoordinates = []
+    yLabels = []
+    
+    topFreqToDraw = fundamentalFrequency
+    yCoordinates.append(topFreqToDraw)
+    yLabels.append("$\omega_0$")
+    
+    multipleCount = 1
+    while topFreqToDraw < highestFrequency:
+        topFreqToDraw = fundamentalFrequency * np.power(2, multipleCount)
+        yCoordinates.append(topFreqToDraw)
+        yLabels.append("$\omega_0 · 2^" + str(multipleCount) + "$")
+        multipleCount += 1
+    
+    # Plotting the legal frequency-multiples
+    for i in range(len(yCoordinates)):
+        yCoordinate = yCoordinates[i]
+        plt.plot(x, yCoordinate, color='lightgreen', marker='o', linestyle='dashed', linewidth=2, markersize=16, fillstyle='none')
+        plt.text(x*1.01, yCoordinate*1.01, yLabels[i], fontsize=12)
+    
 
 def plotValidFrequenciesForX(x, freqsDataMatrix):
     # Finding the smallest frequency (aka. the fundamental frequency) in the last row of the freqsDataMatrix
     if x == 0:
         timeRowIndex = 1
+    # elif x == : # codeword (hack) for last x-coordinate
+        # timeRowIndex = freqsDataMatrix.shape[0]
     else:
         timeRowIndex = x*samplingRate
     fundamentalFrequency = freqsDataMatrix[timeRowIndex-1,:].min()

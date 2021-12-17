@@ -15,11 +15,11 @@ public class SquiggleScript : MonoBehaviour {
     public float beta = 0.8f; // frequency coupling constant
     public int m = 5; // "running median-filter" length
     public Vector2 minMaxInitialFreqs = new Vector2(0.2f, 4f);
-    
+
     // Meta environment-variables:
+    public float t_ref = 0.4f; // ISH LENGDEN I TID PÅ digitalQuickTone er 0.4s. Nymoen BRUKTE 50ms I SIN IMPLEMENTASJON. JEG PRØVDE OGSÅ 0.6f. possiblePool = {0.09f, 0.4f, 0.6f}.
     public bool useSound = true;
     public bool useVisuals = false;
-    public float adjustedTimeScale = 1.0f;
 
 
     // Core (oscillator) synchronization-variables:
@@ -32,7 +32,7 @@ public class SquiggleScript : MonoBehaviour {
     private List<SquiggleScript> otherSquiggles = new List<SquiggleScript>();
     private AudioSource audioSource; // reference to Audio Source component on the Musical Node that is told to play the fire sound
     private int agentID;
-    private bool firedLastClimax = true;
+    private bool firedLastClimax;
 
     // Visual color-variables:
     private Renderer corpsOfAgentRenderer;
@@ -43,8 +43,7 @@ public class SquiggleScript : MonoBehaviour {
     private Color fireColor = Color.yellow;
 
     // FOR REFRACTORY PERIOD:
-        //private bool inRefractoryPeriod = false; // if this is true, no (neither phase- or frequency-) adjustment should happen (?) - <--------------- DIDN'T SOLVE THE ISSUE INITIALLY
-        //private float t_ref = 0.09f; // ISH LENGDEN I TID PÅ digitalQuickTone er 0.4s. Nymoen BRUKTE 50ms I SIN IMPLEMENTASJON.
+    private bool inRefractoryPeriod = false; // if this is true, no (neither phase- or frequency-) adjustment should happen (?) - <--------------- DIDN'T SOLVE THE ISSUE INITIALLY
 
     // ------- END OF Variable Declarations -------
 
@@ -82,11 +81,10 @@ public class SquiggleScript : MonoBehaviour {
         // Eventually updating/lerping the agent-body's color
         if (useVisuals) SetAgentCorpsColor();
 
-        // TODO: MAKE THE REQUIREMENT/CONDITION STRICTER (USE Mathf.Repeat() OR SOMETHING?)
-        if (phase > 1) OnPhaseClimax();
+        if ((phase + frequency*Time.fixedDeltaTime) >= 1) OnPhaseClimax();
 
         // Increasing agent's phase according to its frequency
-        phase += frequency * Time.fixedDeltaTime;
+        phase = Mathf.Repeat(phase + frequency * Time.fixedDeltaTime, 1f); // If this is no good, consider going back to resetting the phase to 0.
     }
 
     // ------- END OF MonoBehaviour Functions/Methods -------
@@ -114,15 +112,11 @@ public class SquiggleScript : MonoBehaviour {
         NotifyTheHuman();
 
         // FOR REFRACTORY PERIOD:
-            //Invoke("ToggleOffRefractoryMode", 0.6f);
+        inRefractoryPeriod = true;
+        Invoke("ToggleOffRefractoryMode", t_ref);
 
+        // Calling on all the agents to adjust their phases and calculate frequency-H-values
         NotifyTheAgents();
-
-        phase = 0; // resetting phase
-
-        // FOR REFRACTORY PERIOD:
-            //inRefractoryPeriod = true;
-            //Invoke("NotifyTheAgents", t_ref); // ISH LENGDEN I TID PÅ digitalQuickTone er 0.4s. Nymoen BRUKTE 50ms I SIN IMPLEMENTASJON.
     }
 
     private void NotifyTheHuman() {
@@ -136,34 +130,31 @@ public class SquiggleScript : MonoBehaviour {
         if (useSound) audioSource.Play();
     }
 
+    private void ToggleOffRefractoryMode() {
+        inRefractoryPeriod = false;
+    }
+
     private void NotifyTheAgents() {
         // Calls out to all neighbouring agents and notifies them of its fire-event.
 
         foreach (SquiggleScript oscillator in otherSquiggles) { // "giving away a signal" all other nodes can hear
-
-            // FOR REFRACTORY PERIOD:
-            //oscillator.AdjustPhase(); // Invoke this after a physical-realistic-constrained time-period?
-
             oscillator.OnHeardFireEvent();
         }
-
-        // FOR REFRACTORY PERIOD:
-            //inRefractoryPeriod = false;
     }
 
     public void OnHeardFireEvent() {
         // Gets called when an "audio"-fire-event-signal is "detected" by the agent.
 
-        AdjustPhase(); // for immediate Phase-adjustment when hearing a fire-event
+        if (!inRefractoryPeriod) AdjustPhase(); // for immediate Phase-adjustment when hearing a fire-event
         AddNthFireEventsHToList(); // for the later Frequency-adjustment at each phase-climax
     }
 
     void AdjustPhase() {
         if (!useNymoen) {
-            phase *= (1 + alpha); // using Phase Update Function (1); "standard" Mirollo-Strogatz
+            phase = Mathf.Repeat(phase*(1 + alpha), 1f); // using Phase Update Function (1); "standard" Mirollo-Strogatz
         } else {
             float wave = Mathf.Sin(2 * Mathf.PI * phase);
-            phase -= alpha * wave * Mathf.Abs(wave); // using Phase Update Function (2); Nymoen et al.'s Bi-Directional
+            phase = Mathf.Repeat(phase - alpha * wave * Mathf.Abs(wave), 1f); // using Phase Update Function (2); Nymoen et al.'s Bi-Directional
         }
     }
 
@@ -171,15 +162,13 @@ public class SquiggleScript : MonoBehaviour {
         // Calculating and saving the n-th fire-event's corresponding H(n)-value capturing how much and in which direction frequency of an agent should be adjusted at phase-climax, judged at the time of hearing fire-event n.
 
         // Recording the n'th error-score, capturing whether the node itself is in synch with the node it hears the "fire"-event from or not
-        float epsilon_n = Mathf.Pow(Mathf.Sin(Mathf.PI * phase), 2);
-
-        // FOR REFRACTORY PERIOD:
-        //if (!inRefractoryPeriod) {
-        //    epsilon_n = Mathf.Pow(Mathf.Sin(Mathf.PI * phase), 2);
-        //}
-        //else {
-        //    epsilon_n = 0f;
-        //}
+        float epsilon_n;
+        if (!inRefractoryPeriod) {
+            epsilon_n = Mathf.Pow(Mathf.Sin(Mathf.PI * phase), 2);
+        }
+        else {
+            epsilon_n = 0f;
+        }
 
         inPhaseErrorBuffer = ShiftFloatListRightToLeftWith(inPhaseErrorBuffer, epsilon_n);
 
@@ -279,9 +268,6 @@ public class SquiggleScript : MonoBehaviour {
     }
 
     private void AssignHelpingVariables() {
-        // Speeding up or down the simulation if that is wanted
-        Time.timeScale = adjustedTimeScale;
-
         // Acquiring a neighbour-list for each agent so that they can call on them when they themselves are firing
         FillUpNeighbourSquigglesList();
     }

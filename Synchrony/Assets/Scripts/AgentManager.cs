@@ -7,6 +7,7 @@ public class AgentManager : MonoBehaviour {
 
     // General Meta-variables
     public float runDuration = 10f;
+    public float adjustedTimeScale = 1.0f;
 
     // Spawning variables:
     public int collectiveSize = 3;
@@ -32,6 +33,9 @@ public class AgentManager : MonoBehaviour {
     // ------- START OF MonoBehaviour Functions/Methods -------
 
     void Start() {
+        // Speeding up or down the simulation if that is wanted
+        Time.timeScale = adjustedTimeScale;
+
         // Spawning all agents randomly (but pretty naively as of now)
         SpawnAgents();
 
