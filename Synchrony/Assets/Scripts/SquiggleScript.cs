@@ -14,7 +14,7 @@ public class SquiggleScript : MonoBehaviour {
     // Frequency-adjustment variables:
     public float beta = 0.8f; // frequency coupling constant
     public int m = 5; // "running median-filter" length
-    public Vector2 minMaxInitialFreqs = new Vector2(0.2f, 4f);
+    public Vector2 minMaxInitialFreqs = new Vector2(0.5f, 8f); // ALSO MAKE SURE FREQUENCIES STAY WITHIN THIS RANGE (RESET THEM TO A RANDOM.RANGE WITH THESE LIMITS)
 
     // Meta environment-variables:
     public float t_ref = 0.4f; // ISH LENGDEN I TID PÅ digitalQuickTone er 0.4s. Nymoen BRUKTE 50ms I SIN IMPLEMENTASJON. JEG PRØVDE OGSÅ 0.6f. possiblePool = {0.09f, 0.4f, 0.6f}.
@@ -81,14 +81,48 @@ public class SquiggleScript : MonoBehaviour {
         // Eventually updating/lerping the agent-body's color
         if (useVisuals) SetAgentCorpsColor();
 
-        if ((phase + frequency*Time.fixedDeltaTime) >= 1) OnPhaseClimax();
+        if ((phase + frequency * Time.fixedDeltaTime) >= 1) {
+            OnPhaseClimax();
+            phase = 0f;
+        }
 
         // Increasing agent's phase according to its frequency
-        phase = Mathf.Repeat(phase + frequency * Time.fixedDeltaTime, 1f); // If this is no good, consider going back to resetting the phase to 0.
+        phase = phase + frequency * Time.fixedDeltaTime; // If this is no good, consider going back to wrapping the phase: Mathf.Repeat(phase + frequency * Time.fixedDeltaTime, 1f);
     }
 
     // ------- END OF MonoBehaviour Functions/Methods -------
 
+
+
+
+
+    // ------- START OF Testing Functions/Methods -------
+
+    private void UpdateFrequencyImmediately() {
+        float epsilon_n;
+        if (!inRefractoryPeriod) {
+            epsilon_n = Mathf.Pow(Mathf.Sin(Mathf.PI * phase), 2);
+        } else {
+            epsilon_n = 0f;
+        }
+
+        inPhaseErrorBuffer = ShiftFloatListRightToLeftWith(inPhaseErrorBuffer, epsilon_n);
+
+        // Calculating the median of the inPhaseErrorBuffer, being the self-assessed synch-score
+        float s_n = ListMedian(inPhaseErrorBuffer);
+
+        // Calculating the measure capturing the amplitude and sign of the frequency-modification of the n-th "fire"-event received
+        float rho_n = -Mathf.Sin(2 * Mathf.PI * phase); // negative for phase < 1/2, and positive for phase > 1/2, and element in [-1, 1]
+
+        float H_n = rho_n * s_n;
+
+        float F_n = beta * H_n;
+
+        float newFrequency = frequency * Mathf.Pow(2, F_n);
+        frequency = newFrequency;
+    }
+
+    // ------- END OF Testing Functions/Methods -------
 
 
 

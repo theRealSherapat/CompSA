@@ -163,10 +163,10 @@ MonoBehaviour:
   useNymoen: 1
   beta: 0.8
   m: 5
-  minMaxInitialFreqs: {x: 0.02, y: 2}
+  minMaxInitialFreqs: {x: 0.5, y: 8}
   t_ref: 0.4
   useSound: 1
-  useVisuals: 0
+  useVisuals: 1
 --- !u!1 &8768706482578209584
 GameObject:
   m_ObjectHideFlags: 0
