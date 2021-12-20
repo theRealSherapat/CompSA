@@ -69,17 +69,21 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 	\label{subsec:fire_signal}
 		\begin{itemize}
 			\item Short and impulsive audio sound/signal, representing a node's phase-climax and ``fire''-/``flash''-event.
-			\item The only means of communication — allowing for stigmergic co-ordination.
+			\item The only means of communication.
+			\item Stigmergic co-ordination/communication.
 			\item Facilitating PCO (pulse-coupled oscillators), different from phase-coupled oscillators with their differences.
 		\end{itemize}
 
+	\gjor{Sjekk oppsummeringen av Nymoen-paperet i Essayet}
+	
 
 	% Om target-staten til systemet: harmonisk synkroni
 	\subsection{System target state: Harmonic Synchrony}
 	\label{subsec:harmonic_synchrony}
 		\begin{itemize}
 			\item The goal and target state of the system
-			\item All agents/node having integer-relation frequencies, so that given a fundamental frequency $\omega_{i,0}$ for the agent $i$ with the lowest frequency in the collective — all other agents have "legal" harmonic frequencies; meaning, all nodes have frequencies in the \tcol{mengde} $\omega_{i,0} \cdot 2^{\mathbb{N}_0}$.
+			\item All agents/nodes having integer-relation frequencies (between each other), so that given a fundamental frequency $\omega_{i,0}$ for the agent $i$ with the lowest frequency in the collective — all other agents have "legal" harmonic frequencies; meaning, all nodes have frequencies in the \tcol{mengde} $\omega_{i,0} \cdot 2^{\mathbb{N}_0}$.
+			
 		\end{itemize}
 	
 	
@@ -87,17 +91,15 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 	\subsection{Update/Adjustment functions: Phase- \& Frequency-Adjustment}
 	\label{subsec:update_functions}
 	
-	\lab{Sigmund Stue-(post IN3190-eksamen)Recall}{
-		\textbf{S}: Oppdateres først faser helt ferdig først — og så begynner frekvenser å oppdatere seg? Eller hvordan oppdateres egentlig frekvensen (hva er formelen for det, sammenliknet med den nokså enkle formelen til fase-oppdateringen)? \nl
-		
-		\textbf{D}: Nei, fase og frekvens oppdateres samtidig, men en nodes fase oppdateres umiddelbart når noden hører et ``fire''/``flash''-signal — til forskjell fra nodens frekvens. For frekvens-justering, samler noden opp (akkumulerer) (error-) scores gjennom hele sin periode/syklus. Hver (error-) score sier noe om hvor mye \textit{ute av synch} noden er, og da altså hvor mye frekvensen dens bør oppdateres for å komme inn i synch (små error-scores fører da til lite behov for justering, og frekvensen oppdateres kun litt). Noen tilleggs-operasjoner på frekvens-oppdaterings-funksjonen forteller også noe om hvilket fortegn denne frekvens-oppdateringen bør ha (da frekvens-justeringen, i likhet med fase-justeringen, også er bi-direksjonell). Gjennomsnittet av disse error-scoresene multiplisert med fortegns-og amplitude-faktorene $\rho(n)$, vektet av en \textit{frekvens-koplings konstant} $\beta$, blir da brukt i kalkuleringen for hva den nye og oppdaterte frekvensen $\omega_i(t^+)$ blir, for agent $i$, der $t^+$ er tidssteget umiddelbart etter frekvensjusteringen er gjennomført
-	}
+	Musical agents's phases get updated/adjusted immediately as ``fire''-/``flash''-events are perceived, whereas agents's frequencies do not get updated until the end of their oscillator-cycle (i.e. when having a phase-climax $\phi(t)=1$). So-called H-values, used for frequency-adjustment/-updating at phase-climaxes, are however calculated and accumulated when agents are perceiving a ``fire''-/``flash''-event.
 	
 		\subsubsection{Phase Adjustment}
 		\label{subsubsec:phase_adj}
-			If we first assume constant and equal oscillator-frequencies in our agents, we can take a look at how the agents adjust their phase in order to synchronize to each other. This is in contrast to the case in \ref{subsubsec:freq_adj} where heterogenous, often randomly initialized, oscillator-frequencies in the musical agents are implemented and utilized.
+			If we first assume constant and equal oscillator-frequencies in our agents, we can take a look at how the agents adjust their|initially random|phases in order to synchronize to each other. This is in contrast to the case in \ref{subsubsec:freq_adj} where heterogenous, often randomly initialized, oscillator-frequencies in the musical agents are implemented and utilized.
 			
-			Two approaches were attempted in Unity, as presented in Nymoen et al.'s ``\textit{Firefly-paper}'' \cite{nymoen_synch}:
+			The goal state of the agents is now to fire/flash more or less simultaneously, after having starting firing/flashing at random initially.
+			
+			Two approaches to achieve this were attempted in Unity, as presented in Nymoen et al.'s ``\textit{Firefly-paper}'' \cite{nymoen_synch}:
 			
 			\myparagraph{1) Mirollo-Strogatz's ``standard'' Phase Adjustment}
 			
@@ -128,8 +130,9 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 			
 			This Phase-adjustment, as in Figure \ref{fig:nymoen_phase}, works very similarly to the Phase-adjustment performed in the \textbf{\textit{Mirollo-Strogatz}} approach; The only difference being that now, nodes update their phase with the slightly more complex \textbf{phase update function \eqref{nymoen_phase}} when hearing a ``fire''-event from one of the other musical nodes — allowing for both larger, but also smaller, updated phases:
 			
-			\begin{equation}\label{nymoen_phase}
-			P(\phi) = \phi - \alpha \cdot sin(2\pi\phi) \cdot | sin(2\pi\phi) |
+			\begin{equation}
+			\label{nymoen_phase}
+				P(\phi) = \phi - \alpha \cdot sin(2\pi\phi) \cdot | sin(2\pi\phi) |
 			\end{equation}
 			
 			The fact that new and updated phases can both be larger, but also smaller, compared to the old phases, is exactly what's meant by the Phase-adjustment being \textbf{\textit{Bi-Directional}}, or as the authors call it in the paper as using ``\textit{both excitatory and inhibitory phase couplings between oscillators}'' \cite{nymoen_synch}.
@@ -137,13 +140,58 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 			The effects then of adjusting phases, upon hearing ``fire''-events, according to this newest update-function \eqref{nymoen_phase} are that the nodes's phases now get decreased if $\phi$ is lower than 0.5, increased if $\phi$ is higher than 0.5, and neither—at least almost—if the phases are close to $0.5 = \frac{1}{2}$. This is due to the negative and positive sign of the sinewave-component in Equation \eqref{nymoen_phase}, as well as the last attenuating factor in it of $| sin(2\pi\phi) | \approx | sin(2\pi \frac{1}{2}) | = | sin(\pi) | = | 0 | = 0.$
 		
 		
-		
 		\subsubsection{Frequency Adjustment}
 		\label{subsubsec:freq_adj}
-			\gjor{Presenter hva Frequency-adjustment er (hvis det ikke ble tydelig nok i slutten av Seksjon-\ref{sec:baseline}), bygg opp fremgangsmåten på hvordan man oppnår Frequency-adjustment (som i reMarkable-notatet 'Logs' $\rightarrow$ 'Simulations' $\rightarrow$ 'Frequency adjustment', Worklog'en, og Mattermost-chatten med Kyrre evt.) | med passende figurer og illustrasjoner}
+			\gjor{Presenter hva Frequency-adjustment er, bygg opp fremgangsmåten på hvordan man oppnår Frequency-adjustment (som i reMarkable-notatet 'Logs' $\rightarrow$ 'Simulations' $\rightarrow$ 'Frequency adjustment', Worklog'en, og Mattermost-chatten med Kyrre evt.) | med passende figurer og illustrasjoner}
+			
+			Now over to the slightly more complex issue of synchronizing frequencies. We introduce randomly initialized, non-constant, and heterogenous oscillator-frequencies in our musical agents|allowing in the music collective the playing of rhythmic patterns like \tcol{doubles, fourths, eights} etc.
+			
+			This approach to Frequency Adjustment stands in contrast to previous approaches to synchronization in oscillators \tcol{cite(fixed\_freqs, fixed\_range\_freqs)} where the oscillators's frequencies are either equal and fixed, or where frequencies are bound to initialize and stay within a fixed interval/range.
+			
+			The goal state now will not be exactly equal frequencies and phases, but rather the goal state of \textit{harmonic synchrony}, as expounded in Subsection \ref{subsec:harmonic_synchrony}.
+			
+			In order to achieve this goal of \textit{harmonic synchrony} in conjunction with|or rather through|frequency adjustment, we have to go through a few steps to build a sophisticated enough update-function helping us to achieve these.
+			
+			
+			
+			\myparagraph{Step 1: The ``in/out-of synch'' Error-Measurement/-Score, $\epsilon(\phi(t))$}
+			
+			The Error Measurement function \eqref{error_measurement}, plotted in Figure \ref{fig:error_measurement}, is calculated immediately by each agent $i$, having phase $\phi_i(t)$, when a ``fire''-event signal from another agent is detected by agent $i$ at time $t$:
+			
+			\begin{equation}
+			\label{error_measurement}
+				\epsilon(\phi_i(t)) = sin^2(\pi\phi_i(t))
+			\end{equation} \nl
+			
+			\begin{figure}[h!]
+				\centering
+				\includegraphics[width=0.8\linewidth]{Assets/Figures/PhaseErrorFunction.pdf}
+				\caption{Error Measurement \eqref{error_measurement} plotted as a function of Phase}
+				\label{fig:error_measurement}
+			\end{figure}
+			
+			As we can see from this Error-Function, the error-score is close to 0 when the agent's phase $\phi_i(t)$ is itself close to 0 or 1 (i.e. the agent either just fired/flashed, or is about to fire/flash very soon). The error-score is the largest when an agent perceives a ``fire''-signal while being half-way through its own phase (i.e. having phase $\phi(t)=0.5$).
+			
+			This Error-Measurement/-Score forms the basis and fundament for the first component of Self-awareness, being the \textit{self-assessed synchrony-score} $s(n)$.
+			
+			\myparagraph{Step 2: The self-assessed synchrony-score, $s(n)$}
+			
+			\begin{equation}
+			\label{self_assessed_synch}
+				s(n) = median\{\epsilon(n), \epsilon(n-1), ... , \epsilon(n-m)\} ,
+			\end{equation} \nl
+			
+			where $m$ is the number of the last observed ``fire''-events we would like to take into account when calculating the self-assessed synch-score.
+			
+			This is then the first degree/aspect of Self-awareness in the design.
+			
+			\myparagraph{Step 3: Frequency Update Amplitude- \& Sign-factor, $\rho(n)$}
+			
+			Acts as an attenuating factor, when $\phi(t)\approx0.5$, in the making of the H-value|supporting the goal of \textit{harmonic synchrony}.
 
-
-
+			\myparagraph{Step 4: The H-values}
+			
+			\myparagraph{The final step: The Frequency Update function}
 
 
 % Om mitt bidrag (skill tydelig på mine bidrag og det jeg ikke har gjort noe med)

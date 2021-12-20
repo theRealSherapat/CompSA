@@ -21,6 +21,7 @@ Possibly a good workflow is preparing the set-up:
 ## Specific TODOs
 * Execute 'GJØR: []'-clauses possible to execute now (remember Abe Lincoln).
 	+ Spesielt den første innunder 'Implementation' og 4.1 (Worklog til Implementation)
+* Overfør Concerns fra .TeX-filene til Word Concerns-dokumentene (Struktur og Content Concerns).
 	
 * Gå igjennom Essay .tex-fila og hent kritikk, INKL.:[]?'s, og concerns.
 
@@ -32,8 +33,11 @@ Possibly a good workflow is preparing the set-up:
 		- 'Aldus Nova Book' by Linotype (found through myfonts.com/WhatTheFont with a sample from Tønnes's master).
 		- 'bold Adobe Times' a.k.a. '\fontfamily{ptm}'  (found through the 'sectsty'-package docs on page 3).
 		- 'Libre Baskerville' a.k.a. '\usepackage{librebaskerville} \usepackage[T1]{fontenc}' (found at tug.org/FontCatalogue/seriffonts.html).
-	+ Use italization on variables and words of emphasis, but not on operators (in equations).
+	+ Be consistent about using italization on variables and words of emphasis, but not on operators (in equations).
 	+ Use bold face on Figure-captions (so that it's rather **Figure 4.1** instead of Figure 4.1).
+	+ Minimize the use of parentheses and '—'s.
 * Polish/finish citations and references throughout the master's report:
 	+ Add citation-links on citations (throughout the thesis document when references are cited), 
 	+ Change to using the [NOR04]-style (first author(s), Normann e.g.) instead of [3]-style.
+* Polish/finish the page layouts:
+	+ Se til at alle figurene og tabellene er plassert der det gir mening for deg, ikke der det gir mening for LaTeX.
