@@ -142,21 +142,23 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 		
 		\subsubsection{Frequency Adjustment}
 		\label{subsubsec:freq_adj}
-			\gjor{Presenter hva Frequency-adjustment er, bygg opp fremgangsmåten på hvordan man oppnår Frequency-adjustment (som i reMarkable-notatet 'Logs' $\rightarrow$ 'Simulations' $\rightarrow$ 'Frequency adjustment', Worklog'en, og Mattermost-chatten med Kyrre evt.) | med passende figurer og illustrasjoner}
-			
+				\gjor{Presenter hva Frequency-adjustment er, bygg opp fremgangsmåten på hvordan man oppnår Frequency-adjustment (som i Worklog'en, og Mattermost-chatten med Kyrre evt.) | med passende figurer og illustrasjoner}
+				
 			Now over to the slightly more complex issue of synchronizing frequencies. We introduce randomly initialized, non-constant, and heterogenous oscillator-frequencies in our musical agents|allowing in the music collective the playing of rhythmic patterns like \tcol{doubles, fourths, eights} etc.
 			
 			This approach to Frequency Adjustment stands in contrast to previous approaches to synchronization in oscillators \tcol{cite(fixed\_freqs, fixed\_range\_freqs)} where the oscillators's frequencies are either equal and fixed, or where frequencies are bound to initialize and stay within a fixed interval/range.
 			
 			The goal state now will not be exactly equal frequencies and phases, but rather the goal state of \textit{harmonic synchrony}, as expounded in Subsection \ref{subsec:harmonic_synchrony}.
 			
-			In order to achieve this goal of \textit{harmonic synchrony} in conjunction with|or rather through|frequency adjustment, we have to go through a few steps to build a sophisticated enough update-function helping us to achieve these.
+			In order to achieve this goal of \textit{harmonic synchrony} in conjunction with|or rather through|frequency adjustment, we have to go through a few steps to build a sophisticated enough update-function able to help us achieve this.
 			
 			
-			
+			% Om epsilon(n):
 			\myparagraph{Step 1: The ``in/out-of synch'' Error-Measurement/-Score, $\epsilon(\phi(t))$}
 			
-			The Error Measurement function \eqref{error_measurement}, plotted in Figure \ref{fig:error_measurement}, is calculated immediately by each agent $i$, having phase $\phi_i(t)$, when a ``fire''-event signal from another agent is detected by agent $i$ at time $t$:
+			Describing the error measurements at the n-th ``fire''-event, we introduce an Error Measurement function.
+			
+			The Error Measurement function \eqref{error_measurement}, plotted in Figure \ref{fig:error_measurement}, is calculated immediately by each agent $i$, having phase $\phi_i(t)$, when a ``fire''-event signal from another agent is detected by agent $i$ at time $t$.
 			
 			\begin{equation}
 			\label{error_measurement}
@@ -174,25 +176,75 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 			
 			This Error-Measurement/-Score forms the basis and fundament for the first component of Self-awareness, being the \textit{self-assessed synchrony-score} $s(n)$.
 			
-			\myparagraph{Step 2: The self-assessed synchrony-score, $s(n)$}
+			% Om s(n):
+			\myparagraph{Step 2: The first Self-awareness component, s(n)}
+			This aforementioned self-assessed synchrony-score, $s(n)$, is in fact simply the median of a list \tcol{(was originally in K. Nymoen et al.'s approach a running median filter over the discrete error measurement function)} containing \textit{m} Error-scores $\epsilon$. Such a list is easily implemented in C\# by declaring a List$<$float$>$ called \textit{errorBuffer} e.g. (i.e. \textit{errorBuffer} is a list containing floating point values):
+			
+			\begin{equation}
+			\label{error_buffer}
+				errorBuffer = \{\epsilon(n), \epsilon(n-1), ... , \epsilon(n-m)\},
+			\end{equation} \nl
+			
+			then leading to:
 			
 			\begin{equation}
 			\label{self_assessed_synch}
-				s(n) = median\{\epsilon(n), \epsilon(n-1), ... , \epsilon(n-m)\} ,
+				\begin{array}{rrclcl}
+				s(n) & = & median(errorBuffer) \\ 
+				& = & median(\{\epsilon(n), \epsilon(n-1), ... , \epsilon(n-m)\}) \in [0, 1],
+				\end{array}
 			\end{equation} \nl
 			
-			where $m$ is the number of the last observed ``fire''-events we would like to take into account when calculating the self-assessed synch-score.
+			where $n$ is the latest observed ``fire-event'', and $m$ is the number of the last observed ``fire''-events we would like to take into account when calculating the self-assessed synch-score.
 			
-			This is then the first degree/aspect of Self-awareness in the design.
+			If we then have a high $s(n)$-score, it tells us that the median of the $k$ last error-scores is high, or in other words that we have mainly high error-scores — indicating that this agent is out of synch. Conversely, if we have a low $s(n)$-score, indicating mainly low error-scores for the agent — then we have an indication that the agent is in synch, hence leading to low error scores, and in turn low $s(n)$-scores. 
 			
+			In other words, we then have a way for each agent to assess themselves how much in or out of synch they believe they are compared to the rest of the agents. This is then the first degree/aspect of \tcol{(public?)} Self-awareness in the design.
+			
+			% Om rho(n):
 			\myparagraph{Step 3: Frequency Update Amplitude- \& Sign-factor, $\rho(n)$}
 			
-			Acts as an attenuating factor, when $\phi(t)\approx0.5$, in the making of the H-value|supporting the goal of \textit{harmonic synchrony}.
-
-			\myparagraph{Step 4: The H-values}
+			Describing the amplitude and sign of the frequency-modification of the n-th ``fire-event'' received. It is used to say something about in which direction, and in how much, the frequency should be adjusted.
 			
-			\myparagraph{The final step: The Frequency Update function}
+			\begin{equation}
+			\label{amp_sign_freq_adj}
+				\rho(\phi) = - sin(2\pi\phi(t)) \in [-1, 1]
+			\end{equation}
+			
+			For example, if a node $i$ has phase $\phi_i(t)=1/4$, it gets a value $\rho(1/4) = - sin(\pi/2) = -1$; meaning, the node's frequency should be decreased (with the highest amplitude actually) in order to "slow down" to wait for the other nodes. Conversely, if a node $j$ has phase $\phi_j(t)=3/4$, it gets a value $\rho(3/4) = - sin(3/2 \pi) = -(-1) = 1$; meaning, the node's frequency should be increased (with the highest amplitude) in order to getting "pushed forward" to catch up with the other nodes.
+			
+			Acts as an attenuating factor, when $\phi(t)\approx0.5$, in the making of the H-value — supporting the goal of \textit{harmonic synchrony}.
 
+			% Om H(n)-verdiene:
+			\myparagraph{Step 4: The H-value, H(n)}
+			
+			Describing how a node should adjust its frequency, based on the n-th ``fire-event'' it received, in the following way:
+			
+			\begin{equation}
+			\label{h_value}
+				H(n) = \rho(n) \cdot s(n)
+			\end{equation}
+			
+			% Om selve oppdateringen av frekvens:
+			\myparagraph{The final step: The Frequency Update function}
+			
+			Putting it all together.
+			
+			When an agent $i$ then has a phase-climax ($\phi_i(t)=1$), it updates its frequency to the new $\omega_i(t^+)$ accordingly:
+			
+			\begin{equation}
+			\label{freq_adj}
+				\omega_i(t^+) = \omega_i(t) \cdot 2^{F(n)},
+			\end{equation}
+			
+			where $t^+$ denotes the time-step immediately after phase-climax, and $F(n)$ is found by:
+			
+			\begin{equation}
+			\label{f_value}
+				F(n) = \beta\sum_{x=0}^{k-1}\frac{H(n-k)}{k},
+			\end{equation}
+			
+			where $\beta$ is the frequency coupling constant, $k$ is the number of heard/received ``fire-event''s from the start of the last cycle/period to the end (i.e. the phase-climax, or \textit{now}) — and the rest of the values are as described above.
 
 % Om mitt bidrag (skill tydelig på mine bidrag og det jeg ikke har gjort noe med)
 \section{My new proposed algorithm: an additional Self-Awareness component}
