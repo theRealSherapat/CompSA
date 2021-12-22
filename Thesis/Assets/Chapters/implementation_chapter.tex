@@ -62,6 +62,8 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 	\subsection{The Node: the musical robot individual}
 	\label{subsec:node}
 		\besk{Om den enkelte noden/agenten med alle egenskaper den har osv. (som f.eks. en oscillator-komponent (jf. I.A., III.Intro., og 'Implementation' i Nymoens Firefly-paper))}
+		
+		Notions like ``agent'', ``node'', ``firefly'', and ``oscillator'' will be used interchangeably throughout the thesis.
 
 
 	% Om kommunikasjonen til agentene: audio-/``fire''-signalet
@@ -83,7 +85,7 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 		\begin{itemize}
 			\item The goal and target state of the system
 			\item All agents/nodes having integer-relation frequencies (between each other), so that given a fundamental frequency $\omega_{i,0}$ for the agent $i$ with the lowest frequency in the collective — all other agents have "legal" harmonic frequencies; meaning, all nodes have frequencies in the \tcol{mengde} $\omega_{i,0} \cdot 2^{\mathbb{N}_0}$.
-			
+			\item (FOR Å DEMONSTRERE \textit{Harmonic Synchrony}) \tcol[blue]{LEGG INN ETT WAVEFORM-SPEKTROGRAM PLOTT AV EN STEMME ELLER EN LYD MED HARMONICS I SEG (F.EKS. FRA PRARIEDOGS-FYREN ELLERNOE), OG SAMMENLIKN MED DE MUSIKALSKE NODENES FREKVENS-SPEKTROGRAM VED SIDEN AV.}
 		\end{itemize}
 	
 	
@@ -144,7 +146,7 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 		\label{subsubsec:freq_adj}
 				\gjor{Presenter hva Frequency-adjustment er, bygg opp fremgangsmåten på hvordan man oppnår Frequency-adjustment (som i Worklog'en, og Mattermost-chatten med Kyrre evt.) | med passende figurer og illustrasjoner}
 				
-			Now over to the slightly more complex issue of synchronizing frequencies. We introduce randomly initialized, non-constant, and heterogenous oscillator-frequencies in our musical agents|allowing in the music collective the playing of rhythmic patterns like \tcol{doubles, fourths, eights} etc.
+			Now over to the slightly more complex issue of synchronizing frequencies in the agents/oscillators. We introduce randomly initialized, non-constant, and heterogenous oscillator-frequencies in our musical agents — allowing in the music collective the playing of rhythmic patterns like \tcol{doubles, fourths, eights (FRA NYMOEN: subdivisions of a measure, i.e. quarter notes and 8ths. "Temporal components in music tend to appear in an integer-ratio relation to each other (e.g., beats, measures, phrases, or quarter notes, 8ths, 16ths)")} etc.
 			
 			This approach to Frequency Adjustment stands in contrast to previous approaches to synchronization in oscillators \tcol{cite(fixed\_freqs, fixed\_range\_freqs)} where the oscillators's frequencies are either equal and fixed, or where frequencies are bound to initialize and stay within a fixed interval/range.
 			
@@ -172,7 +174,9 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 				\label{fig:error_measurement}
 			\end{figure}
 			
-			As we can see from this Error-Function, the error-score is close to 0 when the agent's phase $\phi_i(t)$ is itself close to 0 or 1 (i.e. the agent either just fired/flashed, or is about to fire/flash very soon). The error-score is the largest when an agent perceives a ``fire''-signal while being half-way through its own phase (i.e. having phase $\phi(t)=0.5$).
+			As we can see from this Error-Function, the error-score is close to 0 when the agent's phase $\phi_i(t)$ is itself close to 0 or 1 (i.e. the agent either just fired/flashed, or is about to fire/flash very soon). The error-score is the largest when an agent perceives a ``fire''-signal while being half-way through its own phase (i.e. having phase $\phi(t)=0.5$). We could also then ask ourselves, does not this go against the main/target goal of the system, being \textit{harmonic synchrony} — if agents are allowed to be ``half as fast'' as each other? 
+			
+			We could imagine a completely ``legal'' and harmonically synchronous scenario where two agents have half and double the frequency of each other. The agent with half the frequency of the faster agent would then have phase $\phi(t)=0.5$ when it would hear the faster agent ``fire''/``flash'' — leading to its Error-score $\epsilon(0.5) = sin^2(\pi/2) = 1$, which then makes it seem like the slower agent is maximally out of synch, when it is actually perfectly and harmonically synchronized. \tcol{???} \inkl{This calls out for an attenuating mechanism in our frequency update function, in order to ``cancel out'' this contribution so that perfectly harmonically synchronized agents will not be adjusted further despite their high Error-measurement.}
 			
 			This Error-Measurement/-Score forms the basis and fundament for the first component of Self-awareness, being the \textit{self-assessed synchrony-score} $s(n)$.
 			
@@ -225,7 +229,13 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 				H(n) = \rho(n) \cdot s(n)
 			\end{equation}
 			
-			% Om selve oppdateringen av frekvens:
+			Here we then multiply a factor $\rho(n)$ of how much the node should adjust its phase, as well as in which direction, together with a factor $s(n)$ of the adjusting node's self-assessed synch-score. To recall, the self-assessed synch-score $s(n)$ tells an adjusting node how in- or out-of-synch it was during the last $m$ perceived ``fire''-/``flash''-events. So then if this $H(n)$-value is to be used to adjust the nodes's frequencies with, the frequency will then be adjusted in a certain direction and amount (specified by $\rho(n)$) — given that the node is \textit{enough} ``out of synch''/``unsynchronized'' (in the case $s(n)$ is considerably larger than 0).
+			
+			We could look at this $H(n)$-value as representing the direction and amplitude of the frequency adjustment weighted by the need to adjust (due to being out of synch) at the time of hearing ``fire''-/``flash''-event $n$. Or in other words, this $H(n)$-value is then the $n$-th contribution with which we want to adjust our frequency with.
+			
+			Especially interesting cases are when we have $\phi(n)\approx0.5 \implies \rho(n)\approx\pm0$, as well as the last $m$ Error-scores $\epsilon(n)$ being close to 0, also leading to $s(n)\approx0$. In both of these two cases the entire frequency-adjustment contribution $H(n)$ would be cancelled out, due to harmonic synchronization (legally hearing a ``fire''-/``flash''-event half-way through ones own phase) in the first case, and due to not being out of synch in the latter (having low Error-Measurements). Cancelling out the frequency adjustment contribution in these cases is then not something bad, but something wanted and something that makes sense. If these $H(n)$-values then are cancelled out or very small, it is indicative of that nodes are already in \textit{harmonic synchrony}, and hence should not be ``adjusted away'' from this goal state. On the other side, if these $H(n)$-values then are different (e.g. closer to -1 and 1), it is indicative of that nodes are not yet in \textit{harmonic synchrony}, and that they hence should be ``adjusted closer'' to the goal state.
+			
+			% Om F(n) og selve oppdateringen av frekvens:
 			\myparagraph{The final step: The Frequency Update function}
 			
 			Putting it all together.
@@ -245,6 +255,8 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 			\end{equation}
 			
 			where $\beta$ is the frequency coupling constant, $k$ is the number of heard/received ``fire-event''s from the start of the last cycle/period to the end (i.e. the phase-climax, or \textit{now}) — and the rest of the values are as described above.
+			
+			This $F(n)$-value then, as we see in Equation \eqref{f_value}, is a weighted average of all the node's $H(n)$-values accumulated throughout the node's last cycle.
 
 % Om mitt bidrag (skill tydelig på mine bidrag og det jeg ikke har gjort noe med)
 \section{My new proposed algorithm: an additional Self-Awareness component}
