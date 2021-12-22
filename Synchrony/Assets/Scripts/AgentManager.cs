@@ -5,7 +5,7 @@ using static DavidsUtils;
 public class AgentManager : MonoBehaviour {
     // ------- START OF Variable Declarations -------
 
-    // General Meta-variables
+    // General Meta-variables:
     public float runDuration = 10f;
     public float adjustedTimeScale = 1.0f;
 

@@ -14,10 +14,10 @@ public class SquiggleScript : MonoBehaviour {
     // Frequency-adjustment variables:
     public float beta = 0.8f; // frequency coupling constant
     public int m = 5; // "running median-filter" length
-    public Vector2 minMaxInitialFreqs = new Vector2(0.5f, 8f); // ALSO MAKE SURE FREQUENCIES STAY WITHIN THIS RANGE (RESET THEM TO A RANDOM.RANGE WITH THESE LIMITS)
+    public Vector2 minMaxInitialFreqs = new Vector2(0.5f, 8f);
 
     // Meta environment-variables:
-    public float t_ref = 0.4f; // ISH LENGDEN I TID PÅ digitalQuickTone er 0.4s. Nymoen BRUKTE 50ms I SIN IMPLEMENTASJON. JEG PRØVDE OGSÅ 0.6f. possiblePool = {0.09f, 0.4f, 0.6f}.
+    public float t_ref_perc_of_period = 0.1f; // ISH LENGDEN I TID PÅ digitalQuickTone er 0.4s. Nymoen BRUKTE 50ms I SIN IMPLEMENTASJON. JEG PRØVDE OGSÅ 0.6f. possiblePool = {0.09f, 0.4f, 0.6f}.
     public bool useSound = true;
     public bool useVisuals = false;
 
@@ -25,6 +25,7 @@ public class SquiggleScript : MonoBehaviour {
     // Core (oscillator) synchronization-variables:
     private float phase; // a number between 0 and 1
     private float frequency; // Hz
+    private float t_ref; // seconds
     private List<float> inPhaseErrorBuffer = new List<float>();
     private List<float> HBuffer = new List<float>(); // a list of H(n)-values (which I calculated from the bottom up in the compiled reMarkable-note of mine)
 
@@ -41,9 +42,9 @@ public class SquiggleScript : MonoBehaviour {
     private Transform pupil;
     private Color bodyColor;
     private Color fireColor = Color.yellow;
-
-    // FOR REFRACTORY PERIOD:
-    private bool inRefractoryPeriod = false; // if this is true, no (neither phase- or frequency-) adjustment should happen (?) - <--------------- DIDN'T SOLVE THE ISSUE INITIALLY
+    private bool inRefractoryPeriod = false; // if this is true, neither phase- or frequency-adjustment should happen.
+    private float unstableFrequencyPeriod = 1f/0.5f;
+    private float timeNotClimaxed;
 
     // ------- END OF Variable Declarations -------
 
@@ -67,7 +68,9 @@ public class SquiggleScript : MonoBehaviour {
 
         // Setting up for Frequency-Adjustment
         InitializeInPhaseErrorBuffer();
-        frequency = Random.Range(minMaxInitialFreqs.x, minMaxInitialFreqs.y); // Initializing frequency in range Random.Range(0.5f, 8f) was found useful by Nymoen et al.                                                                                                       (BRUK '1f;' ISTEDET HVIS DU BARE FIL FASE-JUSTERE)
+        frequency = Random.Range(minMaxInitialFreqs.x, minMaxInitialFreqs.y); // Initializing frequency in range Random.Range(0.5f, 8f) was found useful by Nymoen et al.                                                                                                       (BRUK '1f;' ISTEDET HVIS DU BARE VIL FASE-JUSTERE)
+
+        t_ref = t_ref_perc_of_period * 1.0f / frequency;
     }
 
     void Update() {
@@ -81,13 +84,19 @@ public class SquiggleScript : MonoBehaviour {
         // Eventually updating/lerping the agent-body's color
         if (useVisuals) SetAgentCorpsColor();
 
-        if ((phase + frequency * Time.fixedDeltaTime) >= 1) {
+        if (phase == 1f) {
             OnPhaseClimax();
             phase = 0f;
+            timeNotClimaxed = 0f;
         }
-
-        // Increasing agent's phase according to its frequency
-        phase = phase + frequency * Time.fixedDeltaTime; // If this is no good, consider going back to wrapping the phase: Mathf.Repeat(phase + frequency * Time.fixedDeltaTime, 1f);
+        else if (timeNotClimaxed >= unstableFrequencyPeriod*5) {
+            frequency = 2f * frequency;
+        }
+        else {
+            // Increasing agent's phase according to its frequency if it did just hear a ``fire''-event
+            phase = Mathf.Clamp(phase + frequency * Time.fixedDeltaTime, 0f, 1f);
+            timeNotClimaxed += Time.fixedDeltaTime;
+        }
     }
 
     // ------- END OF MonoBehaviour Functions/Methods -------
@@ -140,6 +149,8 @@ public class SquiggleScript : MonoBehaviour {
         }
 
         RFAAdjustFrequency(); // adjust frequency at phase-climax regardless of if the node fired or not last climax         (KOMMENTER UT HVIS DU BARE FIL FASE-JUSTERE)
+
+        t_ref = 0.1f * 1.0f / frequency; // updating the refractory period to 10% of the new period
     }
 
     void FireNode() {
@@ -185,10 +196,10 @@ public class SquiggleScript : MonoBehaviour {
 
     void AdjustPhase() {
         if (!useNymoen) {
-            phase = Mathf.Repeat(phase*(1 + alpha), 1f); // using Phase Update Function (1); "standard" Mirollo-Strogatz
+            phase = Mathf.Clamp(phase *(1 + alpha), 0f, 1f); // using Phase Update Function (1); "standard" Mirollo-Strogatz
         } else {
             float wave = Mathf.Sin(2 * Mathf.PI * phase);
-            phase = Mathf.Repeat(phase - alpha * wave * Mathf.Abs(wave), 1f); // using Phase Update Function (2); Nymoen et al.'s Bi-Directional
+            phase = Mathf.Clamp(phase - alpha * wave * Mathf.Abs(wave), 0f, 1f); // using Phase Update Function (2); Nymoen et al.'s Bi-Directional
         }
     }
 
@@ -227,17 +238,28 @@ public class SquiggleScript : MonoBehaviour {
             // F_n = beta * sum_0^{y-1}(H(n-x)/y);,       der beta er frequency coupling constant, y er antall hørte/mottatte "fire-events",
             //                                           H(n) = rho(n) * s(n), og rho(n)=-sin(2*PI*phase)
 
-        float averageCycleH = 0;
-        int HBufferLength = HBuffer.Count;
+        float averageCycleH = 0f;
+        float HBufferLength = (float)HBuffer.Count;
         foreach (float H in HBuffer) {
-            averageCycleH += H/(float)HBufferLength;
+            averageCycleH += H;
         }
-        float F_n = beta * averageCycleH;
+
+        // BARE FOR TESTING:
+        //Debug.Log("beta: " + beta + ", averageCycleH: " + averageCycleH + ", HBufferLength: " + HBufferLength);
+
+        float F_n = 0f;
+        if (HBufferLength != 0f) {
+            F_n = beta * averageCycleH / HBufferLength;
+        }
 
         // Clearing the buffer of H(n)-values and making it ready for the next cycle
         HBuffer.Clear();
 
         float newFrequency = frequency * Mathf.Pow(2, F_n);
+
+        // BARE FOR TESTING:
+        //Debug.Log("oldFrequency: " + frequency + ", F_n: " + F_n + ", \n newFrequency (old_freq * 2^F_n): " + newFrequency);
+
         frequency = newFrequency;
     }
 
