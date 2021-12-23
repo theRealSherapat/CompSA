@@ -1,5 +1,4 @@
 \chapter{Implementation}
-\gjor{Skriv opp Worklog-materiale (under ``muy bien so far''-bokmerket) dandert i henhold til gode master-theses}
 
 
 % Introducing the Chapter
@@ -69,9 +68,11 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 	% Om kommunikasjonen til agentene: audio-/``fire''-signalet
 	\subsection{Robot communication: the ``fire''-signal}
 	\label{subsec:fire_signal}
+	
+	No individual agent is able to adjust or modify the state of any other agent, and the only means of communication between the agents will be through these ``fire''-signals.
+	
 		\begin{itemize}
 			\item Short and impulsive audio sound/signal, representing a node's phase-climax and ``fire''-/``flash''-event.
-			\item The only means of communication.
 			\item Stigmergic co-ordination/communication.
 			\item Facilitating PCO (pulse-coupled oscillators), different from phase-coupled oscillators with their differences.
 		\end{itemize}
@@ -93,35 +94,19 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 	\subsection{Update/Adjustment functions: Phase- \& Frequency-Adjustment}
 	\label{subsec:update_functions}
 	
-	Musical agents's phases get updated/adjusted immediately as ``fire''-/``flash''-events are perceived, whereas agents's frequencies do not get updated until the end of their oscillator-cycle (i.e. when having a phase-climax $\phi(t)=1$). So-called H-values, used for frequency-adjustment/-updating at phase-climaxes, are however calculated and accumulated when agents are perceiving a ``fire''-/``flash''-event.
+	When it comes to the temporality and timing of when the updating functions are used and applied:
+	
+	Musical agents's phases get updated/adjusted immediately as ``fire''-/``flash''-events are perceived, whereas agents's frequencies do not get updated until the end of their oscillator-cycle (i.e. when having a phase-climax $\phi(t)=1$). This is also the reason why frequencies are updated discretely, not continuously. So-called H-values however, being ``contributions'' with which the frequencies are to be updated according to, are immediately calculated and accumulated when agents are perceiving a ``fire''-/``flash''-event — and then finally used for frequency-adjustment/-updating at phase-climaxes.
 	
 		\subsubsection{Phase Adjustment}
 		\label{subsubsec:phase_adj}
-			If we first assume constant and equal oscillator-frequencies in our agents, we can take a look at how the agents adjust their|initially random|phases in order to synchronize to each other. This is in contrast to the case in \ref{subsubsec:freq_adj} where heterogenous, often randomly initialized, oscillator-frequencies in the musical agents are implemented and utilized.
+			If we again first assume constant and equal oscillator-frequencies in our agents, we can take a look at how the agents adjust their|initially random|phases in order to synchronize to each other. This was then in contrast to the case in Subsection \ref{subsubsec:freq_adj} where heterogenous and randomly initialized oscillator-frequencies in the musical agents are implemented and utilized.
 			
-			The goal state of the agents is now to fire/flash more or less simultaneously, after having starting firing/flashing at random initially.
+			The goal state of the agents is for now to fire/flash more or less simultaneously, after having started firing/flashing at random initially. Note that this is a different goal from the final and ultimate goal of \textit{harmonic synchrony}.
 			
-			Two approaches to achieve this were attempted in Unity, as presented in Nymoen et al.'s ``\textit{Firefly-paper}'' \cite{nymoen_synch}:
+			One relatively new approach to achieve this, firstly introduced by K. Nymoen et al. \cite{nymoen_synch}, is now presented:
 			
-			\myparagraph{1) Mirollo-Strogatz's ``standard'' Phase Adjustment}
-			
-			\begin{figure}[h]
-				\centering
-				\includegraphics[width=0.9\linewidth]{Assets/Figures/MirolloStrogatzPhaseAdjustment.pdf}
-				\caption{``Standard'' Phase-Adjustment with Mirrollo-Strogatz's approach}
-				\label{fig:strog_phase}
-			\end{figure}
-			
-			Each musical node updates its phase $\phi$ accoring to the \textbf{phase update function \eqref{strog_phase}} when hearing a ``fire''-event from one of the other musical nodes:
-			
-			\begin{equation}\label{strog_phase}
-			P(\phi) = (1 + \alpha)\phi	,
-			\end{equation}
-			
-			where ``\textit{$\alpha$ is the pulse coupling constant, denoting the strength between nodes}'' \cite{nymoen_synch}. So, if $\alpha = 0.1$ e.g., then a musical node's new and updated phase, immediately after hearing a ``fire''-signal from another node, will be equal to $P(\phi) = (1 + 0.1)\phi = 1.1\phi$. 110\% of its old phase $\phi$, that is. Hence, and in this way, the node would be ``pushed'' to fire sooner than it would otherwise. An illustration of this is given in Figure \ref{fig:strog_phase}.
-			
-			
-			\myparagraph{2) Nymoen et al.'s Bi-Directional Phase Shifts}
+			\myparagraph{Bi-Directional Phase Shifts}
 			
 			\begin{figure}[h]
 				\centering
@@ -130,7 +115,7 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 				\label{fig:nymoen_phase}
 			\end{figure}
 			
-			This Phase-adjustment, as in Figure \ref{fig:nymoen_phase}, works very similarly to the Phase-adjustment performed in the \textbf{\textit{Mirollo-Strogatz}} approach; The only difference being that now, nodes update their phase with the slightly more complex \textbf{phase update function \eqref{nymoen_phase}} when hearing a ``fire''-event from one of the other musical nodes — allowing for both larger, but also smaller, updated phases:
+			This Phase-adjustment, as in Figure \ref{fig:nymoen_phase}, works very similarly to the Phase-adjustment performed in the ``standard'' \textbf{\textit{Mirollo-Strogatz}} approach presented in the Background-chapter; The only difference being that now, nodes update their phase with the slightly more complex \textbf{phase update function \eqref{nymoen_phase}} when hearing a ``fire''-event from one of the other musical nodes — allowing for both larger, but also smaller, updated phases:
 			
 			\begin{equation}
 			\label{nymoen_phase}
@@ -146,13 +131,23 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 		\label{subsubsec:freq_adj}
 				\gjor{Presenter hva Frequency-adjustment er, bygg opp fremgangsmåten på hvordan man oppnår Frequency-adjustment (som i Worklog'en, og Mattermost-chatten med Kyrre evt.) | med passende figurer og illustrasjoner}
 				
-			Now over to the slightly more complex issue of synchronizing frequencies in the agents/oscillators. We introduce randomly initialized, non-constant, and heterogenous oscillator-frequencies in our musical agents — allowing in the music collective the playing of rhythmic patterns like \tcol{doubles, fourths, eights (FRA NYMOEN: subdivisions of a measure, i.e. quarter notes and 8ths. "Temporal components in music tend to appear in an integer-ratio relation to each other (e.g., beats, measures, phrases, or quarter notes, 8ths, 16ths)")} etc.
+			Now over to the slightly more complex issue of synchronizing frequencies in the agents/oscillators. We introduce randomly initialized, non-constant, and heterogenous oscillator-frequencies in our musical agents — allowing in the music collective the playing of rhythmic patterns like \tcol{doubles, fourths, eights (FRA NYMOEN: subdivisions of a measure, i.e. quarter notes and 8ths. "Temporal components in music tend to appear in an integer-ratio relation to each other (e.g., beats, measures, phrases, or quarter notes, 8ths, 16ths)")} etc. The agents are now then required to not only synchronize their phases to each other, but now also their initially different and random frequencies — so that frequencies are ``legal'' and \textit{harmonically synchronized}.
 			
 			This approach to Frequency Adjustment stands in contrast to previous approaches to synchronization in oscillators \tcol{cite(fixed\_freqs, fixed\_range\_freqs)} where the oscillators's frequencies are either equal and fixed, or where frequencies are bound to initialize and stay within a fixed interval/range.
 			
 			The goal state now will not be exactly equal frequencies and phases, but rather the goal state of \textit{harmonic synchrony}, as expounded in Subsection \ref{subsec:harmonic_synchrony}.
 			
 			In order to achieve this goal of \textit{harmonic synchrony} in conjunction with|or rather through|frequency adjustment, we have to go through a few steps to build a sophisticated enough update-function able to help us achieve this.
+			
+			Each agent $i$ update their frequency, on their own phase-climax (i.e. when $\phi_i(t)=1$), according to the frequency-update function $\omega_i(t^+)$:
+			
+			\begin{equation}
+				\omega_i(t^+) = \omega_i(t) \cdot 2^{F(n)},
+			\end{equation}
+			
+			where $t^+$ denotes the time-step immediately after phase-climax, $\omega_i(t)$ is the old frequency of the agent at time $t$, and $F(n) \in [-1,1]$ is a quantity denoting how much and in which direction a node should update its frequency after having received its $n$th ``fire''-signal.
+			
+			This is how we obtain the aforementioned $F(n)$-quantity:
 			
 			
 			% Om epsilon(n):
@@ -220,20 +215,24 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 			Acts as an attenuating factor, when $\phi(t)\approx0.5$, in the making of the H-value — supporting the goal of \textit{harmonic synchrony}.
 
 			% Om H(n)-verdiene:
-			\myparagraph{Step 4: The H-value, H(n)}
+			\myparagraph{Step 4: The H-value, and the H(n)-list}
 			
-			Describing how a node should adjust its frequency, based on the n-th ``fire-event'' it received, in the following way:
+			The following value, being ``frequency-update-contributions'', is then (as previously mentioned) calculated immediately when the agent perceives another agent's ``flashing''-signal:
 			
 			\begin{equation}
 			\label{h_value}
 				H(n) = \rho(n) \cdot s(n)
 			\end{equation}
 			
-			Here we then multiply a factor $\rho(n)$ of how much the node should adjust its phase, as well as in which direction, together with a factor $s(n)$ of the adjusting node's self-assessed synch-score. To recall, the self-assessed synch-score $s(n)$ tells an adjusting node how in- or out-of-synch it was during the last $m$ perceived ``fire''-/``flash''-events. So then if this $H(n)$-value is to be used to adjust the nodes's frequencies with, the frequency will then be adjusted in a certain direction and amount (specified by $\rho(n)$) — given that the node is \textit{enough} ``out of synch''/``unsynchronized'' (in the case $s(n)$ is considerably larger than 0).
+			Here we then multiply a factor $\rho(n)$ representing how much, as well as in which direction, the node should adjust its frequency, together with a factor $s(n) \in [0,1]$ of the adjusting node's self-assessed synch-score. To recall, the self-assessed synch-score $s(n)$ tells an adjusting node how in- or out-of-synch it was during the last $m$ perceived ``fire''-/``flash''-events — where $s(n)=0$ signifies a mean of 0 in error-scores, and $s(n)=1$ signifies a mean of 1 in error-scores. So then if this $H$-value is to be used to adjust the nodes's frequencies with, the frequency will then be adjusted in a certain direction and amount (specified by $\rho(n)$) — given that the node is \textit{enough} ``out of synch''/``unsynchronized'' (in the case $s(n)$ is considerably larger than 0).
 			
-			We could look at this $H(n)$-value as representing the direction and amplitude of the frequency adjustment weighted by the need to adjust (due to being out of synch) at the time of hearing ``fire''-/``flash''-event $n$. Or in other words, this $H(n)$-value is then the $n$-th contribution with which we want to adjust our frequency with.
+			The H-value says something about how much ``out of phase'' the node was at the time the node's $n$th ``flashing''-signal was perceived (and then followingly how much it should be adjusted, as well as in which direction after having been multiplied together with a sign-factor $\rho(n))$, given then that this H-value also consists of the \textit{self-assessed synch score s(n)} — which again simply was the median of the list of error-scores, \textit{errorBuffer} in our case.
 			
-			Especially interesting cases are when we have $\phi(n)\approx0.5 \implies \rho(n)\approx\pm0$, as well as the last $m$ Error-scores $\epsilon(n)$ being close to 0, also leading to $s(n)\approx0$. In both of these two cases the entire frequency-adjustment contribution $H(n)$ would be cancelled out, due to harmonic synchronization (legally hearing a ``fire''-/``flash''-event half-way through ones own phase) in the first case, and due to not being out of synch in the latter (having low Error-Measurements). Cancelling out the frequency adjustment contribution in these cases is then not something bad, but something wanted and something that makes sense. If these $H(n)$-values then are cancelled out or very small, it is indicative of that nodes are already in \textit{harmonic synchrony}, and hence should not be ``adjusted away'' from this goal state. On the other side, if these $H(n)$-values then are different (e.g. closer to -1 and 1), it is indicative of that nodes are not yet in \textit{harmonic synchrony}, and that they hence should be ``adjusted closer'' to the goal state.
+			We could look at this $H$-value as representing the direction and amplitude of the frequency adjustment weighted by the need to adjust (due to being out of synch) at the time of hearing ``fire''-/``flash''-event $n$. Or in other words, this $H$-value is then the $n$-th contribution with which we want to adjust our frequency with.
+			
+			Especially interesting cases are when we have $\phi(n)\approx0.5 \implies \rho(n)\approx\pm0$, as well as the last $m$ Error-scores $\epsilon(n)$ being close to 0, also leading to $s(n)\approx0$. In both of these two cases the entire frequency-adjustment contribution $H$ would be cancelled out, due to harmonic synchronization (legally hearing a ``fire''-/``flash''-event half-way through ones own phase) in the first case, and due to not being out of synch in the latter (having low Error-Measurements). Cancelling out the frequency adjustment contribution in these cases is then not something bad, but something wanted and something that makes sense. If these $H$-values then are cancelled out or very small, it is indicative of that nodes are already in \textit{harmonic synchrony}, and hence should not be ``adjusted away'' from this goal state. On the other side, if these $H$-values then are different (e.g. closer to -1 and 1), it is indicative of that nodes are not yet in \textit{harmonic synchrony}, and that they hence should be ``adjusted closer'' to the goal state.
+			
+			All the calculated H-values are in my implementation accumulated and stored in an initially empty C\#-list (of floats), referred to as $H(n)$, at once they are calculated. The $H(n)$-list is then consecutively ``cleared out'' or ``flushed'' when its H-values have been used for the current cycle/period's frequency adjustment (i.e. at the phase climax, when $\phi(t)=1$), and is then ready to accumulate new H-values during the next cycle/period.
 			
 			% Om F(n) og selve oppdateringen av frekvens:
 			\myparagraph{The final step: The Frequency Update function}

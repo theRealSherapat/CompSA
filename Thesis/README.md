@@ -19,10 +19,8 @@ Possibly a good workflow is preparing the set-up:
 	+ View your resulting MSc-PDF in the bottom right corner of the window
 
 ## Specific TODOs
-* Execute 'GJØR: []'-clauses possible to execute now (remember Abe Lincoln).
-	+ Spesielt den første innunder 'Implementation' og 4.1 (Worklog til Implementation)
 * Overfør Concerns fra .TeX-filene til Word Concerns-dokumentene (Struktur og Content Concerns).
-	
+* Execute 'GJØR: []'-clauses possible to execute now (remember Abe Lincoln).
 * Gå igjennom Essay .tex-fila og hent kritikk, INKL.:[]?'s, og concerns.
 
 ## Polishing / Finishing TODOs
@@ -37,7 +35,8 @@ Possibly a good workflow is preparing the set-up:
 	+ Use bold face on Figure-captions (so that it's rather **Figure 4.1** instead of Figure 4.1).
 	+ Minimize the use of parentheses and '—'s.
 * Polish/finish citations and references throughout the master's report:
-	+ Add citation-links on citations (throughout the thesis document when references are cited), 
+	+ Add the right citations/references where there are empty \cite{}-clauses.
+	+ Add citation-links on citations (throughout the thesis document when references are cited).
 	+ Change to using the [NOR04]-style (first author(s), Normann e.g.) instead of [3]-style.
 * Polish/finish the page layouts:
 	+ Se til at alle figurene og tabellene er plassert der det gir mening for deg, ikke der det gir mening for LaTeX.
