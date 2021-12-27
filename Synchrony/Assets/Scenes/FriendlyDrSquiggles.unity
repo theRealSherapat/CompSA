@@ -167,9 +167,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd775d64d8fb444d804ffc4263aeca8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runDuration: 20
+  runDuration: 120
   adjustedTimeScale: 10
-  collectiveSize: 6
+  collectiveSize: 2
   squigglePrefabs:
   - {fileID: 2285719835394980754, guid: c314eb5130117ec42b02442ea979e2a7, type: 3}
   - {fileID: 8768706482228693545, guid: 99dff3106accb1b46a953f4ffd8d9d57, type: 3}

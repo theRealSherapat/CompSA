@@ -78,6 +78,9 @@ public class SquiggleScript : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Space)) {
             LoadMySceneAgain();
         }
+
+                                                                                                                            //Debug.Log("errorBuffer: \n");
+                                                                                                                            //DebugLogMyFloatList(inPhaseErrorBuffer);
     }
 
     void FixedUpdate() {
@@ -220,11 +223,15 @@ public class SquiggleScript : MonoBehaviour {
         // Calculating the median of the inPhaseErrorBuffer, being the self-assessed synch-score
         float s_n = ListMedian(inPhaseErrorBuffer);
 
+                                                                                                            // BARE FOR TESTING:
+                                                                                                            // Debug.Log(gameObject.name + "'s self-assessed synch-score s(n): " + s_n);
+
+
         // Calculating the measure capturing the amplitude and sign of the frequency-modification of the n-th "fire"-event received
         float rho_n = -Mathf.Sin(2 * Mathf.PI * phase); // negative for phase < 1/2, and positive for phase > 1/2, and element in [-1, 1]
 
         float H_n = rho_n * s_n;
-        HBuffer.Add(H_n); // H(n)-values appended to the end of the list
+        HBuffer.Add(H_n); // H-values appended to the end of the list H(n)
     }
 
     private void RFAAdjustFrequency() {
@@ -244,8 +251,8 @@ public class SquiggleScript : MonoBehaviour {
             averageCycleH += H;
         }
 
-        // BARE FOR TESTING:
-        //Debug.Log("beta: " + beta + ", averageCycleH: " + averageCycleH + ", HBufferLength: " + HBufferLength);
+                                                                // BARE FOR TESTING:
+                                                                //Debug.Log("beta: " + beta + ", averageCycleH: " + averageCycleH + ", HBufferLength: " + HBufferLength);
 
         float F_n = 0f;
         if (HBufferLength != 0f) {
@@ -257,8 +264,8 @@ public class SquiggleScript : MonoBehaviour {
 
         float newFrequency = frequency * Mathf.Pow(2, F_n);
 
-        // BARE FOR TESTING:
-        //Debug.Log("oldFrequency: " + frequency + ", F_n: " + F_n + ", \n newFrequency (old_freq * 2^F_n): " + newFrequency);
+                                                    // BARE FOR TESTING:
+                                                    //Debug.Log("oldFrequency: " + frequency + ", F_n: " + F_n + ", \n newFrequency (old_freq * 2^F_n): " + newFrequency);
 
         frequency = newFrequency;
     }

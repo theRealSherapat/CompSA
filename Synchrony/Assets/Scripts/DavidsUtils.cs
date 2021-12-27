@@ -67,7 +67,7 @@ public static class DavidsUtils {
         string newLine = "";
 
         for (int i = 0; i < lineEntries.Count; i++) {
-            newLine += lineEntries[i];
+            newLine += string.Format("{0:N6}", lineEntries[i]);
 
             if (i != lineEntries.Count - 1) newLine += ";";
         }
