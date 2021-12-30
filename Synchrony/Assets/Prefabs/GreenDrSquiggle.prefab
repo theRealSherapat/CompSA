@@ -356,12 +356,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alpha: 0.2
   useNymoen: 1
+  useFrequencyAdjustment: 0
   beta: 0.8
   m: 5
   minMaxInitialFreqs: {x: 0.1, y: 4}
   t_ref_perc_of_period: 0.1
   useSound: 1
-  useVisuals: 0
+  useVisuals: 1
 --- !u!1001 &2285719833623400587
 PrefabInstance:
   m_ObjectHideFlags: 0

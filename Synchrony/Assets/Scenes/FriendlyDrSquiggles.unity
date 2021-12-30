@@ -167,14 +167,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd775d64d8fb444d804ffc4263aeca8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runDuration: 120
-  adjustedTimeScale: 10
-  collectiveSize: 2
+  runDurationLimit: 300
+  adjustedTimeScale: 1
+  collectiveSize: 1
   squigglePrefabs:
   - {fileID: 2285719835394980754, guid: c314eb5130117ec42b02442ea979e2a7, type: 3}
   - {fileID: 8768706482228693545, guid: 99dff3106accb1b46a953f4ffd8d9d57, type: 3}
   - {fileID: 7619773679480578012, guid: 80b6bc4a677099a41b9e98ea3171fe5b, type: 3}
   spawnRadius: 10
+  t_f: 0.08
+  k: 8
   frequencyCSVPath: C:\Users\david\Documents\OrdentligeMapper\CompSA\Synchrony\SavedData\Frequencies\freqs_over_time.csv
   phaseCSVPath: C:\Users\david\Documents\OrdentligeMapper\CompSA\Synchrony\SavedData\Phases\phases_over_time.csv
 --- !u!1 &1150399571

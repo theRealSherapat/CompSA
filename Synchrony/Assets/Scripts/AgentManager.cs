@@ -6,13 +6,17 @@ public class AgentManager : MonoBehaviour {
     // ------- START OF Variable Declarations -------
 
     // General Meta-variables:
-    public float runDuration = 10f;
+    public float runDurationLimit = 300f; // 5 minutes (given in seconds)
     public float adjustedTimeScale = 1.0f;
 
     // Spawning variables:
     public int collectiveSize = 3;
     public GameObject[] squigglePrefabs;
     public float spawnRadius = 10.0f; // units in radius from origo to the outermost Dr. Squiggle spawn-point
+
+    // Performance-measure / Synchronization-time variables
+    public float t_f = 0.08f; // the duration of the time-window the nodes are allowed to fire during
+    public int k = 8; // the number of times in a row the 't_q'-/t_q-window (where no fire-events can be heard) must be equally long
 
     // CSV-Serialization variables:
     public string frequencyCSVPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Frequencies" + "\\" + "freqs_over_time.csv";
@@ -23,6 +27,15 @@ public class AgentManager : MonoBehaviour {
     private float agentWidth = Mathf.Sqrt(Mathf.Pow(4.0f, 2) + Mathf.Pow(4.0f, 2)); // diameter from tentacle to tentacle (furthest from each other)
     private List<Vector2> spawnedPositions = new List<Vector2>();
     private List<SquiggleScript> spawnedAgentScripts = new List<SquiggleScript>();
+
+    // Performance-measure (Synchronization-time) variables
+    private bool hSynchConditionsAreMet = false; // A boolean that should be true no sooner than when all the conditions for the achievement of Harmonic Synchrony are fulfilled.
+    private bool t_f_is_now = false; // A short "up-time" when all nodes are allowed to fire during. The duration itself is constant, but when in simulation-time it will be "up", depends largely on the t_q-variable.
+    private float last_t_q_definer = 0f; // The oldest defining firing-event-time to be used to definine a new t_q-value.
+    private bool define_t_q_at_next_firing = false; // A boolean signal/flag that signalizes that the next fire event will be defining (together with the "now set" or "old" last_t_q_definer) in terms of a new t_q-value/-window.
+    private float t_q = 0f; // The varying (but hopefully eventually converging) time-window/-duration lasting for how long no fire-events can be heard after the last time_fire-window ended.
+    private int number_in_a_row_of_no_firings_within_t_q = 0;
+    private bool firstFiringTriggered;
 
     // ------- END OF Variable Declarations -------
 
@@ -39,10 +52,32 @@ public class AgentManager : MonoBehaviour {
         // Spawning all agents randomly (but pretty naively as of now)
         SpawnAgents();
 
+                                        // HUSK: OGSÅ TENKE PÅ Å LOADE INN EN ALLEREDE-EKSISTERENDE .CSV-FIL MED DATAPUNKTER FOR HSYNCHTIMEs OG DENS KOVARIATER.
         // Creating all .CSV-files I want to update throughout the simulation 
         CreateAllCSVFiles();
+    }
 
-        Invoke("QuitMyGame", runDuration);
+    void Update() {
+        CheckHSynchConditions();
+        //                                                                                                                                <---------- WORK ON!!!!!!!
+        if (hSynchConditionsAreMet) {
+            
+            // Saving a successful data-point
+            //SaveDataPointToCSVFile(Time.timeSinceLevelLoad);
+            
+            // BARE FOR TESTING
+            Debug.Log("Synchrony achieved! The synch-time was: " + Time.timeSinceLevelLoad);
+            
+            QuitMyGame();
+        } else if (!hSynchConditionsAreMet && (Time.timeSinceLevelLoad >= runDurationLimit)) { // Max-time limit for the run (so that it won't go on forever)
+            // Saving an un-successful data-point
+            //SaveDataPointToCSVFile("fail");
+
+            // BARE FOR TESTING
+            Debug.Log("Synchrony not acheived. Exiting Simulation.");
+
+            QuitMyGame();
+        }
     }
 
     void FixedUpdate() {
@@ -52,6 +87,90 @@ public class AgentManager : MonoBehaviour {
 
     // ------- END OF MonoBehaviour Functions/Methods -------
 
+
+
+
+
+    // ------- START OF Performance-measure Termination-evaluation Functions/Methods -------
+
+    private void IJustHeardSomeoneFire() {
+        // When this method gets called, it means the AgentManager has picked upon a Dr. Squiggle's Event-Action — meaning it "heard" a Dr. Squiggle's ``fire''-signal.
+
+        // Fanger Accurately opp Action-Eventsa til Dr. Squiggles'a.
+        // FØLG TRINNENE FRA 1) TIL 7) I Fig. 6. I Nymoen-paperet.
+
+        // Calling for the initialization (technically resetting) of the t_q-/t_q-window
+        if (last_t_q_definer == 0f) {
+            last_t_q_definer = Time.time;
+
+            //TriggerFirstFiringTime();                                                                 // KAN MEST SANNSYNLIG KUTTE UT
+
+            define_t_q_at_next_firing = true;
+        }
+        // Resetting the t_q-/t_q-window if this is not the first observed Fire-event and the reset is flagged and wanted
+        else if (define_t_q_at_next_firing) {
+            if (!firstFiringTriggered) { // First mover if this is the first time t_q gets defined?
+                TriggerFiringTime();
+                firstFiringTriggered = true;
+            }
+
+            t_q = Time.time - last_t_q_definer - t_f;                   // KANSKJE TREKKE FRA EN HALV t_f TIL (SOM JEG TOLKET Fig. 6 SOM FØRST)?
+
+            define_t_q_at_next_firing = false;
+        }
+        // Calling for a reset for the t_q-/t_q-window since observed fire-event was received during !t_f a.k.a. t_q, and we did not want to reset t_q this time, nor calling for the initialization of t_q
+        else if (!t_f_is_now) {
+            number_in_a_row_of_no_firings_within_t_q = 0; // resetting the streak, because synch bad
+
+            last_t_q_definer = Time.time;
+
+            define_t_q_at_next_firing = true;
+        }
+
+        // MÅ PASSE PÅ AT TriggerFiringTime() BLIR KALT ETTER HVERT t_q-/t_q-window.
+
+        // NECESSARY CONDITIONS FOR SYNCHRONIZATION:
+            // DOES FIRING ALWAYS OCCUR WITHIN THE time_fire-WINDOW, AND NEVER DURING THE time-quiet-WINDOW ANYMORE? GOOOD!
+
+            // HAVE ALL NODES FIRED AT LEAST ONCE DURING THE EVALUATION PERIOD? GOOOD!
+
+            // HAVE THERE BEEN NO FIRINGS WITHIN THE t_q-WINDOWS k TIMES? GOOOD!
+
+            // IF SO — CONGRATS! YOU CAN SET synchronizationIsAchieved = true;
+    }
+
+    private void CheckHSynchConditions() {
+        // SJEKK AT HVER NODE HAR FYRT MINST EN GANG ILØPET AV EVALUERINGS-PERIODEN.
+
+        if (number_in_a_row_of_no_firings_within_t_q == k) hSynchConditionsAreMet = true;
+    }
+
+    private void TriggerFiringTime() {
+        t_f_is_now = true;
+        number_in_a_row_of_no_firings_within_t_q ++;
+        Debug.Log("Counter towards k: " + number_in_a_row_of_no_firings_within_t_q);
+        Invoke("TriggerQuietPeriod", t_f);
+    }
+
+    private void TriggerQuietPeriod() {
+        t_f_is_now = false;
+        Invoke("TriggerFiringTime", t_q);
+    }
+
+    // KAN MEST SANNSYNLIG KUTTE UT:
+        //private void TriggerFirstFiringTime() {
+        //    // t_q is yet not defined (i.e. t_q = 0f)
+        //    t_f_is_now = true;
+        //    Invoke("FalsifyFiringTime", t_f);
+        //}
+
+        //private void FalsifyFiringTime() {
+        //    // t_q is yet not defined (i.e. t_q = 0f)
+        //    t_f_is_now = false;
+        //}
+
+
+    // ------- END OF Performance-measure Termination-evaluation Functions/-Methods -------
 
 
 
@@ -70,8 +189,11 @@ public class AgentManager : MonoBehaviour {
                                                                 new Vector3(randomCirclePoint.x, -0.96f, randomCirclePoint.y),
                                                                 Quaternion.identity);
 
-            newAgent.GetComponent<SquiggleScript>().SetAgentID(i + 1); // Setting AgentIDs so that agents have IDs {1, 2, 3, ..., N}, where N is the number of agents in the scene.
-            spawnedAgentScripts.Add(newAgent.GetComponent<SquiggleScript>());
+            SquiggleScript extractedSquiggleScript = newAgent.GetComponent<SquiggleScript>();
+
+            extractedSquiggleScript.SetAgentID(i + 1); // Setting AgentIDs so that agents have IDs {1, 2, 3, ..., N}, where N is the number of agents in the scene.
+            extractedSquiggleScript.OnSquiggleFire += IJustHeardSomeoneFire;
+            spawnedAgentScripts.Add(extractedSquiggleScript);
 
             // IF-TIME Debug-TODO: Figure out local vs. global Dr.Squiggle-rotations:
                 // Rotating agents to face each other
@@ -106,7 +228,7 @@ public class AgentManager : MonoBehaviour {
     // ------- END OF Spawning-Functions/-Methods -------
 
 
-
+    
 
 
 

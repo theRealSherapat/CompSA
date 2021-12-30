@@ -6,6 +6,7 @@ using static DavidsUtils;
 
 public class TestBedScript : MonoBehaviour {
     private List<float> errorBuffer = new List<float>();
+    private int incrementVariable;
 
     List<float> squiggleIDer = new List<float> {2f,1f,3f,4f}; // N = 4
 
@@ -53,6 +54,16 @@ public class TestBedScript : MonoBehaviour {
             float beTheMedianPls = ListMedian(errorBuffer);
             print("Medianen er forhåpentligvis: " + beTheMedianPls);
         }
+        else if (Input.GetKeyDown(KeyCode.H)) {
+            // Tester om Invoke's stopper sekvensen/koden, men det gjør den ikke. Linjene etter blir kjørt med en gang.
+            Invoke("PrintHelloFromTheOtherSideIn2Sec", 5f);
+            Debug.Log("Beat you to it suckah.");
+        }
+        else if (Input.GetKeyDown(KeyCode.I)) {
+            // Checking C# integer increments
+            incrementVariable++;
+            Debug.Log(incrementVariable);
+        }
     }
 
     private List<float> GetMyDarnSortedList(List<float> listeAaSortere) {
@@ -65,5 +76,9 @@ public class TestBedScript : MonoBehaviour {
     void ShiftListWith(float thisInput) {
         errorBuffer.Add(thisInput);
         errorBuffer.RemoveAt(0);
+    }
+
+    void PrintHelloFromTheOtherSideIn2Sec() {
+        Debug.Log("Hello From The Other Side");
     }
 }

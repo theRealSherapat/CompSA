@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,6 +13,7 @@ public class SquiggleScript : MonoBehaviour {
     public bool useNymoen = true;
 
     // Frequency-adjustment variables:
+    public bool useFrequencyAdjustment = true;
     public float beta = 0.8f; // frequency coupling constant
     public int m = 5; // "running median-filter" length
     public Vector2 minMaxInitialFreqs = new Vector2(0.5f, 8f);
@@ -20,6 +22,9 @@ public class SquiggleScript : MonoBehaviour {
     public float t_ref_perc_of_period = 0.1f; // ISH LENGDEN I TID PÅ digitalQuickTone er 0.4s. Nymoen BRUKTE 50ms I SIN IMPLEMENTASJON. JEG PRØVDE OGSÅ 0.6f. possiblePool = {0.09f, 0.4f, 0.6f}.
     public bool useSound = true;
     public bool useVisuals = false;
+
+    // Events and Actions
+    public event Action OnSquiggleFire;
 
 
     // Core (oscillator) synchronization-variables:
@@ -64,11 +69,15 @@ public class SquiggleScript : MonoBehaviour {
         AssignHelpingVariables();
 
         // Initializing the agent's phase randomly
-        phase = Random.Range(0.0f, 1.0f);
+        phase = UnityEngine.Random.Range(0.0f, 1.0f);
 
         // Setting up for Frequency-Adjustment
         InitializeInPhaseErrorBuffer();
-        frequency = Random.Range(minMaxInitialFreqs.x, minMaxInitialFreqs.y); // Initializing frequency in range Random.Range(0.5f, 8f) was found useful by Nymoen et al.                                                                                                       (BRUK '1f;' ISTEDET HVIS DU BARE VIL FASE-JUSTERE)
+        if (useFrequencyAdjustment) {
+            frequency = UnityEngine.Random.Range(minMaxInitialFreqs.x, minMaxInitialFreqs.y); // Initializing frequency in range Random.Range(0.5f, 8f) was found useful by Nymoen et al.
+        } else {
+            frequency = 1f;
+        }
 
         t_ref = t_ref_perc_of_period * 1.0f / frequency;
     }
@@ -78,14 +87,13 @@ public class SquiggleScript : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Space)) {
             LoadMySceneAgain();
         }
-
                                                                                                                             //Debug.Log("errorBuffer: \n");
                                                                                                                             //DebugLogMyFloatList(inPhaseErrorBuffer);
     }
 
     void FixedUpdate() {
         // Eventually updating/lerping the agent-body's color
-        if (useVisuals) SetAgentCorpsColor();
+        if (useVisuals && firedLastClimax) SetAgentCorpsColor();
 
         if (phase == 1f) {
             OnPhaseClimax();
@@ -108,36 +116,6 @@ public class SquiggleScript : MonoBehaviour {
 
 
 
-    // ------- START OF Testing Functions/Methods -------
-
-    private void UpdateFrequencyImmediately() {
-        float epsilon_n;
-        if (!inRefractoryPeriod) {
-            epsilon_n = Mathf.Pow(Mathf.Sin(Mathf.PI * phase), 2);
-        } else {
-            epsilon_n = 0f;
-        }
-
-        inPhaseErrorBuffer = ShiftFloatListRightToLeftWith(inPhaseErrorBuffer, epsilon_n);
-
-        // Calculating the median of the inPhaseErrorBuffer, being the self-assessed synch-score
-        float s_n = ListMedian(inPhaseErrorBuffer);
-
-        // Calculating the measure capturing the amplitude and sign of the frequency-modification of the n-th "fire"-event received
-        float rho_n = -Mathf.Sin(2 * Mathf.PI * phase); // negative for phase < 1/2, and positive for phase > 1/2, and element in [-1, 1]
-
-        float H_n = rho_n * s_n;
-
-        float F_n = beta * H_n;
-
-        float newFrequency = frequency * Mathf.Pow(2, F_n);
-        frequency = newFrequency;
-    }
-
-    // ------- END OF Testing Functions/Methods -------
-
-
-
 
 
 
@@ -151,7 +129,7 @@ public class SquiggleScript : MonoBehaviour {
             firedLastClimax = false;
         }
 
-        RFAAdjustFrequency(); // adjust frequency at phase-climax regardless of if the node fired or not last climax         (KOMMENTER UT HVIS DU BARE FIL FASE-JUSTERE)
+        if (useFrequencyAdjustment) RFAAdjustFrequency(); // adjust frequency at phase-climax regardless of if the node fired or not last climax (if FrequencyAdjustment is to be used)
 
         t_ref = 0.1f * 1.0f / frequency; // updating the refractory period to 10% of the new period
     }
@@ -165,6 +143,11 @@ public class SquiggleScript : MonoBehaviour {
 
         // Calling on all the agents to adjust their phases and calculate frequency-H-values
         NotifyTheAgents();
+
+        // Invoking the action the AgentManager is supposed to catch up on and use in the evaluation of the system's synchrony
+        if (OnSquiggleFire != null) {
+            OnSquiggleFire();
+        }
     }
 
     private void NotifyTheHuman() {
@@ -357,4 +340,38 @@ public class SquiggleScript : MonoBehaviour {
     }
 
     // ------- END OF Helping-/Utility Functions/Methods -------
+
+
+
+
+
+
+
+    // ------- START OF Testing Functions/Methods -------
+
+    private void UpdateFrequencyImmediately() {
+        float epsilon_n;
+        if (!inRefractoryPeriod) {
+            epsilon_n = Mathf.Pow(Mathf.Sin(Mathf.PI * phase), 2);
+        } else {
+            epsilon_n = 0f;
+        }
+
+        inPhaseErrorBuffer = ShiftFloatListRightToLeftWith(inPhaseErrorBuffer, epsilon_n);
+
+        // Calculating the median of the inPhaseErrorBuffer, being the self-assessed synch-score
+        float s_n = ListMedian(inPhaseErrorBuffer);
+
+        // Calculating the measure capturing the amplitude and sign of the frequency-modification of the n-th "fire"-event received
+        float rho_n = -Mathf.Sin(2 * Mathf.PI * phase); // negative for phase < 1/2, and positive for phase > 1/2, and element in [-1, 1]
+
+        float H_n = rho_n * s_n;
+
+        float F_n = beta * H_n;
+
+        float newFrequency = frequency * Mathf.Pow(2, F_n);
+        frequency = newFrequency;
+    }
+
+    // ------- END OF Testing Functions/Methods -------
 }
