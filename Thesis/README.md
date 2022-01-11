@@ -20,6 +20,7 @@ Possibly a good workflow is preparing the set-up:
 
 ## Specific TODOs
 * Overfør Concerns fra .TeX-filene til Word Concerns-dokumentene (Struktur og Content Concerns).
+* Skriv mot Up-To-Date MSc-thesis Draft.
 * Execute 'GJØR: []'-clauses possible to execute now (remember Abe Lincoln).
 * Gå igjennom Essay .tex-fila og hent kritikk, INKL.:[]?'s, og concerns.
 
@@ -36,7 +37,9 @@ Possibly a good workflow is preparing the set-up:
 	+ Minimize the use of parentheses and '—'s.
 * Polish/finish citations and references throughout the master's report:
 	+ Add the right citations/references where there are empty \cite{}-clauses.
-	+ Add citation-links on citations (throughout the thesis document when references are cited).
 	+ Change to using the [NOR04]-style (first author(s), Normann e.g.) instead of [3]-style.
 * Polish/finish the page layouts:
 	+ Se til at alle figurene og tabellene er plassert der det gir mening for deg, ikke der det gir mening for LaTeX.
+
+## Pre-Korrekturlesning TODOs
+* Høre med Kyrre om det er fryktelig nøye åssen referansene er skrevet opp, eller om Zoteros eksporterte .bib-filer er gode nok.
