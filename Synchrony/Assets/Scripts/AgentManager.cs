@@ -21,6 +21,8 @@ public class AgentManager : MonoBehaviour {
     // CSV-Serialization variables:
     public string frequencyCSVPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Frequencies" + "\\" + "freqs_over_time.csv";
     public string phaseCSVPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Phases" + "\\" + "phases_over_time.csv";
+    public string t_f_is_nowPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "t_f_is_now.csv";
+    public string nodeFiringDataPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "node_firing_data.csv";
 
 
     // Spawning variables:
@@ -34,7 +36,7 @@ public class AgentManager : MonoBehaviour {
     private float last_t_q_definer = 0f; // The oldest defining firing-event-time to be used to definine a new t_q-value.
     private bool define_t_q_at_next_firing = false; // A boolean signal/flag that signalizes that the next fire event will be defining (together with the "now set" or "old" last_t_q_definer) in terms of a new t_q-value/-window.
     private float t_q = 0f; // The varying (but hopefully eventually converging) time-window/-duration lasting for how long no fire-events can be heard after the last time_fire-window ended.
-    private int number_in_a_row_of_no_firings_within_t_q = 0;
+    private static int number_in_a_row_of_no_firings_within_t_q = 0;
     private bool firstFiringTriggered;
 
     // ------- END OF Variable Declarations -------
@@ -58,8 +60,10 @@ public class AgentManager : MonoBehaviour {
     }
 
     void Update() {
+        //                                                                                                    <---------- WORK ON!!!!!!!
+
         CheckHSynchConditions();
-        //                                                                                                                                <---------- WORK ON!!!!!!!
+        
         if (hSynchConditionsAreMet) {
             
             // Saving a successful data-point
@@ -110,11 +114,11 @@ public class AgentManager : MonoBehaviour {
         // Resetting the t_q-/t_q-window if this is not the first observed Fire-event and the reset is flagged and wanted
         else if (define_t_q_at_next_firing) {
             if (!firstFiringTriggered) { // First mover if this is the first time t_q gets defined?
-                TriggerFiringTime();
                 firstFiringTriggered = true;
+                TriggerFiringTime();
             }
 
-            t_q = Time.time - last_t_q_definer - t_f;                   // KANSKJE TREKKE FRA EN HALV t_f TIL (SOM JEG TOLKET Fig. 6 SOM FØRST)?
+            t_q = Time.time - last_t_q_definer - 3/2*t_f;                   // KANSKJE IKKE TREKKE FRA EN HALV t_f TIL (SOM JEG TOLKET Fig. 6 SOM FØRST)?
 
             define_t_q_at_next_firing = false;
         }
@@ -247,6 +251,13 @@ public class AgentManager : MonoBehaviour {
 
         // 2) Creating one .CSV-file for the agents's phases over time
         CreateCSVWithHeader(phaseCSVPath, agentIDHeader);
+
+        // 3) Creating one .CSV-file for the t_f_is_now-variable, telling (in time) when it is legal for nodes to fire
+        List<int> t_f_is_nowHeader = new List<int>();
+        CreateCSVWithHeader(t_f_is_nowPath, t_f_is_nowHeader);
+
+        // 4) Creating one .CSV-file for the data needed to create the "Node-firing-plot", as in Nymoen's Fig. 6
+        CreateCSVWithHeader(nodeFiringDataPath, agentIDHeader);
     }
 
     private void UpdateCSVFiles() {
@@ -263,6 +274,15 @@ public class AgentManager : MonoBehaviour {
             phaseIntervalEntries.Add(squiggScr.GetPhase());
         }
         FloatUpdateCSV(phaseCSVPath, phaseIntervalEntries);
+
+        // 3) Updating the t_f_is_now digital signal saved to the .CSV-file
+        float t_f_is_nowFloat = System.Convert.ToSingle(t_f_is_now);
+        List<float> t_f_is_nowList = new List<float>();
+        t_f_is_nowList.Add(t_f_is_nowFloat);
+        FloatUpdateCSV(t_f_is_nowPath, t_f_is_nowList);
+
+        // 4) Updating the node-firing data                                               SHOULD BE UPDATED WHEN FIRING EVENTS ARE HEARD, NOT CONTINUOUSLY
+        // MÅ FINNE UT HVILKEN NODE SOM FYRTE AKKURAT NÅ, OG SÅ KONSTRUERE EN .CSV-ENTRY/-LINJE UTIFRA DET.
     }
 
     // ------- END OF CSV-Serialization Functions/Methods -------

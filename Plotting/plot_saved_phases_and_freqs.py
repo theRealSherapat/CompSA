@@ -4,7 +4,7 @@ import numpy as np
 import csv
 import matplotlib.pyplot as plt
 
-samplingRate = 100 # Hz
+samplingRate = 100 # Hz                                                                                     POTENTIAL SOURCE OF ERROR
 
 def main(phase_filename, freqs_filename, agent_no):
     """ It first extracts the data from the .CSVs into two np.arrays, as well as getting the corresponding vertical time-axis.
@@ -47,7 +47,7 @@ def plotPhasesAndFrequencies(t, phaseDataMatrix, frequencyDataMatrix):
     scatterPlotLegalMultiples(t, frequencyDataMatrix)
     
     # Printing out the whole sub-plot
-    plt.tight_layout()
+    plt.tight_layout()    
     plt.show()
     
 def scatterPlotLegalMultiples(timeArray, freqsDataMatrix):
