@@ -4,23 +4,11 @@ Remember:
 * "Less is more." — experience and William Strunk Jr.
 * "Don't overkill it." — experience (crazy and many color-codes)
 
-### SETUP While having displayable writing-inspirations in mind:
-Possibly a good workflow is preparing the set-up:
-1) BIG SCREEN AVAILABLE:
-* On the big screen opening and having on the right or left side:
-	+ (On the left side) A thesis writing-tips document (e.g. from Jim Tørresen) and your own MSc document
-	+ (On the right side) Good MSc theses examples (as many as is needed or useful, in the order 'Nygaard, Samuelsen, Ruud')
-* On the smaller laptop-screen:
-	+ Notepad++ with the master.tex-document, this README, the various Chapters for the master.tex that you're working on
-2) ONLY LAPTOP AVAILABLE:
-* Think of something you want to take inspiration from or compare to, w.r.t. something you could write about right now (something that's on your mind)
-	+ View the inspiration in a top-left corner of the window
-	+ Open Notepad++ and your MSc-document in the middle
-	+ View your resulting MSc-PDF in the bottom right corner of the window
 
 ## Specific TODOs
+* Fiks ordentlig kode-lint i Notepad++ sånn at jeg sparer mye tid og tekst-klassifiserings-krefter.
 * Overfør Concerns fra .TeX-filene til Word Concerns-dokumentene (Struktur og Content Concerns).
-* Skriv mot Up-To-Date MSc-thesis Draft.
+* Skriv mot Up-To-Date MSc-thesis /-chapter Draft.
 * Execute 'GJØR: []'-clauses possible to execute now (remember Abe Lincoln).
 * Gå igjennom Essay .tex-fila og hent kritikk, INKL.:[]?'s, og concerns.
 
@@ -43,3 +31,18 @@ Possibly a good workflow is preparing the set-up:
 
 ## Pre-Korrekturlesning TODOs
 * Høre med Kyrre om det er fryktelig nøye åssen referansene er skrevet opp, eller om Zoteros eksporterte .bib-filer er gode nok.
+
+
+#### Possible setup While having displayable writing-inspirations in mind:
+Possibly a good workflow is preparing the set-up:
+1) BIG SCREEN AVAILABLE:
+* On the big screen opening and having on the right or left side:
+	+ (On the left side) A thesis writing-tips document (e.g. from Jim Tørresen) and your own MSc document
+	+ (On the right side) Good MSc theses examples (as many as is needed or useful, in the order 'Nygaard, Samuelsen, Ruud')
+* On the smaller laptop-screen:
+	+ Notepad++ with the master.tex-document, this README, the various Chapters for the master.tex that you're working on
+2) ONLY LAPTOP AVAILABLE:
+* Think of something you want to take inspiration from or compare to, w.r.t. something you could write about right now (something that's on your mind)
+	+ View the inspiration in a top-left corner of the window
+	+ Open Notepad++ and your MSc-document in the middle
+	+ View your resulting MSc-PDF in the bottom right corner of the window
