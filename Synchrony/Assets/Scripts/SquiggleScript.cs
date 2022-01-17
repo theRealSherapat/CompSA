@@ -310,7 +310,7 @@ public class SquiggleScript : MonoBehaviour {
     
     private void AssignAudioVariables() {
         audioSource = GetComponent<AudioSource>();
-        audioSource.volume = 1f / (otherSquiggles.Count + 1);
+        audioSource.volume = 1f / (2*(otherSquiggles.Count + 1)); // REMOVE THE FACTOR 2 IN THE DENOMINATOR TO INCREASE VOLUME
     }
 
     private void AssignHelpingVariables() {

@@ -20,7 +20,7 @@ public class TestBedScript : MonoBehaviour {
         // FOR Å TESTE CSV-LAGRINGEN:
         string path = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "minForsteDataFil.csv";
         List<int> CSVHeaderEntries = new List<int> { 2, 1, 3, 4};
-        CreateCSVWithHeader(path, CSVHeaderEntries);
+        CreateCSVWithIntHeader(path, CSVHeaderEntries);
     }
 
     void Update() {

@@ -4,7 +4,7 @@ import numpy as np
 import csv
 import matplotlib.pyplot as plt
 
-samplingRate = 50 # Hz
+samplingRate = 100 # Hz
 
 def main(csv_filename, agent_no, dataPlotted):
     """ Takes in the .CSV filename to extract and plot data from, the amount of agents we have data for,

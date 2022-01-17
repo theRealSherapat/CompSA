@@ -3,6 +3,8 @@ using UnityEngine;
 using System.IO;
 
 public static class DavidsUtils {
+    // HUSK AT Å KALLE DET DavidsUtils KAN VÆRE UÆRLIG, SIDEN DU FIKK INSPIRASJON FRA PIERRES Unity-PROSJEKT.
+
     public static List<float> ShiftFloatListRightToLeftWith(List<float> thisList, float thisInput) {
         thisList.Add(thisInput);
         thisList.RemoveAt(0);
@@ -46,7 +48,7 @@ public static class DavidsUtils {
         Debug.Log("END.");
     }
 
-    public static void CreateCSVWithHeader(string path, List<int> headerEntries) {
+    public static void CreateCSVWithIntHeader(string path, List<int> headerEntries) {
         // Summary: creates a .CSV-file at arg1, <path>, with the top-line/header according to arg2, <headerEntries>.
         TextWriter tw = new StreamWriter(path, false);
         string firstLine = "";

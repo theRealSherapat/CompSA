@@ -5,12 +5,15 @@ using static DavidsUtils;
 public class AgentManager : MonoBehaviour {
     // ------- START OF Variable Declarations -------
 
+    // Simulation Hyperparameters/HSYNCH-Covariates
+    public int collectiveSize = 3;
+    
     // General Meta-variables:
     public float runDurationLimit = 300f; // 5 minutes (given in seconds)
     public float adjustedTimeScale = 1.0f;
 
+
     // Spawning variables:
-    public int collectiveSize = 3;
     public GameObject[] squigglePrefabs;
     public float spawnRadius = 10.0f; // units in radius from origo to the outermost Dr. Squiggle spawn-point
 
@@ -21,9 +24,10 @@ public class AgentManager : MonoBehaviour {
     // CSV-Serialization variables:
     public string frequencyCSVPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Frequencies" + "\\" + "freqs_over_time.csv";
     public string phaseCSVPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Phases" + "\\" + "phases_over_time.csv";
-    public string t_f_is_nowPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "t_f_is_now.csv";
-    public string nodeFiringDataPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "node_firing_data.csv";
-
+    public string nodeFiringDataPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "nodeFiringDataPath.csv";
+    //public string nodeFiringDataPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "node_firing_data.csv"; // FOR THE SYNCHRONY-PLOT (AS IN NYMOEN'S PAPER)
+    public string datasetPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "synchronyDataset.csv";
+    
 
     // Spawning variables:
     private float agentWidth = Mathf.Sqrt(Mathf.Pow(4.0f, 2) + Mathf.Pow(4.0f, 2)); // diameter from tentacle to tentacle (furthest from each other)
@@ -36,7 +40,7 @@ public class AgentManager : MonoBehaviour {
     private float last_t_q_definer = 0f; // The oldest defining firing-event-time to be used to definine a new t_q-value.
     private bool define_t_q_at_next_firing = false; // A boolean signal/flag that signalizes that the next fire event will be defining (together with the "now set" or "old" last_t_q_definer) in terms of a new t_q-value/-window.
     private float t_q = 0f; // The varying (but hopefully eventually converging) time-window/-duration lasting for how long no fire-events can be heard after the last time_fire-window ended.
-    private static int number_in_a_row_of_no_firings_within_t_q = 0;
+    private int number_in_a_row_of_no_firings_within_t_q = 0;
     private bool firstFiringTriggered;
 
     // ------- END OF Variable Declarations -------
@@ -54,12 +58,21 @@ public class AgentManager : MonoBehaviour {
         // Spawning all agents randomly (but pretty naively as of now)
         SpawnAgents();
 
-                                        // HUSK: OGSÅ TENKE PÅ Å LOADE INN EN ALLEREDE-EKSISTERENDE .CSV-FIL MED DATAPUNKTER FOR HSYNCHTIMEs OG DENS KOVARIATER.
         // Creating all .CSV-files I want to update throughout the simulation 
         CreateAllCSVFiles();
     }
 
     void Update() {
+                                                                                                // BARE FOR TESTING:
+        if (Input.GetKeyDown(KeyCode.Q)) {
+            Debug.Log("FAKE Synchrony achieved! The synch-time was: " + Time.timeSinceLevelLoad);
+
+            // Saving a FAKE successful data-point
+            SaveDatapointToDataset();
+
+            QuitMyGame();
+        }
+
         //                                                                                                    <---------- WORK ON!!!!!!!
 
         CheckHSynchConditions();
@@ -70,7 +83,7 @@ public class AgentManager : MonoBehaviour {
             //SaveDataPointToCSVFile(Time.timeSinceLevelLoad);
             
             // BARE FOR TESTING
-            Debug.Log("Synchrony achieved! The synch-time was: " + Time.timeSinceLevelLoad);
+            Debug.Log("'REAL' Synchrony achieved! The synch-time was: " + Time.timeSinceLevelLoad);
             
             QuitMyGame();
         } else if (!hSynchConditionsAreMet && (Time.timeSinceLevelLoad >= runDurationLimit)) { // Max-time limit for the run (so that it won't go on forever)
@@ -96,6 +109,27 @@ public class AgentManager : MonoBehaviour {
 
 
     // ------- START OF Performance-measure Termination-evaluation Functions/Methods -------
+
+    private void SaveDatapointToDataset() {
+        // Saving the Performance Measure (HSYNCHTIME) and the current Simulator-covariates/-hyperparameters
+
+        // Initializing empty float-List soon-to-contain the performance measure and the covariates/explanators
+        List<float> performanceAndCovariateValues = new List<float>();
+
+        // Adding the performance measure
+        performanceAndCovariateValues.Add(Time.timeSinceLevelLoad);
+        
+        // Adding Covariate 1
+        float hSynchConditionsAreMetFloat = System.Convert.ToSingle(hSynchConditionsAreMet);
+        performanceAndCovariateValues.Add(hSynchConditionsAreMetFloat);
+        
+        // Adding Covariate 2
+        float useNymoenFloat = System.Convert.ToSingle(spawnedAgentScripts[0].useNymoen);
+        performanceAndCovariateValues.Add(useNymoenFloat);
+        
+        // Saving one datapoint, a.k.a. writing one .CSV-row (Performance-measure, Covariates) to the .CSV-file at the datasetPath
+        FloatUpdateCSV(datasetPath, performanceAndCovariateValues);
+    }
 
     private void IJustHeardSomeoneFire() {
         // When this method gets called, it means the AgentManager has picked upon a Dr. Squiggle's Event-Action — meaning it "heard" a Dr. Squiggle's ``fire''-signal.
@@ -247,17 +281,24 @@ public class AgentManager : MonoBehaviour {
         }
 
         // 1) Creating one .CSV-file for the agents's frequencies over time
-        CreateCSVWithHeader(frequencyCSVPath, agentIDHeader);
+        CreateCSVWithIntHeader(frequencyCSVPath, agentIDHeader);
 
         // 2) Creating one .CSV-file for the agents's phases over time
-        CreateCSVWithHeader(phaseCSVPath, agentIDHeader);
+        CreateCSVWithIntHeader(phaseCSVPath, agentIDHeader);
 
-        // 3) Creating one .CSV-file for the t_f_is_now-variable, telling (in time) when it is legal for nodes to fire
-        List<int> t_f_is_nowHeader = new List<int>();
-        CreateCSVWithHeader(t_f_is_nowPath, t_f_is_nowHeader);
+        // 3) Creating one .CSV-file for the nodeFiringData, including the t_f_is_now which is telling (in time) when it is legal for nodes to fire
+        List<int> nodeFiringDataHeader = new List<int>();
+        CreateCSVWithIntHeader(nodeFiringDataPath, nodeFiringDataHeader);
 
-        // 4) Creating one .CSV-file for the data needed to create the "Node-firing-plot", as in Nymoen's Fig. 6
-        CreateCSVWithHeader(nodeFiringDataPath, agentIDHeader);
+        //// 4) Creating one .CSV-file for the data needed to create the "Node-firing-plot", as in Nymoen's Fig. 6
+        //CreateCSVWithHeader(nodeFiringDataPath, agentIDHeader);
+
+        // Creating a .CSV-file for the MSc Synchrony-dataset, which are to contain the HSYNCHTIMEs with their covariates.
+        List<string> performanceAndCovariatesHeader = new List<string>(); // The covariates we want to record the performance-measure/outcome/response-variable for
+        //performanceAndCovariatesHeader.Add("HSYNCHTIME");
+        //performanceAndCovariatesHeader.Add("SUCCESS");    // Binary covariate (no=0 or yes=1)
+        //performanceAndCovariatesHeader.Add("PHASEADJ");
+        //CreateCSVWithStringHeader(datasetPath, performanceAndCovariatesHeader);
     }
 
     private void UpdateCSVFiles() {
