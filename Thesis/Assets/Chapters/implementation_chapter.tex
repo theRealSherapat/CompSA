@@ -1,15 +1,14 @@
 \chapter{Implementation}
-
-
 % Introducing the Chapter
 This chapter gives an overview of the developed musical multi-robot system. The main goal of the implemented system is to allow for a multi-robot (musical) collective to interact with each other in order to achieve emergent and co-ordinating/co-operative behaviour—synchronization specifically in our case—with varying degrees of difficulty and certainty in the environment and communication. More specifically, the goal with the design is to enable the robot collective to achieve so-called \textit{harmonic synchronization} within a relatively short time. What is meant by \textit{harmonic synchronization} will be expounded in Subsection \ref{subsec:harmonic_synchrony}. These goals firstly require of the agents/nodes the modelling of oscillators with their properties, like phase and frequency, as explained further in Subsection \ref{subsec:node}. To allow for interaction and communication between the agents, mechanisms so that the agents can transmit "fire"-signals, as well as listen for other agents's "fire"-signals, is necessary as well, and is presented in Subsection \ref{subsec:fire_signal}.
 
 
 
-% Om baselinen (hva jeg baserer min implementasjon på, forskjellig fra mitt eget bidrag).
 % Introducing the System:
-\section{The baseline: Achieving Decentralized Harmonic Synchronization in (Oscillators $\vee$ Musical Robot Collectives)}
-\label{sec:baseline}
+\section{The Developed System: the (Oscillators $\vee$ Musical Robot Collective)}
+\label{sec:developed_system}
+\besk{About introduction, overview, and description of the developed system (as well as the system sub-constituents — aka. what the system consists of). $\implies$ in a nutshell: What is the system, and What does it consist of? Why?}
+
 	Envision that we have a multi-agent collective scenario consisting of musical robots modelled as oscillators, solely communicating through brief ``fire''-like audio-signals|greatly inspired by K. Nymoen et al.'s approach for achieving \textit{decentralized harmonic synchronization in mobile music systems} \cite{nymoen_synch}. These agents are initially not synchronized in their firing of audio-signals, but as time goes, they are entraining to synchronize to each other by adjusting their phases and frequencies when or after hearing each other's audio-signals. An illustration of this is given in Figure \ref{fig:initial}.
 
 	% First Intro-illustration figure to easily get a quick idea of what the system/design does/consists of:
@@ -55,7 +54,7 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 
 
 
-	% Sub-Introducing the System:
+	% Introducing the System Components:
 	
 	% Om den enkelte noden/agenten med alle egenskaper den har osv.
 	\subsection{The Node: the musical robot individual}
@@ -86,27 +85,77 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 		\begin{itemize}
 			\item The goal and target state of the system
 			\item All agents/nodes having integer-relation frequencies (between each other), so that given a fundamental frequency $\omega_{i,0}$ for the agent $i$ with the lowest frequency in the collective — all other agents have "legal" harmonic frequencies; meaning, all nodes have frequencies in the \tcol{mengde} $\omega_{i,0} \cdot 2^{\mathbb{N}_0}$.
-			\item (FOR Å DEMONSTRERE \textit{Harmonic Synchrony}) \tcol[blue]{LEGG INN ETT WAVEFORM-SPEKTROGRAM PLOTT AV EN STEMME ELLER EN LYD MED HARMONICS I SEG (F.EKS. FRA PRARIEDOGS-FYREN ELLERNOE), OG SAMMENLIKN MED DE MUSIKALSKE NODENES FREKVENS-SPEKTROGRAM VED SIDEN AV.}
+			\item Waveform-Spektrogram av en stemme eller en lyd med Harmonics i seg (f.eks. fra Prariedogs-fyren ellernoe) — som jeg kan sammenlikne med de musikalske nodenes Frekvens-Spektrogram ved siden av. Hvorfor? For å introdusere/presentere/sammenlikne/forklare target-goalet best mulig.
 		\end{itemize}
 	
 	
-	% Om Update-functions for frekvens- og fase-oppdateringene
+	
+	
+	
+	
+	
+	
+% Presenting Implemented Methods:
+\section{Implemented Methods: Achieving Decentralized Harmonic Synchronization in (Oscillators $\vee$ Musical Robot Collectives)}
+\label{sec:methods}
+\besk{About various methods/algorithms/approaches (the nitty gritty) implemented to achieve the target/goal state(s). $\implies$ in a nutshell: What different but comparable methods did you use to achieve your goal(s)?}
+	
+	
+	% Om Update-functions for fase- & frekvens-oppdateringene
 	\subsection{Update/Adjustment functions: Phase- \& Frequency-Adjustment}
 	\label{subsec:update_functions}
 	
-	When it comes to the temporality and timing of when the updating functions are used and applied:
+	When it comes to the temporality and timing of when the updating functions are used and applied;
 	
 	Musical agents's phases get updated/adjusted immediately as ``fire''-/``flash''-events are perceived, whereas agents's frequencies do not get updated until the end of their oscillator-cycle (i.e. when having a phase-climax $\phi(t)=1$). This is also the reason why frequencies are updated discretely, not continuously. So-called H-values however, being ``contributions'' with which the frequencies are to be updated according to, are immediately calculated and accumulated when agents are perceiving a ``fire''-/``flash''-event — and then finally used for frequency-adjustment/-updating at phase-climaxes.
 	
-		\subsubsection{Phase Adjustment}
+	
+	
+	
+	
+	
+	
+	
+	
+		\subsubsection{Phase Adjustment: Two Approaches}
 		\label{subsubsec:phase_adj}
-			If we again first assume constant and equal oscillator-frequencies in our agents, we can take a look at how the agents adjust their|initially random|phases in order to synchronize to each other. This was then in contrast to the case in Subsection \ref{subsubsec:freq_adj} where heterogenous and randomly initialized oscillator-frequencies in the musical agents are implemented and utilized.
+			If we first assume constant and equal oscillator-frequencies in our agents, we can take a look at how the agents adjust their|initially random|phases in order to synchronize to each other. This is then in contrast to the case in Subsection \ref{subsubsec:freq_adj} where heterogenous and randomly initialized oscillator-frequencies in the musical agents are implemented and utilized.
 			
 			The goal state of the agents is for now to fire/flash more or less simultaneously, after having started firing/flashing at random initially. Note that this is a different goal from the final and ultimate goal of \textit{harmonic synchrony}.
 			
 			One relatively new approach to achieve this, firstly introduced by K. Nymoen et al. \cite{nymoen_synch}, is now presented:
 			
-			\myparagraph{Bi-Directional Phase Shifts}
+			
+			
+			% Approach 1
+			
+			% Mirollo-Strogatz's Phase-Synchronization
+			\myparagraph{1) Mirollo-Strogatz's ``Standard'' Phase-adjustment}
+			
+			One approach having been used to achieve this in the past is Mirollo-Strogatz's ``Standard'' Phase-adjustment in oscillators \cite{mirollo_strogatz_PCO_synch}, as illustrated in Figure \ref{fig:strog_phase}.
+					
+			\begin{figure}[h]
+				\centering
+				\includegraphics[width=0.9\linewidth]{Assets/Figures/MirolloStrogatzPhaseAdjustment.pdf}
+				\caption{``Standard'' Phase-Adjustment with Mirrollo-Strogatz's approach}
+				\label{fig:strog_phase}
+			\end{figure}
+			
+			Each musical node gets a new phase, $\phi(t^+) = P(\phi(t))$, accoring to the \textbf{phase update function \eqref{strog_phase}} upon perceiving a ``fire''-event from one of the other musical nodes:
+			
+			\begin{equation}\label{strog_phase}
+			P(\phi(t)) = (1 + \alpha)\phi(t)	,
+			\end{equation}
+			
+			where ``\textit{$\alpha$ is the pulse coupling constant, denoting the strength between nodes}'' \cite{nymoen_synch}, and $t^+$ denotes the time-step immediately after phase-climax. So, if $\alpha = 0.1$ e.g., then a musical node's new and updated phase, immediately after hearing a ``fire''-signal from another node, will be equal to $\phi(t^+) = P(\phi) = (1 + 0.1)\phi = 1.1\phi$. 110\% of its old phase $\phi$, that is. Hence, and in this way, the node would be ``pushed'' to fire sooner than it would otherwise (as nodes fire once they have reached phase-climax $\phi=1$).
+				
+			
+			
+			
+			% Approach 2
+			
+			% K. Nymoen's Phase-Synchronization
+			\myparagraph{2) K. Nymoen's Bi-Directional Phase Shifts}
 			
 			\begin{figure}[h]
 				\centering
@@ -115,7 +164,7 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 				\label{fig:nymoen_phase}
 			\end{figure}
 			
-			This Phase-adjustment, as in Figure \ref{fig:nymoen_phase}, works very similarly to the Phase-adjustment performed in the ``standard'' \textbf{\textit{Mirollo-Strogatz}} approach presented in the Background-chapter; The only difference being that now, nodes update their phase with the slightly more complex \textbf{phase update function \eqref{nymoen_phase}} when hearing a ``fire''-event from one of the other musical nodes — allowing for both larger, but also smaller, updated phases:
+			This Phase-adjustment, as in Figure \ref{fig:nymoen_phase}, works very similarly to the Phase-adjustment performed in the ``standard'' \textbf{\textit{Mirollo-Strogatz}} approach presented earlier; the only difference being that now, nodes update their phases with the slightly more complex \textbf{phase update function \eqref{nymoen_phase}} when hearing a ``fire''-event from one of the other musical nodes — allowing for both larger, but also smaller, updated phases:
 			
 			\begin{equation}
 			\label{nymoen_phase}
@@ -124,13 +173,18 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 			
 			The fact that new and updated phases can both be larger, but also smaller, compared to the old phases, is exactly what's meant by the Phase-adjustment being \textbf{\textit{Bi-Directional}}, or as the authors call it in the paper as using ``\textit{both excitatory and inhibitory phase couplings between oscillators}'' \cite{nymoen_synch}.
 			
-			The effects then of adjusting phases, upon hearing ``fire''-events, according to this newest update-function \eqref{nymoen_phase} are that the nodes's phases now get decreased if $\phi$ is lower than 0.5, increased if $\phi$ is higher than 0.5, and neither—at least almost—if the phases are close to $0.5 = \frac{1}{2}$. This is due to the negative and positive sign of the sinewave-component in Equation \eqref{nymoen_phase}, as well as the last attenuating factor in it of $| sin(2\pi\phi) | \approx | sin(2\pi \frac{1}{2}) | = | sin(\pi) | = | 0 | = 0.$
+			The effects then of adjusting phases—upon hearing ``fire''-events, according to this newest update-function \eqref{nymoen_phase}—are that the nodes's phases now get decreased if $\phi(t)$ is lower than 0.5, increased if $\phi(t)$ is higher than 0.5, and neither—at least almost—if the phases are close to $0.5$. This is due to the negative and positive sign of the sinewave-component in Equation \eqref{nymoen_phase}, as well as the last attenuating factor in it of $| sin(2\pi\phi) | \approx | sin(2\pi \frac{1}{2}) | = | sin(\pi) | = | 0 | = 0$, then if we have $\phi(t) \approx 0.5 = \frac{1}{2}$.
 		
 		
-		\subsubsection{Frequency Adjustment}
+		
+		
+		
+		
+		
+		
+		
+		\subsubsection{Frequency Adjustment: Three Approaches}
 		\label{subsubsec:freq_adj}
-				\gjor{Presenter hva Frequency-adjustment er, bygg opp fremgangsmåten på hvordan man oppnår Frequency-adjustment (som i Worklog'en, og Mattermost-chatten med Kyrre evt.) | med passende figurer og illustrasjoner}
-				
 			Now over to the slightly more complex issue of synchronizing frequencies in the agents/oscillators. We introduce randomly initialized, non-constant, and heterogenous oscillator-frequencies in our musical agents — allowing in the music collective the playing of rhythmic patterns like \tcol{doubles, fourths, eights (FRA NYMOEN: subdivisions of a measure, i.e. quarter notes and 8ths. "Temporal components in music tend to appear in an integer-ratio relation to each other (e.g., beats, measures, phrases, or quarter notes, 8ths, 16ths)")} etc. The agents are now then required to not only synchronize their phases to each other, but now also their initially different and random frequencies — so that frequencies are ``legal'' and \textit{harmonically synchronized}.
 			
 			This approach to Frequency Adjustment stands in contrast to previous approaches to synchronization in oscillators \tcol{cite(fixed\_freqs, fixed\_range\_freqs)} where the oscillators's frequencies are either equal and fixed, or where frequencies are bound to initialize and stay within a fixed interval/range.
@@ -138,6 +192,33 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 			The goal state now will not be exactly equal frequencies and phases, but rather the goal state of \textit{harmonic synchrony}, as expounded in Subsection \ref{subsec:harmonic_synchrony}.
 			
 			In order to achieve this goal of \textit{harmonic synchrony} in conjunction with|or rather through|frequency adjustment, we have to go through a few steps to build a sophisticated enough update-function able to help us achieve this.
+			
+			
+			
+			
+			
+			
+			
+			
+			% Approach 1
+			
+			% LOW LEVEL Self-Awareness:
+			% Person X's "simpler" Frequency-Synchronization without any Self-Awareness components
+			\myparagraph{1) Person X's ``Standard'' Low SA-level Frequency-Updates}
+			
+			A simpler strategy/method for achieving Harmonic Synchronization, specifically with no Self-Awareness capabilities.
+			
+			
+			
+			
+			
+			
+			
+			% Approach 2
+			
+			% MID LEVEL Self-Awareness:
+			% K. Nymoen's Frequency-Synchronization with some Self-Awareness (which as far as I know only works together with K. Nymoen's Phase-Synchronization)
+			\myparagraph{2) K. Nymoen's Mid SA-level Frequency-Updates}
 			
 			Each agent $i$ update their frequency, on their own phase-climax (i.e. when $\phi_i(t)=1$), according to the frequency-update function $\omega_i(t^+)$:
 			
@@ -256,6 +337,19 @@ This chapter gives an overview of the developed musical multi-robot system. The 
 			where $\beta$ is the frequency coupling constant, $k$ is the number of heard/received ``fire-event''s from the start of the last cycle/period to the end (i.e. the phase-climax, or \textit{now}) — and the rest of the values are as described above.
 			
 			This $F(n)$-value then, as we see in Equation \eqref{f_value}, is a weighted average of all the node's $H(n)$-values accumulated throughout the node's last cycle.
-
-% Om mitt bidrag (skill tydelig på mine bidrag og det jeg ikke har gjort noe med)
-\section{My new proposed algorithm: an additional Self-Awareness component}
+			
+			
+			
+			
+			
+			
+			
+			% Approach 1
+			
+			% HIGH LEVEL Self-Awareness:
+			% Hopefully an improved method with some additional Self-Awareness components
+			\myparagraph{3) Thorvaldsen's High SA-level Frequency-Updates}
+			
+			\besk{Om mitt bidrag (skill tydelig på mine bidrag og det jeg ikke har gjort noe med)}
+			
+			My new proposed algorithm, including several additional Self-Awareness components (jf. \textbf{Thorvaldsen's improved approach} på reMarkablen).

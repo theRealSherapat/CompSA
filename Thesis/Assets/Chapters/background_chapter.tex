@@ -37,28 +37,9 @@
 	Much of the terminology from \cite{nymoen_synch} is used here. An oscillator $i$ is characterized by its \textit{phase} $\phi_i(t)$, which is initialized to 0 and evolves towards 1 at a rate of $\frac{d \phi_i(t)}{d t}$ — which is also called the \textit{frequency} of the oscillator.
 	
 	\subsection{Phase-adjustment}
-	
-		If we first assume constant and equal oscillator-frequencies in our agents, we can take a look at how the agents adjust their|initially random|phases in order to synchronize to each other.
 				
-		The goal state of the agents is now to fire/flash more or less simultaneously, after having started firing/flashing at random initially.
-		
-		One approach having been used to achieve this in the past: Mirollo-Strogatz ``Standard'' Phase-adjustment in oscillators \cite{}, as in Figure \ref{fig:strog_phase}.
-		
-		\begin{figure}[h]
-			\centering
-			\includegraphics[width=0.9\linewidth]{Assets/Figures/MirolloStrogatzPhaseAdjustment.pdf}
-			\caption{``Standard'' Phase-Adjustment with Mirrollo-Strogatz's approach}
-			\label{fig:strog_phase}
-		\end{figure}
-		
-		Each musical node updates its phase $\phi$ accoring to the \textbf{phase update function \eqref{strog_phase}} when hearing a ``fire''-event from one of the other musical nodes:
-		
-		\begin{equation}\label{strog_phase}
-		P(\phi) = (1 + \alpha)\phi	,
-		\end{equation}
-		
-		where ``\textit{$\alpha$ is the pulse coupling constant, denoting the strength between nodes}'' \cite{nymoen_synch}. So, if $\alpha = 0.1$ e.g., then a musical node's new and updated phase, immediately after hearing a ``fire''-signal from another node, will be equal to $P(\phi) = (1 + 0.1)\phi = 1.1\phi$. 110\% of its old phase $\phi$, that is. Hence, and in this way, the node would be ``pushed'' to fire sooner than it would otherwise. An illustration of this is given in Figure \ref{fig:strog_phase}.
+	(If relevant and wanted) previous approaches to Phase-synchronization in oscillators (pulse- and/or phase-coupled).
 		
 	\subsection{Frequency-adjustment}
 	
-	* previous approaches to synchronization in oscillators \tcol{cite(fixed\_freqs, fixed\_range\_freqs)} where the oscillators's frequencies are either equal and fixed, or where frequencies are bound to initialize and stay within a fixed interval/range. *
+	(If relevant and wanted) previous approaches to Frequency-synchronization in oscillators (pulse- and/or phase-coupled) \tcol{cite(fixed\_freqs, fixed\_range\_freqs)} where the oscillators's frequencies are either equal and fixed, or where frequencies are bound to initialize and stay within a fixed interval/range.
