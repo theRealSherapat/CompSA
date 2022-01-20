@@ -6,15 +6,18 @@ Remember:
 
 
 ## Specific TODOs
-* Fiks ordentlig kode-lint i Notepad++ sånn at jeg sparer mye tid og tekst-klassifiserings-krefter.
-* Overfør Concerns fra .TeX-filene til Word Concerns-dokumentene (Struktur og Content Concerns).
-* Skriv mot Up-To-Date MSc-thesis /-chapter Draft.
+* Overfør forstyrrende og un-clarifyende Concerns fra .TeX-filene til Word Concerns-dokumentene (Struktur og Content Concerns).
+* Fiks ordentlig kode-lint i Notepad++ sånn at jeg sparer mye tid og tekst-klassifiserings-krefter (ihvertfall for Python).
 * Execute 'GJØR: []'-clauses possible to execute now (remember Abe Lincoln).
-* Gå igjennom Essay .tex-fila og hent kritikk, INKL.:[]?'s, og concerns.
+* Gå igjennom 'notert-på reMarkable Thesis-document(s)' og 'Essay .tex'-fila, så rett på eller hent kritikk, INKL.:[]?'s, og concerns.
+* Skriv mot Up-To-Date MSc-thesis /-chapter Draft.
+
+
+
 
 ## Polishing / Finishing TODOs
 * Polish/finish font-families, -styles, and -sizes (by e.g. using the packages 'sectsty' or 'titlesec' — but preferably just LaTeX's standard font-manipulation if possible):
-	+ Make Section- & Chapter-headlines (and possibly the 2nd thesis-title, like in the Overleaf-IFI-standard-document) bold-face. 
+	+ Make Section- & Chapter-headlines (and possibly the 2nd thesis-title, like in the Overleaf-IFI-standard-document) bold-face.
 	+ Ensure that the Thesis-title isn't inferior and smaller perhaps than the Chapter/Section-headlines.
 	+ Use a good-looking font-family. Previously looked at font-families are:
 		- 'Aldus Nova Book' by Linotype (found through myfonts.com/WhatTheFont with a sample from Tønnes's master).
@@ -25,6 +28,7 @@ Remember:
 	+ Minimize the use of parentheses and '—'s.
 * Polish/finish citations and references throughout the master's report:
 	+ Add the right citations/references where there are empty \cite{}-clauses.
+	+ Ensure the right uses of \ref{}, so that 'Subsection \ref{}' doesn't e.g. refer to a Section or Paragraph.
 	+ Change to using the [NOR04]-style (first author(s), Normann e.g.) instead of [3]-style.
 * Polish/finish the page layouts:
 	+ Se til at alle figurene og tabellene er plassert der det gir mening for deg, ikke der det gir mening for LaTeX.
