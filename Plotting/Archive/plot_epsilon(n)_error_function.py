@@ -16,7 +16,7 @@ def main():
     plt.ylabel("error-score $\epsilon$")
     plt.title("Error-Phase plot")
     plt.plot(phase, error_scores)
-    plt.savefig("function_over_time.pdf", format="pdf", bbox_inches="tight")
+    # plt.savefig("function_over_time.pdf", format="pdf", bbox_inches="tight")
     plt.show()
     
 if __name__ == "__main__":

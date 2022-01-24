@@ -4,20 +4,14 @@ import numpy as np
 import csv
 import matplotlib.pyplot as plt
 
-samplingRate = 100 # Hz                                                                                     POTENTIAL SOURCE OF ERROR
+samplingRate = 100 # Hz                                                                             POTENTIAL SOURCE OF ERROR
 
-def main(phase_filename, freqs_filename, agent_no):
-    """ It first extracts the data from the .CSVs into two np.arrays, as well as getting the corresponding vertical time-axis.
-        
-        It then plots all of the columns (corresponding to an agents's data each) over the vertical time-axis in a subplot with phase and frequencies. 
-        
-        Lastly, legal multiples for frequency (in order to have achieved harmonic synchronization) are marked with green circles. """
-        
+def main(phase_filename, freqs_filename):        
     plt.close("all") # First clearing all other opened figures.
     
-    times, phasesDatapointArray = parseDataFrom(phase_filename, agent_no)
+    times, phasesDatapointArray = parseDataFrom(phase_filename)
     
-    _, freqsDatapointArray = parseDataFrom(freqs_filename, agent_no)
+    _, freqsDatapointArray = parseDataFrom(freqs_filename)
     
     plotPhasesAndFrequencies(times, phasesDatapointArray, freqsDatapointArray)
     
@@ -47,7 +41,8 @@ def plotPhasesAndFrequencies(t, phaseDataMatrix, frequencyDataMatrix):
     scatterPlotLegalMultiples(t, frequencyDataMatrix)
     
     # Printing out the whole sub-plot
-    plt.tight_layout()    
+    plt.tight_layout()
+    # plt.savefig("mySavedPDF.pdf", format="pdf", bbox_inches="tight") # Uncomment if you want to save the figure to .PDF.
     plt.show()
     
 def scatterPlotLegalMultiples(timeArray, freqsDataMatrix):
@@ -122,16 +117,19 @@ def plotValidFrequenciesForX(x, freqsDataMatrix):
         plt.text(x*1.01, yCoordinate*1.01, yLabels[i], fontsize=12)
 
 
-def parseDataFrom(csv_filename, no_of_agents):
+def parseDataFrom(csv_filename):
     """ Reads all rows (apart from the header) into a numpy data-matrix, and returns that 'arrayOfDatapoints' and its corresponding vertical time-axis 't' """
 
-    arrayOfDatapoints = np.empty((1, no_of_agents))
+    arrayOfDatapoints = np.empty((1, 1)) # initializing our numpy data-matrix with a dummy size (real size will be sat later on)
     
     numOfRows = 0
     with open(csv_filename) as dataFile:
         csvReader = csv.reader(dataFile, delimiter=';')
         next(csvReader, None) # to skip the headers
         for row in csvReader:
+            if numOfRows == 0:
+                arrayOfDatapoints = np.empty((1, len(row))) # initializing our numpy data-matrix when we know the number of columns to include in it
+                
             col_array = np.array([])
             for col_index in range(len(row)):
                 col_element = float(row[col_index].replace(',','.'))
@@ -148,11 +146,14 @@ def parseDataFrom(csv_filename, no_of_agents):
     return t, arrayOfDatapoints[2:,:] # Slicing due to initialization values (being huuuuge).
     
 if __name__ == "__main__":
-    """ Python-script takes in command-line argument: (int)    amount of agents collected data for """
+    """ Functionality:
+            It first extracts the data from the .CSVs into two np.arrays, as well as getting the corresponding vertical time-axis.
+        
+            It then plots all of the columns (corresponding to an agents's data each) over the vertical time-axis in a subplot with phase and frequencies. 
+            
+            Lastly, legal multiples for frequency (in order to have achieved harmonic synchronization) are marked with green circles. """
     
-    phase_path = "../Synchrony/SavedData/Phases/phases_over_time.csv"
-    freqs_path = "../Synchrony/SavedData/Frequencies/freqs_over_time.csv"
+    phase_path = "../../Synchrony/SavedData/Phases/phases_over_time.csv"
+    freqs_path = "../../Synchrony/SavedData/Frequencies/freqs_over_time.csv"
     
-    numberOfAgents = int(sys.argv[1])
-    
-    main(phase_path, freqs_path, numberOfAgents)
+    main(phase_path, freqs_path)

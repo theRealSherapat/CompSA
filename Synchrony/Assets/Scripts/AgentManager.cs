@@ -12,7 +12,6 @@ public class AgentManager : MonoBehaviour {
     public float runDurationLimit = 300f; // 5 minutes (given in seconds)
     public float adjustedTimeScale = 1.0f;
 
-
     // Spawning variables:
     public GameObject[] squigglePrefabs;
     public float spawnRadius = 10.0f; // units in radius from origo to the outermost Dr. Squiggle spawn-point
@@ -24,8 +23,9 @@ public class AgentManager : MonoBehaviour {
     // CSV-Serialization variables:
     public string frequencyCSVPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Frequencies" + "\\" + "freqs_over_time.csv";
     public string phaseCSVPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Phases" + "\\" + "phases_over_time.csv";
-    public string nodeFiringDataPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "nodeFiringDataPath.csv";
-    //public string nodeFiringDataPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "node_firing_data.csv"; // FOR THE SYNCHRONY-PLOT (AS IN NYMOEN'S PAPER)
+    public string nodeFiringDataPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "node_firing_data.csv";
+
+    public string t_f_is_nowPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "t_f_is_now_digital_signal.csv";
     public string datasetPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "synchronyDataset.csv";
     
 
@@ -42,6 +42,9 @@ public class AgentManager : MonoBehaviour {
     private float t_q = 0f; // The varying (but hopefully eventually converging) time-window/-duration lasting for how long no fire-events can be heard after the last time_fire-window ended.
     private int number_in_a_row_of_no_firings_within_t_q = 0;
     private bool firstFiringTriggered;
+
+    // Node-firing plot variables
+    private bool justHeardFireEvent = false;
 
     // ------- END OF Variable Declarations -------
 
@@ -63,17 +66,13 @@ public class AgentManager : MonoBehaviour {
     }
 
     void Update() {
-                                                                                                // BARE FOR TESTING:
-        if (Input.GetKeyDown(KeyCode.Q)) {
-            Debug.Log("FAKE Synchrony achieved! The synch-time was: " + Time.timeSinceLevelLoad);
+        // BARE FOR TESTING:
+        //if (Input.GetKeyDown(KeyCode.Q)) {
+        //    Debug.Log("You pressed Quit for Quit Invoke at time " + Time.timeSinceLevelLoad);
+        //    CancelInvoke();
+        //}
 
-            // Saving a FAKE successful data-point
-            SaveDatapointToDataset();
-
-            QuitMyGame();
-        }
-
-        //                                                                                                    <---------- WORK ON!!!!!!!
+        //                                                                                                                   <---------- WORK ON!!!!!!!
 
         CheckHSynchConditions();
         
@@ -131,54 +130,68 @@ public class AgentManager : MonoBehaviour {
         FloatUpdateCSV(datasetPath, performanceAndCovariateValues);
     }
 
-    private void IJustHeardSomeoneFire() {
-        // When this method gets called, it means the AgentManager has picked upon a Dr. Squiggle's Event-Action — meaning it "heard" a Dr. Squiggle's ``fire''-signal.
+    public void IJustHeardSomeoneFire(int firingAgentId) {
+        // When this method gets called, it means the AgentManager has picked upon a Dr. Squiggle's method-call — meaning it "heard" a Dr. Squiggle's ``fire''-signal.
 
-        // Fanger Accurately opp Action-Eventsa til Dr. Squiggles'a.
-        // FØLG TRINNENE FRA 1) TIL 7) I Fig. 6. I Nymoen-paperet.
+        justHeardFireEvent = true;
 
+        UpdateNodeFiringCSVPositive(firingAgentId);
+
+        AdjustHsynchCriteriasIfNeeded();
+    }
+
+    private void AdjustHsynchCriteriasIfNeeded() {
         // Calling for the initialization (technically resetting) of the t_q-/t_q-window
-        if (last_t_q_definer == 0f) {
+        if (last_t_q_definer == 0f) { // bra logikk?
+            if (!firstFiringTriggered) {
+                TriggerFirstFiringTime();
+                firstFiringTriggered = true;
+            }
+
             last_t_q_definer = Time.time;
 
-            //TriggerFirstFiringTime();                                                                 // KAN MEST SANNSYNLIG KUTTE UT
 
             define_t_q_at_next_firing = true;
         }
         // Resetting the t_q-/t_q-window if this is not the first observed Fire-event and the reset is flagged and wanted
         else if (define_t_q_at_next_firing) {
-            if (!firstFiringTriggered) { // First mover if this is the first time t_q gets defined?
-                firstFiringTriggered = true;
-                TriggerFiringTime();
+            float new_t_q = Time.time - last_t_q_definer - t_f; // Optionally subtract 3/2*t_f instead of just t_f.
+            //Debug.Log("new_t_q: " + new_t_q + "\n, and the if-criteria (new_t_q+t_f) = " + (new_t_q + t_f) + " which should be greater than 0.5f.");
+            if ((new_t_q+t_f) > 0.5f) { // weird condition because I don't want too close fire-events to define the t_q-window
+                t_q = new_t_q;
+                define_t_q_at_next_firing = false;
+
+                RestartInvokeCycle();
             }
-
-            t_q = Time.time - last_t_q_definer - 3/2*t_f;                   // KANSKJE IKKE TREKKE FRA EN HALV t_f TIL (SOM JEG TOLKET Fig. 6 SOM FØRST)?
-
-            define_t_q_at_next_firing = false;
+            
+            
         }
         // Calling for a reset for the t_q-/t_q-window since observed fire-event was received during !t_f a.k.a. t_q, and we did not want to reset t_q this time, nor calling for the initialization of t_q
         else if (!t_f_is_now) {
             number_in_a_row_of_no_firings_within_t_q = 0; // resetting the streak, because synch bad
+            Debug.Log("Counter just restarted, cause synch bad.");
 
             last_t_q_definer = Time.time;
 
             define_t_q_at_next_firing = true;
         }
 
-        // MÅ PASSE PÅ AT TriggerFiringTime() BLIR KALT ETTER HVERT t_q-/t_q-window.
+                                                        // FØLG TRINNENE FRA 1) TIL 7) I Fig. 6. I Nymoen-paperet.
 
-        // NECESSARY CONDITIONS FOR SYNCHRONIZATION:
-            // DOES FIRING ALWAYS OCCUR WITHIN THE time_fire-WINDOW, AND NEVER DURING THE time-quiet-WINDOW ANYMORE? GOOOD!
+                                                            // MÅ PASSE PÅ AT TriggerFiringTime() BLIR KALT ETTER HVERT t_q-window.
 
-            // HAVE ALL NODES FIRED AT LEAST ONCE DURING THE EVALUATION PERIOD? GOOOD!
+                                                            // NECESSARY CONDITIONS FOR SYNCHRONIZATION:
+                                                                // DOES FIRING ALWAYS OCCUR WITHIN THE time_fire-WINDOW, AND NEVER DURING THE time-quiet-WINDOW ANYMORE? GOOOD!
 
-            // HAVE THERE BEEN NO FIRINGS WITHIN THE t_q-WINDOWS k TIMES? GOOOD!
+                                                                // HAVE ALL NODES FIRED AT LEAST ONCE DURING THE EVALUATION PERIOD? GOOOD!
 
-            // IF SO — CONGRATS! YOU CAN SET synchronizationIsAchieved = true;
+                                                                // HAVE THERE BEEN NO FIRINGS WITHIN THE t_q-WINDOWS k TIMES? GOOOD!
+
+                                                                // IF SO — CONGRATS! YOU CAN SET synchronizationIsAchieved = true;
     }
 
     private void CheckHSynchConditions() {
-        // SJEKK AT HVER NODE HAR FYRT MINST EN GANG ILØPET AV EVALUERINGS-PERIODEN.
+        // * SJEKK AT HVER NODE HAR FYRT MINST EN GANG ILØPET AV EVALUERINGS-PERIODEN. *
 
         if (number_in_a_row_of_no_firings_within_t_q == k) hSynchConditionsAreMet = true;
     }
@@ -186,29 +199,43 @@ public class AgentManager : MonoBehaviour {
     private void TriggerFiringTime() {
         t_f_is_now = true;
         number_in_a_row_of_no_firings_within_t_q ++;
-        Debug.Log("Counter towards k: " + number_in_a_row_of_no_firings_within_t_q);
+        Debug.Log("Whole Firing Time Triggered at " + Time.time + ". Counter towards k: " + number_in_a_row_of_no_firings_within_t_q + "\n, and t_f: " + t_f);
         Invoke("TriggerQuietPeriod", t_f);
+    }
+
+    private void TriggerHalfFiringTime() {
+        t_f_is_now = true;
+        Debug.Log("Half Firing Time Triggered at " + Time.time + ". Counter towards k: " + number_in_a_row_of_no_firings_within_t_q);
+        Invoke("TriggerQuietPeriod", t_f/2f);
     }
 
     private void TriggerQuietPeriod() {
         t_f_is_now = false;
+        Debug.Log("Quiet period triggered at time: " + Time.time);
         Invoke("TriggerFiringTime", t_q);
     }
 
-    // KAN MEST SANNSYNLIG KUTTE UT:
-        //private void TriggerFirstFiringTime() {
-        //    // t_q is yet not defined (i.e. t_q = 0f)
-        //    t_f_is_now = true;
-        //    Invoke("FalsifyFiringTime", t_f);
-        //}
+    private void TriggerFirstFiringTime() {
+        // Remember: t_q is yet not defined (i.e. t_q = 0f)
+        t_f_is_now = true;
+        Invoke("FalsifyFiringTime", t_f);
+    }
 
-        //private void FalsifyFiringTime() {
-        //    // t_q is yet not defined (i.e. t_q = 0f)
-        //    t_f_is_now = false;
-        //}
+    private void FalsifyFiringTime() {
+        // Remember: t_q is yet not defined (i.e. t_q = 0f)
+        t_f_is_now = false;
+    }
+
+    private void RestartInvokeCycle() {
+        CancelInvoke(); // All t_q-/t_f-Invokes are ended/executed.
+        TriggerHalfFiringTime(); // A new cycle of t_f-/t_q-Invokes commences.
+    }
 
 
     // ------- END OF Performance-measure Termination-evaluation Functions/-Methods -------
+
+
+
 
 
 
@@ -230,7 +257,6 @@ public class AgentManager : MonoBehaviour {
             SquiggleScript extractedSquiggleScript = newAgent.GetComponent<SquiggleScript>();
 
             extractedSquiggleScript.SetAgentID(i + 1); // Setting AgentIDs so that agents have IDs {1, 2, 3, ..., N}, where N is the number of agents in the scene.
-            extractedSquiggleScript.OnSquiggleFire += IJustHeardSomeoneFire;
             spawnedAgentScripts.Add(extractedSquiggleScript);
 
             // IF-TIME Debug-TODO: Figure out local vs. global Dr.Squiggle-rotations:
@@ -243,7 +269,7 @@ public class AgentManager : MonoBehaviour {
     }
 
     private Vector2 FindFreeSpawnPosition() {
-        // IF-TIME TODO: Find the free spawn position in a much smarter manner (like with artificial potential fields, or Gauss-Neuton or the likes).
+        // TODO: Find the free spawn position in a much smarter manner (like with artificial potential fields, or Gauss-Neuton or the likes).
 
         Vector2 currentGuess = Random.insideUnitCircle * spawnRadius;
         bool foundFreeSpawnPoint = false;
@@ -273,32 +299,71 @@ public class AgentManager : MonoBehaviour {
 
     // ------- START OF CSV-Serialization Functions/Methods -------
 
+    public void UpdateNodeFiringCSVPositive(int agentId) {                         // OBS: HVA SKJER HVIS TO ELLER FLERE AGENTER FYRER PÅ LIKT? FUNKER DET GREIT NOK FOR GRAFENS SKYLD?
+        List<float> nodeFiringDataList = new List<float>();
+
+        // Appending the fire-values for all agents (where one of them should have fired)
+        for (int i = 0; i < spawnedAgentScripts.Count; i++) {
+            if (i != agentId - 1) {
+                nodeFiringDataList.Add(0f);
+            }
+            else {
+                nodeFiringDataList.Add(1f);
+            }
+        }
+
+        // Appending the digital signal t_f_is_now
+        float t_f_is_nowFloat = System.Convert.ToSingle(t_f_is_now);
+        nodeFiringDataList.Add(t_f_is_nowFloat);
+
+        // Updating the CSV with one time-row
+        FloatUpdateCSV(nodeFiringDataPath, nodeFiringDataList);
+
+        // Resetting the flag telling the AgentManager a fire-signal was just heard
+        justHeardFireEvent = false;
+    }
+
+    private void UpdateNodeFiringCSVNegative() {
+        List<float> noNodeFiringDataList = new List<float>();
+
+        // Appending the fire-values for all agents (where none of them should have fired)
+        for (int i = 0; i < spawnedAgentScripts.Count; i++) noNodeFiringDataList.Add(0f);
+
+        // Appending the digital signal t_f_is_now
+        float t_f_is_nowFloat = System.Convert.ToSingle(t_f_is_now);
+        noNodeFiringDataList.Add(t_f_is_nowFloat);
+
+        // Updating the CSV with one time-row
+        FloatUpdateCSV(nodeFiringDataPath, noNodeFiringDataList);
+    }
+
     private void CreateAllCSVFiles() {
         // Creating a .CSV-header consisting of the agents's IDs
-        List<int> agentIDHeader = new List<int>();
+        List<string> agentIDHeader = new List<string>();
         foreach (SquiggleScript squiggScr in spawnedAgentScripts) {
-            agentIDHeader.Add(squiggScr.GetAgentID());
+            agentIDHeader.Add("agent" + squiggScr.GetAgentID().ToString());
         }
 
         // 1) Creating one .CSV-file for the agents's frequencies over time
-        CreateCSVWithIntHeader(frequencyCSVPath, agentIDHeader);
+        CreateCSVWithStringHeader(frequencyCSVPath, agentIDHeader);
 
         // 2) Creating one .CSV-file for the agents's phases over time
-        CreateCSVWithIntHeader(phaseCSVPath, agentIDHeader);
+        CreateCSVWithStringHeader(phaseCSVPath, agentIDHeader);
 
-        // 3) Creating one .CSV-file for the nodeFiringData, including the t_f_is_now which is telling (in time) when it is legal for nodes to fire
-        List<int> nodeFiringDataHeader = new List<int>();
-        CreateCSVWithIntHeader(nodeFiringDataPath, nodeFiringDataHeader);
+        // 3) Creating one .CSV-file for the node_firing_data (including t_f_is_now) needed to create the "Node-firing-plot" as in Nymoen's Fig. 6
+        List<string> nodeFiringWithTfHeader = new List<string>(agentIDHeader);
+        nodeFiringWithTfHeader.Add("t_f_is_now");
+        CreateCSVWithStringHeader(nodeFiringDataPath, nodeFiringWithTfHeader);
+        
 
-        //// 4) Creating one .CSV-file for the data needed to create the "Node-firing-plot", as in Nymoen's Fig. 6
-        //CreateCSVWithHeader(nodeFiringDataPath, agentIDHeader);
 
-        // Creating a .CSV-file for the MSc Synchrony-dataset, which are to contain the HSYNCHTIMEs with their covariates.
-        List<string> performanceAndCovariatesHeader = new List<string>(); // The covariates we want to record the performance-measure/outcome/response-variable for
-        //performanceAndCovariatesHeader.Add("HSYNCHTIME");
-        //performanceAndCovariatesHeader.Add("SUCCESS");    // Binary covariate (no=0 or yes=1)
-        //performanceAndCovariatesHeader.Add("PHASEADJ");
-        //CreateCSVWithStringHeader(datasetPath, performanceAndCovariatesHeader);
+        // FOR SYNCHRONY-/PERFORMANCE-PLOT:
+            // Creating a .CSV-file for the MSc Synchrony-dataset, which are to contain the HSYNCHTIMEs with their covariates.
+            //List<string> performanceAndCovariatesHeader = new List<string>(); // The covariates we want to record the performance-measure/outcome/response-variable for
+            //performanceAndCovariatesHeader.Add("HSYNCHTIME");
+            //performanceAndCovariatesHeader.Add("SUCCESS");    // Binary covariate (no=0 or yes=1)
+            //performanceAndCovariatesHeader.Add("PHASEADJ");
+            //CreateCSVWithStringHeader(datasetPath, performanceAndCovariatesHeader);
     }
 
     private void UpdateCSVFiles() {
@@ -316,14 +381,10 @@ public class AgentManager : MonoBehaviour {
         }
         FloatUpdateCSV(phaseCSVPath, phaseIntervalEntries);
 
-        // 3) Updating the t_f_is_now digital signal saved to the .CSV-file
-        float t_f_is_nowFloat = System.Convert.ToSingle(t_f_is_now);
-        List<float> t_f_is_nowList = new List<float>();
-        t_f_is_nowList.Add(t_f_is_nowFloat);
-        FloatUpdateCSV(t_f_is_nowPath, t_f_is_nowList);
-
-        // 4) Updating the node-firing data                                               SHOULD BE UPDATED WHEN FIRING EVENTS ARE HEARD, NOT CONTINUOUSLY
-        // MÅ FINNE UT HVILKEN NODE SOM FYRTE AKKURAT NÅ, OG SÅ KONSTRUERE EN .CSV-ENTRY/-LINJE UTIFRA DET.
+        // 3) Updating the .CSV-file for the t_f_is_now digital signal which is telling when it is legal for nodes to fire, together with 0s indicating no firing (if no fire-event is just heard)
+        if (!justHeardFireEvent) {
+            UpdateNodeFiringCSVNegative();
+        }
     }
 
     // ------- END OF CSV-Serialization Functions/Methods -------

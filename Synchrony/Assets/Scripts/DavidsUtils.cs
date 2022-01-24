@@ -34,7 +34,7 @@ public static class DavidsUtils {
         } else { // we have an 'even-length' list.
             int lowerMedianIndex = Mathf.FloorToInt((sortedList.Count - 1) / 2.0f);
             int upperMedianIndex = Mathf.CeilToInt((sortedList.Count - 1) / 2.0f);
-            median = (sortedList[lowerMedianIndex] + sortedList[upperMedianIndex]) / 2.0f; // using average median instead of lower middle median.
+            median = (sortedList[lowerMedianIndex] + sortedList[upperMedianIndex]) / 2.0f; // using average median instead of lower middle median, which it seems like Nymoen also used in his Matlab-implementation.
         }
 
         return median;
@@ -49,6 +49,22 @@ public static class DavidsUtils {
     }
 
     public static void CreateCSVWithIntHeader(string path, List<int> headerEntries) {
+        // Summary: creates a .CSV-file at arg1, <path>, with the top-line/header according to arg2, <headerEntries>.
+        TextWriter tw = new StreamWriter(path, false);
+        string firstLine = "";
+
+        // Fyller inn firstLine med IDene til Dr. Squigglene f.eks.:
+        for (int i = 0; i < headerEntries.Count; i++) {
+            firstLine += headerEntries[i];
+
+            if (i != headerEntries.Count - 1) firstLine += ";";
+        }
+
+        tw.WriteLine(firstLine);
+        tw.Close();
+    }
+
+    public static void CreateCSVWithStringHeader(string path, List<string> headerEntries) {
         // Summary: creates a .CSV-file at arg1, <path>, with the top-line/header according to arg2, <headerEntries>.
         TextWriter tw = new StreamWriter(path, false);
         string firstLine = "";

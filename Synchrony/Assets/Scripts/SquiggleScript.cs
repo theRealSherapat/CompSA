@@ -23,9 +23,6 @@ public class SquiggleScript : MonoBehaviour {
     public bool useSound = true;
     public bool useVisuals = false;
 
-    // Events and Actions
-    public event Action OnSquiggleFire;
-
 
     // Core (oscillator) synchronization-variables:
     private float phase; // a number between 0 and 1
@@ -35,6 +32,7 @@ public class SquiggleScript : MonoBehaviour {
     private List<float> HBuffer = new List<float>(); // a list of H(n)-values (which I calculated from the bottom up in the compiled reMarkable-note of mine)
 
     // Helping-variables:
+    private AgentManager myCreator;
     private List<SquiggleScript> otherSquiggles = new List<SquiggleScript>();
     private AudioSource audioSource; // reference to Audio Source component on the Musical Node that is told to play the fire sound
     private int agentID;
@@ -66,6 +64,7 @@ public class SquiggleScript : MonoBehaviour {
         // Setting up for a human listener being able to hear the ``fire''-events from the Dr. Squiggles
         AssignAudioVariables();
 
+        // Initializing all helping variables (including the reference to the Dr. Squiggle's creator, which is used for creating the Node-firing-plot later)
         AssignHelpingVariables();
 
         // Initializing the agent's phase randomly
@@ -87,8 +86,6 @@ public class SquiggleScript : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Space)) {
             LoadMySceneAgain();
         }
-                                                                                                                            //Debug.Log("errorBuffer: \n");
-                                                                                                                            //DebugLogMyFloatList(inPhaseErrorBuffer);
     }
 
     void FixedUpdate() {
@@ -135,6 +132,8 @@ public class SquiggleScript : MonoBehaviour {
     }
 
     void FireNode() {
+        NotifyMyCreator();
+
         NotifyTheHuman();
 
         // FOR REFRACTORY PERIOD:
@@ -143,11 +142,11 @@ public class SquiggleScript : MonoBehaviour {
 
         // Calling on all the agents to adjust their phases and calculate frequency-H-values
         NotifyTheAgents();
+    }
 
-        // Invoking the action the AgentManager is supposed to catch up on and use in the evaluation of the system's synchrony
-        if (OnSquiggleFire != null) {
-            OnSquiggleFire();
-        }
+    private void NotifyMyCreator() {
+        // Notifying my creator so that it can record my fire-event for the creation of the Node-firing-plot
+        myCreator.IJustHeardSomeoneFire(agentID);
     }
 
     private void NotifyTheHuman() {
@@ -206,10 +205,6 @@ public class SquiggleScript : MonoBehaviour {
         // Calculating the median of the inPhaseErrorBuffer, being the self-assessed synch-score
         float s_n = ListMedian(inPhaseErrorBuffer);
 
-                                                                                                            // BARE FOR TESTING:
-                                                                                                            // Debug.Log(gameObject.name + "'s self-assessed synch-score s(n): " + s_n);
-
-
         // Calculating the measure capturing the amplitude and sign of the frequency-modification of the n-th "fire"-event received
         float rho_n = -Mathf.Sin(2 * Mathf.PI * phase); // negative for phase < 1/2, and positive for phase > 1/2, and element in [-1, 1]
 
@@ -220,22 +215,11 @@ public class SquiggleScript : MonoBehaviour {
     private void RFAAdjustFrequency() {
         // Adjusting frequency according to the reachback firefly algorithm (RFA) with the values calculated since the start of previous oscillator cycle until now.
 
-        // OLD COMMENTS AND THOUGHTS:
-            // IMPLEMENTER FORMELEN ØVERST I “UiO/MSc/Logs/Simulations/Frequency adjustment”-notatet på reMarkable'n.
-            // Nå har jeg verdiene s(n), og kan lett finne rho(n), og da altså H(n).
-            // Da mangler jeg å ha en beta, en y, og å summe med alle disse verdiene — og til slutt sette den resulterende frekvens-verdien som min nye/nåværende/oppdaterte frekvens.
-
-            // F_n = beta * sum_0^{y-1}(H(n-x)/y);,       der beta er frequency coupling constant, y er antall hørte/mottatte "fire-events",
-            //                                           H(n) = rho(n) * s(n), og rho(n)=-sin(2*PI*phase)
-
         float averageCycleH = 0f;
         float HBufferLength = (float)HBuffer.Count;
         foreach (float H in HBuffer) {
             averageCycleH += H;
         }
-
-                                                                // BARE FOR TESTING:
-                                                                //Debug.Log("beta: " + beta + ", averageCycleH: " + averageCycleH + ", HBufferLength: " + HBufferLength);
 
         float F_n = 0f;
         if (HBufferLength != 0f) {
@@ -246,9 +230,6 @@ public class SquiggleScript : MonoBehaviour {
         HBuffer.Clear();
 
         float newFrequency = frequency * Mathf.Pow(2, F_n);
-
-                                                    // BARE FOR TESTING:
-                                                    //Debug.Log("oldFrequency: " + frequency + ", F_n: " + F_n + ", \n newFrequency (old_freq * 2^F_n): " + newFrequency);
 
         frequency = newFrequency;
     }
@@ -310,10 +291,13 @@ public class SquiggleScript : MonoBehaviour {
     
     private void AssignAudioVariables() {
         audioSource = GetComponent<AudioSource>();
-        audioSource.volume = 1f / (2*(otherSquiggles.Count + 1)); // REMOVE THE FACTOR 2 IN THE DENOMINATOR TO INCREASE VOLUME
+        audioSource.volume = 1f / (2*(otherSquiggles.Count + 1)); // Remove the factor of 2 in the denominator to increase volume
     }
 
     private void AssignHelpingVariables() {
+        // Acquiring a reference to the creator (AgentManager) so that the Dr. Squiggle's agentId can be passed to it when saving some data to .CSV-files
+        myCreator = FindObjectOfType<AgentManager>();
+
         // Acquiring a neighbour-list for each agent so that they can call on them when they themselves are firing
         FillUpNeighbourSquigglesList();
     }
