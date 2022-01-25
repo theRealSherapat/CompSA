@@ -93,4 +93,6 @@ public static class DavidsUtils {
         tw.WriteLine(newLine);
         tw.Close();
     }
+
+    //public static bool ContainsATrue
 }

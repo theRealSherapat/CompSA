@@ -89,7 +89,7 @@ public class SquiggleScript : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        // Eventually updating/lerping the agent-body's color
+        // Eventually updating/lerping the agent-body's color                   CONSIDER PUTTING THIS FUNCTIONALITY INTO THE NotifyHuman()-FUNCTION
         if (useVisuals && firedLastClimax) SetAgentCorpsColor();
 
         if (phase == 1f) {

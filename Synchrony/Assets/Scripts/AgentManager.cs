@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 using static DavidsUtils;
 
 public class AgentManager : MonoBehaviour {
@@ -43,6 +44,7 @@ public class AgentManager : MonoBehaviour {
     private float t_q = 0f; // The varying (but hopefully eventually converging) time-window/-duration lasting for how long no fire-events can be heard after the last time_fire-window ended.
     private int number_in_a_row_of_no_firings_within_t_q = 0;
     private bool firstFiringTriggered;
+    private bool[] agentiHasFiredAtLeastOnce;
 
     // Node-firing plot variables
     private bool justHeardFireEvent = false;
@@ -62,32 +64,27 @@ public class AgentManager : MonoBehaviour {
         // Spawning all agents randomly (but pretty naively as of now)
         SpawnAgents();
 
+        // Initializing and allocating as many boolean values (used for the performance measure) as there are agents, which are to be put "high"/true if agent with agentID fired at least once. REMEMBER TO CHECK THAT THIS BOOLEAN ARRAY GETS RESET TO ALL FALSE VALUES AT A SIMULATION RE-LOAD.
+        agentiHasFiredAtLeastOnce = new bool[spawnedAgentScripts.Count];
+
         // Creating all .CSV-files I want to update throughout the simulation 
         CreateAllCSVFiles();
     }
 
     void Update() {
-        //                                                                                                                   <---------- WORK ON!!!!!!!
+        // POTENTIAL PERFORMANCE-GAIN:
+            // Make the simulation quit immediately the even-beat-counter hits k, instead of at the next Update()-call.
 
         CheckHSynchConditions();
-        
-        if (hSynchConditionsAreMet) {
-            
-            // Saving a successful data-point
-            //SaveDataPointToCSVFile(Time.timeSinceLevelLoad);
-            
-            // BARE FOR TESTING
-            Debug.Log("'REAL' Synchrony achieved! The synch-time was: " + Time.timeSinceLevelLoad);
-            
-            QuitMyGame();
-        } else if (!hSynchConditionsAreMet && (Time.timeSinceLevelLoad >= runDurationLimit)) { // Max-time limit for the run (so that it won't go on forever)
-            // Saving an un-successful data-point
-            //SaveDataPointToCSVFile("fail");
 
-            // BARE FOR TESTING
-            Debug.Log("Synchrony not acheived. Exiting Simulation.");
+        // If the simulation has either succeeded, or failed — save datapoint and move on
+        // Condition 2: Max-time limit for the run (so that it won't go on forever)
+        if (hSynchConditionsAreMet || (!hSynchConditionsAreMet && (Time.timeSinceLevelLoad >= runDurationLimit))) {
+            
+            // Saving a successful or unsuccessful data-point
+            SaveDatapointToDataset(Time.timeSinceLevelLoad);
 
-            QuitMyGame();
+            QuitMyGame();                                                                                   // PERHAPS SWAP OUT FOR A SCENE/LEVEL RELOAD (AS YOU DO WHEN PRESSING SPACE IN THE SquiggleScript.cs. BUT THEN, REMEMBER TO CHECK THAT ALL VARIABLES THAT NEED TO BE RESET ARE RESET.
         }
     }
 
@@ -105,15 +102,19 @@ public class AgentManager : MonoBehaviour {
     // ------- START OF Performance-measure Termination-evaluation Functions/Methods -------
     
     private void CheckHSynchConditions() {
-        // * SJEKK AT HVER NODE HAR FYRT MINST EN GANG ILØPET AV EVALUERINGS-PERIODEN. *
+        // Checks if all nodes have fired at least once, as well as beat k times evenly (i.e. with an equal t_q-window but in a very short time-window t_f) in a row — and raising the signal/flag for achieved harmonic synchrony as a consequence (if these conditions are true).
 
-        if (number_in_a_row_of_no_firings_within_t_q == k) hSynchConditionsAreMet = true;
+        bool notAllHaveFiredOnceYet = agentiHasFiredAtLeastOnce.AsQueryable().Any(val => val == false);
+        bool agentsHaveBeatenInAnEvenRhythmKTimes = number_in_a_row_of_no_firings_within_t_q == k;
+
+        if (!notAllHaveFiredOnceYet && agentsHaveBeatenInAnEvenRhythmKTimes) hSynchConditionsAreMet = true;
     }
 
     public void IJustHeardSomeoneFire(int firingAgentId) {
         // When this method gets called, it means the AgentManager has picked upon a Dr. Squiggle's method-call — meaning it "heard" a Dr. Squiggle's ``fire''-signal.
 
         justHeardFireEvent = true;
+        agentiHasFiredAtLeastOnce[firingAgentId - 1] = true; // Flagging that corresponding agent with AgentID has fired at least once during the simulation.
 
         UpdateNodeFiringCSVPositive(firingAgentId);
 
@@ -149,67 +150,55 @@ public class AgentManager : MonoBehaviour {
         // Calling for a reset for the t_q-/t_q-window since observed fire-event was received during !t_f a.k.a. t_q, and we did not want to reset t_q this time, nor calling for the initialization of t_q
         else if (!t_f_is_now) {
             number_in_a_row_of_no_firings_within_t_q = 0; // resetting the streak, because synch bad
-            Debug.Log("Counter just restarted, cause synch bad.");
+            Debug.Log("Even-beat-counter towards k=" + k + ":    " + number_in_a_row_of_no_firings_within_t_q);
 
             last_t_q_definer = Time.time;
 
             define_t_q_at_next_firing = true;
         }
-
-                                                        // FØLG TRINNENE FRA 1) TIL 7) I Fig. 6. I Nymoen-paperet.
-
-                                                            // MÅ PASSE PÅ AT TriggerFiringTime() BLIR KALT ETTER HVERT t_q-window.
-
-                                                            // NECESSARY CONDITIONS FOR SYNCHRONIZATION:
-                                                                // DOES FIRING ALWAYS OCCUR WITHIN THE time_fire-WINDOW, AND NEVER DURING THE time-quiet-WINDOW ANYMORE? GOOOD!
-
-                                                                // HAVE ALL NODES FIRED AT LEAST ONCE DURING THE EVALUATION PERIOD? GOOOD!
-
-                                                                // HAVE THERE BEEN NO FIRINGS WITHIN THE t_q-WINDOWS k TIMES? GOOOD!
-
-                                                                // IF SO — CONGRATS! YOU CAN SET synchronizationIsAchieved = true;
     }
 
-    private void SaveDatapointToDataset() {
-        // Saving the Performance Measure (HSYNCHTIME) and the current Simulator-covariates/-hyperparameters
+    private void SaveDatapointToDataset(float runDuration) {
+        // Saving the Performance Measure (HSYNCHTIME) and the current Simulator-covariates/-hyperparameters (assumed to be manually written in the existing .CSV already).
 
         // Initializing empty float-List soon-to-contain the performance measure and the covariates/explanators
         List<float> performanceAndCovariateValues = new List<float>();
 
         // Adding the performance measure
-        performanceAndCovariateValues.Add(Time.timeSinceLevelLoad);
+        performanceAndCovariateValues.Add(runDuration);
         
         // Adding Covariate 1
         float hSynchConditionsAreMetFloat = System.Convert.ToSingle(hSynchConditionsAreMet);
         performanceAndCovariateValues.Add(hSynchConditionsAreMetFloat);
-        
+        // Telling the programmer in the console whether the simulation run was a success or not
+        if (hSynchConditionsAreMet) Debug.Log("Congratulations! Harmonic synchrony in your musical multi-robot collective was achieved in " + runDuration + " seconds!");
+        else                        Debug.Log("That's too bad... Harmonic synchrony, according to the performance-measure defined by K. Nymoen et al., was not achieved within the run time-limit of " + runDurationLimit + " seconds..");
+
+
         // Adding Covariate 2
         float useNymoenFloat = System.Convert.ToSingle(spawnedAgentScripts[0].useNymoen);
         performanceAndCovariateValues.Add(useNymoenFloat);
+
+        // Add Covariate N
         
         // Saving one datapoint, a.k.a. writing one .CSV-row (Performance-measure, Covariates) to the .CSV-file at the datasetPath
         FloatUpdateCSV(datasetPath, performanceAndCovariateValues);
     }
 
-
-
-
     private void TriggerFiringTime() {
         t_f_is_now = true;
         number_in_a_row_of_no_firings_within_t_q ++;
-        Debug.Log("Whole Firing Time Triggered at " + Time.time + ". Counter towards k: " + number_in_a_row_of_no_firings_within_t_q + "\n, and t_f: " + t_f);
+        Debug.Log("Even-beat-counter towards k=" + k + ":    " + number_in_a_row_of_no_firings_within_t_q);
         Invoke("TriggerQuietPeriod", t_f);
     }
 
     private void TriggerHalfFiringTime() {
         t_f_is_now = true;
-        Debug.Log("Half Firing Time Triggered at " + Time.time + ". Counter towards k: " + number_in_a_row_of_no_firings_within_t_q);
         Invoke("TriggerQuietPeriod", t_f/2f);
     }
 
     private void TriggerQuietPeriod() {
         t_f_is_now = false;
-        Debug.Log("Quiet period triggered at time: " + Time.time);
         Invoke("TriggerFiringTime", t_q);
     }
 
