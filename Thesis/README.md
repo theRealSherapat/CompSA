@@ -3,10 +3,11 @@
 Remember:
 * "Less is more." — experience and William Strunk Jr.
 * "Don't overkill it." — experience (crazy and many color-codes)
+* "Ikke drible eller lur deg selv." — overdreven bruk av "clarifying markers" og fotball
 
 
 ## Specific TODOs
-* Overfør og noter forstyrrende og un-clarifyende Concerns fra .TeX-filene, og de uthentede Concernsa fra Word-dokumentene ("Struktur og Content Concerns"), til notater på det nyeste MSc Thesis-dokumentet på reMarkable'n.
+* Overfør og rydd opp forstyrrende og un-clarifyende Concerns fra .TeX-filene til Word-dokumentene "StrukturConcerns", "SporsmaalAaSvarePaa", og "ContentSuggestions".
 * Fiks ordentlig kode-lint i Notepad++ sånn at jeg sparer mye tid og tekst-klassifiserings-krefter (ihvertfall for Python).
 * Execute 'GJØR: []'-clauses possible to execute now (remember Abe Lincoln).
 * Gå igjennom 'notert-på reMarkable Thesis-document(s)' og 'Essay .tex'-fila, så rett på eller hent kritikk, INKL.:[]?'s, og concerns.
