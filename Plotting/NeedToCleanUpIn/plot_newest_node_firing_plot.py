@@ -5,6 +5,10 @@ import matplotlib.pyplot as plt
 
 samplingRate = 100 # Hz                                                                             POTENTIAL SOURCE OF ERROR
 
+# THIS SCRIPT IS NOT TIMELY FUNCTIONAL AT THE MOMENT, AND DOES NOT CORRESPOND 1-1 WITH THE Debug.Log-window IN Unity IN TERMS OF TIMES/TIMINGS (E.G. THE 80ms T_F-PERIOD LOOKED LIKE A 130ms T_F-PERIOD IN THE PLOT, USING 5 AGENTS I BELIEVE).
+# THIS IS MOST LIKELY DUE TO HOW THE node_firing_data.csv IS UPDATED (I.E. NOT JUST ONCE PER FIXED-UPDATE, BUT ALSO ONCE EVERY TIME A MUSICAL ROBOT IS HEARD FIRING/FLASHING).
+    # LOOK AT HOW UpdateNodeFiringCSVNegative() AND UpdateNodeFiringCSVPositive() ARE CALLED TO FIX THIS.
+
 def main(csv_filename):
     times, datapointArray = parseDataFrom(csv_filename)
     
@@ -25,10 +29,10 @@ def plotAllColsVsTime(t, dataMatrix):
 
     # for arrayOfDatapoints in arraysOfDatapoints:
     
-    plt.ylabel("Signals (on/off)")
-    plt.xlabel("Time (seconds)")
+    plt.ylabel("signals (on/off)")
+    plt.xlabel("ish time in seconds")
     plt.legend(loc='upper right')
-    plt.title("Node-firing-plot")
+    plt.title("Chronologically (not necessarily timely) correct Node-firing-plot")
     plt.show()
 
 def parseDataFrom(csv_filename):

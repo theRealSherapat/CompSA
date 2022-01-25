@@ -18,7 +18,8 @@ public class AgentManager : MonoBehaviour {
 
     // Performance-measure / Synchronization-time variables
     public float t_f = 0.08f; // the duration of the time-window the nodes are allowed to fire during
-    public int k = 8; // the number of times in a row the 't_q'-/t_q-window (where no fire-events can be heard) must be equally long
+    public int k = 9; // the number of times in a row the 't_q'-/t_q-window (where no fire-events can be heard) must be equally long. KAN SETTE TILBAKE k=8 HVIS JEG FORSIKRER MEG OM AT INKREMENT-REGELEN MIN IKKE ER FOR LIBERAL.
+
 
     // CSV-Serialization variables:
     public string frequencyCSVPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Frequencies" + "\\" + "freqs_over_time.csv";
@@ -66,12 +67,6 @@ public class AgentManager : MonoBehaviour {
     }
 
     void Update() {
-        // BARE FOR TESTING:
-        //if (Input.GetKeyDown(KeyCode.Q)) {
-        //    Debug.Log("You pressed Quit for Quit Invoke at time " + Time.timeSinceLevelLoad);
-        //    CancelInvoke();
-        //}
-
         //                                                                                                                   <---------- WORK ON!!!!!!!
 
         CheckHSynchConditions();
@@ -108,26 +103,11 @@ public class AgentManager : MonoBehaviour {
 
 
     // ------- START OF Performance-measure Termination-evaluation Functions/Methods -------
+    
+    private void CheckHSynchConditions() {
+        // * SJEKK AT HVER NODE HAR FYRT MINST EN GANG ILØPET AV EVALUERINGS-PERIODEN. *
 
-    private void SaveDatapointToDataset() {
-        // Saving the Performance Measure (HSYNCHTIME) and the current Simulator-covariates/-hyperparameters
-
-        // Initializing empty float-List soon-to-contain the performance measure and the covariates/explanators
-        List<float> performanceAndCovariateValues = new List<float>();
-
-        // Adding the performance measure
-        performanceAndCovariateValues.Add(Time.timeSinceLevelLoad);
-        
-        // Adding Covariate 1
-        float hSynchConditionsAreMetFloat = System.Convert.ToSingle(hSynchConditionsAreMet);
-        performanceAndCovariateValues.Add(hSynchConditionsAreMetFloat);
-        
-        // Adding Covariate 2
-        float useNymoenFloat = System.Convert.ToSingle(spawnedAgentScripts[0].useNymoen);
-        performanceAndCovariateValues.Add(useNymoenFloat);
-        
-        // Saving one datapoint, a.k.a. writing one .CSV-row (Performance-measure, Covariates) to the .CSV-file at the datasetPath
-        FloatUpdateCSV(datasetPath, performanceAndCovariateValues);
+        if (number_in_a_row_of_no_firings_within_t_q == k) hSynchConditionsAreMet = true;
     }
 
     public void IJustHeardSomeoneFire(int firingAgentId) {
@@ -139,7 +119,7 @@ public class AgentManager : MonoBehaviour {
 
         AdjustHsynchCriteriasIfNeeded();
     }
-
+    
     private void AdjustHsynchCriteriasIfNeeded() {
         // Calling for the initialization (technically resetting) of the t_q-/t_q-window
         if (last_t_q_definer == 0f) { // bra logikk?
@@ -156,8 +136,8 @@ public class AgentManager : MonoBehaviour {
         // Resetting the t_q-/t_q-window if this is not the first observed Fire-event and the reset is flagged and wanted
         else if (define_t_q_at_next_firing) {
             float new_t_q = Time.time - last_t_q_definer - t_f; // Optionally subtract 3/2*t_f instead of just t_f.
-            //Debug.Log("new_t_q: " + new_t_q + "\n, and the if-criteria (new_t_q+t_f) = " + (new_t_q + t_f) + " which should be greater than 0.5f.");
-            if ((new_t_q+t_f) > 0.5f) { // weird condition because I don't want too close fire-events to define the t_q-window
+
+            if ((new_t_q+t_f) > 0.5f) { // weird condition because I don't want too close fire-events to define the t_q-window (i.e. not too small fire-time-differences)
                 t_q = new_t_q;
                 define_t_q_at_next_firing = false;
 
@@ -190,11 +170,29 @@ public class AgentManager : MonoBehaviour {
                                                                 // IF SO — CONGRATS! YOU CAN SET synchronizationIsAchieved = true;
     }
 
-    private void CheckHSynchConditions() {
-        // * SJEKK AT HVER NODE HAR FYRT MINST EN GANG ILØPET AV EVALUERINGS-PERIODEN. *
+    private void SaveDatapointToDataset() {
+        // Saving the Performance Measure (HSYNCHTIME) and the current Simulator-covariates/-hyperparameters
 
-        if (number_in_a_row_of_no_firings_within_t_q == k) hSynchConditionsAreMet = true;
+        // Initializing empty float-List soon-to-contain the performance measure and the covariates/explanators
+        List<float> performanceAndCovariateValues = new List<float>();
+
+        // Adding the performance measure
+        performanceAndCovariateValues.Add(Time.timeSinceLevelLoad);
+        
+        // Adding Covariate 1
+        float hSynchConditionsAreMetFloat = System.Convert.ToSingle(hSynchConditionsAreMet);
+        performanceAndCovariateValues.Add(hSynchConditionsAreMetFloat);
+        
+        // Adding Covariate 2
+        float useNymoenFloat = System.Convert.ToSingle(spawnedAgentScripts[0].useNymoen);
+        performanceAndCovariateValues.Add(useNymoenFloat);
+        
+        // Saving one datapoint, a.k.a. writing one .CSV-row (Performance-measure, Covariates) to the .CSV-file at the datasetPath
+        FloatUpdateCSV(datasetPath, performanceAndCovariateValues);
     }
+
+
+
 
     private void TriggerFiringTime() {
         t_f_is_now = true;
@@ -299,44 +297,6 @@ public class AgentManager : MonoBehaviour {
 
     // ------- START OF CSV-Serialization Functions/Methods -------
 
-    public void UpdateNodeFiringCSVPositive(int agentId) {                         // OBS: HVA SKJER HVIS TO ELLER FLERE AGENTER FYRER PÅ LIKT? FUNKER DET GREIT NOK FOR GRAFENS SKYLD?
-        List<float> nodeFiringDataList = new List<float>();
-
-        // Appending the fire-values for all agents (where one of them should have fired)
-        for (int i = 0; i < spawnedAgentScripts.Count; i++) {
-            if (i != agentId - 1) {
-                nodeFiringDataList.Add(0f);
-            }
-            else {
-                nodeFiringDataList.Add(1f);
-            }
-        }
-
-        // Appending the digital signal t_f_is_now
-        float t_f_is_nowFloat = System.Convert.ToSingle(t_f_is_now);
-        nodeFiringDataList.Add(t_f_is_nowFloat);
-
-        // Updating the CSV with one time-row
-        FloatUpdateCSV(nodeFiringDataPath, nodeFiringDataList);
-
-        // Resetting the flag telling the AgentManager a fire-signal was just heard
-        justHeardFireEvent = false;
-    }
-
-    private void UpdateNodeFiringCSVNegative() {
-        List<float> noNodeFiringDataList = new List<float>();
-
-        // Appending the fire-values for all agents (where none of them should have fired)
-        for (int i = 0; i < spawnedAgentScripts.Count; i++) noNodeFiringDataList.Add(0f);
-
-        // Appending the digital signal t_f_is_now
-        float t_f_is_nowFloat = System.Convert.ToSingle(t_f_is_now);
-        noNodeFiringDataList.Add(t_f_is_nowFloat);
-
-        // Updating the CSV with one time-row
-        FloatUpdateCSV(nodeFiringDataPath, noNodeFiringDataList);
-    }
-
     private void CreateAllCSVFiles() {
         // Creating a .CSV-header consisting of the agents's IDs
         List<string> agentIDHeader = new List<string>();
@@ -385,6 +345,43 @@ public class AgentManager : MonoBehaviour {
         if (!justHeardFireEvent) {
             UpdateNodeFiringCSVNegative();
         }
+    }
+
+    public void UpdateNodeFiringCSVPositive(int agentId) {                         // OBS: HVA SKJER HVIS TO ELLER FLERE AGENTER FYRER PÅ LIKT? FUNKER DET GREIT NOK FOR GRAFENS SKYLD?
+        List<float> nodeFiringDataList = new List<float>();
+
+        // Appending the fire-values for all agents (where one of them should have fired)
+        for (int i = 0; i < spawnedAgentScripts.Count; i++) {
+            if (i != agentId - 1) {
+                nodeFiringDataList.Add(0f);
+            } else {
+                nodeFiringDataList.Add(1f);
+            }
+        }
+
+        // Appending the digital signal t_f_is_now
+        float t_f_is_nowFloat = System.Convert.ToSingle(t_f_is_now);
+        nodeFiringDataList.Add(t_f_is_nowFloat);
+
+        // Updating the CSV with one time-row
+        FloatUpdateCSV(nodeFiringDataPath, nodeFiringDataList);
+
+        // Resetting the flag telling the AgentManager a fire-signal was just heard
+        justHeardFireEvent = false;
+    }
+
+    private void UpdateNodeFiringCSVNegative() {
+        List<float> noNodeFiringDataList = new List<float>();
+
+        // Appending the fire-values for all agents (where none of them should have fired)
+        for (int i = 0; i < spawnedAgentScripts.Count; i++) noNodeFiringDataList.Add(0f);
+
+        // Appending the digital signal t_f_is_now
+        float t_f_is_nowFloat = System.Convert.ToSingle(t_f_is_now);
+        noNodeFiringDataList.Add(t_f_is_nowFloat);
+
+        // Updating the CSV with one time-row
+        FloatUpdateCSV(nodeFiringDataPath, noNodeFiringDataList);
     }
 
     // ------- END OF CSV-Serialization Functions/Methods -------

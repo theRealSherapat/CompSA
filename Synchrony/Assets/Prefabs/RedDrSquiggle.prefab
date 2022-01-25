@@ -160,7 +160,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alpha: 0.2
-  useNymoen: 0
+  useNymoen: 1
   useFrequencyAdjustment: 0
   beta: 0.8
   m: 5
