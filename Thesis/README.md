@@ -3,11 +3,11 @@
 Remember:
 * "Less is more." — experience and William Strunk Jr.
 * "Don't overkill it." — experience (crazy and many color-codes)
-* "Ikke drible eller lur deg selv." — overdreven bruk av "clarifying markers" og fotball
+* "Ikke drible eller lure deg selv." — overdreven bruk av "clarifying markers" og fotball
 
 
 ## Specific TODOs
-* Overfør og rydd opp forstyrrende og un-clarifyende Concerns fra .TeX-filene til Word-dokumentene "StrukturConcerns", "SporsmaalAaSvarePaa", og "ContentSuggestions".
+* Synkroniser "StrukturConcerns" med de to andre "SporsmaalAaSvarePaa" og "ContentSuggestions".
 * Fiks ordentlig kode-lint i Notepad++ sånn at jeg sparer mye tid og tekst-klassifiserings-krefter (ihvertfall for Python).
 * Execute 'GJØR: []'-clauses possible to execute now (remember Abe Lincoln).
 * Gå igjennom 'notert-på reMarkable Thesis-document(s)' og 'Essay .tex'-fila, så rett på eller hent kritikk, INKL.:[]?'s, og concerns.
@@ -30,7 +30,7 @@ Remember:
 * Polish/finish citations and references throughout the master's report:
 	+ Add the right citations/references where there are empty \cite{}-clauses.
 	+ Ensure the right uses of \ref{}, so that 'Subsection \ref{}' doesn't e.g. refer to a Section or Paragraph.
-	+ Change to using the [NOR04]-style (first author(s), Normann e.g.) instead of [3]-style.
+	+ Change to using the [NOR04]-style (first author(s), Normann e.g.) instead of [3]-style (cf. https://www.overleaf.com/learn/latex/Bibliography_management_in_LaTeX).
 * Polish/finish the page layouts:
 	+ Se til at alle figurene og tabellene er plassert der det gir mening for deg, ikke der det gir mening for LaTeX.
 

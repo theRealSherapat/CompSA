@@ -2,7 +2,7 @@
 % Introducing the Chapter
 This chapter gives an overview of the developed musical multi-robot system. The main goal of the implemented system is to allow for a multi-robot (musical) collective to interact with each other in order to achieve emergent and co-ordinating/co-operative behaviour—synchronization specifically in our case—with varying degrees of difficulty and certainty in the environment and communication. More specifically, the goal with the design is to enable the robot collective to achieve so-called \textit{harmonic synchronization} within a relatively short time. What is meant by \textit{harmonic synchronization} will be expounded in Subsection \ref{subsec:harmonic_synchrony}. These goals firstly require of the agents/nodes the modelling of oscillators with their properties, like phase and frequency, as explained further in Subsection \ref{subsec:node}. To allow for interaction and communication between the agents, mechanisms so that the agents can transmit "fire"-signals, as well as listen for other agents's "fire"-signals, is necessary as well, and is presented in Subsection \ref{subsec:fire_signal}.
 
-First, the system and the system components will be presented and introduced. Then, methods implemented for achieving the target goal of \textit{harmonic synchrony} in various synchronization objectives—firstly solely for oscillator-phases, then secondly for both oscillator-phases and oscillator-frequencies—will be described and presented.
+First, the system and the system components will be presented and introduced. Then, methods implemented for achieving the system target goal of \textit{harmonic synchrony} in various synchronization objectives—firstly solely for oscillator-phases, then secondly for both oscillator-phases and oscillator-frequencies—will be described and presented.
 
 
 
@@ -10,9 +10,9 @@ First, the system and the system components will be presented and introduced. Th
 % SECTION 1, Introducing the System and the System-components:
 \section{The musical multi-robot collective}
 \label{sec:developed_system}
-\besk{About introduction, overview, and description of the developed system (as well as the system sub-constituents — aka. what the system consists of). $\implies$ in a nutshell: What is the system, and What does it consist of? Why?}
+\besk{about introducing, giving an overview, and describing the developed system \tcol[gray]{(as well as the system sub-constituents — aka. what the system consists of)}. $\implies$ In a nutshell answering: What is the system, and what does it consist of? Why?}
 
-	Envision that we have a multi-agent collective scenario consisting of musical robots modelled as oscillators, solely communicating through brief ``fire''-like audio-signals|greatly inspired by K. Nymoen et al.'s approach for achieving \textit{decentralized harmonic synchronization in mobile music systems} \cite{nymoen_synch}. These agents are initially not synchronized in their firing of audio-signals, but as time goes, they are entraining to synchronize to each other by adjusting their phases and frequencies when or after hearing each other's audio-signals. An illustration of this is given in Figure \ref{fig:initial}.
+	Envision that we have a multi-agent collective scenario consisting of musical robots modelled as oscillators, solely communicating through brief ``fire''-like audio-signals—greatly inspired by K. Nymoen et al.'s synchronizing ``fireflies'' \cite{nymoen_synch}. These agents are initially not synchronized in their firing of audio-signals, but as time goes, they are entraining to synchronize to each other by adjusting their phases and frequencies when or after hearing each other's audio-signals. An illustration of this is given in Figure \ref{fig:initial}.
 
 	% First Intro-illustration figure to easily get a quick idea of what the system/design does/consists of (to be exchanged with a describing system scheme/diagram):
 	\begin{figure}[h]
@@ -29,7 +29,7 @@ First, the system and the system components will be presented and introduced. Th
 				\caption{Seconds later, after having listened to each other's fire-event signals and adapted themselves accordingly, the agents are here firing synchronously.}
 				\label{fig:initial:synch}
 			\end{subfigure}
-		\caption{Decentralized Synchronization of phases achieved in a musical robot collective, consisting of M. J. Krzyzaniak and RITMO's Dr. Squiggles.}
+		\caption{Decentralized synchronization of phases achieved in a musical robot collective, consisting of M. J. Krzyzaniak and RITMO's Dr. Squiggles.}
 		\label{fig:initial}
 	\end{figure}
 
@@ -60,9 +60,9 @@ First, the system and the system components will be presented and introduced. Th
 	% Introducing the System Components:
 	
 	% Om den enkelte noden/agenten med alle egenskaper den har osv.
-	\subsection{The Node: the musical robot individual}
+	\subsection{The node: the musical robot individual}
 	\label{subsec:node}
-		\besk{Om den enkelte noden/agenten med alle egenskaper den har osv. (som f.eks. en oscillator-komponent (jf. I.A., III.Intro., og 'Implementation' i Nymoens Firefly-paper))}
+		\besk{about the individual node/agent with all its attributes and characteristics etc. \tcol[gray]{(as e.g. an oscillator-component (cf. I.A, III.Intro., and 'Implementation' in Nymoen's firefly-paper))}}
 		
 		Notions like ``agent'', ``node'', ``firefly'', and ``oscillator'' will be used interchangeably throughout the thesis.
 
@@ -71,23 +71,22 @@ First, the system and the system components will be presented and introduced. Th
 	\subsection{Robot communication: the ``fire''-signal}
 	\label{subsec:fire_signal}
 	
-	No individual agent is able to adjust or modify the state of any other agent, and the only means of communication between the agents will be through these ``fire''-signals.
+	No individual agent is able to adjust or modify the state of any other agent, only its own, and the only means of communication between the agents will be through these ``fire''-signals.
 	
 		\begin{itemize}
 			\item Short and impulsive audio sound/signal, representing a node's phase-climax and ``fire''-/``flash''-event.
 			\item Stigmergic co-ordination/communication.
 			\item Facilitating PCO (pulse-coupled oscillators), different from phase-coupled oscillators with their differences.
+			\item Aspekter fra Nymoens paper som presentert i Essay-oppsummeringen min.
 		\end{itemize}
-
-	\gjor{Sjekk oppsummeringen av Nymoen-paperet i Essayet}
 	
 
 	% Om target-staten til systemet: harmonisk synkroni
-	\subsection{System target state: Harmonic Synchrony}
+	\subsection{System target state: harmonic synchrony}
 	\label{subsec:harmonic_synchrony}
 		\begin{itemize}
 			\item The goal and target state of the system
-			\item All agents/nodes having integer-relation frequencies (between each other), so that given a fundamental frequency $\omega_{i,0}$ for the agent $i$ with the lowest frequency in the collective — all other agents have "legal" harmonic frequencies; meaning, all nodes have frequencies in the \tcol{mengde} $\omega_{i,0} \cdot 2^{\mathbb{N}_0}$.
+			\item All agents/nodes having integer-relation frequencies (between each other), so that given a fundamental frequency $\omega_{i,0}$ for the agent $i$ with the lowest frequency in the collective — all other agents have "legal" harmonic frequencies; meaning, all nodes have frequencies $\in \omega_{i,0} \cdot 2^{\mathbb{N}_0}$.
 			\item Waveform-Spektrogram av en stemme eller en lyd med Harmonics i seg (f.eks. fra Prariedogs-fyren ellernoe) — som jeg kan sammenlikne med de musikalske nodenes Frekvens-Spektrogram ved siden av. Hvorfor? For å introdusere/presentere/sammenlikne/forklare target-goalet best mulig.
 		\end{itemize}
 	
@@ -108,7 +107,7 @@ First, the system and the system components will be presented and introduced. Th
 % SECTION 2, Presenting Methods for Phase-Synchronization:
 \section{Synchronizing oscillator-phases}
 \label{sec:phase_methods}
-\besk{About various methods/algorithms/approaches (the nitty gritty) implemented to achieve the target/goal state(s). $\implies$ in a nutshell: What different but comparable methods did you use to achieve your goal(s) for Phase-Synchronization?}
+\besk{about various methods/algorithms/approaches \tcol[gray]{(the nitty gritty)} implemented to achieve the target/goal state of harmonic synchrony. $\implies$ In a nutshell answer: What different but comparable methods did you use to achieve harmonic synchrony with Phase-Synchronization?}
 
 	If we first assume constant and equal oscillator-frequencies in our agents, we can take a look at how the agents adjust their|initially random|phases in order to synchronize to each other. This is then in contrast to the case in Section \ref{sec:frequency_methods} where heterogenous and randomly initialized oscillator-frequencies in the musical agents are used and synchronized.
 	
@@ -121,7 +120,7 @@ First, the system and the system components will be presented and introduced. Th
 	
 	
 	% Mirollo-Strogatz's Phase-Synchronization
-	\subsection{Mirollo-Strogatz's ``Standard'' Phase-adjustment}
+	\subsection{Mirollo-Strogatz's ``standard'' phase-updates} % used '-adjustment' before
 	
 	One approach having been used to achieve this in the past is Mirollo-Strogatz's ``Standard'' Phase-adjustment in oscillators \cite{mirollo_strogatz_PCO_synch}, as illustrated in Figure \ref{fig:strog_phase}.
 			
@@ -144,7 +143,7 @@ First, the system and the system components will be presented and introduced. Th
 	
 	
 	% K. Nymoen's Phase-Synchronization
-	\subsection{K. Nymoen's Bi-Directional Phase Shifts}
+	\subsection{K. Nymoen's bi-directional phase-updates} % used 'Shifts' before
 	
 	\begin{figure}[h]
 		\centering
@@ -185,7 +184,7 @@ First, the system and the system components will be presented and introduced. Th
 % SECTION 3, Presenting Methods for Phase- & Frequency-Synchronization:
 \section{Synchronizing both oscillator -phases and -frequencies}
 \label{sec:frequency_methods}
-\besk{About various methods/algorithms/approaches (the nitty gritty) implemented to achieve the target/goal state(s). $\implies$ in a nutshell: What different but comparable methods did you use to achieve your goal(s) for Frequency- \& Phase-Synchronization?}
+\besk{about various methods/algorithms/approaches \tcol[gray]{(the nitty gritty)} implemented to achieve the target/goal state of harmonic synchrony. $\implies$ In a nutshell answer: What different but comparable methods did you use to achieve harmonic synchrony with Frequency- \inkl{\& Phase-}Synchronization?}
 
 	% Om Update-functions for frekvens-oppdateringene
 	Now over to the slightly more complex issue of adjusting and synchronizing frequencies—as well as phases—in the agent-/oscillator-collective. We introduce randomly initialized, non-constant, and heterogenous oscillator-frequencies in our musical agents — allowing in the music collective the playing of rhythmic patterns like \tcol{doubles, fourths, eights (FRA NYMOEN: subdivisions of a measure, i.e. quarter notes and 8ths. "Temporal components in music tend to appear in an integer-ratio relation to each other (e.g., beats, measures, phrases, or quarter notes, 8ths, 16ths)")} etc. The agents are now then required to not only synchronize their phases to each other, but now also their initially different and random frequencies — so that frequencies are ``legal'' and \textit{harmonically synchronized}.
@@ -211,7 +210,7 @@ First, the system and the system components will be presented and introduced. Th
 	% K. Nymoen's Frequency-Synchronization with some Self-Awareness (which as far as I know only works together with K. Nymoen's Phase-Synchronization)
 	\subsection{K. Nymoen's mid SA-level frequency-updates}
 	
-	This approach to Frequency Adjustment stands in contrast to previous approaches to synchronization in oscillators \tcol{cite(fixed\_freqs, fixed\_range\_freqs)} where the oscillators's frequencies are either equal and fixed, or where frequencies are bound to initialize and stay within a fixed interval/range.
+	This approach to Frequency Adjustment stands in contrast to previous approaches to synchronization in oscillators [fixed\_freqs, fixed\_range\_freqs] where the oscillators's frequencies are either equal and fixed, or where frequencies are bound to initialize and stay within a fixed interval/range.
 	
 	In order to achieve this goal of \textit{harmonic synchrony} in conjunction with|or rather through|frequency adjustment, we have to go through a few steps to build a sophisticated enough update-function able to help us achieve this.
 	
@@ -343,4 +342,14 @@ First, the system and the system components will be presented and introduced. Th
 	% Hopefully an improved method with some additional Self-Awareness components
 	\subsection{Thorvaldsen's high SA-level frequency-updates}
 	
-	My new proposed algorithm for achieving Harmonic Synchronization including Frequeny-Adjustment, comprising several additional Self-Awareness components compared to K. Nymoen's approach (jf. \textbf{Thorvaldsen's improved approach} på reMarkablen). I want to best Nymoen.
+	Min nye proposede algoritme for å oppnå Harmonic Synchronization med Frequency-Adjustment, som inneholder flere tilleggs- Self-Awareness-komponenter (e.g. Belief-awareness og/eller Expectation-awareness), sammenliknet med K. Nymoens tilnærming (jf. \textbf{Thorvaldsen's improved approach} og det jeg og Kyrre snakka om under 'Mid-November'-recall-notatet på 'reMarkable -\> Meetings -\> Kyrre' på reMarkablen). Jeg vil ``beste'' Kristian.
+
+
+
+
+
+% SECTION 4, Presenting the Performance-measure used to evaluate the implemented methods (Benchmark?):
+\section{Performance measure}
+\label{sec:performance_measure}
+\besk{``where I present the method used to evaluate the performance \tcol[gray]{(detecting harmonic synchrony)} of the presented and newly proposed algorithms/methods'' — Samuelsen's MSc-thesis?}
+\gjor{Vurder om du skal droppe denne seksjonen og slå sammen med \ref{subsec:harmonic_synchrony}}
