@@ -168,7 +168,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collectiveSize: 5
-  runDurationLimit: 300
+  simulationRuns: 10
+  runDurationLimit: 40
   adjustedTimeScale: 1
   squigglePrefabs:
   - {fileID: 2285719835394980754, guid: c314eb5130117ec42b02442ea979e2a7, type: 3}

@@ -8,8 +8,9 @@ public class AgentManager : MonoBehaviour {
 
     // Simulation Hyperparameters/HSYNCH-Covariates
     public int collectiveSize = 3;
-    
+
     // General Meta-variables:
+    public int simulationRuns = 1;
     public float runDurationLimit = 300f; // 5 minutes (given in seconds)
     public float adjustedTimeScale = 1.0f;
 
@@ -30,6 +31,9 @@ public class AgentManager : MonoBehaviour {
     public string t_f_is_nowPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "t_f_is_now_digital_signal.csv";
     public string datasetPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "synchronyDataset.csv";
     
+    
+    
+    private static int atSimRun = 0;
 
     // Spawning variables:
     private float agentWidth = Mathf.Sqrt(Mathf.Pow(4.0f, 2) + Mathf.Pow(4.0f, 2)); // diameter from tentacle to tentacle (furthest from each other)
@@ -48,6 +52,7 @@ public class AgentManager : MonoBehaviour {
 
     // Node-firing plot variables
     private bool justHeardFireEvent = false;
+
 
     // ------- END OF Variable Declarations -------
 
@@ -80,11 +85,21 @@ public class AgentManager : MonoBehaviour {
         // If the simulation has either succeeded, or failed — save datapoint and move on
         // Condition 2: Max-time limit for the run (so that it won't go on forever)
         if (hSynchConditionsAreMet || (!hSynchConditionsAreMet && (Time.timeSinceLevelLoad >= runDurationLimit))) {
-            
+
+            // Signifying that I am done with one simulator-run
+            atSimRun ++;
+
             // Saving a successful or unsuccessful data-point
             SaveDatapointToDataset(Time.timeSinceLevelLoad);
 
-            QuitMyGame();                                                                                   // PERHAPS SWAP OUT FOR A SCENE/LEVEL RELOAD (AS YOU DO WHEN PRESSING SPACE IN THE SquiggleScript.cs. BUT THEN, REMEMBER TO CHECK THAT ALL VARIABLES THAT NEED TO BE RESET ARE RESET.
+            Debug.Log("Checking if counter 'atSimRun'=" + atSimRun + " isn't equal to 'simulationRuns'=" + simulationRuns);
+
+            if (atSimRun != simulationRuns) {
+                ResetSimulationVariables();                                                                      // REMEMBER TO CHECK THAT ALL VARIABLES THAT NEED TO BE RESET ARE RESET.
+                LoadMySceneAgain();
+            } else {
+                QuitMyGame();
+            }
         }
     }
 
@@ -129,14 +144,14 @@ public class AgentManager : MonoBehaviour {
                 firstFiringTriggered = true;
             }
 
-            last_t_q_definer = Time.time;
+            last_t_q_definer = Time.timeSinceLevelLoad;
 
 
             define_t_q_at_next_firing = true;
         }
         // Resetting the t_q-/t_q-window if this is not the first observed Fire-event and the reset is flagged and wanted
         else if (define_t_q_at_next_firing) {
-            float new_t_q = Time.time - last_t_q_definer - t_f; // Optionally subtract 3/2*t_f instead of just t_f.
+            float new_t_q = Time.timeSinceLevelLoad - last_t_q_definer - t_f; // Optionally subtract 3/2*t_f instead of just t_f.
 
             if ((new_t_q+t_f) > 0.5f) { // weird condition because I don't want too close fire-events to define the t_q-window (i.e. not too small fire-time-differences)
                 t_q = new_t_q;
@@ -152,7 +167,7 @@ public class AgentManager : MonoBehaviour {
             number_in_a_row_of_no_firings_within_t_q = 0; // resetting the streak, because synch bad
             Debug.Log("Even-beat-counter towards k=" + k + ":    " + number_in_a_row_of_no_firings_within_t_q);
 
-            last_t_q_definer = Time.time;
+            last_t_q_definer = Time.timeSinceLevelLoad;
 
             define_t_q_at_next_firing = true;
         }
@@ -382,6 +397,19 @@ public class AgentManager : MonoBehaviour {
 
 
     // ------- START OF Helping-/Utility Functions/Methods -------
+
+    private void ResetSimulationVariables() {
+        // Basically reset all the initial/default values (to what they were by default) as in the variable-declaration-section all over again. Maybe it can be done smarter in the code, only writing the lines once?
+        hSynchConditionsAreMet = false;
+        agentiHasFiredAtLeastOnce = new bool[spawnedAgentScripts.Count];
+        last_t_q_definer = 0f;
+        define_t_q_at_next_firing = false;
+        CancelInvoke(); // All t_q-/t_f-Invokes are ended/executed.
+        t_f_is_now = false;
+        t_q = 0f;
+        number_in_a_row_of_no_firings_within_t_q = 0;
+        firstFiringTriggered = false;
+}
 
     private void QuitMyGame() {
         UnityEditor.EditorApplication.isPlaying = false;

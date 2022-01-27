@@ -160,14 +160,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alpha: 0.2
-  useNymoen: 1
+  useNymoen: 0
   useFrequencyAdjustment: 0
   beta: 0.8
   m: 5
   minMaxInitialFreqs: {x: 0.1, y: 4}
   t_ref_perc_of_period: 0.1
   useSound: 1
-  useVisuals: 1
+  useVisuals: 0
 --- !u!1 &8768706482578209584
 GameObject:
   m_ObjectHideFlags: 0

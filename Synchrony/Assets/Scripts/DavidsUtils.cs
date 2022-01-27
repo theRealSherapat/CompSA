@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 public static class DavidsUtils {
     // HUSK AT Å KALLE DET DavidsUtils KAN VÆRE UÆRLIG, SIDEN DU FIKK INSPIRASJON FRA PIERRES Unity-PROSJEKT.
@@ -94,5 +95,8 @@ public static class DavidsUtils {
         tw.Close();
     }
 
-    //public static bool ContainsATrue
+    public static void LoadMySceneAgain() {
+        string currentScene = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(currentScene);
+    }
 }

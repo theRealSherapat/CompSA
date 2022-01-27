@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-
 using static DavidsUtils;
 
 public class SquiggleScript : MonoBehaviour {
@@ -300,11 +298,6 @@ public class SquiggleScript : MonoBehaviour {
 
         // Acquiring a neighbour-list for each agent so that they can call on them when they themselves are firing
         FillUpNeighbourSquigglesList();
-    }
-
-    private void LoadMySceneAgain() {
-        string currentScene = SceneManager.GetActiveScene().name;
-        SceneManager.LoadScene(currentScene);
     }
 
     public float GetFrequency() {
