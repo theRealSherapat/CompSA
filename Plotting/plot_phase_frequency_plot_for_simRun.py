@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 
 samplingRate = 100 # Hz                                                                             POTENTIAL SOURCE OF ERROR
 
+# TODO: INVESTIGATE WHAT MAKES THE LEGAL-FREQUENCY GREEN CIRCLES LOOK SO WEIRD.
+
 def main(phase_filename, freqs_filename):        
     plt.close("all") # First clearing all other opened figures.
     
@@ -152,8 +154,14 @@ if __name__ == "__main__":
             It then plots all of the columns (corresponding to an agents's data each) over the vertical time-axis in a subplot with phase and frequencies. 
             
             Lastly, legal multiples for frequency (in order to have achieved harmonic synchronization) are marked with green circles. """
+     
+    """ Arguments:
+            simRun (str): the simulation-run from the latest Unity-run
+    """
     
-    phase_path = "../../Synchrony/SavedData/Phases/phases_over_time.csv"
-    freqs_path = "../../Synchrony/SavedData/Frequencies/freqs_over_time.csv"
+    simRun = sys.argv[1]
+    phase_path = "../Synchrony/SavedData/Phases/phases_over_time_atSimRun" + simRun + ".csv"
+    freqs_path = "../Synchrony/SavedData/Frequencies/freqs_over_time_atSimRun" + simRun + ".csv"
+    
     
     main(phase_path, freqs_path)

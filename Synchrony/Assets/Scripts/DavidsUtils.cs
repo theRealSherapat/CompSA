@@ -3,9 +3,7 @@ using UnityEngine;
 using System.IO;
 using UnityEngine.SceneManagement;
 
-public static class DavidsUtils {
-    // HUSK AT Å KALLE DET DavidsUtils KAN VÆRE UÆRLIG, SIDEN DU FIKK INSPIRASJON FRA PIERRES Unity-PROSJEKT.
-
+public static class DavidsUtils { // HUSK AT Å KALLE DET DavidsUtils KAN VÆRE UÆRLIG, SIDEN DU FIKK INSPIRASJON FRA PIERRES Unity-PROSJEKT.
     public static List<float> ShiftFloatListRightToLeftWith(List<float> thisList, float thisInput) {
         thisList.Add(thisInput);
         thisList.RemoveAt(0);
@@ -45,6 +43,22 @@ public static class DavidsUtils {
         Debug.Log("START:");
         for (int i = 0; i < listo.Count; i++) {                         // selvom 'for-in' loops i C# virker til å være ordered.
             Debug.Log("List-entry " + i + " sin verdi: " + listo[i]);
+        }
+        Debug.Log("END.");
+    }
+
+    public static void DebugLogMyIntList(List<int> listo) {
+        Debug.Log("START:");
+        for (int i = 0; i < listo.Count; i++) {                         // selvom 'for-in' loops i C# virker til å være ordered.
+            Debug.Log("List-entry " + i + " sin verdi: " + listo[i]);
+        }
+        Debug.Log("END.");
+    }
+
+    public static void DebugLogMyIntArray(int[] arrayo) {
+        Debug.Log("START:");
+        for (int i = 0; i < arrayo.Length; i++) {                         // selvom 'for-in' loops i C# virker til å være ordered.
+            Debug.Log("Array-entry " + i + " sin verdi: " + arrayo[i]);
         }
         Debug.Log("END.");
     }

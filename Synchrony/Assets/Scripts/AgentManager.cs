@@ -24,11 +24,10 @@ public class AgentManager : MonoBehaviour {
 
 
     // CSV-Serialization variables:
-    public string frequencyCSVPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Frequencies" + "\\" + "freqs_over_time.csv";
-    public string phaseCSVPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Phases" + "\\" + "phases_over_time.csv";
-    public string nodeFiringDataPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "node_firing_data.csv";
+    public string phaseCSVPathStart = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Phases" + "\\" + "phases_over_time";
+    public string frequencyCSVPathStart = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Frequencies" + "\\" + "freqs_over_time";
+    public string nodeFiringDataPathStart = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "NodeFiringPlotMaterial" + "\\" + "node_firing_data";
 
-    public string t_f_is_nowPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "t_f_is_now_digital_signal.csv";
     public string datasetPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "synchronyDataset.csv";
     
     
@@ -51,8 +50,7 @@ public class AgentManager : MonoBehaviour {
     private bool[] agentiHasFiredAtLeastOnce;
 
     // Node-firing plot variables
-    private bool justHeardFireEvent = false;
-
+    private List<int> agentWithAgentIDsJustFired = new List<int>(); // Initializing (used for creation of node-firing-plot) a list for all the agents with agent-ids that just fired. 
 
     // ------- END OF Variable Declarations -------
 
@@ -69,7 +67,7 @@ public class AgentManager : MonoBehaviour {
         // Spawning all agents randomly (but pretty naively as of now)
         SpawnAgents();
 
-        // Initializing and allocating as many boolean values (used for the performance measure) as there are agents, which are to be put "high"/true if agent with agentID fired at least once. REMEMBER TO CHECK THAT THIS BOOLEAN ARRAY GETS RESET TO ALL FALSE VALUES AT A SIMULATION RE-LOAD.
+        // Initializing and allocating as many boolean values (used for the performance measure) as there are agents, which are to be put "high"/true if agent with agentID fired at least once.
         agentiHasFiredAtLeastOnce = new bool[spawnedAgentScripts.Count];
 
         // Creating all .CSV-files I want to update throughout the simulation 
@@ -78,34 +76,17 @@ public class AgentManager : MonoBehaviour {
 
     void Update() {
         // POTENTIAL PERFORMANCE-GAIN:
-            // Make the simulation quit immediately the even-beat-counter hits k, instead of at the next Update()-call.
+            // - Make the simulation quit immediately the even-beat-counter hits k, instead of at the next Update()-call.
+            // - Call EndSimulationIfHSynchConditionsAreReached() in FixedUpdate() instead of Update().
 
         CheckHSynchConditions();
 
-        // If the simulation has either succeeded, or failed — save datapoint and move on
-        // Condition 2: Max-time limit for the run (so that it won't go on forever)
-        if (hSynchConditionsAreMet || (!hSynchConditionsAreMet && (Time.timeSinceLevelLoad >= runDurationLimit))) {
-
-            // Signifying that I am done with one simulator-run
-            atSimRun ++;
-
-            // Saving a successful or unsuccessful data-point
-            SaveDatapointToDataset(Time.timeSinceLevelLoad);
-
-            Debug.Log("Checking if counter 'atSimRun'=" + atSimRun + " isn't equal to 'simulationRuns'=" + simulationRuns);
-
-            if (atSimRun != simulationRuns) {
-                ResetSimulationVariables();                                                                      // REMEMBER TO CHECK THAT ALL VARIABLES THAT NEED TO BE RESET ARE RESET.
-                LoadMySceneAgain();
-            } else {
-                QuitMyGame();
-            }
-        }
+        EndSimulationRunIfHSynchConditionsAreReached();
     }
 
     void FixedUpdate() {
         // Updating all my CSV-files with a constant interval (here at the rate at which FixedUpdate() is called, hence at 50Hz)
-        UpdateCSVFiles();
+        UpdateAllCSVFiles();
     }
 
     // ------- END OF MonoBehaviour Functions/Methods -------
@@ -125,13 +106,32 @@ public class AgentManager : MonoBehaviour {
         if (!notAllHaveFiredOnceYet && agentsHaveBeatenInAnEvenRhythmKTimes) hSynchConditionsAreMet = true;
     }
 
+    private void EndSimulationRunIfHSynchConditionsAreReached() {
+        // If the simulation has either succeeded, or failed — save datapoint and move on
+        // Condition 2: Max-time limit for the run (so that it won't go on forever)
+        if (hSynchConditionsAreMet || (!hSynchConditionsAreMet && (Time.timeSinceLevelLoad >= runDurationLimit))) {
+
+            // Signifying that I am done with one simulator-run
+            atSimRun++;
+
+            // Saving a successful or unsuccessful data-point
+            SaveDatapointToDataset(Time.timeSinceLevelLoad);
+
+            if (atSimRun != simulationRuns) {
+                ResetSimulationVariables();
+                LoadMySceneAgain();
+            } else {
+                QuitMyGame();
+            }
+        }
+    }
+
     public void IJustHeardSomeoneFire(int firingAgentId) {
         // When this method gets called, it means the AgentManager has picked upon a Dr. Squiggle's method-call — meaning it "heard" a Dr. Squiggle's ``fire''-signal.
 
-        justHeardFireEvent = true;
-        agentiHasFiredAtLeastOnce[firingAgentId - 1] = true; // Flagging that corresponding agent with AgentID has fired at least once during the simulation.
+        agentWithAgentIDsJustFired.Add(firingAgentId);
 
-        UpdateNodeFiringCSVPositive(firingAgentId);
+        agentiHasFiredAtLeastOnce[firingAgentId - 1] = true; // Flagging that corresponding agent with AgentID has fired at least once during the simulation.
 
         AdjustHsynchCriteriasIfNeeded();
     }
@@ -186,8 +186,8 @@ public class AgentManager : MonoBehaviour {
         float hSynchConditionsAreMetFloat = System.Convert.ToSingle(hSynchConditionsAreMet);
         performanceAndCovariateValues.Add(hSynchConditionsAreMetFloat);
         // Telling the programmer in the console whether the simulation run was a success or not
-        if (hSynchConditionsAreMet) Debug.Log("Congratulations! Harmonic synchrony in your musical multi-robot collective was achieved in " + runDuration + " seconds!");
-        else                        Debug.Log("That's too bad... Harmonic synchrony, according to the performance-measure defined by K. Nymoen et al., was not achieved within the run time-limit of " + runDurationLimit + " seconds..");
+        if (hSynchConditionsAreMet) Debug.Log("Congratulations! Harmonic synchrony in your musical multi-robot collective at simRun " + atSimRun + " was achieved in " + runDuration + " seconds!");
+        else                        Debug.Log("That's too bad... Harmonic synchrony, according to the performance-measure defined by K. Nymoen et al., was not achieved at simRun " + atSimRun + " within the run time-limit of " + runDurationLimit + " seconds..");
 
 
         // Adding Covariate 2
@@ -302,90 +302,104 @@ public class AgentManager : MonoBehaviour {
     // ------- START OF CSV-Serialization Functions/Methods -------
 
     private void CreateAllCSVFiles() {
+        // Obtaining the .CSV-header consisting of the agents's IDs
+        List<string> agentIDHeader = GetAgentHeader();
+
+        // Creating one .CSV-file for the agents's phases over time
+        CreatePhaseCSV(agentIDHeader);
+        
+        // Creating one .CSV-file for the agents's frequencies over time
+        CreateFrequencyCSV(agentIDHeader);
+
+        // Creating one .CSV-file for the node_firing_data (including t_f_is_now) needed to create the "Node-firing-plot" as in Nymoen's Fig. 6
+        CreateNodeFiringCSV(agentIDHeader);
+
+        // FOR AUTOMATIC (CURRENTLY IT IS MANUAL) SYNCHRONY-/PERFORMANCE-PLOT .CSV-FILE:
+        //CreateSynchDatasetCSV();
+    }
+
+    private List<string> GetAgentHeader() {
         // Creating a .CSV-header consisting of the agents's IDs
+
         List<string> agentIDHeader = new List<string>();
         foreach (SquiggleScript squiggScr in spawnedAgentScripts) {
             agentIDHeader.Add("agent" + squiggScr.GetAgentID().ToString());
         }
 
-        // 1) Creating one .CSV-file for the agents's frequencies over time
-        CreateCSVWithStringHeader(frequencyCSVPath, agentIDHeader);
-
-        // 2) Creating one .CSV-file for the agents's phases over time
-        CreateCSVWithStringHeader(phaseCSVPath, agentIDHeader);
-
-        // 3) Creating one .CSV-file for the node_firing_data (including t_f_is_now) needed to create the "Node-firing-plot" as in Nymoen's Fig. 6
-        List<string> nodeFiringWithTfHeader = new List<string>(agentIDHeader);
-        nodeFiringWithTfHeader.Add("t_f_is_now");
-        CreateCSVWithStringHeader(nodeFiringDataPath, nodeFiringWithTfHeader);
-        
-
-
-        // FOR SYNCHRONY-/PERFORMANCE-PLOT:
-            // Creating a .CSV-file for the MSc Synchrony-dataset, which are to contain the HSYNCHTIMEs with their covariates.
-            //List<string> performanceAndCovariatesHeader = new List<string>(); // The covariates we want to record the performance-measure/outcome/response-variable for
-            //performanceAndCovariatesHeader.Add("HSYNCHTIME");
-            //performanceAndCovariatesHeader.Add("SUCCESS");    // Binary covariate (no=0 or yes=1)
-            //performanceAndCovariatesHeader.Add("PHASEADJ");
-            //CreateCSVWithStringHeader(datasetPath, performanceAndCovariatesHeader);
+        return agentIDHeader;
     }
 
-    private void UpdateCSVFiles() {
-        // 1) Updating the Frequency-Over-Time-.CSV-file
-        List<float> frequencyIntervalEntries = new List<float>();
-        foreach (SquiggleScript squiggScr in spawnedAgentScripts) {
-            frequencyIntervalEntries.Add(squiggScr.GetFrequency());
-        }
-        FloatUpdateCSV(frequencyCSVPath, frequencyIntervalEntries);
+    private void CreatePhaseCSV(List<string> agentHeader) {
+        CreateCSVWithStringHeader(phaseCSVPathStart + "_atSimRun" + atSimRun + ".csv", agentHeader);
+    }
 
-        // 2) Updating the Phase-Over-Time-.CSV-file
+    private void CreateFrequencyCSV(List<string> agentHeader) {
+        CreateCSVWithStringHeader(frequencyCSVPathStart + "_atSimRun" + atSimRun + ".csv", agentHeader);
+    }
+
+    private void CreateNodeFiringCSV(List<string> agentHeader) {
+        List<string> nodeFiringWithTfHeader = new List<string>(agentHeader);
+        nodeFiringWithTfHeader.Insert(0, "t_f_is_now");
+        CreateCSVWithStringHeader(nodeFiringDataPathStart + "_atSimRun" + atSimRun + ".csv", nodeFiringWithTfHeader);
+    }
+
+    //private void CreateSynchDatasetCSV() {
+        // Creating a .CSV-file for the MSc Synchrony-dataset, which are to contain the HSYNCHTIMEs with their covariates.
+        //List<string> performanceAndCovariatesHeader = new List<string>(); // The covariates we want to record the performance-measure/outcome/response-variable for
+        //performanceAndCovariatesHeader.Add("HSYNCHTIME");
+        //performanceAndCovariatesHeader.Add("SUCCESS");    // Binary covariate (no=0 or yes=1)
+        //performanceAndCovariatesHeader.Add("PHASEADJ");
+        //CreateCSVWithStringHeader(datasetPath, performanceAndCovariatesHeader);
+    //}
+
+
+
+    private void UpdateAllCSVFiles() {
+        // 1) Updating the Frequencies-Over-Time-.CSV-file
+        UpdateFrequencyCSV();
+
+        // 2) Updating the Phases-Over-Time-.CSV-file
+        UpdatePhaseCSV();
+
+        // 3) Updating the .CSV-file for the t_f_is_now digital signal which is telling when it is legal for nodes to fire, together with 0s indicating no firing
+        UpdateNodeFiringCSV();
+    }
+
+    private void UpdatePhaseCSV() {
         List<float> phaseIntervalEntries = new List<float>();
         foreach (SquiggleScript squiggScr in spawnedAgentScripts) {
             phaseIntervalEntries.Add(squiggScr.GetPhase());
         }
-        FloatUpdateCSV(phaseCSVPath, phaseIntervalEntries);
-
-        // 3) Updating the .CSV-file for the t_f_is_now digital signal which is telling when it is legal for nodes to fire, together with 0s indicating no firing (if no fire-event is just heard)
-        if (!justHeardFireEvent) {
-            UpdateNodeFiringCSVNegative();
-        }
+        FloatUpdateCSV(phaseCSVPathStart + "_atSimRun" + atSimRun + ".csv", phaseIntervalEntries);
     }
 
-    public void UpdateNodeFiringCSVPositive(int agentId) {                         // OBS: HVA SKJER HVIS TO ELLER FLERE AGENTER FYRER PÅ LIKT? FUNKER DET GREIT NOK FOR GRAFENS SKYLD?
-        List<float> nodeFiringDataList = new List<float>();
-
-        // Appending the fire-values for all agents (where one of them should have fired)
-        for (int i = 0; i < spawnedAgentScripts.Count; i++) {
-            if (i != agentId - 1) {
-                nodeFiringDataList.Add(0f);
-            } else {
-                nodeFiringDataList.Add(1f);
-            }
+    private void UpdateFrequencyCSV() {
+        List<float> frequencyIntervalEntries = new List<float>();
+        foreach (SquiggleScript squiggScr in spawnedAgentScripts) {
+            frequencyIntervalEntries.Add(squiggScr.GetFrequency());
         }
-
-        // Appending the digital signal t_f_is_now
-        float t_f_is_nowFloat = System.Convert.ToSingle(t_f_is_now);
-        nodeFiringDataList.Add(t_f_is_nowFloat);
-
-        // Updating the CSV with one time-row
-        FloatUpdateCSV(nodeFiringDataPath, nodeFiringDataList);
-
-        // Resetting the flag telling the AgentManager a fire-signal was just heard
-        justHeardFireEvent = false;
+        FloatUpdateCSV(frequencyCSVPathStart + "_atSimRun" + atSimRun + ".csv", frequencyIntervalEntries);
     }
 
-    private void UpdateNodeFiringCSVNegative() {
-        List<float> noNodeFiringDataList = new List<float>();
+    private void UpdateNodeFiringCSV() {
+        float[] nodeFiringDataArray = new float[spawnedAgentScripts.Count + 1];
 
-        // Appending the fire-values for all agents (where none of them should have fired)
-        for (int i = 0; i < spawnedAgentScripts.Count; i++) noNodeFiringDataList.Add(0f);
-
-        // Appending the digital signal t_f_is_now
+        // Marking the digital signal t_f_is_now
         float t_f_is_nowFloat = System.Convert.ToSingle(t_f_is_now);
-        noNodeFiringDataList.Add(t_f_is_nowFloat);
+        nodeFiringDataArray[0] = t_f_is_nowFloat;
+
+        // Marking the correct agents having fired if they just fired recently for the CSV-row.
+        foreach (int agentId in agentWithAgentIDsJustFired) {
+            nodeFiringDataArray[agentId] = 1f;
+        }
+
+        agentWithAgentIDsJustFired.Clear();
+
+        // Converting the nodeFiringData-array to a list
+        List<float> nodeFiringDataList = new List<float>(nodeFiringDataArray);
 
         // Updating the CSV with one time-row
-        FloatUpdateCSV(nodeFiringDataPath, noNodeFiringDataList);
+        FloatUpdateCSV(nodeFiringDataPathStart + "_atSimRun" + atSimRun + ".csv", nodeFiringDataList);
     }
 
     // ------- END OF CSV-Serialization Functions/Methods -------
@@ -400,6 +414,9 @@ public class AgentManager : MonoBehaviour {
 
     private void ResetSimulationVariables() {
         // Basically reset all the initial/default values (to what they were by default) as in the variable-declaration-section all over again. Maybe it can be done smarter in the code, only writing the lines once?
+
+        // Basically declare all default-values not assigned in Start().
+
         hSynchConditionsAreMet = false;
         agentiHasFiredAtLeastOnce = new bool[spawnedAgentScripts.Count];
         last_t_q_definer = 0f;

@@ -1,19 +1,39 @@
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 using static DavidsUtils;
 
-// ER ENTRIESA/VALUESA I ET C# ARRAY VERDIER ELLER REFERANSER? Jeg tror referanser (både for Arrays og Lister).
-
 public class TestBedScript : MonoBehaviour {
+    // ------- START OF Variable Declarations -------
+
     private List<float> errorBuffer = new List<float>();
     private int incrementVariable;
 
     List<float> squiggleIDer = new List<float> {2f,1f,3f,4f}; // N = 4
+    int[] agentIDer;
 
     bool[] agentIHasFired;
 
+    // ------- END OF Variable Declarations -------
+
     void Start() {
+
+        // Tester konverteringen fra ARRAY -> LIST
+        agentIDer = new int[10];
+
+        agentIDer[3] = 1;
+        agentIDer[5] = 1;
+        agentIDer[7] = 1;
+        agentIDer[1] = 1;
+        agentIDer[0] = 1;
+
+        DebugLogMyIntArray(agentIDer);
+
+        //List<object> list = agentIDer.Cast<Object>().ToList();
+        List<int> nyeListo = new List<int>(agentIDer);
+
+        DebugLogMyIntList(nyeListo);
+
+
         // Tester list-shifteren:
         //errorBuffer.Add(0.01f);
         //errorBuffer.Add(0.02f);
