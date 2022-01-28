@@ -6,7 +6,7 @@ These goals firstly require of the agents the modelling of oscillators with thei
 
 First, the system and the system components will be presented and introduced. Then, methods implemented for achieving the system target goal of \textit{harmonic synchrony} in various synchronization objectives—firstly solely for oscillator-phases, then secondly for both oscillator-phases and oscillator-frequencies—will be described and presented.
 
-Helpful way to read this chapter: how to achieve the final part when doing/using/performing the middle part using / to/with the first part?
+A helpful way to read this chapter could be as answers to the question "how can one achieve and detect the final part of the chapter by performing the middle part to the first one?" — more specifically "how can one achieve and detect the target/goal state of harmonic synchrony, by performing updates to the musical robots's phases and frequencies, in the musical multi-robot collective?"
 
 
 
@@ -350,9 +350,9 @@ Helpful way to read this chapter: how to achieve the final part when doing/using
 
 As previously mentioned, this state of \textit{harmonic synchrony} is then the system goal state which we want the musical robot-collective to end up in eventually, the sooner the better.
 
-The state of harmonic synchrony is the state in which all agents in the musical collective ``fire''/``flash'' at an even underlying interval or pulse, a certain number of times in a row. This is not to say all agents will have to ``fire''/``flash'' simultaneously, as has traditionally been the case for pulse-coupled oscillators.
+The state of harmonic synchrony is defined as the state in which all agents in the musical collective ``fire''/``flash'', as described in Subsection \ref{subsec:fire_signal}, at an even underlying interval or pulse, a certain number of times in a row. This is not to say all agents will have to ``fire''/``flash'' simultaneously, as has traditionally been the case for pulse-coupled oscillators \cite{}.
 
-As one is creating an interactive music technology system, one might want to encourage and allow for the playing of musical instruments at slower and faster rhythms/paces, as it might be quite boring if all instruments were played at the exact same measure or pulse. As K. Nymoen et al. \cite{nymoen_synch} reason when discussing their own interactive ``Firefly'' music-system, as well as coining the term of harmonic synchrony: \nl
+As one is creating an interactive music technology system, one might want to encourage and allow for the playing of various musical instruments at various rhythms/paces, as it might be quite boring if all instruments were played at the exact same measure or pulse. As K. Nymoen et al. \cite{nymoen_synch} reason when discussing their own interactive ``Firefly'' music-system, as well as coining the term of harmonic synchrony: \nl
 
 ``\textit{Temporal components in music tend to appear in an integer-ratio relation to each other (e.g., beats, measures, phrases, or quarter notes, 8ths, 16ths)}.'' \nl
 
@@ -360,7 +360,16 @@ and \nl
 
 ``\textit{Being an interactive music system, people may want their device to synchronize with different subdivisions of a measure (e.g. some play quarter notes while others play 8ths).}'' \nl
 
-Accomodating for these aspects, K. Nymoen et al. hence took inspiration from the concept of \textit{harmonics} in the frequency spectrum of a waveform, in that each harmonic wave or signal has an integer-relationship frequency to the fundamental (smallest) frequency. This is exactly how the frequencies of the individual musical agents in our music-collective must be, in order for the agent-collective to be harmonically synchronized.
+Accomodating for these aspects then, K. Nymoen et al. \cite{nymoen_synch} took inspiration for achieving synchronization in a decentralized system from the concept of \textit{harmonics} in the frequency spectrum of a waveform, in that each harmonic wave or overtone has a frequency with an integer-relationship to the fundamental (smallest) frequency. This can e.g. be seen in the frequency spectrogram below, in Figure \ref{fig:G3_waveform_frequency_spectrogram}, where a waveform with a fundamental frequency of 195,99 Hz (i.e. a G3-note and $\approx$ 200 Hz) has harmonics and overtones with frequencies with integer relationships to said fundamental frequency.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.9\linewidth]{Assets/Figures/G3_196Hz_HummingWaveform_FrequencySpectrum.pdf}
+	\caption{The frequency spectrogram of a 14 second long waveform being a hummed and recorded G3-tone at around 195,99 Hz.}
+	\label{fig:G3_waveform_frequency_spectrogram}
+\end{figure}
+
+This is exactly how the frequencies of the individual musical agents in our music-collective must be, in order for the agent-collective to be harmonically synchronized.
 
 More accurately, all musical agents—in a harmonically synchronized state—will have frequencies $\in \omega_{0} \cdot 2^{\mathbb{N}_0}$, where $\omega_{0}$ is the agent with the lowest frequency's frequency (i.e. the fundamental frequency), and $\mathbb{N}_0$ is the mathematical set of natural numbers including the number zero. Hence, agents will typically have frequencies like $\omega_{0} \cdot 2^0 = \omega_{0}$, $\omega_{0} \cdot 2^1 = 2\omega_{0}$, $\omega_{0} \cdot 2^2 = 4\omega_{0}$, or $\omega_{0} \cdot 2^3 = 8\omega_{0}$. If all agents end up with these kind of frequencies, we say they have ``legal'' and harmonically synchronized frequencies.
 
