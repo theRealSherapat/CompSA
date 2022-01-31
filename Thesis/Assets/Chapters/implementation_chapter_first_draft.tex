@@ -1,4 +1,4 @@
-\chapter{Implementation} % Read: how to achieve the last part when doing the middle part to/with the first part?
+\chapter{Implementation}
 % Introducing the Chapter
 This chapter gives an overview of the developed musical multi-robot system. The main goal of the implemented system is to allow for individual musical agents in a musical multi-agent collective to interact with each other, in order to achieve emergent and co-ordinating behaviour—in our case synchronization—with varying degrees of self-awareness, collective-sizes, and of difficulty and certainty in the environment and communication. More specifically, the goal with the design is to enable the robot collective to achieve so-called \textit{harmonic synchronization} within a relatively short time. Exactly what is meant by \textit{harmonic synchronization} will be expounded in Section \ref{sec:harmonic_synchrony}.
 
@@ -14,27 +14,34 @@ A helpful way to read this chapter could be as answers to the question "how can 
 % SECTION 1, Introducing the System and the System-components:
 \section{The musical multi-robot collective}
 \label{sec:developed_system}
-\besk{about introducing, giving an overview, and describing the developed system \tcol[gray]{(as well as the system sub-constituents — aka. what the system consists of)}. $\implies$ In a nutshell answering: What is the system, and what does it consist of? Why?}
 
-	Envision that we have a multi-agent collective scenario consisting of musical robots modelled as oscillators, solely communicating through brief ``fire''-like audio-signals—greatly inspired by K. Nymoen et al.'s synchronizing ``fireflies'' \cite{nymoen_synch}. These agents are not initially synchronized in their firing of audio-signals; but as time goes, they are entraining to synchronize to each other by adjusting their phases and frequencies when/after hearing each other's audio-/fire-signals. If they then, after some time of listening and adjusting, succeed in becoming synchronized — we then will eventually see ``fire''-events/-signals line up at an even underlying pulse or rhythm. An example of this in a simulation is given in Figure \ref{fig:initial}.
+	Envision that we have a multi-agent collective scenario consisting of musical robots modelled as oscillators, solely communicating through brief ``fire''-like audio-signals—greatly inspired by K. Nymoen et al.'s synchronizing ``fireflies'' \cite{nymoen_synch}. These agents are not initially synchronized in their firing of audio-signals; but as time goes, they are entraining to synchronize to each other by adjusting their phases and frequencies when/after hearing each other's audio-/fire-signals. If they then, after some time of listening and adjusting, succeed in becoming synchronized — we then will eventually see ``fire''-events/-signals line up at an even underlying pulse or rhythm. Examples and demonstrations of this process are depicted in Figure \ref{fig:first_idea:first_fig} and \ref{fig:first_idea:second_fig}.
 
 	% First Intro-illustration figure to easily get a quick idea of what the system/design does/consists of (to be exchanged with a describing system scheme/diagram):
 	\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.9\linewidth]{Assets/Figures/schematic_initial_idea.pdf}
+	\caption{Illustration/Schematic: Moving towards achieving harmonic synchronization, through performing phase- \& frequency-adjustments. Agents that are not firing will adjust themselves after hearing a signal from a neighbouring and firing agent.}
+	\label{fig:first_idea:first_fig}
+	\end{figure}
+
+	% Second Intro-illustration figure to easily get a quick idea of what the system/design does/consists of (to be exchanged with a describing system scheme/diagram):
+	\begin{figure}[ht!]
 		\centering
 			\begin{subfigure}[t]{.5\textwidth}
 				\centering\captionsetup{width=.9\linewidth}%
 				\includegraphics[width=0.9\linewidth]{Assets/Figures/IntroUnsynch.jpg}
-				\caption{The agents firing asynchronously at first. Here, only the two Dr. Squiggles with red tentacles are firing simultaneously, but the rest are not.}
-				\label{fig:initial:unsynch}
+				\caption{Agents firing asynchronously at first. Only two Dr. Squiggles-robots with red tentacles fire simultaneously, the rest do not.}
+				\label{fig:first_idea:second_fig:unsynched}
 			\end{subfigure}%
 			\begin{subfigure}[t]{.5\textwidth}
 				\centering\captionsetup{width=.9\linewidth}%
 				\includegraphics[width=0.9\linewidth]{Assets/Figures/IntroSynch.jpg}
 				\caption{Seconds later, after having listened to each other's fire-event signals and adapted themselves accordingly, the agents are here firing synchronously.}
-				\label{fig:initial:synch}
+				\label{fig:first_idea:second_fig:synched}
 			\end{subfigure}
-		\caption{Synchronization achieved in a musical robot collective, consisting of M. J. Krzyzaniak and RITMO's musical robots, the Dr. Squiggles.}
-		\label{fig:initial}
+		\caption{From simulation: Example of synchronization achieved in a musical robot collective. Note however that technically, due to either a special rule implemented to achieve harmonic synchrony—namely only ``firing every second time''—or using heterogenous frequencies; both robot collectives may in fact be harmonically synchronized.}
+		\label{fig:first_idea:second_fig}
 	\end{figure}
 
 	% INCLUDE PHASES UNSYNCHED VS. SYNCHED PLOT? See 'Relevant MSc-thesis Concerns'.
@@ -59,27 +66,38 @@ A helpful way to read this chapter could be as answers to the question "how can 
 
 
 
+
 	% Introducing the System Components:
 	
 	% Om den enkelte noden/agenten med alle egenskaper den har osv.
 	\subsection{The individual agent: a musical robot}
 	\label{subsec:agent}
-		\besk{about the individual agent with all its attributes and characteristics etc. \tcol[gray]{(as e.g. an oscillator-component (cf. I.A, III.Intro., and 'Implementation' in Nymoen's firefly-paper))}}
+		The musical robot collective consists of M. J. Krzyzaniak and RITMO's musical robots, the Dr. Squiggles. \nl
 		
+		Om hver individuelle agents egenskaper og karakteristikker.
+		
+		Hver individuelle agent består av noen deler:
+		\begin{itemize}
+			\item For eksempel en oscillator-komponent.
+			\item Noe inspirert fra I.A, III.Intro., og 'Implementation' i Nymoen's firefly-paper
+		\end{itemize}
+		
+		(as e.g. an oscillator-component (cf. I.A, III.Intro., and 'Implementation' in Nymoen's firefly-paper))
+		
+		All agents have the ability to listen for transmitted ``fire''-signals from their neighbours, which they then will use as a trigger to adjust themselves according to some well-designed update-functions to be elaborated upon in Section \ref{sec:phase_methods} and \ref{sec:frequency_methods}.
+
 		Notions like ``agent'', ``robot'', ``firefly'', and ``oscillator'' will be used interchangeably throughout the thesis.
-		
-		All agents have the ability to listen for such transmitted ``fire''-signals from their neighbours, which they then will use as a trigger to adjust themselves according to some well-designed update-functions to be elaborated upon in Section \ref{sec:phase_methods} and \ref{sec:frequency_methods}.
+
 
 
 	% Om kommunikasjonen til agentene: audio-/``fire''-signalet
 	\subsection{Robot communication: the ``fire''-signal}
 	\label{subsec:fire_signal}
 	
-	No individual agent is able to adjust or modify the state of any other agent, only its own, and the only means of communication between the agents will be through these ``fire''-signals. \nl
-	
-	What are the signals, how do they look (maybe simulation vs. reality), and how are they sent out? What happens when they are sent out?
-	
-	These aforementioned audio-signals, also referred to as ``fire''-signals, are transmitted whenever an agent's oscillator \textit{peaks} (i.e. after its cycle or period is finished, having phase $\phi(t)=1$) — or actually every second \textit{peak} due to the system target goal of \textit{harmonic synchrony}, to be elaborated upon in Section \ref{sec:harmonic_synchrony}.
+	These aforementioned audio-signals, also referred to as ``fire''-signals, are transmitted whenever an agent's oscillator \textit{peaks} (i.e. after its cycle or period is finished, having phase $\phi(t)=1$) — or actually every second \textit{peak} due to the system target goal of \textit{harmonic synchrony}
+, to be elaborated upon in Section \ref{sec:harmonic_synchrony}.
+
+	Hva er signalene, hvordan ser de ut (kanskje diskutere simulering vs. virkeligheten), og hvordan sendes de ut? Hva skjer når de blir sendt ut?
 	
 		\begin{itemize}
 			\item Short and impulsive audio sound/signal, representing an agent's phase-climax and ``fire''-/``flash''-event.
@@ -88,6 +106,7 @@ A helpful way to read this chapter could be as answers to the question "how can 
 			\item Aspekter fra Nymoens paper som presentert i Essay-oppsummeringen min.
 		\end{itemize}
 	
+	No individual agent is able to adjust or modify the state of any other agent, only its own, and the only means of communication between the agents will be through these ``fire''-signals.
 	
 	
 	
@@ -105,11 +124,10 @@ A helpful way to read this chapter could be as answers to the question "how can 
 % SECTION 2, Presenting Methods for Phase-Adjustment:
 \section{Synchronizing oscillator-phases}
 \label{sec:phase_methods}
-\besk{about various methods/algorithms/approaches \tcol[gray]{(the nitty gritty)} implemented to achieve the target/goal state of harmonic synchrony. $\implies$ In a nutshell answer: What different but comparable methods did you use to achieve harmonic synchrony with Phase-Adjustment?}
 
 	If we first assume constant and equal oscillator-frequencies in our agents, we can take a look at how the agents adjust their|initially random|phases in order to synchronize to each other. This is then in contrast to the case in Section \ref{sec:frequency_methods} where heterogenous and randomly initialized oscillator-frequencies in the musical agents are used and synchronized.
 	
-	The goal state of the agents is for now to fire/flash simultaneously, after having started firing/flashing at random initially. Note that this is a different goal from the final and ultimate goal of \textit{harmonic synchrony}. This is actually not true — as firing/flashing simultaneously technically would be considered having achieved harmonic synchrony. Hence, this "sub-goal" is actually a sufficient and weaker goal w.r.t. the main goal of harmonic synchrony.
+	The goal state of the agents is for now to fire/flash simultaneously, after having started firing/flashing at random initially. Note that this is a special case of the final and ultimate goal of \textit{harmonic synchrony}. This is due to how all agents in the collective firing/flashing simultaneously, is considered having achieved harmonic synchrony since its phases would be synchronized if fire-events are lined up in even pulses, as well as all frequencies in the agent collective being within the set of ``legal'' frequencies, $\omega_{0} \cdot 2^{\mathbb{N}_0}$, where $\omega_0$ is the fundamental (smallest) frequency in the agent collective, and $0 \in \mathbb{N}_0$ — leading to $\omega_0 \cdot 2^0 = \omega_0$ to be a legal frequency, which is what all agents in our case here have as frequences.
 	
 	In order for the musical agents to synchronize to each other, they will have to—due to their heterogenous and randomly initialized phases—adjust or update their own phases according to some well-designed update-/adjustment-functions, as presented below.
 	
@@ -182,7 +200,6 @@ A helpful way to read this chapter could be as answers to the question "how can 
 % SECTION 3, Presenting Methods for Frequency-Synchronization:
 \section{Synchronizing oscillator-frequencies}
 \label{sec:frequency_methods}
-\besk{about various methods/algorithms/approaches \tcol[gray]{(the nitty gritty)} implemented to achieve the target/goal state of harmonic synchrony. $\implies$ In a nutshell answer: What different but comparable methods did you use to achieve harmonic synchrony with Frequency-Adjustment?}
 
 	% Om Update-functions for frekvens-oppdateringene
 	Now over to the slightly more complex issue of adjusting and synchronizing frequencies in the agent-/oscillator-collective. We introduce randomly initialized, non-constant, and heterogenous oscillator-frequencies in our musical agents — allowing in the music collective the playing of diverse rhythmic patterns. The agents are now required to synchronize their initially different and random frequencies, so that frequencies are ``legal'' and \textit{harmonically synchronized}. Such ``legal'' frequencies are described clearly in detail in Section \ref{sec:harmonic_synchrony}.
@@ -196,7 +213,7 @@ A helpful way to read this chapter could be as answers to the question "how can 
 	% Person X's "simpler" Frequency-Synchronization without any Self-Awareness components
 	\subsection{Person X's low SA-leveled frequency-updates}
 	
-	A simpler strategy/method for achieving Harmonic Synchronization including Frequeny-Adjustment, specifically with no Self-Awareness capabilities, if it exists.
+	En simplere strategi/metode for å oppnå harmonisk synkronitet med Freq.-Adj., spesifikt uten noe Self-Awareness egenskaper, hvis det finnes.
 	
 	
 	
@@ -244,7 +261,7 @@ A helpful way to read this chapter could be as answers to the question "how can 
 	
 	As we can see from this Error-Function, the error-score is close to 0 when the agent's phase $\phi_i(t)$ is itself close to 0 or 1 (i.e. the agent either just fired/flashed, or is about to fire/flash very soon). The error-score is the largest when an agent perceives a ``fire''-signal while being half-way through its own phase (i.e. having phase $\phi(t)=0.5$). We could also then ask ourselves, does not this go against the main/target goal of the system, being \textit{harmonic synchrony} — if agents are allowed to be ``half as fast'' as each other? 
 	
-	\lab{Hypothetical scenario}{
+	\lab{Hypotetisk scenario}{
 		We could imagine a completely ``legal'' and harmonically synchronous scenario where two agents have half and double the frequency of each other. The agent with half the frequency of the faster agent would then have phase $\phi(t)=0.5$ when it would hear the faster agent ``fire''/``flash'' — leading to its Error-score $\epsilon(0.5) = sin^2(\pi/2) = 1$, which then makes it seem like the slower agent is maximally out of synch, when it is actually perfectly and harmonically synchronized. This calls out for an attenuating mechanism in our frequency update function, in order to ``cancel out'' this contribution so that perfectly harmonically synchronized agents will not be adjusted further despite their high Error-measurement.
 	}
 	
@@ -340,7 +357,7 @@ A helpful way to read this chapter could be as answers to the question "how can 
 	% Hopefully an improved method with some additional Self-Awareness components
 	\subsection{Thorvaldsen's high SA-leveled frequency-updates}
 	
-	Min nye proposede algoritme for å oppnå Harmonic Synchronization med Frequency-Adjustment, som inneholder flere tilleggs- Self-Awareness-komponenter (e.g. Belief-awareness og/eller Expectation-awareness), sammenliknet med K. Nymoens tilnærming (jf. \textbf{Thorvaldsen's improved approach} og det jeg og Kyrre snakka om under 'Mid-November'-recall-notatet på 'reMarkable -\> Meetings -\> Kyrre' på reMarkablen). Jeg vil ``beste'' Kristian.
+	Min nye proposede algoritme for å oppnå harmonisk synkronitet med Freq.-Adj., som inneholder flere tilleggs- Self-Awareness-komponenter (e.g. Belief-awareness og/eller Expectation-awareness), sammenliknet med K. Nymoens tilnærming (jf. \textbf{Thorvaldsen's improved approach} og det jeg og Kyrre snakka om under 'Mid-November'-recall-notatet på 'reMarkable -\> Meetings -\> Kyrre' på reMarkablen). Jeg vil ``beste'' Kristian.
 
 
 
@@ -350,7 +367,7 @@ A helpful way to read this chapter could be as answers to the question "how can 
 \section{System target state: harmonic synchrony}
 \label{sec:harmonic_synchrony}
 
-As previously mentioned, this state of \textit{harmonic synchrony} is then the system goal state which we want the musical robot-collective to end up in eventually, the sooner the better.
+As previously mentioned, this state of \textit{harmonic synchrony} is then the system goal state which we want the musical robot-collective to end up in eventually, and the sooner the better.
 
 The state of harmonic synchrony is defined as the state in which all agents in the musical collective ``fire''/``flash'', as described in Subsection \ref{subsec:fire_signal}, at an even underlying interval or pulse, a certain number of times in a row. This is not to say all agents will have to ``fire''/``flash'' simultaneously, as has traditionally been the case for pulse-coupled oscillators \cite{}.
 
@@ -377,14 +394,16 @@ More accurately, all musical agents—in a harmonically synchronized state—wil
 
 
 
+
+
+
+
 % Presenting the Performance-measure used to evaluate the implemented methods (Benchmark?):
 \section{Performance-measure: time until goal of harmonic synchrony is detected}
 \label{sec:performance_measure}
-
-\besk{``where I present the method used to evaluate the performance of the presented and newly proposed algorithms/methods \tcol[gray]{(i.e. the Synchronization-/Performance-measure)}'' — Samuelsen's MSc-thesis I think}
 
 Hvordan detektere harmonic synchrony. \nl
 
 Hvordan HSYNCHTIME er definert. \nl
 
-\textbf{Node-firing-plot}.
+\textbf{Node-firing plot}.
