@@ -7,10 +7,10 @@ public class SquiggleScript : MonoBehaviour {
 
     // Phase-adjustment variables:
     public float alpha = 0.05f; // pulse coupling constant, denoting coupling strength between nodes
-    public bool useNymoen = true;
+    public bool useNymoenPhaseAdj = true;
 
     // Frequency-adjustment variables:
-    public bool useFrequencyAdjustment = true;
+    public bool useNymoenFreqAdj = true;
     public float beta = 0.8f; // frequency coupling constant
     public int m = 5; // "running median-filter" length
     public Vector2 minMaxInitialFreqs = new Vector2(0.5f, 8f);
@@ -69,8 +69,8 @@ public class SquiggleScript : MonoBehaviour {
 
         // Setting up for Frequency-Adjustment
         InitializeInPhaseErrorBuffer();
-        if (useFrequencyAdjustment) {
-            frequency = UnityEngine.Random.Range(minMaxInitialFreqs.x, minMaxInitialFreqs.y); // Initializing frequency in range Random.Range(0.5f, 8f) was found useful by Nymoen et al.
+        if (useNymoenFreqAdj) {
+            frequency = Random.Range(minMaxInitialFreqs.x, minMaxInitialFreqs.y); // Initializing frequency in range Random.Range(0.5f, 8f) was found useful by Nymoen et al.
         } else {
             frequency = 1f;
         }
@@ -123,7 +123,7 @@ public class SquiggleScript : MonoBehaviour {
             firedLastClimax = false;
         }
 
-        if (useFrequencyAdjustment) RFAAdjustFrequency(); // adjust frequency at phase-climax regardless of if the node fired or not last climax (if FrequencyAdjustment is to be used)
+        if (useNymoenFreqAdj) RFAAdjustFrequency(); // adjust frequency at phase-climax regardless of if the node fired or not last climax (if FrequencyAdjustment is to be used)
 
         t_ref = 0.1f * 1.0f / frequency; // updating the refractory period to 10% of the new period
     }
@@ -177,7 +177,7 @@ public class SquiggleScript : MonoBehaviour {
     }
 
     void AdjustPhase() {
-        if (!useNymoen) {
+        if (!useNymoenPhaseAdj) {
             phase = Mathf.Clamp(phase *(1 + alpha), 0f, 1f); // using Phase Update Function (1); "standard" Mirollo-Strogatz
         } else {
             float wave = Mathf.Sin(2 * Mathf.PI * phase);

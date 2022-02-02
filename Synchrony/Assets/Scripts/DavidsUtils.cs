@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Linq;
 using UnityEngine.SceneManagement;
 
 public static class DavidsUtils { // HUSK AT Å KALLE DET DavidsUtils KAN VÆRE UÆRLIG, SIDEN DU FIKK INSPIRASJON FRA PIERRES Unity-PROSJEKT.
@@ -37,6 +38,10 @@ public static class DavidsUtils { // HUSK AT Å KALLE DET DavidsUtils KAN VÆRE UÆ
         }
 
         return median;
+    }
+
+    public static float ListAverage(List<float> myList) {
+        return myList.Count > 0 ? myList.Average() : 0.0f;
     }
 
     public static void DebugLogMyFloatList(List<float> listo) {

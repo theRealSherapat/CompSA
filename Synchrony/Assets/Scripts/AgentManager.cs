@@ -42,8 +42,8 @@ public class AgentManager : MonoBehaviour {
     // Performance-measure (Synchronization-time) variables
     private bool hSynchConditionsAreMet = false; // A boolean that should be true no sooner than when all the conditions for the achievement of Harmonic Synchrony are fulfilled.
     private bool t_f_is_now = false; // A short "up-time" when all nodes are allowed to fire during. The duration itself is constant, but when in simulation-time it will be "up", depends largely on the t_q-variable.
-    private float last_t_q_definer = 0f; // The oldest defining firing-event-time to be used to definine a new t_q-value.
-    private bool define_t_q_at_next_firing = false; // A boolean signal/flag that signalizes that the next fire event will be defining (together with the "now set" or "old" last_t_q_definer) in terms of a new t_q-value/-window.
+    private float oldest_t_q_definer_time = 0f; // The oldest defining firing-event-time to be used to definine a new t_q-value.
+    private bool define_t_q_at_next_firings = false; // A boolean signal/flag that signalizes that the next fire event will be defining (together with the "now set" or "old" oldest_t_q_definer_time) in terms of a new t_q-value/-window.
     private float t_q = 0f; // The varying (but hopefully eventually converging) time-window/-duration lasting for how long no fire-events can be heard after the last time_fire-window ended.
     private int number_in_a_row_of_no_firings_within_t_q = 0;
     private bool firstFiringTriggered;
@@ -51,6 +51,12 @@ public class AgentManager : MonoBehaviour {
 
     // Node-firing plot variables
     private List<int> agentWithAgentIDsJustFired = new List<int>(); // Initializing (used for creation of node-firing-plot) a list for all the agents with agent-ids that just fired. 
+    //private List<float> synchedFiringTimeErrorSpreads = new List<float>();
+    //private float synchedFiringTimeErrorSpread = 0.0101f; // the time from the first firing to the last when agents are synched(but have some small errors due to calculations)
+
+    private float firstDefineTime;
+    private int timesHeardFiringsInARowShortly;
+    private List<float> definingFiringsTimes = new List<float>();
 
     // ------- END OF Variable Declarations -------
 
@@ -81,7 +87,7 @@ public class AgentManager : MonoBehaviour {
 
         CheckHSynchConditions();
 
-        EndSimulationRunIfHSynchConditionsAreReached();
+        EndSimulationRunIfTerminationCriteriaAreReached();
     }
 
     void FixedUpdate() {
@@ -106,7 +112,7 @@ public class AgentManager : MonoBehaviour {
         if (!notAllHaveFiredOnceYet && agentsHaveBeatenInAnEvenRhythmKTimes) hSynchConditionsAreMet = true;
     }
 
-    private void EndSimulationRunIfHSynchConditionsAreReached() {
+    private void EndSimulationRunIfTerminationCriteriaAreReached() {
         // If the simulation has either succeeded, or failed — save datapoint and move on
         // Condition 2: Max-time limit for the run (so that it won't go on forever)
         if (hSynchConditionsAreMet || (!hSynchConditionsAreMet && (Time.timeSinceLevelLoad >= runDurationLimit))) {
@@ -129,7 +135,9 @@ public class AgentManager : MonoBehaviour {
     public void IJustHeardSomeoneFire(int firingAgentId) {
         // When this method gets called, it means the AgentManager has picked upon a Dr. Squiggle's method-call — meaning it "heard" a Dr. Squiggle's ``fire''-signal.
 
-        agentWithAgentIDsJustFired.Add(firingAgentId);
+        agentWithAgentIDsJustFired.Add(firingAgentId); // For saving of Node-firing-plot-material.
+
+        //if (t_f_is_now) t_f_firing_times.Add(Time.timeSinceLevelLoad); // In order to calculate and update the FiringTimesErrorSpread.
 
         agentiHasFiredAtLeastOnce[firingAgentId - 1] = true; // Flagging that corresponding agent with AgentID has fired at least once during the simulation.
 
@@ -138,39 +146,70 @@ public class AgentManager : MonoBehaviour {
     
     private void AdjustHsynchCriteriasIfNeeded() {
         // Calling for the initialization (technically resetting) of the t_q-/t_q-window
-        if (last_t_q_definer == 0f) { // bra logikk?
+        if (oldest_t_q_definer_time == 0f) {                                                    // BRA LOGIKK? HVA OM SIMULERINGEN RESETTES?
             if (!firstFiringTriggered) {
                 TriggerFirstFiringTime();
                 firstFiringTriggered = true;
             }
 
-            last_t_q_definer = Time.timeSinceLevelLoad;
+            oldest_t_q_definer_time = Time.timeSinceLevelLoad;
 
-
-            define_t_q_at_next_firing = true;
+            define_t_q_at_next_firings = true;
         }
         // Resetting the t_q-/t_q-window if this is not the first observed Fire-event and the reset is flagged and wanted
-        else if (define_t_q_at_next_firing) {
-            float new_t_q = Time.timeSinceLevelLoad - last_t_q_definer - t_f; // Optionally subtract 3/2*t_f instead of just t_f.
+        else if (define_t_q_at_next_firings) {
+            //float new_t_q = Time.timeSinceLevelLoad - oldest_t_q_definer_time - 1.2f*t_f; // Optionally subtract 1.25*t_f instead for Nymoen-Phase-Adj. of just t_f.  - synchedFiringTimeErrorSpread / 2f
 
-            if ((new_t_q+t_f) > 0.5f) { // weird condition because I don't want too close fire-events to define the t_q-window (i.e. not too small fire-time-differences)
-                t_q = new_t_q;
-                define_t_q_at_next_firing = false;
+            firstDefineTime = timesHeardFiringsInARowShortly == 0 ? Time.timeSinceLevelLoad : firstDefineTime;
+            timesHeardFiringsInARowShortly ++;
+            definingFiringsTimes.Add(Time.timeSinceLevelLoad);
 
-                RestartInvokeCycle();
+            if (!IAmInADefiningFiringsPeriod(Time.timeSinceLevelLoad)) {
+                RestartTheQuietTimewindow();
             }
-            
-            
         }
         // Calling for a reset for the t_q-/t_q-window since observed fire-event was received during !t_f a.k.a. t_q, and we did not want to reset t_q this time, nor calling for the initialization of t_q
         else if (!t_f_is_now) {
             number_in_a_row_of_no_firings_within_t_q = 0; // resetting the streak, because synch bad
             Debug.Log("Even-beat-counter towards k=" + k + ":    " + number_in_a_row_of_no_firings_within_t_q);
 
-            last_t_q_definer = Time.timeSinceLevelLoad;
+            oldest_t_q_definer_time = Time.timeSinceLevelLoad;
 
-            define_t_q_at_next_firing = true;
+            define_t_q_at_next_firings = true;
         }
+    }
+
+    private void RestartTheQuietTimewindow() {
+        float t_firing_median = ListMedian(definingFiringsTimes);
+
+        float limit = 0.9f;
+
+        if ((t_firing_median-oldest_t_q_definer_time) > limit) { //                  HUSK Å FJERNE ELLER ENDRE DENNE FOR FREQ.-ADJ.
+            Debug.Log("t_firing_median: " + t_firing_median + ", oldest_t_q_definer_time: " + oldest_t_q_definer_time + ". Subtracted: " + (t_firing_median - oldest_t_q_definer_time) + ", which has to be > " + limit + ".");
+            Debug.Log("Old QuietTimewindow was: " + t_q);
+
+            t_q = t_firing_median - oldest_t_q_definer_time - t_f;
+
+            Debug.Log("New QuietTimewindow is now: " + t_q);
+
+            timesHeardFiringsInARowShortly = 0;
+            definingFiringsTimes.Clear();
+            define_t_q_at_next_firings = false;
+            RestartInvokeCycle();
+        }
+
+        
+
+        // OLD ATTEMPT:
+            //if ((t_firing_median - oldest_t_q_definer_time) > 0.5f) { // weird condition because I don't want too close fire-events to define the t_q-window (i.e. not too small fire-time-differences) + synchedFiringTimeErrorSpread / 2f
+            //    t_q = new_t_q;
+            //    define_t_q_at_next_firings = false
+            //        RestartInvokeCycle();
+            //}
+    }
+
+    private bool IAmInADefiningFiringsPeriod(float firingTime) {
+        return (firingTime - firstDefineTime) < t_f ? true : false;
     }
 
     private void SaveDatapointToDataset(float runDuration) {
@@ -179,23 +218,62 @@ public class AgentManager : MonoBehaviour {
         // Initializing empty float-List soon-to-contain the performance measure and the covariates/explanators
         List<float> performanceAndCovariateValues = new List<float>();
 
-        // Adding the performance measure
-        performanceAndCovariateValues.Add(runDuration);
-        
+        // Adding the performance measure HSYNCHTIME
+        float HSYNCHTIME = runDuration;
+        performanceAndCovariateValues.Add(HSYNCHTIME);
+
         // Adding Covariate 1
-        float hSynchConditionsAreMetFloat = System.Convert.ToSingle(hSynchConditionsAreMet);
-        performanceAndCovariateValues.Add(hSynchConditionsAreMetFloat);
+        float SUCCESS = System.Convert.ToSingle(hSynchConditionsAreMet);
+        performanceAndCovariateValues.Add(SUCCESS);
         // Telling the programmer in the console whether the simulation run was a success or not
         if (hSynchConditionsAreMet) Debug.Log("Congratulations! Harmonic synchrony in your musical multi-robot collective at simRun " + atSimRun + " was achieved in " + runDuration + " seconds!");
         else                        Debug.Log("That's too bad... Harmonic synchrony, according to the performance-measure defined by K. Nymoen et al., was not achieved at simRun " + atSimRun + " within the run time-limit of " + runDurationLimit + " seconds..");
 
-
         // Adding Covariate 2
-        float useNymoenFloat = System.Convert.ToSingle(spawnedAgentScripts[0].useNymoen);
-        performanceAndCovariateValues.Add(useNymoenFloat);
+        float COLLSIZE = collectiveSize;
+        performanceAndCovariateValues.Add(COLLSIZE);
+
+        // Adding Covariate 3
+        float PHASEADJ = System.Convert.ToSingle(spawnedAgentScripts[0].useNymoenPhaseAdj); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE
+        performanceAndCovariateValues.Add(PHASEADJ);
+
+        // Adding Covariate 4
+        float FREQADJ = System.Convert.ToSingle(spawnedAgentScripts[0].useNymoenFreqAdj); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE
+        performanceAndCovariateValues.Add(FREQADJ);
+
+        // Adding Covariate 5
+        float ALPHA = System.Convert.ToSingle(spawnedAgentScripts[0].alpha); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE
+        performanceAndCovariateValues.Add(ALPHA);
+
+        // Adding Covariate 6
+        float BETA = System.Convert.ToSingle(spawnedAgentScripts[0].beta); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE
+        performanceAndCovariateValues.Add(BETA);
+
+        // Adding Covariate 7
+        float TREFPERC = System.Convert.ToSingle(spawnedAgentScripts[0].t_ref_perc_of_period); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE
+        performanceAndCovariateValues.Add(TREFPERC);
+
+        // Adding Covariate 8
+        float M = System.Convert.ToSingle(spawnedAgentScripts[0].m); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE
+        performanceAndCovariateValues.Add(M);
+
+        // Adding Covariate 9
+        float MINFREQ = System.Convert.ToSingle(spawnedAgentScripts[0].minMaxInitialFreqs.x); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE
+        performanceAndCovariateValues.Add(MINFREQ);
+
+        // Adding Covariate 10
+        float MAXFREQ = System.Convert.ToSingle(spawnedAgentScripts[0].minMaxInitialFreqs.y); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE
+        performanceAndCovariateValues.Add(MAXFREQ);
+
+        // Adding (Environment-) Covariate 11
+        float ADJTIMESCALE = adjustedTimeScale;
+        performanceAndCovariateValues.Add(ADJTIMESCALE);
+
+        // POSSIBLE TODO:
+        // Splitting Covariates into collective-covariates and individual-covariates.
 
         // Add Covariate N
-        
+
         // Saving one datapoint, a.k.a. writing one .CSV-row (Performance-measure, Covariates) to the .CSV-file at the datasetPath
         FloatUpdateCSV(datasetPath, performanceAndCovariateValues);
     }
@@ -209,11 +287,13 @@ public class AgentManager : MonoBehaviour {
 
     private void TriggerHalfFiringTime() {
         t_f_is_now = true;
-        Invoke("TriggerQuietPeriod", t_f/2f);
+        //Debug.Log("Triggered half firing time, and will trigger the QuietPeriod in t_f/2=" + t_f / 2f + " + synchedErrorSpread/2=" + synchedFiringTimeErrorSpread / 2f + " = " + (t_f / 2f + synchedFiringTimeErrorSpread / 2f));
+        Invoke("TriggerQuietPeriod", t_f/2f); // + synchedFiringTimeErrorSpread/2f)
     }
 
     private void TriggerQuietPeriod() {
         t_f_is_now = false;
+        UpdateSynchedFiringTimeErrorSpread();
         Invoke("TriggerFiringTime", t_q);
     }
 
@@ -231,6 +311,14 @@ public class AgentManager : MonoBehaviour {
     private void RestartInvokeCycle() {
         CancelInvoke(); // All t_q-/t_f-Invokes are ended/executed.
         TriggerHalfFiringTime(); // A new cycle of t_f-/t_q-Invokes commences.
+    }
+
+    private void UpdateSynchedFiringTimeErrorSpread() {
+        //synchedFiringTimeErrorSpreads.Add(t_f_firing_times.LastOrDefault() - t_f_firing_times.FirstOrDefault());
+        //Debug.Log((t_f_firing_times.LastOrDefault()-t_f_firing_times.FirstOrDefault()) + " = errSpreadLast - errSpreadFirst was added to the list.");
+        //synchedFiringTimeErrorSpread = ListAverage(synchedFiringTimeErrorSpreads);
+        //synchedFiringTimeErrorSpread = t_f_firing_times.LastOrDefault() - t_f_firing_times.FirstOrDefault();
+        //t_f_firing_times.Clear();
     }
 
 
@@ -415,17 +503,20 @@ public class AgentManager : MonoBehaviour {
     private void ResetSimulationVariables() {
         // Basically reset all the initial/default values (to what they were by default) as in the variable-declaration-section all over again. Maybe it can be done smarter in the code, only writing the lines once?
 
-        // Basically declare all default-values not assigned in Start().
+        // Basically declare all default-values not assigned in Start()?
 
         hSynchConditionsAreMet = false;
         agentiHasFiredAtLeastOnce = new bool[spawnedAgentScripts.Count];
-        last_t_q_definer = 0f;
-        define_t_q_at_next_firing = false;
+        oldest_t_q_definer_time = 0f;                                                          // BRYTER IKKE LOGIKKEN DIN SAMMEN I ADJUSTHSYNCHCONDITIONS DA?
+        define_t_q_at_next_firings = false;
         CancelInvoke(); // All t_q-/t_f-Invokes are ended/executed.
         t_f_is_now = false;
         t_q = 0f;
         number_in_a_row_of_no_firings_within_t_q = 0;
         firstFiringTriggered = false;
+        timesHeardFiringsInARowShortly = 0;
+        firstDefineTime = 0f;                                                           // BRYTER IKKE LOGIKKEN DIN SAMMEN I ADJUSTHSYNCHCONDITIONS DA?
+        definingFiringsTimes.Clear();
 }
 
     private void QuitMyGame() {

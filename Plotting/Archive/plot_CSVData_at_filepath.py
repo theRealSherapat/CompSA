@@ -19,7 +19,8 @@ def plotAllColsVsTime(t, dataMatrix):
     for col_index in range(dataMatrix.shape[1]):
         # Plots each column-slice from the dataMatrix over the vertical time-axis 't'
         labelString = "Column " + str(col_index+1)
-        plt.plot(t, dataMatrix[:,col_index], label=labelString)
+        # labelString = "Agent " + str(col_index+1) # FOR PLOTTING PHASE- OR FREQUENCY-VALUES BY THEMSELVES
+        plt.plot(t, dataMatrix[:,col_index], label=labelString, linewidth=3)
     
     plt.ylabel("numerical .csv-values")
     plt.xlabel("vertical time-values (seconds)")
