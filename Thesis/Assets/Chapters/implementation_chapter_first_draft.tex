@@ -21,7 +21,7 @@ A helpful way to read this chapter could be as answers to the question "how can 
 	\begin{figure}[h]
 	\centering
 	\includegraphics[width=0.9\linewidth]{Assets/Figures/schematic_initial_idea.pdf}
-	\caption{Illustration/Schematic: Moving towards achieving harmonic synchronization, through performing phase- \& frequency-adjustments. Agents that are not firing will adjust themselves after hearing a signal from a neighbouring and firing agent.}
+	\caption{Illustration/Schematic: Musical robot collective moving towards achieving harmonic synchronization, through performing phase- \& frequency-adjustments. Agents that are not firing at the moment will adjust themselves after hearing a ``fire''-/adjustment-signal from a neighbouring firing agent.}
 	\label{fig:first_idea:first_fig}
 	\end{figure}
 
@@ -31,16 +31,16 @@ A helpful way to read this chapter could be as answers to the question "how can 
 			\begin{subfigure}[t]{.5\textwidth}
 				\centering\captionsetup{width=.9\linewidth}%
 				\includegraphics[width=0.9\linewidth]{Assets/Figures/IntroUnsynch.jpg}
-				\caption{Agents firing asynchronously at first. Only two Dr. Squiggles-robots with red tentacles fire simultaneously, the rest do not.}
+				\caption{Agents firing, i.e. blinking with their eyes and turning their body yellow, asynchronously at first. Only two Dr. Squiggles-robots with red tentacles fire simultaneously, the rest do not.}
 				\label{fig:first_idea:second_fig:unsynched}
 			\end{subfigure}%
 			\begin{subfigure}[t]{.5\textwidth}
 				\centering\captionsetup{width=.9\linewidth}%
 				\includegraphics[width=0.9\linewidth]{Assets/Figures/IntroSynch.jpg}
-				\caption{Seconds later, after having listened to each other's fire-event signals and adapted themselves accordingly, the agents are here firing synchronously.}
+				\caption{Seconds later, after having listened to each others's adjustment-signals and adjusted themselves accordingly, all agents are here firing simultaneously and synchronously.}
 				\label{fig:first_idea:second_fig:synched}
 			\end{subfigure}
-		\caption{From simulation: Example of synchronization achieved in a musical robot collective. Note however that technically, due to either a special rule implemented to achieve harmonic synchrony—namely only ``firing every second time''—or using heterogenous frequencies; both robot collectives may in fact be harmonically synchronized.}
+		\caption{From simulation: Example of harmonic synchronization achieved in a musical robot collective, where frequencies are equal and constant, but phases are heterogenous and randomly initialized. This is the first and simpler problem to solve, synchronizing the phases $\phi_i$ for all agents $i$, which we will refer to as \textit{the $\phi$-problem}. The second and harder problem of synchronizing both phases $\phi_i$, as well as frequencies $\omega_i$, we will refer to as \textit{the $\phi$- \& $\omega$-problem}.}
 		\label{fig:first_idea:second_fig}
 	\end{figure}
 
@@ -136,7 +136,7 @@ A helpful way to read this chapter could be as answers to the question "how can 
 	
 	
 	% Mirollo-Strogatz's Phase-Adjustment
-	\subsection{Mirollo-Strogatz's ``standard'' phase-updates} % used '-adjustment' before
+	\subsection{Mirollo-Strogatz's ``standard'' phase-adjustment} % used '-adjustment' before
 	
 	One approach having been used to achieve this in the past is Mirollo-Strogatz's ``Standard'' Phase-adjustment in oscillators \cite{mirollo_strogatz_PCO_synch}, as illustrated in Figure \ref{fig:strog_phase}.
 			
@@ -159,7 +159,7 @@ A helpful way to read this chapter could be as answers to the question "how can 
 	
 	
 	% K. Nymoen's Phase-Adjustment
-	\subsection{K. Nymoen's bi-directional phase-updates} % used 'Shifts' before
+	\subsection{K. Nymoen's bi-directional phase-adjustment} % used 'Shifts' before
 	
 	\begin{figure}[h]
 		\centering
@@ -204,16 +204,17 @@ A helpful way to read this chapter could be as answers to the question "how can 
 	% Om Update-functions for frekvens-oppdateringene
 	Now over to the slightly more complex issue of adjusting and synchronizing frequencies in the agent-/oscillator-collective. We introduce randomly initialized, non-constant, and heterogenous oscillator-frequencies in our musical agents — allowing in the music collective the playing of diverse rhythmic patterns. The agents are now required to synchronize their initially different and random frequencies, so that frequencies are ``legal'' and \textit{harmonically synchronized}. Such ``legal'' frequencies are described clearly in detail in Section \ref{sec:harmonic_synchrony}.
 	
-	In order for the musical agents to synchronize their frequencies to each other, they will have to adjust or update their frequencies according to some well-designed update-/adjustment-functions. Three approaches/methods that was implemented to achieve this, or more specificly the goal state of \textit{harmonic synchrony}, is presented now. Notice the increasing degree of \textit{Computational Self-Awareness} endowed in the methods.
+	In order for the musical agents to (harmonically) synchronize their frequencies to each other, they will have to adjust or update their frequencies according to some well-designed update-/adjustment-functions. Three implemented approaches for achieving this are presented now. Notice the increasing degree of \textit{Computational Self-Awareness} endowed in the methods.
 	
 	
 	
 	
 	% FREQ.-SYNCH APPROACH 1: LOW LEVEL Self-Awareness
 	% Person X's "simpler" Frequency-Synchronization without any Self-Awareness components
-	\subsection{Person X's low SA-leveled frequency-updates}
+	% Can use -updates or -synchronization
+	\subsection{Person X's low SA-leveled frequency-adjustment}
 	
-	En simplere strategi/metode for å oppnå harmonisk synkronitet med Freq.-Adj., spesifikt uten noe Self-Awareness egenskaper, hvis det finnes.
+	\gjor{Beskriv en simplere strategi/metode (to-be-implemented) for å oppnå harmonisk synkronitet i $\phi$- \& $\omega$-problemet (i.e. problemet der både faser og frekvenser starter med ulike og tilfeldige verdier, og altså begge trenger synkronisering) med frequency-adjustment, da uten noe Self-Awareness-egenskaper, hvis det finnes}
 	
 	
 	
@@ -221,7 +222,7 @@ A helpful way to read this chapter could be as answers to the question "how can 
 	
 	% FREQ.-SYNCH APPROACH 2: MID LEVEL Self-Awareness
 	% K. Nymoen's Frequency-Synchronization with some Self-Awareness (which as far as I know only works together with K. Nymoen's Phase-Synchronization)
-	\subsection{K. Nymoen's middle SA-leveled frequency-updates}
+	\subsection{K. Nymoen's middle SA-leveled frequency-adjustment}
 	
 	This approach to Frequency Adjustment stands in contrast to previous approaches to synchronization in oscillators [fixed\_freqs, fixed\_range\_freqs] where the oscillators's frequencies are either equal and fixed, or where frequencies are bound to initialize and stay within a fixed interval/range.
 	
@@ -355,9 +356,16 @@ A helpful way to read this chapter could be as answers to the question "how can 
 	
 	% FREQ.-SYNCH APPROACH 3: HIGH LEVEL Self-Awareness
 	% Hopefully an improved method with some additional Self-Awareness components
-	\subsection{Thorvaldsen's high SA-leveled frequency-updates}
+	\subsection{Thorvaldsen's high SA-leveled frequency-adjustment}
 	
-	Min nye proposede algoritme for å oppnå harmonisk synkronitet med Freq.-Adj., som inneholder flere tilleggs- Self-Awareness-komponenter (e.g. Belief-awareness og/eller Expectation-awareness), sammenliknet med K. Nymoens tilnærming (jf. \textbf{Thorvaldsen's improved approach} og det jeg og Kyrre snakka om under 'Mid-November'-recall-notatet på 'reMarkable -\> Meetings -\> Kyrre' på reMarkablen). Jeg vil ``beste'' Kristian.
+	\gjor{Beskriv min nye proposede algoritme (to-be-implemented) for å oppnå harmonisk synkronitet i $\phi$- \& $\omega$-problemet med frequency-adjustment, som inneholder flere tilleggs- Self-Awareness-komponenter, sammenliknet med K. Nymoens frequency-adjustment metode. Eksempler på slike tilleggs- Self-Awareness-komponenter er såkalt Belief-awareness (som fanger usikkerhet og tillits-nivåer) og/eller Expectation-awareness (som kombinerer Belief-awareness og Time-awareness) \cite{sacs17_ch3}. Andre forslag er å implementere Self-Awareness i forhold til, og vekte frekvensoppdaterings-bidragene H(n) i henhold til:
+	\begin{itemize}
+		\item avstand: f.eks. $H^*(n)= H(n) \cdot \frac{1}{distance}$ for ``fire''-event $n$, så lenge ikke $distance = 0$.
+		\item hvem som er hvem (i.e. agent\_id).
+		\item større median-liste ift. den self-assessed'e synch-score'n $s(n)$ og $errorBuffer$'et. Dette kan være nyttig ved større collective-sizes, da et lite/kort median-filter/-$errorBuffer$-liste vil kunne miste eller gå glipp av error-scores, $\epsilon(n)$, fra ``fire''-events fra langt tilbake (tidlig) i ``oppsamlings-perioden.''
+		\item de andres frekvenser. Høre etter og registrere andre individers ``fire''-signaler kontinuerlig og estimere disse individenes frekvenser utifra det (f.eks. $\hat{\omega}_j = time_{j, fired\_now} - time_{j, fired\_last\_time}$, eller et gjennomsnitt av slike oppsamlede verdier).
+	\end{itemize}
+	}
 
 
 
@@ -371,6 +379,8 @@ As previously mentioned, this state of \textit{harmonic synchrony} is then the s
 
 The state of harmonic synchrony is defined as the state in which all agents in the musical collective ``fire''/``flash'', as described in Subsection \ref{subsec:fire_signal}, at an even underlying interval or pulse, a certain number of times in a row. This is not to say all agents will have to ``fire''/``flash'' simultaneously, as has traditionally been the case for pulse-coupled oscillators \cite{}.
 
+So for phases to be harmonically synchronized, they have to be so that they climax ..................
+
 As one is creating an interactive music technology system, one might want to encourage and allow for the playing of various musical instruments at various rhythms/paces, as it might be quite boring if all instruments were played at the exact same measure or pulse. As K. Nymoen et al. \cite{nymoen_synch} reason when discussing their own interactive ``Firefly'' music-system, as well as coining the term of harmonic synchrony: \nl
 
 ``\textit{Temporal components in music tend to appear in an integer-ratio relation to each other (e.g., beats, measures, phrases, or quarter notes, 8ths, 16ths)}.'' \nl
@@ -379,18 +389,38 @@ and \nl
 
 ``\textit{Being an interactive music system, people may want their device to synchronize with different subdivisions of a measure (e.g. some play quarter notes while others play 8ths).}'' \nl
 
-Accomodating for these aspects then, K. Nymoen et al. \cite{nymoen_synch} took inspiration for achieving synchronization in a decentralized system from the concept of \textit{harmonics} in the frequency spectrum of a waveform, in that each harmonic wave or overtone has a frequency with an integer-relationship to the fundamental (smallest) frequency. This can e.g. be seen in the frequency spectrogram below, in Figure \ref{fig:G3_waveform_frequency_spectrogram}, where a waveform with a fundamental frequency of 195,99 Hz (i.e. a G3-note and $\approx$ 200 Hz) has harmonics and overtones with frequencies with integer relationships to said fundamental frequency.
+Accomodating for these aspects then, K. Nymoen et al. \cite{nymoen_synch} took inspiration for achieving synchronization in a decentralized system from the concept of \textit{harmonics} in the frequency spectrum of a waveform, in that each harmonic wave or overtone has a frequency with an integer-relationship to the fundamental (smallest) frequency. This phenomenon can e.g. be seen in the frequency spectrogram of a humanly hummed G3-tone, in Figure \ref{fig:sub:G3_hummed_waveform}, where we can observe the harmonics and overtones having frequencies with integer relationships to the fundamental (smallest) frequency, which was meant to be 195,99 Hz.
 
-\begin{figure}[h]
+% a waveform with a fundamental frequency of 195,99 Hz (i.e. a G3-note and $\approx$ 200 Hz) has harmonics and overtones with frequencies with integer relationships to said fundamental frequency.
+
+\begin{figure}[ht!]
 	\centering
-	\includegraphics[width=0.9\linewidth]{Assets/Figures/G3_196Hz_HummingWaveform_FrequencySpectrum.pdf}
-	\caption{The frequency spectrogram of a 14 second long waveform being a hummed and recorded G3-tone at around 195,99 Hz.}
-	\label{fig:G3_waveform_frequency_spectrogram}
+		\begin{subfigure}[t]{.5\textwidth}
+			\centering\captionsetup{width=.9\linewidth}%
+			\includegraphics[width=0.9\linewidth]{Assets/Figures/G3_196Hz_PureTone_waveform_spectrogram.pdf}
+			\caption{The frequency spectrogram of an audible waveform being a monotone and purely generated \cite{generate_tones} G3-tone at 195,99 Hz.}
+			\label{fig:sub:G3_pure_waveform}
+		\end{subfigure}%
+		\begin{subfigure}[t]{.5\textwidth}
+			\centering\captionsetup{width=.9\linewidth}%
+			\includegraphics[width=0.9\linewidth]{Assets/Figures/G3_196Hz_HummingWaveform_FrequencySpectrum.pdf}
+			\caption{The frequency spectrogram of an audible waveform being a more-or-less monotone but non-pure G3-tone, hummed and recorded by me \cite{}, according to what I perceived as the G3-tone when I heard the waveform corresponding to \ref{fig:sub:G3_pure_waveform} with my own ears.}
+			\label{fig:sub:G3_hummed_waveform}
+		\end{subfigure}
+	\caption{Frequency spectrograms of two different-sounding waveforms of the same G3-tone at 195,99 Hz. Frequencies in a harmonically synchronized agent collective will for the first $\phi$-problem resemble the frequencies in \ref{fig:sub:G3_pure_waveform}, since all frequencies in this problem are equal and constant. Conversely, when frequencies can be heterogenous, as in the $\phi$- \& $\omega$-problem, the frequencies in a harmonically synchrnonized agent collective will resemble more the frequencies in \ref{fig:sub:G3_hummed_waveform}, where harmonics and overtones (i.e. frequencies in integer-relationships to the fundamental and lowest frequency) are present.}
+	\label{fig:frequency_spectrograms}
 \end{figure}
 
-This is exactly how the frequencies of the individual musical agents in our music-collective must be, in order for the agent-collective to be harmonically synchronized.
 
-More accurately, all musical agents—in a harmonically synchronized state—will have frequencies $\in \omega_{0} \cdot 2^{\mathbb{N}_0}$, where $\omega_{0}$ is the agent with the lowest frequency's frequency (i.e. the fundamental frequency), and $\mathbb{N}_0$ is the mathematical set of natural numbers including the number zero. Hence, agents will typically have frequencies like $\omega_{0} \cdot 2^0 = \omega_{0}$, $\omega_{0} \cdot 2^1 = 2\omega_{0}$, $\omega_{0} \cdot 2^2 = 4\omega_{0}$, or $\omega_{0} \cdot 2^3 = 8\omega_{0}$. If all agents end up with these kind of frequencies, we say they have ``legal'' and harmonically synchronized frequencies.
+
+\inkl{This is exactly how the frequencies of the individual musical agents in our music-collective must be, in order for the agent-collective to be harmonically synchronized.
+
+So for frequencies to be harmonically synchronized, they have to be so that ..................
+}
+
+
+
+More accurately then, all musical agents—in a harmonically synchronized state—will have frequencies $\in \omega_{0} \cdot 2^{\mathbb{N}_0}$, where $\omega_{0}$ is the agent with the lowest frequency's frequency (i.e. the fundamental frequency), and $\mathbb{N}_0$ is the mathematical set of natural numbers including the number zero. Hence, agents will typically have frequencies like $\omega_{0} \cdot 2^0 = \omega_{0}$, $\omega_{0} \cdot 2^1 = 2\omega_{0}$, $\omega_{0} \cdot 2^2 = 4\omega_{0}$, or $\omega_{0} \cdot 2^3 = 8\omega_{0}$. If all agents end up with these kind of frequencies, we say they have ``legal'' and harmonically synchronized frequencies.
 
 
 
