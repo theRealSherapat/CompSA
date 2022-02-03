@@ -334,7 +334,7 @@ A helpful way to read this chapter could be as answers to the question "how can 
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.9\linewidth]{Assets/Figures/all_possible_H_n_values.pdf}
-		\caption{All possible $H(n)$-values marked in green, given by $\rho(n) \cdot s(n)$, where $\rho(n)$ is defined as above and depicted in Figure \ref{fig:rho_n}, and the self-assessed synch-scores $s(n) \in [0, 1]$. The $s(n)$-scores were again simply the median of $m$ error-scores \{$\epsilon(n)$, $\epsilon(n-1)$, $\epsilon(n-2)$, ... , $\epsilon(n-m)$\} which again were given by the error-function \eqref{error_measurement} plotted in Figure \ref{fig:error_measurement}.}
+		\caption{All possible $H(n)$-values marked in green, given by $\rho(n) \cdot s(n)$, where $\rho(n)$ is defined as above and depicted in Figure \ref{fig:rho_n}, and the self-assessed synch-scores $s(n) \in [0, 1]$. The $s(n)$-scores were again simply the median of $m$ error-scores \{$\epsilon(n)$, $\epsilon(n-1)$, $\epsilon(n-2)$, ... , $\epsilon(n-m)$\} which again were given by the error-function \eqref{error_measurement} plotted in Figure \ref{fig:error_measurement}. Note how the ``frequency-adjustment-contribution'' $H(n)$ can be equal to 0 despite high error scores and a high $s(n)$-score.}
 		\label{fig:all_possible_H_n_values}
 	\end{figure}
 	
@@ -411,7 +411,7 @@ and \nl
 
 ``\textit{Being an interactive music system, people may want their device to synchronize with different subdivisions of a measure (e.g. some play quarter notes while others play 8ths).}'' \nl
 
-Accomodating for these aspects then, K. Nymoen et al. \cite{nymoen_synch} took inspiration for achieving synchronization in a decentralized system from the concept of \textit{harmonics} in the frequency spectrum of a waveform, in that each harmonic wave or overtone has a frequency with an integer-relationship to the fundamental (smallest) frequency. This phenomenon can e.g. be seen in the frequency spectrogram of a humanly hummed G3-tone, in Figure \ref{fig:sub:G3_hummed_waveform}, where we can observe the harmonics and overtones having frequencies with integer relationships to the fundamental (smallest) frequency, which was intended to be 195,99 Hz.
+Accomodating for these aspects then, K. Nymoen et al. \cite{nymoen_synch} took inspiration for achieving synchronization in a decentralized system from the concept of \textit{harmonics} in the frequency spectrum of a waveform, in that each harmonic wave or overtone has a frequency with an integer-relationship to the fundamental (smallest) frequency. This phenomenon can e.g. be seen in the frequency spectrogram of a humanly hummed G3-tone, depicted in Figure \ref{fig:sub:G3_hummed_waveform}, where one can observe the harmonics and overtones having frequencies with integer relationships to the fundamental (smallest) frequency, which was intended to be 195,99 Hz.
 
 % a waveform with a fundamental frequency of 195,99 Hz (i.e. a G3-note and $\approx$ 200 Hz) has harmonics and overtones with frequencies with integer relationships to said fundamental frequency.
 
@@ -426,16 +426,16 @@ Accomodating for these aspects then, K. Nymoen et al. \cite{nymoen_synch} took i
 		\begin{subfigure}[t]{.5\textwidth}
 			\centering\captionsetup{width=.9\linewidth}%
 			\includegraphics[width=0.9\linewidth]{Assets/Figures/G3_196Hz_HummingWaveform_FrequencySpectrum.pdf}
-			\caption{The frequency spectrogram of the audible waveform being a more-or-less monotone but non-pure G3-tone, hummed and recorded by me \cite{}, as I tried to repeat the tone depticted in \ref{fig:sub:G3_pure_waveform} with my voice.}
+			\caption{The frequency spectrogram of the audible waveform being a more-or-less monotone but non-pure G3-tone, hummed and recorded by me \cite{}, as I tried to repeat the tone in \ref{fig:sub:G3_pure_waveform} with my voice.}
 			\label{fig:sub:G3_hummed_waveform}
 		\end{subfigure}
-	\caption{Frequency spectrograms of two different-sounding waveforms of the same G3-tone at 195,99 Hz. Frequencies in a harmonically synchronized agent collective will for the first $\phi$-problem resemble the frequencies in \ref{fig:sub:G3_pure_waveform}, since all frequencies in this problem are equal and constant. Conversely, when frequencies can be heterogenous, as in the $\phi$- \& $\omega$-problem, the frequencies in a harmonically synchronized agent collective will rather resemble the frequencies in \ref{fig:sub:G3_hummed_waveform}, where harmonics and overtones (i.e. frequencies in integer-relationships to the fundamental and lowest frequency) are present.}
+	\caption{Frequency spectrograms of two different-sounding waveforms of the same G3-tone at 195,99 Hz. Frequencies in a harmonically synchronized agent collective will for the first $\phi$-problem resemble the frequencies in \ref{fig:sub:G3_pure_waveform}, since all frequencies in this problem are equal and constant. Conversely, when frequencies can be heterogenous, as in the $\phi$- \& $\omega$-problem, the frequencies in a harmonically synchronized agent collective will rather resemble the frequencies in \ref{fig:sub:G3_hummed_waveform}, where harmonics and overtones with integer-relationship frequencies to the fundamental and lowest frequency are present.}
 	\label{fig:frequency_spectrograms}
 \end{figure}
 
 % \newpage
 
-More accurately then, all musical agents—in a harmonically synchronized state—will have frequencies $\in \omega_{0} \cdot 2^{\mathbb{N}_0}$, where $\omega_{0}$ is the agent with the lowest frequency's frequency (i.e. the fundamental frequency), and $\mathbb{N}_0$ is the mathematical set of natural numbers including the number zero. Hence, agents will typically have frequencies like $\omega_{0} \cdot 2^0 = \omega_{0}$, $\omega_{0} \cdot 2^1 = 2\omega_{0}$, $\omega_{0} \cdot 2^2 = 4\omega_{0}$, or $\omega_{0} \cdot 2^3 = 8\omega_{0}$. If all agents end up with these kind of frequencies, we say they have ``legal'' and harmonically synchronized frequencies.
+More accurately then, and inspired by although not completely analagous to the integer-relationship frequencies like in Figure \ref{fig:sub:G3_hummed_waveform}, we introduce the formal and ``legal'' requirement the oscillator-frequencies in the musical robot collective have to fulfill in order for the oscillator-frequencies to be harmonically synchronized. All musical agents—in a harmonically synchronized state—will have frequencies $\in \omega_{0} \cdot 2^{\mathbb{N}_0}$, where $\omega_{0}$ is the agent with the lowest frequency's frequency (i.e. the fundamental frequency), and $\mathbb{N}_0$ is the mathematical set of natural numbers including the number zero. Hence, agents will typically have frequencies like $\omega_{0} \cdot 2^0 = \omega_{0}$, $\omega_{0} \cdot 2^1 = 2\omega_{0}$, $\omega_{0} \cdot 2^2 = 4\omega_{0}$, or $\omega_{0} \cdot 2^3 = 8\omega_{0}$. If all agents end up with these kind of frequencies, we say they have ``legal'' and harmonically synchronized frequencies.
 
 
 
