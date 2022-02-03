@@ -15,13 +15,13 @@ A helpful way to read this chapter could be as answers to the question "how can 
 \section{The musical multi-robot collective}
 \label{sec:developed_system}
 
-	Envision that we have a multi-agent collective scenario consisting of musical robots modelled as oscillators, solely communicating through brief ``fire''-like audio-signals—greatly inspired by K. Nymoen et al.'s synchronizing ``fireflies'' \cite{nymoen_synch}. These agents are not initially synchronized in their firing of audio-signals; but as time goes, they are entraining to synchronize to each other by adjusting their phases and frequencies when/after hearing each other's audio-/fire-signals. If they then, after some time of listening and adjusting, succeed in becoming synchronized — we then will eventually see ``fire''-events/-signals line up at an even underlying pulse or rhythm. Examples and demonstrations of this process are depicted in Figure \ref{fig:first_idea:first_fig} and \ref{fig:first_idea:second_fig}.
+	Envision that we have a multi-agent collective scenario consisting of musical robots modelled as oscillators, solely communicating through brief ``fire''-like audio-signals—greatly inspired by K. Nymoen et al.'s synchronizing ``fireflies'' \cite{nymoen_synch}. These agents are not initially synchronized in their firing of audio-signals; but as time goes, they are entraining to synchronize to each other by adjusting their phases and frequencies when/after hearing each other's audio-/fire-signals. If they then, after some time of listening and adjusting, succeed in becoming synchronized — we then will eventually see ``fire''-events/-signals line up at an even underlying pulse or rhythm. Examples and demonstrations of this process are depicted in Figure \ref{fig:first_idea:first_fig} and Figure \ref{fig:first_idea:second_fig}.
 
 	% First Intro-illustration figure to easily get a quick idea of what the system/design does/consists of (to be exchanged with a describing system scheme/diagram):
 	\begin{figure}[h]
 	\centering
 	\includegraphics[width=0.9\linewidth]{Assets/Figures/schematic_initial_idea.pdf}
-	\caption{Illustration/Schematic: Musical robot collective moving towards achieving harmonic synchronization, through performing phase- \& frequency-adjustments. Agents that are not firing at the moment will adjust themselves after hearing a ``fire''-/adjustment-signal from a neighbouring firing agent.}
+	\caption{Illustration/Schematic: Musical robot collective entraining to synchronize to each other, or more specifically achieve harmonic synchronization, through performing phase- \& frequency-adjustments. Agents that are not firing at the moment will adjust themselves after hearing a transmitted ``fire''-/adjustment-signal from a neighbouring firing agent.}
 	\label{fig:first_idea:first_fig}
 	\end{figure}
 
@@ -37,12 +37,14 @@ A helpful way to read this chapter could be as answers to the question "how can 
 			\begin{subfigure}[t]{.5\textwidth}
 				\centering\captionsetup{width=.9\linewidth}%
 				\includegraphics[width=0.9\linewidth]{Assets/Figures/IntroSynch.jpg}
-				\caption{Seconds later, after having listened to each others's adjustment-signals and adjusted themselves accordingly, all agents are here firing simultaneously and synchronously.}
+				\caption{Seconds later, after having listened to each others's adjustment-signals and adjusted themselves accordingly, all agents now fire simultaneously and synchronously.}
 				\label{fig:first_idea:second_fig:synched}
 			\end{subfigure}
-		\caption{From simulation: Example of harmonic synchronization achieved in a musical robot collective, where frequencies are equal and constant, but phases are heterogenous and randomly initialized. This is the first and simpler problem to solve, synchronizing the phases $\phi_i$ for all agents $i$, which we will refer to as \textit{the $\phi$-problem}. The second and harder problem of synchronizing both phases $\phi_i$, as well as frequencies $\omega_i$, we will refer to as \textit{the $\phi$- \& $\omega$-problem}.}
+		\caption{From simulation: Example of harmonic synchronization achieved in a musical robot collective, where frequencies are equal and constant, but phases are heterogenous and randomly initialized. This is the first and simpler problem to solve, synchronizing the phases $\phi_i$ for all agents $i$, which we will refer to as \textit{the $\phi$-problem}. The second and harder problem of synchronizing both phases $\phi_i$, as well as frequencies $\omega_i$, we will refer to as \textit{the $\phi$- \& $\omega$-problem}. These pictures could actually both have been of harmonically synchronized robot-collectives, if this was in fact a simulation where the $\phi$- \& $\omega$-problem was attempted to be solved.}
 		\label{fig:first_idea:second_fig}
 	\end{figure}
+
+	\inkl{Noe om hyperparameterne}
 
 	% INCLUDE PHASES UNSYNCHED VS. SYNCHED PLOT? See 'Relevant MSc-thesis Concerns'.
 		% % Phase-/time-plot Figure with two Subplots. Subplot 1: phase-/time-plot when oscillators are unsynchronized. Subplot 2: phase-/time-plot when oscillators are synchronized
@@ -72,7 +74,7 @@ A helpful way to read this chapter could be as answers to the question "how can 
 	% Om den enkelte noden/agenten med alle egenskaper den har osv.
 	\subsection{The individual agent: a musical robot}
 	\label{subsec:agent}
-		The musical robot collective consists of M. J. Krzyzaniak and RITMO's musical robots, the Dr. Squiggles. \nl
+		The musical robot collective consists of M. J. Krzyzaniak and RITMO's musical robots, the Dr. Squiggles \cite{dr_squiggles}. The 3D-models of these robots were designed by Pierre Potel \cite{pierre_potel} and were reused, with permission, for the simulations in this thesis project. \nl
 		
 		Om hver individuelle agents egenskaper og karakteristikker.
 		
@@ -124,6 +126,7 @@ A helpful way to read this chapter could be as answers to the question "how can 
 % SECTION 2, Presenting Methods for Phase-Adjustment:
 \section{Synchronizing oscillator-phases}
 \label{sec:phase_methods}
+	\gjor{Introduser det første $\phi$-problemet, uthevet og i fet skrift. Deretter løsningen dens}
 
 	If we first assume constant and equal oscillator-frequencies in our agents, we can take a look at how the agents adjust their|initially random|phases in order to synchronize to each other. This is then in contrast to the case in Section \ref{sec:frequency_methods} where heterogenous and randomly initialized oscillator-frequencies in the musical agents are used and synchronized.
 	
@@ -182,6 +185,20 @@ A helpful way to read this chapter could be as answers to the question "how can 
 	
 	
 	
+	% PHASE.-ADJ APPROACH 3: HIGH LEVEL Self-Awareness
+	% Hopefully an improved method with some additional Self-Awareness components
+	\subsection{Thorvaldsen's self-aware phase-adjustment}
+	
+	\gjor{Beskriv min nye proposede algoritme (to-be-implemented) for å oppnå harmonisk synkronitet i $\phi$-problemet med phase-adjustment, som inneholder flere tilleggs- Self-Awareness-komponenter, sammenliknet med K. Nymoens bi-directional phase-adjustment metode. 
+	
+	Eksempler på slike tilleggs- Self-Awareness-komponenter er såkalt Belief-awareness (som fanger usikkerhet og tillits-nivåer) og/eller Expectation-awareness (som kombinerer Belief-awareness og Time-awareness) \cite{sacs17_ch3}. Andre forslag er å implementere Self-Awareness i forhold til:
+	\begin{itemize}
+		\item avstand: f.eks. $H^*(n)= H(n) \cdot \frac{1}{distance}$ for ``fire''-event $n$, så lenge ikke $distance = 0$.
+		\item hvem som er hvem (i.e. agent\_id).
+		% \item de andres frekvenser. Høre etter og registrere andre individers ``fire''-signaler kontinuerlig og estimere disse individenes frekvenser utifra det (f.eks. $\hat{\omega}_j = time_{j, fired\_now} - time_{j, fired\_last\_time}$, eller et gjennomsnitt av slike oppsamlede verdier).
+	\end{itemize}
+	}
+	
 	
 	
 	
@@ -200,6 +217,8 @@ A helpful way to read this chapter could be as answers to the question "how can 
 % SECTION 3, Presenting Methods for Frequency-Synchronization:
 \section{Synchronizing oscillator-frequencies}
 \label{sec:frequency_methods}
+
+	\gjor{Introduser det andre, og mer utfordrende, $\phi$-\&$\omega$-problemet, uthevet og i fet skrift. Deretter løsningen dens}
 
 	% Om Update-functions for frekvens-oppdateringene
 	Now over to the slightly more complex issue of adjusting and synchronizing frequencies in the agent-/oscillator-collective. We introduce randomly initialized, non-constant, and heterogenous oscillator-frequencies in our musical agents — allowing in the music collective the playing of diverse rhythmic patterns. The agents are now required to synchronize their initially different and random frequencies, so that frequencies are ``legal'' and \textit{harmonically synchronized}. Such ``legal'' frequencies are described clearly in detail in Section \ref{sec:harmonic_synchrony}.
@@ -260,11 +279,9 @@ A helpful way to read this chapter could be as answers to the question "how can 
 		\label{fig:error_measurement}
 	\end{figure}
 	
-	As we can see from this Error-Function, the error-score is close to 0 when the agent's phase $\phi_i(t)$ is itself close to 0 or 1 (i.e. the agent either just fired/flashed, or is about to fire/flash very soon). The error-score is the largest when an agent perceives a ``fire''-signal while being half-way through its own phase (i.e. having phase $\phi(t)=0.5$). We could also then ask ourselves, does not this go against the main/target goal of the system, being \textit{harmonic synchrony} — if agents are allowed to be ``half as fast'' as each other? 
+	As we can see from this Error-Function, the error-score is close to 0 when the agent's phase $\phi_i(t)$ is itself close to 0 or 1 (i.e. the agent either just fired/flashed, or is about to fire/flash very soon). This implies that if it was only short time ago since we just fired, or conversely if there is only short time left until we will fire, we are not much in error or \textit{out-of-synch}. 
 	
-	\lab{Hypotetisk scenario}{
-		We could imagine a completely ``legal'' and harmonically synchronous scenario where two agents have half and double the frequency of each other. The agent with half the frequency of the faster agent would then have phase $\phi(t)=0.5$ when it would hear the faster agent ``fire''/``flash'' — leading to its Error-score $\epsilon(0.5) = sin^2(\pi/2) = 1$, which then makes it seem like the slower agent is maximally out of synch, when it is actually perfectly and harmonically synchronized. This calls out for an attenuating mechanism in our frequency update function, in order to ``cancel out'' this contribution so that perfectly harmonically synchronized agents will not be adjusted further despite their high Error-measurement.
-	}
+	The error-score is the largest when an agent perceives a ``fire''-signal while being half-way through its own phase (i.e. having phase $\phi(t)=0.5$). We could also then ask ourselves, does not this go against the main/target goal of the system, being \textit{harmonic synchrony} — if agents are allowed to be ``half as fast'' as each other? We could imagine a completely ``legal'' and harmonically synchronous scenario where two agents have half and double the frequency of each other. The agent with half the frequency of the faster agent would then have phase $\phi(t)=0.5$ when it would hear the faster agent ``fire''/``flash'' — leading to its Error-score $\epsilon(0.5) = sin^2(\pi/2) = 1$, which then makes it seem like the slower agent is maximally out of synch, when it is actually perfectly and harmonically synchronized. This calls out for an attenuating mechanism in our frequency update function, in order to ``cancel out'' this contribution so that perfectly harmonically synchronized agents will not be adjusted further despite their high Error-measurement. As we will see below, in Figure \ref{fig:rho_n}, exactly such an attenuating mechanism is utilized in our frequency-adjustment method.
 	
 	This Error-Measurement/-Score forms the basis and fundament for the first component of Self-awareness, being the \textit{self-assessed synchrony-score} $s(n)$.
 	
@@ -303,6 +320,13 @@ A helpful way to read this chapter could be as answers to the question "how can 
 		\rho(\phi) = - sin(2\pi\phi(t)) \in [-1, 1]
 	\end{equation}
 	
+	\begin{figure}[ht!]
+		\centering
+		\includegraphics[width=0.9\linewidth]{Assets/Figures/rho_n.pdf}
+		\caption{The amplitude- \& sign-factor, $\rho(\phi(t))$, where $\phi(t)$ is the phase of an agent at time $t$ when it heard ``fire''-event $n$. Notice how the amplitude is equal to 0 when the phase is equal to 0,5.}
+		\label{fig:rho_n}
+	\end{figure}
+	
 	For example, if an agent $i$ has phase $\phi_i(t)=1/4$, it gets a value $\rho(1/4) = - sin(\pi/2) = -1$; meaning, the agent's frequency should be decreased (with the highest amplitude actually) in order to "slow down" to wait for the other nodes. Conversely, if an agent $j$ has phase $\phi_j(t)=3/4$, it gets a value $\rho(3/4) = - sin(3/2 \pi) = -(-1) = 1$; meaning, the agent's frequency should be increased (with the highest amplitude) in order to getting "pushed forward" to catch up with the other nodes.
 	
 	Acts as an attenuating factor, when $\phi(t)\approx0.5$, in the making of the H-value — supporting the goal of \textit{harmonic synchrony}.
@@ -317,7 +341,16 @@ A helpful way to read this chapter could be as answers to the question "how can 
 		H(n) = \rho(n) \cdot s(n)
 	\end{equation}
 	
-	Here we then multiply a factor $\rho(n)$ representing how much, as well as in which direction, the agent should adjust its frequency, together with a factor $s(n) \in [0,1]$ of the adjusting agent's self-assessed synch-score. To recall, the self-assessed synch-score $s(n)$ tells an adjusting agent how in- or out-of-synch it was during the last $m$ perceived ``fire''-/``flash''-events — where $s(n)=0$ signifies a mean of 0 in error-scores, and $s(n)=1$ signifies a mean of 1 in error-scores. So then if this $H$-value is to be used to adjust the nodes's frequencies with, the frequency will then be adjusted in a certain direction and amount (specified by $\rho(n)$) — given that the agent is \textit{enough} ``out of synch''/``unsynchronized'' (in the case $s(n)$ is considerably larger than 0).
+	Here we then multiply the factor $\rho(n)$, depicted in Figure \ref{fig:rho_n}, representing how much, as well as in which direction, the agent should adjust its frequency, together with a factor $s(n) \in [0,1]$ of the adjusting agent's self-assessed synch-score. This means that all the possible values this $H(n)$-value can take, lies within the green zone in Figure \ref{fig:all_possible_H_n_values}. We hence see that the smallest value $H(n)$ can take for the $n$th ``fire''-event is -1, which it does when $\phi(n) = 0.25$ and $s(n) = 1$. The highest value it can take is 1, which it does when $\phi(n) = 0.75$ and $s(n) = 1$. We can also see that even though the self-assessed synch-score $s(n)$ (i.e. the median of error-scores) is high and even the maximum value of 1, thus indicating consistent high error-scores (judging by error-function \eqref{error_measurement} and Figure \ref{fig:error_measurement}) — the ``frequency-update-contribution'' $H(n)$ can in the end be cancelled out, as alluded to before, if in fact the amplitude- \& sign-factor $\rho(n)$ is equal to 0. Hence, if we have two agents then where the one is twice as fast as the other, and we accept the $H(n)$-value as the ``frequency-update-contribution'', the slower agent which will hear ``fire''-events consistently when it has its phase $\phi(n) \approx 0.5$ (if the agents are synchronized) will, even though it gets a high \textit{out-of-synch score} $s(n) \approx 1$, not ``be told'' to adjust its frequency more by getting a large ``frequency-update-contribution'', but in fact ``be told'' not to adjust its frequency more due to the small or cancelled-out ``frequency-update-contribution.''
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.9\linewidth]{Assets/Figures/all_possible_H_n_values.pdf}
+		\caption{All possible $H(n)$-values marked in green, given by $\rho(n) \cdot s(n)$, where $\rho(n)$ is defined as above and depicted in Figure \ref{fig:rho_n}, and the self-assessed synch-scores $s(n) \in [0, 1]$. The $s(n)$-scores were again simply the median of $m$ error-scores \{$\epsilon(n)$, $\epsilon(n-1)$, $\epsilon(n-2)$, ... , $\epsilon(n-m)$\} which again were given by the error-function \eqref{error_measurement} plotted in Figure \ref{fig:error_measurement}.}
+		\label{fig:all_possible_H_n_values}
+	\end{figure}
+	
+	To recall, the self-assessed synch-score $s(n)$ tells an adjusting agent how in- or out-of-synch it was during the last $m$ perceived ``fire''-/``flash''-events — where $s(n)=0$ signifies a mean of 0 in error-scores, and $s(n)=1$ signifies a mean of 1 in error-scores. So then if this $H$-value is to be used to adjust the nodes's frequencies with, the frequency will then be adjusted in a certain direction and amount (specified by $\rho(n)$) — given that the agent is \textit{enough} ``out of synch''/``unsynchronized'' (in the case $s(n)$ is considerably larger than 0).
 	
 	The H-value says something about how much ``out of phase'' the agent was at the time the agent's $n$th ``flashing''-signal was perceived (and then followingly how much it should be adjusted, as well as in which direction after having been multiplied together with a sign-factor $\rho(n))$, given then that this H-value also consists of the \textit{self-assessed synch score s(n)} — which again simply was the median of the list of error-scores, \textit{errorBuffer} in our case.
 	
@@ -352,6 +385,9 @@ A helpful way to read this chapter could be as answers to the question "how can 
 	
 	
 	
+	
+	
+
 	
 	
 	% FREQ.-SYNCH APPROACH 3: HIGH LEVEL Self-Awareness
@@ -389,7 +425,7 @@ and \nl
 
 ``\textit{Being an interactive music system, people may want their device to synchronize with different subdivisions of a measure (e.g. some play quarter notes while others play 8ths).}'' \nl
 
-Accomodating for these aspects then, K. Nymoen et al. \cite{nymoen_synch} took inspiration for achieving synchronization in a decentralized system from the concept of \textit{harmonics} in the frequency spectrum of a waveform, in that each harmonic wave or overtone has a frequency with an integer-relationship to the fundamental (smallest) frequency. This phenomenon can e.g. be seen in the frequency spectrogram of a humanly hummed G3-tone, in Figure \ref{fig:sub:G3_hummed_waveform}, where we can observe the harmonics and overtones having frequencies with integer relationships to the fundamental (smallest) frequency, which was meant to be 195,99 Hz.
+Accomodating for these aspects then, K. Nymoen et al. \cite{nymoen_synch} took inspiration for achieving synchronization in a decentralized system from the concept of \textit{harmonics} in the frequency spectrum of a waveform, in that each harmonic wave or overtone has a frequency with an integer-relationship to the fundamental (smallest) frequency. This phenomenon can e.g. be seen in the frequency spectrogram of a humanly hummed G3-tone, in Figure \ref{fig:sub:G3_hummed_waveform}, where we can observe the harmonics and overtones having frequencies with integer relationships to the fundamental (smallest) frequency, which was intended to be 195,99 Hz.
 
 % a waveform with a fundamental frequency of 195,99 Hz (i.e. a G3-note and $\approx$ 200 Hz) has harmonics and overtones with frequencies with integer relationships to said fundamental frequency.
 
@@ -398,16 +434,16 @@ Accomodating for these aspects then, K. Nymoen et al. \cite{nymoen_synch} took i
 		\begin{subfigure}[t]{.5\textwidth}
 			\centering\captionsetup{width=.9\linewidth}%
 			\includegraphics[width=0.9\linewidth]{Assets/Figures/G3_196Hz_PureTone_waveform_spectrogram.pdf}
-			\caption{The frequency spectrogram of an audible waveform being a monotone and purely generated \cite{generate_tones} G3-tone at 195,99 Hz.}
+			\caption{The frequency spectrogram of the audible waveform being a monotone and purely generated G3-tone at 195,99 Hz \cite{generate_tones}.}
 			\label{fig:sub:G3_pure_waveform}
 		\end{subfigure}%
 		\begin{subfigure}[t]{.5\textwidth}
 			\centering\captionsetup{width=.9\linewidth}%
 			\includegraphics[width=0.9\linewidth]{Assets/Figures/G3_196Hz_HummingWaveform_FrequencySpectrum.pdf}
-			\caption{The frequency spectrogram of an audible waveform being a more-or-less monotone but non-pure G3-tone, hummed and recorded by me \cite{}, according to what I perceived as the G3-tone when I heard the waveform corresponding to \ref{fig:sub:G3_pure_waveform} with my own ears.}
+			\caption{The frequency spectrogram of the audible waveform being a more-or-less monotone but non-pure G3-tone, hummed and recorded by me \cite{}, as I tried to repeat the tone depticted in \ref{fig:sub:G3_pure_waveform} with my voice.}
 			\label{fig:sub:G3_hummed_waveform}
 		\end{subfigure}
-	\caption{Frequency spectrograms of two different-sounding waveforms of the same G3-tone at 195,99 Hz. Frequencies in a harmonically synchronized agent collective will for the first $\phi$-problem resemble the frequencies in \ref{fig:sub:G3_pure_waveform}, since all frequencies in this problem are equal and constant. Conversely, when frequencies can be heterogenous, as in the $\phi$- \& $\omega$-problem, the frequencies in a harmonically synchrnonized agent collective will resemble more the frequencies in \ref{fig:sub:G3_hummed_waveform}, where harmonics and overtones (i.e. frequencies in integer-relationships to the fundamental and lowest frequency) are present.}
+	\caption{Frequency spectrograms of two different-sounding waveforms of the same G3-tone at 195,99 Hz. Frequencies in a harmonically synchronized agent collective will for the first $\phi$-problem resemble the frequencies in \ref{fig:sub:G3_pure_waveform}, since all frequencies in this problem are equal and constant. Conversely, when frequencies can be heterogenous, as in the $\phi$- \& $\omega$-problem, the frequencies in a harmonically synchronized agent collective will rather resemble the frequencies in \ref{fig:sub:G3_hummed_waveform}, where harmonics and overtones (i.e. frequencies in integer-relationships to the fundamental and lowest frequency) are present.}
 	\label{fig:frequency_spectrograms}
 \end{figure}
 
@@ -429,7 +465,7 @@ More accurately then, all musical agents—in a harmonically synchronized state�
 
 
 % Presenting the Performance-measure used to evaluate the implemented methods (Benchmark?):
-\section{Performance-measure: time until goal of harmonic synchrony is detected}
+\section{Performance-measure: time until system target state of harmonic synchrony is detected}
 \label{sec:performance_measure}
 
 Hvordan detektere harmonic synchrony. \nl
