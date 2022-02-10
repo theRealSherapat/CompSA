@@ -1,0 +1,172 @@
+\chapter{Baseline and benchmark}
+\besk{Mellomkapittel om K. Nymoens approach til fase-\&frekvens-synk. Her presenterer jeg baselinen/benchmarken jeg har brukt mesteparten av masterjobbings-tiden på å etterlikne/implementere i Unity}
+	
+	% K. Nymoen's bi-directional phase-adjustment
+	\section{K. Nymoen's bi-directional phase-adjustment} % used 'Shifts' before
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.9\linewidth]{Assets/Figures/KNymoenPhaseAdjustmentSecondTry.pdf}
+		\caption[Illustration of K. Nymoen's bi-directional phase-adjustment]{Bi-directional phase-adjustment with K. Nymoen et al.'s approach}
+		\label{fig:nymoen_phase}
+	\end{figure}
+	
+	This approach to phase-adjustment, as in Figure \ref{fig:nymoen_phase}, works very similarly to the phase-adjustment performed in the ``standard'' \textbf{\textit{Mirollo-Strogatz}} approach presented earlier; the only difference being that now, nodes update their phases with the slightly more complex \textbf{phase update function \eqref{nymoen_phase}} when hearing a ``fire''-event from one of the other musical nodes — allowing for both larger, but also smaller, updated phases compared to the old phases:
+	
+	\begin{equation}
+	\label{nymoen_phase}
+		\phi(t^+)=P(\phi(t)) = \phi(t) - \alpha \cdot sin(2\pi\phi(t)) \cdot | sin(2\pi\phi(t)) |
+	\end{equation}
+	
+	, where $t^+$ denotes the time-step immediately after a ``fire''-event is heard, and $\phi(t)$ is the old frequency of the agent at time $t$.
+	
+	The fact that new and updated phases can both be larger, but also smaller, compared to the old phases, is exactly what's meant by the phase-adjustment being \textbf{\textit{bi-directional}}, or as the authors call it in the paper as using both excitatory and inhibitory phase couplings between oscillators \cite{nymoen_synch}.
+	
+	The effects then of adjusting phases—upon hearing ``fire''-events, according to this newest update-function \eqref{nymoen_phase}—are that the nodes's updated phases $\phi(t^+)$, compared to their old phases $\phi(t)$, now get decreased if $\phi(t)$ is lower than 0.5, increased if $\phi(t)$ is higher than 0.5, and neither—at least almost—if the phases are close to $0.5$. This is due to the negative and positive sign of the sinewave-component in Equation \eqref{nymoen_phase}, as well as the last attenuating factor in it of $| sin(2\pi\phi) | \approx | sin(2\pi \frac{1}{2}) | = | sin(\pi) | = | 0 | = 0$, then if we have $\phi(t) \approx 0.5 = \frac{1}{2}$.
+	
+	
+	
+	
+	% FREQ.-SYNCH APPROACH 2: MID LEVEL Self-Awareness
+	% K. Nymoen's Frequency-Synchronization with some Self-Awareness (which as far as I know only works together with K. Nymoen's Phase-Synchronization)
+	\section{K. Nymoen's middle SA-leveled frequency-adjustment}
+	
+	This approach to Frequency Adjustment stands in contrast to previous approaches to synchronization in oscillators [fixed\_freqs, fixed\_range\_freqs] where the oscillators's frequencies are either equal and fixed, or where frequencies are bound to initialize and stay within a fixed interval/range.
+	
+	In order to achieve this goal of \textit{harmonic synchrony} in conjunction with|or rather through|frequency adjustment, we have to go through a few steps to build a sophisticated enough update-function able to help us achieve this.
+	
+	When it comes to the temporality and timing of when these update functions are used and applied; Musical agents's phases get updated/adjusted immediately as ``fire''-/``flash''-events are perceived, whereas agents's frequencies do not get updated until the end of their oscillator-cycle (i.e. when having a phase-climax $\phi(t)=1$). This is also the reason why frequencies are updated discretely, not continuously. So-called H-values however, being ``contributions'' with which the frequencies are to be updated according to, are immediately calculated and accumulated when agents are perceiving a ``fire''-/``flash''-event — and then finally used for frequency-adjustment/-updating at phase-climaxes.
+			
+	Each agent $i$ update their frequency, on their own phase-climax (i.e. when $\phi_i(t)=1$), according to the frequency-update function $\omega_i(t^+)$:
+	
+	\begin{equation}
+		\omega_i(t^+) = \omega_i(t) \cdot 2^{F(n)},
+	\end{equation}
+	
+	where $t^+$ denotes the time-step immediately after phase-climax, $\omega_i(t)$ is the old frequency of the agent at time $t$, and $F(n) \in [-1,1]$ is a quantity denoting how much and in which direction an agent should update its frequency after having received its $n$th ``fire''-signal.
+	
+	This is how we obtain the aforementioned $F(n)$-quantity:
+	
+	
+	% Om epsilon(n):
+	\subsubsection{Step 1: the ``in/out-of synch'' error-measurement/-score, $\epsilon(\phi(t))$}
+	
+	Describing the error measurements at the n-th ``fire''-event, we introduce an Error Measurement function.
+	
+	The error measurement function \eqref{error_measurement}, plotted in Figure \ref{fig:error_measurement}, is calculated immediately by each agent $i$, having phase $\phi_i(t)$, when a ``fire''-event signal from another agent is detected by agent $i$ at time $t$.
+	
+	\begin{equation}
+	\label{error_measurement}
+		\epsilon(\phi_i(t)) = sin^2(\pi\phi_i(t))
+	\end{equation} \nl
+	
+	\begin{figure}[ht!]
+		\centering
+		\includegraphics[width=0.65\linewidth]{Assets/Figures/PhaseErrorFunction.pdf}
+		\caption[Plot of error-measurement function for K. Nymoen's frequency-adjustment]{Error measurement \eqref{error_measurement} plotted as a function of phase}
+		\label{fig:error_measurement}
+	\end{figure}
+	
+	As we can see from this error-function, the error-score is close to 0 when the agent's phase $\phi_i(t)$ is itself close to 0 or 1 (i.e. the agent either just fired/flashed, or is about to fire/flash very soon). This implies that if it was only short time ago since we just fired, or conversely if there is only short time left until we will fire, we are not much in error or \textit{out-of-synch}. 
+	
+	The error-score is the largest when an agent perceives a ``fire''-signal while being half-way through its own phase (i.e. having phase $\phi(t)=0.5$). We could also then ask ourselves, does not this go against the main/target goal of the system, being \textit{harmonic synchrony} — if agents are allowed to be ``half as fast'' as each other? We could imagine a completely ``legal'' and harmonically synchronous scenario where two agents have half and double the frequency of each other. The agent with half the frequency of the faster agent would then have phase $\phi(t)=0.5$ when it would hear the faster agent ``fire''/``flash'' — leading to its Error-score $\epsilon(0.5) = sin^2(\pi/2) = 1$, which then makes it seem like the slower agent is maximally out of synch, when it is actually perfectly and harmonically synchronized. This calls out for an attenuating mechanism in our frequency update function, in order to ``cancel out'' this contribution so that perfectly harmonically synchronized agents will not be adjusted further despite their high Error-measurement. As we will see below, in Figure \ref{fig:rho_n}, exactly such an attenuating mechanism is utilized in our frequency-adjustment method.
+	
+	This error-measurement/-score forms the basis and fundament for the first component of self-awareness, being the \textit{self-assessed synchrony-score} $s(n)$.
+	
+	% Om s(n):
+	\subsubsection{Step 2: The first self-awareness component, s(n)}
+	This aforementioned self-assessed synchrony-score, $s(n)$, is in fact simply the median of a list containing \textit{m} Error-scores $\epsilon$. Such a list is easily implemented in C\# by declaring a List$<$float$>$ called \textit{errorBuffer} e.g. (i.e. \textit{errorBuffer} is a list containing floating point values):
+	
+	\begin{equation}
+	\label{error_buffer}
+		errorBuffer = \{\epsilon(n), \epsilon(n-1), ... , \epsilon(n-m)\},
+	\end{equation} \nl
+	
+	then leading to:
+	
+	\begin{equation}
+	\label{self_assessed_synch}
+		\begin{array}{rrclcl}
+		s(n) & = & median(errorBuffer) \\ 
+		& = & median(\{\epsilon(n), \epsilon(n-1), ... , \epsilon(n-m)\}) \in [0, 1],
+		\end{array}
+	\end{equation} \nl
+	
+	where $n$ is the latest observed ``fire-event'', and $m$ is the number of the last observed ``fire''-events we would like to take into account when calculating the self-assessed synch-score.
+	
+	If we then have a high $s(n)$-score, it tells us that the median of the $k$ last error-scores is high, or in other words that we have mainly high error-scores — indicating that this agent is out of synch. Conversely, if we have a low $s(n)$-score, indicating mainly low error-scores for the agent — then we have an indication that the agent is in synch, hence leading to low error scores, and in turn low $s(n)$-scores. 
+	
+	In other words, each agent hence has a way to assess themselves in how much in- or out-of-synch they believe they are compared to the rest of the agents. This is then the first degree/aspect of \opphoy{public} self-awareness in the design.
+	
+	% Om rho(n):
+	\subsubsection{Step 3: frequency update amplitude- \& sign-factor, $\rho(n)$}
+	
+	Describing the amplitude and sign of the frequency-modification of the n-th ``fire-event'' received. It is used to say something about in which direction, and in how much, the frequency should be adjusted.
+	
+	\begin{equation}
+	\label{amp_sign_freq_adj}
+		\rho(\phi) = - sin(2\pi\phi(t)) \in [-1, 1]
+	\end{equation}
+	
+	\begin{figure}[ht!]
+		\centering
+		\includegraphics[width=0.65\linewidth]{Assets/Figures/rho_n.pdf}
+		\caption[Plot of amplitude- \& sign-factor for K. Nymoen's frequency-adjustment]{The amplitude- \& sign-factor, $\rho(\phi(t))$, where $\phi(t)$ is the phase of an agent at time $t$ when it heard ``fire''-event $n$. Notice how the amplitude is equal to 0 when the phase is equal to 0,5.}
+		\label{fig:rho_n}
+	\end{figure}
+	
+	For example, if an agent $i$ has phase $\phi_i(t)=1/4$, it gets a value $\rho(1/4) = - sin(\pi/2) = -1$; meaning, the agent's frequency should be decreased (with the highest amplitude actually) in order to "slow down" to wait for the other nodes. Conversely, if an agent $j$ has phase $\phi_j(t)=3/4$, it gets a value $\rho(3/4) = - sin(3/2 \pi) = -(-1) = 1$; meaning, the agent's frequency should be increased (with the highest amplitude) in order to getting "pushed forward" to catch up with the other nodes.
+	
+	Acts as an attenuating factor, when $\phi(t)\approx0.5$, in the making of the H-value — supporting the goal of \textit{harmonic synchrony}.
+
+	% Om H(n)-verdiene:
+	\subsubsection{Step 4: the H-value, and the H(n)-list}
+	
+	The following value, being ``frequency-update-contributions'', is then (as previously mentioned) calculated immediately when the agent perceives another agent's ``flashing''-signal:
+	
+	\begin{equation}
+	\label{h_value}
+		H(n) = \rho(n) \cdot s(n)
+	\end{equation}
+	
+	Here we then multiply the factor $\rho(n)$, depicted in Figure \ref{fig:rho_n}, representing how much, as well as in which direction, the agent should adjust its frequency, together with a factor $s(n) \in [0,1]$ of the adjusting agent's self-assessed synch-score. This means that all the possible values this $H(n)$-value can take, lies within the green zone in Figure \ref{fig:all_possible_H_n_values}. We hence see that the smallest value $H(n)$ can take for the $n$th ``fire''-event is -1, which it does when $\phi(n) = 0.25$ and $s(n) = 1$. The highest value it can take is 1, which it does when $\phi(n) = 0.75$ and $s(n) = 1$. We can also see that even though the self-assessed synch-score $s(n)$ (i.e. the median of error-scores) is high and even the maximum value of 1, thus indicating consistent high error-scores (judging by error-function \eqref{error_measurement} and Figure \ref{fig:error_measurement}) — the ``frequency-update-contribution'' $H(n)$ can in the end be cancelled out, as alluded to before, if in fact the amplitude- \& sign-factor $\rho(n)$ is equal to 0. Hence, if we have two agents then where the one is twice as fast as the other, and we accept the $H(n)$-value as the ``frequency-update-contribution'', the slower agent which will hear ``fire''-events consistently when it has its phase $\phi(n) \approx 0.5$ (if the agents are synchronized) will, even though it gets a high \textit{out-of-synch score} $s(n) \approx 1$, not ``be told'' to adjust its frequency more by getting a large ``frequency-update-contribution'', but in fact ``be told'' not to adjust its frequency more due to the small or cancelled-out ``frequency-update-contribution.''
+	
+	\begin{figure}[ht!]
+		\centering
+		\includegraphics[width=0.65\linewidth]{Assets/Figures/all_possible_H_n_values.pdf}
+		\caption[Plot of all possible frequency-adjustment contribution-values, $H(n)$-values, for K. Nymoen's frequency-adjustment]{All possible $H(n)$-values marked in green, given by $\rho(n) \cdot s(n)$, where $\rho(n)$ is defined as above and depicted in Figure \ref{fig:rho_n}, and the self-assessed synch-scores $s(n) \in [0, 1]$. The $s(n)$-scores were again simply the median of $m$ error-scores \{$\epsilon(n)$, $\epsilon(n-1)$, $\epsilon(n-2)$, ... , $\epsilon(n-m)$\} which again were given by the error-function \eqref{error_measurement} plotted in Figure \ref{fig:error_measurement}. Observe, in conjunction with Equation \eqref{freq_adj}, what the authors \cite{nymoen_synch} point out when describing their frequency update function, when saying that they specify a function that decreases frequency if a fire event is received in the first half of a node's cycle (i.e. phase $\phi(t)<0.5$), and speeds up if in the last half (to ``catch up' with the firing node). Also note how the wanted design of the authors, of causing (close to) 0 change to the frequency half-way through the cycle, is enabled by how the ``frequency-adjustment-contribution'' $H(n)$ can be equal to 0 despite the reacting node having high error scores and a high $s(n)$-score.}
+		\label{fig:all_possible_H_n_values}
+	\end{figure}
+	
+	To recall, the self-assessed synch-score $s(n)$ tells an adjusting agent how in- or out-of-synch it was during the last $m$ perceived ``fire''-/``flash''-events — where $s(n)=0$ signifies a mean of 0 in error-scores, and $s(n)=1$ signifies a mean of 1 in error-scores. So then if this $H$-value is to be used to adjust the nodes's frequencies with, the frequency will then be adjusted in a certain direction and amount (specified by $\rho(n)$) — given that the agent is \textit{enough} ``out of synch''/``unsynchronized'' (in the case $s(n)$ is considerably larger than 0).
+	
+	The H-value says something about how much ``out of phase'' the agent was at the time the agent's $n$th ``flashing''-signal was perceived (and then followingly how much it should be adjusted, as well as in which direction after having been multiplied together with a sign-factor $\rho(n))$, given then that this H-value also consists of the \textit{self-assessed synch score s(n)} — which again simply was the median of the list of error-scores, \textit{errorBuffer} in our case.
+	
+	We could look at this $H$-value as representing the direction and amplitude of the frequency adjustment weighted by the need to adjust (due to being out of synch) at the time of hearing ``fire''-/``flash''-event $n$. Or in other words, this $H$-value is then the $n$-th contribution with which we want to adjust our frequency with.
+	
+	Especially interesting cases are when we have $\phi(n)\approx0.5 \implies \rho(n)\approx\pm0$, as well as the last $m$ Error-scores $\epsilon(n)$ being close to 0, also leading to $s(n)\approx0$. In both of these two cases the entire frequency-adjustment contribution $H$ would be cancelled out, due to harmonic synchronization (legally hearing a ``fire''-/``flash''-event half-way through ones own phase) in the first case, and due to not being out of synch in the latter (having low Error-Measurements). Cancelling out the frequency adjustment contribution in these cases is then not something bad, but something wanted and something that makes sense. If these $H$-values then are cancelled out or very small, it is indicative of that nodes are already in \textit{harmonic synchrony}, and hence should not be ``adjusted away'' from this goal state. On the other side, if these $H$-values then are different (e.g. closer to -1 and 1), it is indicative of that nodes are not yet in \textit{harmonic synchrony}, and that they hence should be ``adjusted closer'' to the goal state.
+	
+	All the calculated H-values are in my implementation accumulated and stored in an initially empty C\#-list (of floats), referred to as $H(n)$, at once they are calculated. The $H(n)$-list is then consecutively ``cleared out'' or ``flushed'' when its H-values have been used for the current cycle/period's frequency adjustment (i.e. at the phase climax, when $\phi(t)=1$), and is then ready to accumulate new H-values during the next cycle/period.
+	
+	% Om F(n) og selve oppdateringen av frekvens:
+	\subsubsection{The final step: the frequency update function, $\omega_i(t^+)$}
+	
+	Now, we can pull it all together, for Nymoen et al.'s Frequency Adjustment approach for achieving harmonic synchrony with initially randomized and heterogenous frequencies.
+	
+	When an agent $i$ has a phase-climax ($\phi_i(t)=1$), it will update/adjust its frequency to the new $\omega_i(t^+)$ accordingly:
+	
+	\begin{equation}
+	\label{freq_adj}
+		\omega_i(t^+) = \omega_i(t) \cdot 2^{F(n)},
+	\end{equation}
+	
+	where $t^+$ denotes the time-step immediately after phase-climax, and $F(n)$ is found by:
+	
+	\begin{equation}
+	\label{f_value}
+		F(n) = \beta\sum_{x=0}^{k-1}\frac{H(n-k)}{k},
+	\end{equation}
+	
+	where $\beta$ is the frequency coupling constant, $k$ is the number of heard/received ``fire-event''s from the start of the last cycle/period to the end (i.e. the phase-climax, or \textit{now}) — and the rest of the values are as described above.
+	
+	This $F(n)$-value then, as we see in Equation \eqref{f_value}, is a weighted average of all the agent's $H(n)$-values accumulated throughout the agent's last cycle.
