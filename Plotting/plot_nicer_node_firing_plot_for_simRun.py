@@ -4,37 +4,50 @@ import csv
 import matplotlib.pyplot as plt
 
 samplingRate = 100 # Hz                                                                             POTENTIAL SOURCE OF ERROR
-colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
+colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k', 'w']
+symbols = ['X', 'o', 's', 'p', 'P', 'D', '|', '*'] # symmetric ones
 
 def main(csv_filename):
     times, t_f_is_now_samples, datapointArray = parseDataFrom(csv_filename)
     
     plotANicePlot(times, t_f_is_now_samples, datapointArray)
     
-    # plotAllColsVsTime(times, datapointArray)
-    
-
 def plotANicePlot(timeArray, t_fArray, nodesFiringMatrix):
     plt.close("all") # First clearing all other opened figures.
-
-    for col_index in range(nodesFiringMatrix.shape[1]):
-        labelString = "Agent " + str(col_index) + " fired"
-        yHeight = (nodesFiringMatrix.shape[1]-col_index)
-        plotBooleanStripWithSymbolAtHeight(nodesFiringMatrix[:,col_index], 2*col_index, col_index, timeArray, yHeight)
-        # fOfT = nodesFiringMatrix[:,col_index] + yHeight
-        # plt.plot(timeArray, fOfT, label=labelString)
     
-    plt.xlabel("Time in seconds")
-    plt.ylabel("Agent # firing")
-    # plt.legend(loc='upper right')
-    plt.title("Node-firing plot")
-    plt.show()
+    plot_t_f_is_now_background(timeArray, t_fArray)
+    
+    plotAllAgentData(timeArray, nodesFiringMatrix)
+    
+    finishAndShowPlot(timeArray)
+    
+def plot_t_f_is_now_background(timeArray, t_fArray):
+    shadeStopAndStartIndexes = get_t_f_is_now_highs_start_and_stop_indexes(t_fArray)
+    
+    for shadePair in shadeStopAndStartIndexes:
+        plt.axvspan(shadePair[0]/samplingRate, shadePair[1]/samplingRate, facecolor='0.8', alpha=0.8, zorder=-100)
+        
+def get_t_f_is_now_highs_start_and_stop_indexes(floatArray):
+    indexes = [0]
+    
+    for i in range(len(floatArray)):
+        if not (i == 0 or i == (len(floatArray)-1)): # making sure we're not in the ends so we can check the previous and next alleles
+            if floatArray[i] == 1.0: # then we know we have a possible candidate-index
+                if (floatArray[i-1] == 0.0 and floatArray[i+1] == 1.0) or (floatArray[i-1] == 1.0 and floatArray[i+1] == 0.0): # then we have either a start of a t_f_is_now or an end (a.k.a. a winner)
+                    indexes.append(i)
+                    
+    indexes.append(len(floatArray)-1) # appending the final "quiet" time-window (after the last t_f_is_now-window has happened)
+            
+    return np.array(indexes).reshape(-1, 2) # reshaping so that to-be-colored-x-intervals come in pairs
 
-def plotBooleanStripWithSymbolAtHeight(boolStrip, symbol, colorIndex, tArray, yCoordinate):
+def plotAllAgentData(timeArray, nodesFiringMatrix):
+    for col_index in range(nodesFiringMatrix.shape[1]):
+        plotBooleanStripWithSymbolAtHeight(nodesFiringMatrix[:,col_index], col_index, timeArray)
+
+def plotBooleanStripWithSymbolAtHeight(boolStrip, agentIndex, tArray):
     for stripIndex in range(boolStrip.shape[0]):
         if boolStrip[stripIndex] == 1.0:
-            # print("Hi! I want to plot a point at x=" + str(tArray[stripIndex]) + " , y=" + str(yCoordinate))
-            plt.plot(tArray[stripIndex], yCoordinate, marker=symbol, color=colors[colorIndex])
+            plt.plot(tArray[stripIndex], agentIndex+1, marker=symbols[agentIndex%len(symbols)], markersize=2.3, color=colors[agentIndex%len(colors)])
 
 def parseDataFrom(csv_filename):
     """ Reads all rows (apart from the header) into a numpy data-matrix, and returns that 'arrayOfDatapoints' and its corresponding vertical time-axis 't' """
@@ -59,14 +72,22 @@ def parseDataFrom(csv_filename):
             numOfRows += 1
             
     
-    t = np.linspace(0, numOfRows*(1/samplingRate), numOfRows-1) # In reality we start sampling after a split-second long startup-phase in Unity.
+    t = np.linspace(0, numOfRows*(1/samplingRate), numOfRows+1) # In reality we start sampling after a split-second long startup-phase in Unity.
     
     t_f_is_now_samples = arrayOfDatapoints[:,0]
     
     datapointArray = arrayOfDatapoints[:,1:]
     
-    return t, t_f_is_now_samples, datapointArray[2:,:] # Slicing from index 2 due to initialization values being huuuuge.
-    
+    return t, t_f_is_now_samples, datapointArray # Slicing from index 2 due to initialization values being huuuuge.
+
+def finishAndShowPlot(timeArray):
+    plt.xlim(0, timeArray[-1])
+    plt.xlabel("Simulation time")
+    plt.ylabel("Agent # firing")
+    plt.gca().invert_yaxis()
+    plt.title("Node-firing plot")
+    plt.show()
+
 if __name__ == "__main__":
     """ Functionality:
             Takes in the .CSV filename to extract and plot data from, the amount of agents we have data for.
