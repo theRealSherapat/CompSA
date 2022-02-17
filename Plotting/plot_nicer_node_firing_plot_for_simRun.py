@@ -82,10 +82,9 @@ def parseDataFrom(csv_filename):
 
 def finishAndShowPlot(timeArray):
     plt.xlim(0, timeArray[-1])
-    plt.xlabel("Simulation time")
+    plt.xlabel("Simulation time (seconds)")
     plt.ylabel("Agent # firing")
     plt.gca().invert_yaxis()
-    plt.title("Node-firing plot")
     plt.show()
 
 if __name__ == "__main__":
