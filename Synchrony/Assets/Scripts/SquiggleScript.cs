@@ -143,7 +143,7 @@ public class SquiggleScript : MonoBehaviour {
 
     private void NotifyMyCreator() {
         // Notifying my creator so that it can record my fire-event for the creation of the Node-firing-plot
-        myCreator.IJustHeardSomeoneFire(agentID);
+        myCreator.IJustHeardAFireEvent(agentID);
     }
 
     private void NotifyTheHuman() {

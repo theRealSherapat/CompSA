@@ -118,4 +118,8 @@ public static class DavidsUtils { // HUSK AT Å KALLE DET DavidsUtils KAN VÆRE UÆ
         string currentScene = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene(currentScene);
     }
+	
+	private static void QuitMyGame() {
+        UnityEditor.EditorApplication.isPlaying = false;
+    }
 }
