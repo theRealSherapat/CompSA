@@ -78,10 +78,9 @@ public class AgentManager : MonoBehaviour {
 	private List<float> late_reset_defining_times = new List<float>();
 	private bool first_late_reset_defining_time_added = false;
 	
-	private bool[] agentiHasFiredAtLeastOnce = new bool[collectiveSize]; // An array with as many boolean values as there are agents, which are to be put "high"/true if agent with agentID fired at least once during the simulation-run.	// HUSK Å SETTE DENNE ARRAYEN TIL EN NY BOOL-ARRAY MED FALSE-DEFAULTVERDIER.
+	private bool[] agentiHasFiredAtLeastOnce;
 	private bool hSynchConditionsAreMet = false; // A boolean that should be true no sooner than when all the conditions for the achievement of Harmonic Synchrony are fulfilled.
 	private int equal_t_q_streak_counter = 0; // to become equal to 'k'.
-	
 	
 
     // ------- END OF Variable Declarations -------
@@ -96,8 +95,11 @@ public class AgentManager : MonoBehaviour {
         // Speeding up or down the simulation if that is wanted
         Time.timeScale = adjustedTimeScale;
 
-        // Spawning all agents randomly (but pretty naively as of now)
-        SpawnAgents();
+		// Initializing an array with as many boolean values as there are agents, which are to be put "high"/true if agent with agentID fired at least once during the simulation-run.
+		agentiHasFiredAtLeastOnce = new bool[collectiveSize];
+
+		// Spawning all agents randomly (but pretty naively as of now)
+		SpawnAgents();
 
         // Creating all .CSV-files I want to update throughout the simulation 
         CreateAllCSVFiles();
@@ -142,7 +144,7 @@ public class AgentManager : MonoBehaviour {
 	
 	private void EndSimulationRunIfTerminationCriteriaAreReached() {
         // If the simulation has either succeeded, or failed: save the corresponding datapoint and move on.
-        if SimulationRunEitherSucceededOrFailed() {
+        if (SimulationRunEitherSucceededOrFailed()) {
             // Signifying that I am done with one simulator-run
             atSimRun++;
 
@@ -270,26 +272,26 @@ public class AgentManager : MonoBehaviour {
 		
 		
 			// THE REAL PSEUDO-LOGIC:
-		if !ItIsLegalToFireNow() { // the 3)-"reset t_q"-process is started
+		if (!ItIsLegalToFireNow()) { // the 3)-"reset t_q"-process is started
 			StartTheResetTQProcess();
 		}
 		
-		if !FirstFiringHasBeenPerceived() { // the 1)-step is performed
+		if (!FirstFiringHasBeenPerceived()) { // the 1)-step is performed
 			PerformTheFirstSynchMeasureStep();
 		}
 		
-		if EarlyDefiningMedianIsInTheMaking() { // estimating the first "holdepunkt", median_1, for defining the new t_q-estimate (given by B-sketch)
+		if (EarlyDefiningMedianIsInTheMaking()) { // estimating the first "holdepunkt", median_1, for defining the new t_q-estimate (given by B-sketch)
 			AddEarlyResetDefiningTime(Time.timeSinceLevelLoad);
 			
-			if !FirstEarlyResetDefiningTimeIsAdded() {
+			if (!FirstEarlyResetDefiningTimeIsAdded()) {
 				TriggerDefineEarlyMedian();
 			}
 		}
 		
-		if LateDefiningMedianIsInTheMaking() { // estimating the second "holdepunkt", median_2, for defining the new t_q-estimate (given by B-sketch)
+		if (LateDefiningMedianIsInTheMaking()) { // estimating the second "holdepunkt", median_2, for defining the new t_q-estimate (given by B-sketch)
 			AddLateResetDefiningTime(Time.timeSinceLevelLoad);
 			
-			if !FirstLateResetDefiningTimeIsAdded() {
+			if (!FirstLateResetDefiningTimeIsAdded()) {
 				TriggerDefineNewTQ();
 			}
 		}
@@ -303,7 +305,7 @@ public class AgentManager : MonoBehaviour {
 	}
 	
 	private void DefineNewTQ() {
-		new_t_q_estimate = ListMedian(late_reset_defining_times) - early_median_time - t_f_duration;
+		float new_t_q_estimate = ListMedian(late_reset_defining_times) - early_median_time - t_f_duration;
 		medians_acquired = 0; // Resetting median-counter despite its true-value of 2 (for the next possible TQ-resetting).
 		// the 4)-"t_q-reset"-processclosing is executed:
 		t_q = new_t_q_estimate;
@@ -633,7 +635,7 @@ public class AgentManager : MonoBehaviour {
 				//synchedFiringTimeErrorSpread = ListAverage(synchedFiringTimeErrorSpreads);
 				//synchedFiringTimeErrorSpread = t_f_firing_times.LastOrDefault() - t_f_firing_times.FirstOrDefault();
 				//t_f_firing_times.Clear();
-			}
+			//}
 
 
     // ------- END OF Performance-measure Termination-evaluation Functions/-Methods -------
