@@ -3,9 +3,9 @@ import numpy as np
 import csv
 import matplotlib.pyplot as plt
 
-samplingRate = 100 # Hz                                                                             POTENTIAL SOURCE OF ERROR
+samplingRate = 100 # Hz                                                                 POTENTIAL SOURCE OF ERROR
 colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k', 'w']
-symbols = ['X', 'o', 's', 'p', 'P', 'D', '|', '*'] # symmetric ones
+symbols = ['X', 'o', 's', 'p', 'P', 'D', '|', '*'] # symmetric markers
 
 def main(csv_filename):
     times, t_f_is_now_samples, datapointArray = parseDataFrom(csv_filename)
@@ -19,7 +19,9 @@ def plotANicePlot(timeArray, t_fArray, nodesFiringMatrix):
     
     plotAllAgentData(timeArray, nodesFiringMatrix)
     
-    finishAndShowPlot(timeArray)
+    yticks = range(nodesFiringMatrix.shape[1]+1)[1:]
+    
+    finishAndShowPlot(timeArray, yticks)
     
 def plot_t_f_is_now_background(timeArray, t_fArray):
     shadeStopAndStartIndexes = get_t_f_is_now_highs_start_and_stop_indexes(t_fArray)
@@ -47,7 +49,7 @@ def plotAllAgentData(timeArray, nodesFiringMatrix):
 def plotBooleanStripWithSymbolAtHeight(boolStrip, agentIndex, tArray):
     for stripIndex in range(boolStrip.shape[0]):
         if boolStrip[stripIndex] == 1.0:
-            plt.plot(tArray[stripIndex], agentIndex+1, marker=symbols[agentIndex%len(symbols)], markersize=2.3, color=colors[agentIndex%len(colors)])
+            plt.plot(tArray[stripIndex], int(agentIndex+1), marker=symbols[agentIndex%len(symbols)], markersize=2.3, color=colors[agentIndex%len(colors)])
 
 def parseDataFrom(csv_filename):
     """ Reads all rows (apart from the header) into a numpy data-matrix, and returns that 'arrayOfDatapoints' and its corresponding vertical time-axis 't' """
@@ -80,10 +82,11 @@ def parseDataFrom(csv_filename):
     
     return t, t_f_is_now_samples, datapointArray # Slicing from index 2 due to initialization values being huuuuge.
 
-def finishAndShowPlot(timeArray):
+def finishAndShowPlot(timeArray, yticks):
     plt.xlim(0, timeArray[-1])
     plt.xlabel("Simulation time (seconds)")
-    plt.ylabel("Agent # firing")
+    plt.ylabel("Node # firing")
+    plt.yticks(yticks)
     plt.gca().invert_yaxis()
     plt.show()
 
