@@ -169,19 +169,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collectiveSize: 3
   simulationRuns: 1
-  runDurationLimit: 40
+  runDurationLimit: 60
   adjustedTimeScale: 1
   squigglePrefabs:
   - {fileID: 2285719835394980754, guid: c314eb5130117ec42b02442ea979e2a7, type: 3}
   - {fileID: 8768706482228693545, guid: 99dff3106accb1b46a953f4ffd8d9d57, type: 3}
   - {fileID: 7619773679480578012, guid: 80b6bc4a677099a41b9e98ea3171fe5b, type: 3}
-  spawnRadius: 15
-  t_f: 0.08
-  k: 12
+  spawnRadius: 10
   phaseCSVPathStart: C:\Users\david\Documents\OrdentligeMapper\CompSA\Synchrony\SavedData\Phases\phases_over_time
   frequencyCSVPathStart: C:\Users\david\Documents\OrdentligeMapper\CompSA\Synchrony\SavedData\Frequencies\freqs_over_time
   nodeFiringDataPathStart: C:\Users\david\Documents\OrdentligeMapper\CompSA\Synchrony\SavedData\NodeFiringPlotMaterial\node_firing_data
   datasetPath: C:\Users\david\Documents\OrdentligeMapper\CompSA\Synchrony\SavedData\synchronyDataset.csv
+  t_f_duration: 0.08
+  k: 8
 --- !u!1 &1150399571
 GameObject:
   m_ObjectHideFlags: 0

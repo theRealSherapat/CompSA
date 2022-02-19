@@ -145,11 +145,11 @@ public class AgentManager : MonoBehaviour {
 	private void EndSimulationRunIfTerminationCriteriaAreReached() {
         // If the simulation has either succeeded, or failed: save the corresponding datapoint and move on.
         if (SimulationRunEitherSucceededOrFailed()) {
-            // Signifying that I am done with one simulator-run
-            atSimRun++;
-
             // Saving a successful or unsuccessful data-point
             SaveDatapointToDataset(Time.timeSinceLevelLoad);
+
+            // Signifying that I am done with one simulator-run
+            atSimRun++;
 
             if (atSimRun != simulationRuns) {
                 ResetSimulationVariables();
@@ -272,7 +272,10 @@ public class AgentManager : MonoBehaviour {
 		
 		
 			// THE REAL PSEUDO-LOGIC:
-		if (!ItIsLegalToFireNow()) { // the 3)-"reset t_q"-process is started
+		if (!ItIsLegalToFireNow() && !reset_t_q_flag) { // the 3)-"reset t_q"-process is started if not started already
+																																		// BARE FOR TESTING
+			Debug.Log("Illegal firing! Even-beat-counter towards k=" + k + ":    " + equal_t_q_streak_counter);
+
 			StartTheResetTQProcess();
 		}
 		
@@ -301,14 +304,24 @@ public class AgentManager : MonoBehaviour {
 	private void TriggerDefineNewTQ() {
 		first_late_reset_defining_time_added = true;
 		t_f_is_now = true; // Setting off a t_f_is_now-period. 					 	// KANSKJE PLASSER NEDERST I FUNKSJONEN
-		Invoke("DefineNewTQ", t_f_duration);
+		Invoke("DefineNewTQ", t_f_duration/2f);
 	}
 	
 	private void DefineNewTQ() {
 		float new_t_q_estimate = ListMedian(late_reset_defining_times) - early_median_time - t_f_duration;
 		medians_acquired = 0; // Resetting median-counter despite its true-value of 2 (for the next possible TQ-resetting).
 		// the 4)-"t_q-reset"-processclosing is executed:
+
+																																					// BARE FOR TESTING
+		Debug.Log("late_median_time: " + ListMedian(late_reset_defining_times) + ", early_median_time: " + early_median_time + ". new_t_q_estimate = late_median_time - early_median_time - t_f_duration: " + new_t_q_estimate + ".");
+		Debug.Log("Old t_q-window was: " + t_q);
+
 		t_q = new_t_q_estimate;
+
+																																					// BARE FOR TESTING
+		Debug.Log("New t_q-window is now: " + t_q);
+
+
 		RestartTFTQWindows();
 		// Variabel-opprydning:
 		reset_t_q_flag = false;
@@ -328,12 +341,22 @@ public class AgentManager : MonoBehaviour {
 	
 	private void TriggerTFPeriod() {
 		t_f_is_now = true;
+																																				// BARE FOR TESTING
 		if (reset_t_q_flag) Debug.Log("Hæ? Er ikke dette umulig? Jeg tror du kanskje har feil/hull i logikken din...");
+		Debug.Log("Even-beat-counter towards k=" + k + ":    " + equal_t_q_streak_counter);
 		equal_t_q_streak_counter ++;
 		Invoke("TriggerTQPeriod", t_f_duration);
 	}
-	
-	
+
+	//private void TriggerHalfTFPeriod() {
+	//	t_f_is_now = true;
+	//	if (reset_t_q_flag) Debug.Log("Hæ? Er ikke dette umulig? Jeg tror du kanskje har feil/hull i logikken din...");
+	//	Debug.Log("Starting over with a new t_q-value of " + t_q + ". Even-beat-counter towards k=" + k + ":    " + equal_t_q_streak_counter);
+	//	equal_t_q_streak_counter++;
+	//	Invoke("TriggerTQPeriod", t_f_duration/2f);
+	//}
+
+
 	private void TriggerDefineEarlyMedian() {
 		first_early_reset_defining_time_added = true;
 		t_f_is_now = true; 															// KANSKJE PLASSER NEDERST I FUNKSJONEN
@@ -361,23 +384,29 @@ public class AgentManager : MonoBehaviour {
 	
 	private void AddLateResetDefiningTime(float simulationTimeInSeconds) {
 		late_reset_defining_times.Add(simulationTimeInSeconds);
+																										// BARE FOR TESTING
+		//Debug.Log("Late Reset Defining Times: ");
+		//DebugLogMyFloatList(late_reset_defining_times);
 	}
 	
 	private void AddEarlyResetDefiningTime(float simulationTimeInSeconds) {
 		early_reset_defining_times.Add(simulationTimeInSeconds);
+																										// BARE FOR TESTING
+		//Debug.Log("Early Reset Defining Times: ");
+		//DebugLogMyFloatList(early_reset_defining_times);
 	}
 	
 	
 	private bool LateDefiningMedianIsInTheMaking() {
 		// Returning true if the 3)-"reset t_q"-process is started, the candidate late median definer is far enough away from the early median time (to avoid negative numbers), the early median has been found but the late and second median still hasn't been used to define the new t_q-estimate through the DefineNewTQ()-function. Returns false otherwise.
 		
-		return reset_t_q_flag && (Time.timeSinceLevelLoad > (early_median_time + t_f_duration)) && (medians_acquired == 1);
+		return (reset_t_q_flag && (Time.timeSinceLevelLoad > (early_median_time + t_f_duration)) && (medians_acquired == 1));
 	}
 	
 	private bool EarlyDefiningMedianIsInTheMaking() {
 		// Returning true if the 3)-"reset t_q"-process is started, the candidate early median definer is far enough away from the reset-triggering firing-time (to avoid negative numbers), and the early and first median still haven't been acquired through the DefineEarlyMedian()-function. Returns false otherwise.
 		
-		return reset_t_q_flag && (Time.timeSinceLevelLoad > (reset_t_q_flag_raiser + t_f_duration)) && (medians_acquired == 0);
+		return (reset_t_q_flag && (Time.timeSinceLevelLoad > (reset_t_q_flag_raiser + t_f_duration)) && (medians_acquired == 0));
 	}
 	
 	
@@ -402,8 +431,8 @@ public class AgentManager : MonoBehaviour {
 	
     
 	private void StartTheResetTQProcess() {
-		CancelInvoke(); // Cancelling all currently ongoing Invoke-calls. 	PASS PÅ SÅ DU IKKE CANCELLER DefineEarlyMedian- ELLER DefineNewTQ-Invokesa MED ET UHELL HER.
-		reset_t_q_flag_raiser 		= Time.timeSinceLevelLoad;
+        CancelInvoke(); // Cancelling all currently ongoing Invoke-calls. 	PASS PÅ SÅ DU IKKE CANCELLER DefineEarlyMedian- ELLER DefineNewTQ-Invokesa MED ET UHELL HER.
+        reset_t_q_flag_raiser 		= Time.timeSinceLevelLoad;
 		reset_t_q_flag 				= true;
 		equal_t_q_streak_counter 	= 0;
 	}
