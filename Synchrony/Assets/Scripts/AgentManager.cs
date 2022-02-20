@@ -81,7 +81,8 @@ public class AgentManager : MonoBehaviour {
 	private bool[] agentiHasFiredAtLeastOnce;
 	private bool hSynchConditionsAreMet = false; // A boolean that should be true no sooner than when all the conditions for the achievement of Harmonic Synchrony are fulfilled.
 	private int equal_t_q_streak_counter = 0; // to become equal to 'k'.
-	
+
+	private int last_t_f_firers_counter = 0;
 
     // ------- END OF Variable Declarations -------
 
@@ -116,7 +117,7 @@ public class AgentManager : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        // Updating all my CSV-files with a constant interval (here at the rate at which FixedUpdate() is called, hence at 50Hz)
+        // Updating all my CSV-files with a constant interval (here at the rate at which FixedUpdate() is called, hence at 50Hz atm)
         UpdateAllCSVFiles();
     }
 
@@ -298,8 +299,16 @@ public class AgentManager : MonoBehaviour {
 				TriggerDefineNewTQ();
 			}
 		}
+
+		// Safety-mechanism prohibiting the TowardsKCounter, equal_t_q_streak_counter, to hit 'k' when no nodes are firing within the t_f-periods/-windows
+		if (FiringWasPerceivedDuringTF()) {
+			last_t_f_firers_counter++;
+		}
 	}
 	
+	private bool FiringWasPerceivedDuringTF() {
+		return t_f_is_now;
+	}
 	
 	private void TriggerDefineNewTQ() {
 		first_late_reset_defining_time_added = true;
@@ -324,7 +333,7 @@ public class AgentManager : MonoBehaviour {
 
 		RestartTFTQWindows();
 		// Variabel-opprydning:
-		reset_t_q_flag = false;
+																																			//reset_t_q_flag = false;
 		late_reset_defining_times.Clear();
 		first_late_reset_defining_time_added = false;
 	}
@@ -336,15 +345,32 @@ public class AgentManager : MonoBehaviour {
 	
 	private void TriggerTQPeriod() {
 		t_f_is_now = false;
+
+		IncrementTowardsKCounterIfWanted();
+		if (reset_t_q_flag) reset_t_q_flag = false;
+		ResetLastTFFirersCounter();
+
+		Debug.Log("Even-beat-counter towards k=" + k + ":    " + equal_t_q_streak_counter);
 		Invoke("TriggerTFPeriod", t_q);
 	}
-	
+
+	private void ResetLastTFFirersCounter() {
+		last_t_f_firers_counter = 0;
+    }
+
+	private void IncrementTowardsKCounterIfWanted() {
+		// Ignoring the first counter-increment, so that the ending of the simulation-run actually follows 'Condition 2', relating to k.
+		// Ignoring, for the sake of 'Condition 2' and the TowardsKCounter equal_t_q_streak_counter, "successfully" finished t_f-windows if no nodes fired during it.
+		// Incrementing the counter otherwise.
+
+		if (!reset_t_q_flag && last_t_f_firers_counter != 0) equal_t_q_streak_counter++;
+	}
+
+
 	private void TriggerTFPeriod() {
 		t_f_is_now = true;
 																																				// BARE FOR TESTING
 		if (reset_t_q_flag) Debug.Log("Hæ? Er ikke dette umulig? Jeg tror du kanskje har feil/hull i logikken din...");
-		equal_t_q_streak_counter ++;
-		Debug.Log("Even-beat-counter towards k=" + k + ":    " + equal_t_q_streak_counter);
 		Invoke("TriggerTQPeriod", t_f_duration);
 	}
 

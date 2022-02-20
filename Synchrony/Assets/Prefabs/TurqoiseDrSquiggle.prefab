@@ -167,7 +167,7 @@ MonoBehaviour:
   minMaxInitialFreqs: {x: 0.1, y: 4}
   t_ref_perc_of_period: 0.1
   useSound: 1
-  useVisuals: 1
+  useVisuals: 0
 --- !u!1 &7619773679695212229
 GameObject:
   m_ObjectHideFlags: 0
