@@ -7,6 +7,8 @@ samplingRate = 100 # Hz                                                         
 colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k', 'w']
 symbols = ['X', 'o', 's', 'p', 'P', 'D', '|', '*'] # symmetric markers
 
+# POSSIBLE TODO: DU KAN "FAKE" PLOTTET LITT SÅNN AT ALLE DE HVITE VINDUENE I PLOTTET HAR VERDIEN TIL t_f (MEN ER DET ERLIG? ALLE ER JO IKKE DET, NOEN ER t_f/2).
+
 def main(csv_filename):
     times, t_f_is_now_samples, datapointArray = parseDataFrom(csv_filename)
     
@@ -38,9 +40,16 @@ def get_t_f_is_now_highs_start_and_stop_indexes(floatArray):
                 if (floatArray[i-1] == 0.0 and floatArray[i+1] == 1.0) or (floatArray[i-1] == 1.0 and floatArray[i+1] == 0.0): # then we have either a start of a t_f_is_now or an end (a.k.a. a winner)
                     indexes.append(i)
                     
-    indexes.append(len(floatArray)-1) # appending the final "quiet" time-window (after the last t_f_is_now-window has happened)
-            
-    return np.array(indexes).reshape(-1, 2) # reshaping so that to-be-colored-x-intervals come in pairs
+    # indexes.append(len(floatArray)-1) # appending the final "quiet" time-window (after the last t_f_is_now-window has happened)
+    
+    pairRows = np.array(indexes)
+    if pairRows.size % 2 == 0:
+        pairRows = pairRows.reshape(-1, 2)
+    else:
+        pairRows = np.append(pairRows, len(floatArray)-1).reshape(-1, 2)
+    
+    
+    return pairRows # reshaping so that to-be-colored-x-intervals come in pairs
 
 def plotAllAgentData(timeArray, nodesFiringMatrix):
     for col_index in range(nodesFiringMatrix.shape[1]):

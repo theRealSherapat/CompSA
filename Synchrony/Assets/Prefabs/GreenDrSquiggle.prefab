@@ -355,7 +355,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alpha: 0.2
-  useNymoenPhaseAdj: 0
+  useNymoenPhaseAdj: 1
   useNymoenFreqAdj: 0
   beta: 0.8
   m: 5

@@ -313,13 +313,13 @@ public class AgentManager : MonoBehaviour {
 		// the 4)-"t_q-reset"-processclosing is executed:
 
 																																					// BARE FOR TESTING
-		Debug.Log("late_median_time: " + ListMedian(late_reset_defining_times) + ", early_median_time: " + early_median_time + ". new_t_q_estimate = late_median_time - early_median_time - t_f_duration: " + new_t_q_estimate + ".");
-		Debug.Log("Old t_q-window was: " + t_q);
+		//Debug.Log("late_median_time: " + ListMedian(late_reset_defining_times) + ", early_median_time: " + early_median_time + ". new_t_q_estimate = late_median_time - early_median_time - t_f_duration: " + new_t_q_estimate + ".");
+		//Debug.Log("Old t_q-window was: " + t_q);
 
 		t_q = new_t_q_estimate;
 
 																																					// BARE FOR TESTING
-		Debug.Log("New t_q-window is now: " + t_q);
+		//Debug.Log("New t_q-window is now: " + t_q);
 
 
 		RestartTFTQWindows();
@@ -343,19 +343,10 @@ public class AgentManager : MonoBehaviour {
 		t_f_is_now = true;
 																																				// BARE FOR TESTING
 		if (reset_t_q_flag) Debug.Log("Hæ? Er ikke dette umulig? Jeg tror du kanskje har feil/hull i logikken din...");
-		Debug.Log("Even-beat-counter towards k=" + k + ":    " + equal_t_q_streak_counter);
 		equal_t_q_streak_counter ++;
+		Debug.Log("Even-beat-counter towards k=" + k + ":    " + equal_t_q_streak_counter);
 		Invoke("TriggerTQPeriod", t_f_duration);
 	}
-
-	//private void TriggerHalfTFPeriod() {
-	//	t_f_is_now = true;
-	//	if (reset_t_q_flag) Debug.Log("Hæ? Er ikke dette umulig? Jeg tror du kanskje har feil/hull i logikken din...");
-	//	Debug.Log("Starting over with a new t_q-value of " + t_q + ". Even-beat-counter towards k=" + k + ":    " + equal_t_q_streak_counter);
-	//	equal_t_q_streak_counter++;
-	//	Invoke("TriggerTQPeriod", t_f_duration/2f);
-	//}
-
 
 	private void TriggerDefineEarlyMedian() {
 		first_early_reset_defining_time_added = true;
