@@ -110,9 +110,6 @@ public class SquiggleScript : MonoBehaviour {
 
 
 
-
-
-
     // ------- START OF Core-/Essential Functions/Methods -------
 
     private void OnPhaseClimax() {
