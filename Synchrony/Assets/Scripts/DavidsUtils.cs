@@ -122,4 +122,9 @@ public static class DavidsUtils { // HUSK AT Å KALLE DET DavidsUtils KAN VÆRE UÆ
 	public static void QuitMyGame() {
         UnityEditor.EditorApplication.isPlaying = false;
     }
+
+    public static string BoolToString(bool value) {
+        if (value) return "True";
+        else return "False";
+    }
 }

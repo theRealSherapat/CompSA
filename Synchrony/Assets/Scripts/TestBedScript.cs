@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 using static DavidsUtils;
 
 public class TestBedScript : MonoBehaviour {
@@ -18,27 +19,27 @@ public class TestBedScript : MonoBehaviour {
     void Start() {
 
         // Tester konverteringen fra ARRAY -> LIST
-        agentIDer = new int[10];
+        //agentIDer = new int[10];
 
-        agentIDer[3] = 1;
-        agentIDer[5] = 1;
-        agentIDer[7] = 1;
-        agentIDer[1] = 1;
-        agentIDer[0] = 1;
+        //agentIDer[3] = 1;
+        //agentIDer[5] = 1;
+        //agentIDer[7] = 1;
+        //agentIDer[1] = 1;
+        //agentIDer[0] = 1;
 
-        DebugLogMyIntArray(agentIDer);
+        //DebugLogMyIntArray(agentIDer);
 
         //List<object> list = agentIDer.Cast<Object>().ToList();
-        List<int> nyeListo = new List<int>(agentIDer);
+        //List<int> nyeListo = new List<int>(agentIDer);
 
-        DebugLogMyIntList(nyeListo);
+        //DebugLogMyIntList(nyeListo);
 
 
         // Tester list-shifteren:
-        //errorBuffer.Add(0.01f);
-        //errorBuffer.Add(0.02f);
-        //errorBuffer.Add(0.03f);
-        //errorBuffer.Add(0.04f);
+        errorBuffer.Add(0.01f);
+        errorBuffer.Add(0.02f);
+        errorBuffer.Add(0.03f);
+        errorBuffer.Add(0.04f);
 
         // Jeg tester hvordan boolske arrays fungerer i C#
         //agentIHasFired = new bool[errorBuffer.Count];
@@ -70,19 +71,18 @@ public class TestBedScript : MonoBehaviour {
         //}
 
         // Jeg shifter alle Liste-verdier ved 'Space'-tastetrykk, og skriver ut Lista ved et 'p'-tastetrykk. Sorterer Lista og skriver ut ved 's'.
-        //if (Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    ShiftListWith(Random.Range(-20f, 20f));
-        //} else if (Input.GetKeyDown(KeyCode.P)) {
-        //    // FOR Å TESTE LIST-SHIFTEREN:
-        //    DebugLogMyFloatList(errorBuffer);
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            ShiftListWith(Random.Range(-20f, 20f));
+        } else if (Input.GetKeyDown(KeyCode.P)) {
+            // FOR Å TESTE LIST-SHIFTEREN:
+            DebugLogMyFloatList(errorBuffer);
 
-        //    // FOR Å TESTE CSV-LAGRINGEN:
-        //    //Debug.Log(System.IO.Directory.GetCurrentDirectory() + "\\" + "minForsteDataFil.csv");
-        //    //foreach (int squig in squiggleIDer) {
-        //    //    Debug.Log(squig);
-        //    //}
-        //}
+            //    // FOR Å TESTE CSV-LAGRINGEN:
+            //    //Debug.Log(System.IO.Directory.GetCurrentDirectory() + "\\" + "minForsteDataFil.csv");
+            //    //foreach (int squig in squiggleIDer) {
+            //    //    Debug.Log(squig);
+            //    //}
+        }
         //else if (Input.GetKeyDown(KeyCode.S)) 
         //{
         //    // FOR Å TESTE LIST-SHIFTEREN:
@@ -98,6 +98,10 @@ public class TestBedScript : MonoBehaviour {
         //    float beTheMedianPls = ListMedian(errorBuffer);
         //    print("Medianen er forhåpentligvis: " + beTheMedianPls);
         //}
+        else if (Input.GetKeyDown(KeyCode.A)) {
+            float beTheAveragePls = ListAverage(errorBuffer);
+            print("Gjennomsnittet er forhåpentligvis: " + beTheAveragePls);
+        }
         //else if (Input.GetKeyDown(KeyCode.H)) {
         //    // Tester om Invoke's stopper sekvensen/koden, men det gjør den ikke. Linjene etter blir kjørt med en gang.
         //    Invoke("PrintHelloFromTheOtherSideIn2Sec", 5f);
@@ -124,5 +128,9 @@ public class TestBedScript : MonoBehaviour {
 
     void PrintHelloFromTheOtherSideIn2Sec() {
         Debug.Log("Hello From The Other Side");
+    }
+
+    float ListAverage(List<float> listeAaTaGjennomsnittAv) {
+        return listeAaTaGjennomsnittAv.Average();
     }
 }

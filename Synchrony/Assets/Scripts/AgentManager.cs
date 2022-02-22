@@ -13,10 +13,11 @@ public class AgentManager : MonoBehaviour {
     // General Meta-variables:
     public int simulationRuns = 1;
     public float runDurationLimit = 300f; // 5 minutes (given in seconds)
-	public bool debugModeOn = false;
+	public bool debugSuccessOn = false;
+    public bool debugTqTfOn = false;
 
-	// Spawning variables:
-	public GameObject[] squigglePrefabs;
+    // Spawning variables:
+    public GameObject[] squigglePrefabs;
     public float spawnRadius = 10.0f; // units in radius from origo to the outermost Dr. Squiggle spawn-point
 
     // CSV-Serialization variables:
@@ -27,7 +28,7 @@ public class AgentManager : MonoBehaviour {
 
 	// Performance-/Synchronization-measure variables:
 	// Defined hyperparameters and constant throughout simulation-run:
-	public float t_f_duration = 0.08f; // the duration of the time-window the nodes are allowed to fire during
+	public float t_f = 0.08f; // the duration of the time-window the nodes are allowed to fire during
 	public int k = 8; // the number of times in a row the 't_q'-/t_q-window (where no fire-events can be heard) must be equally long
 
 
@@ -164,8 +165,8 @@ public class AgentManager : MonoBehaviour {
         float SUCCESS = System.Convert.ToSingle(hSynchConditionsAreMet);
         performanceAndCovariateValues.Add(SUCCESS);
         // (JUST FOR DEBUGGING) Telling the programmer in the console whether the simulation run was a success or not:
-        if (hSynchConditionsAreMet) Debug.Log("Congratulations! Harmonic synchrony in your musical multi-robot collective at simRun " + atSimRun + " was achieved in " + runDuration + " seconds!");
-        else                        Debug.Log("That's too bad... Harmonic synchrony, according to the performance-measure defined by K. Nymoen et al., was not achieved at simRun " + atSimRun + " within the run time-limit of " + runDurationLimit + " seconds..");
+        if (hSynchConditionsAreMet) Debug.Log("CONGRATULATIONS! Harmonic synchrony in your musical multi-robot collective at simRun " + atSimRun + " was achieved in " + runDuration + " seconds!");
+        else                        Debug.Log("TOO BAD... Harmonic synchrony, according to the performance-measure defined by K. Nymoen et al., was not achieved at simRun " + atSimRun + " within the run time-limit of " + runDurationLimit + " seconds..");
 
         // Adding Covariate 2
         float COLLSIZE = collectiveSize;
@@ -203,7 +204,15 @@ public class AgentManager : MonoBehaviour {
         float MAXFREQ = System.Convert.ToSingle(spawnedAgentScripts[0].minMaxInitialFreqs.y); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE
         performanceAndCovariateValues.Add(MAXFREQ);
 
-        // Adding (Environment-) Covariate 11
+        // Adding Covariate 11
+        float K = System.Convert.ToSingle(k); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE
+        performanceAndCovariateValues.Add(K);
+
+        // Adding Covariate 12
+        float T_F = t_f;
+        performanceAndCovariateValues.Add(T_F);
+
+        // Adding (Environment-) Covariate 13
         float ADJTIMESCALE = adjustedTimeScale;
         performanceAndCovariateValues.Add(ADJTIMESCALE);
 
@@ -236,9 +245,12 @@ public class AgentManager : MonoBehaviour {
 	
 	public void IJustHeardAFireEvent(int firingAgentId) {
 		// When this method gets called, it means the AgentManager has picked upon a Dr. Squiggle's method-call — meaning it "heard" a Dr. Squiggle's ``fire''-signal.
-		
-		// For saving of Node-firing-plot-material:
-		agentWithAgentIDsJustFired.Add(firingAgentId);
+
+                                                                                                                                                                    // BARE FOR TESTING:
+        if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) Node " + firingAgentId + " fired while 't_f_is_now'=" + BoolToString(t_f_is_now) + ".");
+
+        // For saving of Node-firing-plot-material:
+        agentWithAgentIDsJustFired.Add(firingAgentId);
 		
 		// For enforcing 'Condition 3' about all agents having fired at least once during the simulation-run/evaluation:
 		agentiHasFiredAtLeastOnce[firingAgentId - 1] = true; // Flagging that agent corresponding with AgentID has fired at least once during the simulation.
@@ -246,8 +258,7 @@ public class AgentManager : MonoBehaviour {
 		
 			// THE REAL PSEUDO-LOGIC:
 		if (!ItIsLegalToFireNow() && !reset_t_q_flag) { // the 3)-"reset t_q"-process is started if not started already
-																																		// BARE FOR TESTING
-			Debug.Log("Illegal firing! Even-beat-counter towards k=" + k + ":    " + equal_t_q_streak_counter);
+			if (debugSuccessOn) Debug.Log("Illegal firing! Even-beat-counter towards k=" + k + ":    " + equal_t_q_streak_counter);
 
 			StartTheResetTQProcess();
 		}
@@ -258,16 +269,18 @@ public class AgentManager : MonoBehaviour {
 		
 		if (EarlyDefiningMedianIsInTheMaking()) { // estimating the first "holdepunkt", median_1, for defining the new t_q-estimate (given by B-sketch)
 			AddEarlyResetDefiningTime(Time.timeSinceLevelLoad);
-			
-			if (!FirstEarlyResetDefiningTimeIsAdded()) {
+            if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) Reset-defining firing-time added to early median-list.");
+
+            if (!FirstEarlyResetDefiningTimeIsAdded()) {
 				TriggerDefineEarlyMedian();
 			}
 		}
 		
 		if (LateDefiningMedianIsInTheMaking()) { // estimating the second "holdepunkt", median_2, for defining the new t_q-estimate (given by B-sketch)
 			AddLateResetDefiningTime(Time.timeSinceLevelLoad);
-			
-			if (!FirstLateResetDefiningTimeIsAdded()) {
+            if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) Reset-defining firing-time added to late median-list.");
+
+            if (!FirstLateResetDefiningTimeIsAdded()) {
 				TriggerDefineNewTQ();
 			}
 		}
@@ -285,15 +298,19 @@ public class AgentManager : MonoBehaviour {
 	private void TriggerDefineNewTQ() {
 		first_late_reset_defining_time_added = true;
 		t_f_is_now = true; // Setting off a t_f_is_now-period.
-		Invoke("DefineNewTQ", t_f_duration/2f);
-	}
+		Invoke("DefineNewTQ", t_f/2f);
+        if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) 't_f-START' and setting new 't_q' in half a 't_f'-period = " + t_f/2.0 + " SimSecs.");
+
+    }
 	
 	private void DefineNewTQ() {
-		float new_t_q_estimate = ListMedian(late_reset_defining_times) - early_median_time - t_f_duration;
+		float new_t_q_estimate = ListAverage(late_reset_defining_times) - early_median_time - t_f;
 		medians_acquired = 0; // Resetting median-counter despite its true-value of 2 (for the next possible TQ-resetting).
 		// the 4)-"t_q-reset"-processclosing is executed:
 		t_q = new_t_q_estimate;
-		RestartTFTQWindows();
+        if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) New 't_q' set: " + t_q + ".");
+
+        RestartTFTQWindows();
 		// Variabel-opprydning:
 		late_reset_defining_times.Clear();
 		first_late_reset_defining_time_added = false;
@@ -301,20 +318,23 @@ public class AgentManager : MonoBehaviour {
 	
 	private void RestartTFTQWindows() {
 		CancelInvoke(); // Cancelling all currently ongoing Invoke-calls.
+        if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) Invoke-Cancellations and 't_q-START' with 't_q'=" + t_q + ".");
 		TriggerTQPeriod();
-	}
+
+    }
 	
 	private void TriggerTQPeriod() {
 		t_f_is_now = false;
 
 		IncrementTowardsKCounterIfWanted();
-		if (reset_t_q_flag) reset_t_q_flag = false;
+		reset_t_q_flag = false;
 		ResetLastTFFirersCounter();
 
-		if (debugModeOn) Debug.Log("Even-beat-counter towards k=" + k + ":    " + equal_t_q_streak_counter);
+		if (debugSuccessOn) Debug.Log("Even-beat-counter towards k=" + k + ":    " + equal_t_q_streak_counter);
 
 		Invoke("TriggerTFPeriod", t_q);
-	}
+        if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) 't_f-EXIT' & 't_q-START'. Calling for a 't_q-EXIT' & 't_f-START' in 't_q'=" + t_q + " SimSecs.");
+    }
 
 	private void ResetLastTFFirersCounter() {
 		last_t_f_firers_counter = 0;
@@ -331,18 +351,26 @@ public class AgentManager : MonoBehaviour {
 
 	private void TriggerTFPeriod() {
 		t_f_is_now = true;
-		Invoke("TriggerTQPeriod", t_f_duration);
-	}
+		Invoke("TriggerTQPeriod", t_f);
+        if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) 't_q-EXIT' & 't_f-START'. Called for 't_f-EXIT' & 't_q-START' in 't_f'=" + t_f + " SimSecs.");
+
+    }
 
 	private void TriggerDefineEarlyMedian() {
 		first_early_reset_defining_time_added = true;
 		t_f_is_now = true;
-		Invoke("DefineEarlyMedian", t_f_duration);
-	}
+		Invoke("DefineEarlyMedian", t_f);
+
+        if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) 't_f-START'. Defining 'early_median' in 't_f'=" + t_f + " SimSecs.");
+
+    }
 	
 	private void DefineEarlyMedian() {
-		early_median_time = ListMedian(early_reset_defining_times);
-		medians_acquired ++;
+		early_median_time = ListAverage(early_reset_defining_times);
+
+        if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) 'early_median' defined: " + early_median_time + ".");
+        
+        medians_acquired ++;
 		TFLower();
 		// Variabel-opprydning:
 		early_reset_defining_times.Clear();
@@ -362,32 +390,30 @@ public class AgentManager : MonoBehaviour {
 	private void AddLateResetDefiningTime(float simulationTimeInSeconds) {
 		late_reset_defining_times.Add(simulationTimeInSeconds);
 
-		if (debugModeOn) {
-            Debug.Log("Late Reset Defining Times: ");
-            DebugLogMyFloatList(late_reset_defining_times);
-        }
-	}
+        // Hvis du er sjuk og vil debugge ekstremt hardt:
+        //Debug.Log("Late Reset Defining Times: ");
+        //DebugLogMyFloatList(late_reset_defining_times);
+    }
 
 	private void AddEarlyResetDefiningTime(float simulationTimeInSeconds) {
 		early_reset_defining_times.Add(simulationTimeInSeconds);
 
-		if (debugModeOn) {
-			Debug.Log("Early Reset Defining Times: ");
-			DebugLogMyFloatList(early_reset_defining_times);
-		}
+        // Hvis du er sjuk og vil debugge ekstremt hardt:
+        //Debug.Log("Early Reset Defining Times: ");
+		//DebugLogMyFloatList(early_reset_defining_times);
 	}
 	
 	
 	private bool LateDefiningMedianIsInTheMaking() {
 		// Returning true if the 3)-"reset t_q"-process is started, the candidate late median definer is far enough away from the early median time (to avoid negative numbers), the early median has been found but the late and second median still hasn't been used to define the new t_q-estimate through the DefineNewTQ()-function. Returns false otherwise.
 		
-		return (reset_t_q_flag && (Time.timeSinceLevelLoad > (early_median_time + t_f_duration)) && (medians_acquired == 1));
+		return (reset_t_q_flag && (Time.timeSinceLevelLoad > (early_median_time + t_f)) && (medians_acquired == 1));
 	}
 	
 	private bool EarlyDefiningMedianIsInTheMaking() {
 		// Returning true if the 3)-"reset t_q"-process is started, the candidate early median definer is far enough away from the reset-triggering firing-time (to avoid negative numbers), and the early and first median still haven't been acquired through the DefineEarlyMedian()-function. Returns false otherwise.
 		
-		return (reset_t_q_flag && (Time.timeSinceLevelLoad > (reset_t_q_flag_raiser + t_f_duration)) && (medians_acquired == 0));
+		return (reset_t_q_flag && (Time.timeSinceLevelLoad > (reset_t_q_flag_raiser + t_f)) && (medians_acquired == 0));
 	}
 	
 	
@@ -398,12 +424,16 @@ public class AgentManager : MonoBehaviour {
 	
 	private void TriggerFirstTFRise() {
 		t_f_is_now = true;
-		Invoke("TFLower", t_f_duration);
-	}
+		Invoke("TFLower", t_f);
+
+        if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) 't_f-START', supposedly the first. Also called for 't_f-EXIT' in 't_f'=" + t_f + " SimSecs.");
+    }
 	
 	private void TFLower() {
 		t_f_is_now = false;
-	}
+
+        if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) 't_f-EXIT'.");
+    }
 	
 	
 	private bool FirstFiringHasBeenPerceived() {
@@ -416,7 +446,9 @@ public class AgentManager : MonoBehaviour {
         reset_t_q_flag_raiser 		= Time.timeSinceLevelLoad;
 		reset_t_q_flag 				= true;
 		equal_t_q_streak_counter 	= 0;
-	}
+
+        if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) Illegal firing. 't_q-RESET' initiated.");
+    }
 	
 	
 	private bool ItIsLegalToFireNow() {
