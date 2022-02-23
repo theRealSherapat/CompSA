@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 samplingRate = 100 # Hz                                                                             POTENTIAL SOURCE OF ERROR
 
-# TODO: INVESTIGATE WHAT MAKES THE LEGAL-FREQUENCY GREEN CIRCLES LOOK SO WEIRD.
+# TODO WHEN DEBUGGING FREQUENCY-ADJUSTMENT: INVESTIGATE WHAT MAKES THE LEGAL-FREQUENCY GREEN CIRCLES LOOK SO WEIRD.
 
 def main(phase_filename, freqs_filename):        
     plt.close("all") # First clearing all other opened figures.
@@ -148,16 +148,14 @@ def parseDataFrom(csv_filename):
     return t, arrayOfDatapoints[2:,:] # Slicing due to initialization values (being huuuuge).
     
 if __name__ == "__main__":
+    # Args: 1) (int) SimRun: the simulation-run from the latest Unity-run
+
     """ Functionality:
             It first extracts the data from the .CSVs into two np.arrays, as well as getting the corresponding vertical time-axis.
         
             It then plots all of the columns (corresponding to an agents's data each) over the vertical time-axis in a subplot with phase and frequencies. 
             
             Lastly, legal multiples for frequency (in order to have achieved harmonic synchronization) are marked with green circles. """
-     
-    """ Arguments:
-            simRun (str): the simulation-run from the latest Unity-run
-    """
     
     simRun = sys.argv[1]
     phase_path = "../Synchrony/SavedData/Phases/phases_over_time_atSimRun" + simRun + ".csv"

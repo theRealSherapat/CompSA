@@ -37,9 +37,11 @@ def parseDataFrom(csv_filename):
     return arrayOfDatapoints[arrayOfDatapoints[:,1] == 1]
 
 if __name__ == "__main__":
+    # Args: 1) dataset.csv filepath, 2) wanted binary.npy filename
+    
     # Takes as input and extracts non-failure synchronization times from a .CSV-file representing a dataset from several runs of the Harmonic Synchrony Simulation with the Dr. Squiggles Musical Multi-Robot System.
     
-    # Outputs (saves) numpy ndarrays, .npy-binaries, containing all the relevant Performance-scores (Synchronization times) from a given set of Simulation-runs with certain covariates (have to be kept control of manually).
+    # Saves .npy-binaries containing all the relevant performance-scores (harmonic synchronization times in simulation time (s)) from a given set of Simulation-runs with certain covariates (have to be kept control of manually).
     
     filepath = sys.argv[1]
     npyBinaryFilename = sys.argv[2]

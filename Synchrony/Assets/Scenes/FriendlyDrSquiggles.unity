@@ -167,9 +167,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd775d64d8fb444d804ffc4263aeca8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectiveSize: 6
+  collectiveSize: 10
   adjustedTimeScale: 1
-  simulationRuns: 2
+  simulationRuns: 1
   runDurationLimit: 300
   debugSuccessOn: 1
   debugTqTfOn: 0

@@ -14,14 +14,15 @@ def main(binaryArray1Path, binaryArray2Path):
     
     # Plotting stacked data
     plt.boxplot(timesStacked, labels=["Mirollo-Strogatz", "Kristian Nymoen et al."]) # Kan ha med whis=(0,100) for å få whiskerne til å dekke hele data-samplet (til og med outliersa).
-    # plt.title("Harmonic Synchronization-performance when synchronizing only ph")
     plt.ylabel("Simulation time (s) until harmonic synchrony is detected")
     plt.xlabel("Phase-adjustment method")
-    plt.savefig("FirstExperimentPlot.pdf", format="pdf")
+    plt.savefig("ExperimentPlot.pdf", format="pdf")
     plt.show()
 
 
 if __name__ == "__main__":
+    # Args: 1) (string) binary1.npy filepath, 2) (string) binary2.npy filepath
+
     binary1Path = sys.argv[1]
     binary2Path = sys.argv[2]
 

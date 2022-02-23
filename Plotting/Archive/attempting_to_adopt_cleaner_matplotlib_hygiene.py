@@ -1,13 +1,18 @@
+#!/usr/bin/python
 import sys
 import numpy as np
 import csv
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
+import time
 
 samplingRate = 100 # Hz                                                                 POTENTIAL SOURCE OF ERROR
 colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k', 'w']
 symbols = ['X', 'o', 's', 'p', 'P', 'D', '|', '*'] # symmetric markers
 
-# POSSIBLE TODO: DU KAN "FAKE" PLOTTET LITT SÅNN AT ALLE DE HVITE VINDUENE I PLOTTET HAR VERDIEN TIL t_f (MEN ER DET ERLIG? ALLE ER JO IKKE DET, NOEN ER t_f/2).
+# SKJØNN DEG MER PÅ TIMING I UNITY, SÅ SE PÅ LAGRINGEN AV NODE-FIRING-PLOT-MATERIALE-DATAEN (KANSKJE EN NOTHING-BURGER SIDEN Node-firingplottet ER INTERNT KONSISTENT MEN BARE MED ET FEIL OFFSETT?), OG SKJØNN DEG PÅ HVORFOR ET ~37ms HEAD-START KOMMER I PLOTTET — ELLER DRIT I Å VÆRE SÅ PEDANTISK OG PERFEKSJONISTISK.
+
+fig, ax = plt.subplots()
 
 def main(csv_filename):
     times, t_f_is_now_samples, datapointArray = parseDataFrom(csv_filename)
@@ -29,7 +34,7 @@ def plot_t_f_is_now_background(timeArray, t_fArray):
     shadeStopAndStartIndexes = get_t_f_is_now_highs_start_and_stop_indexes(t_fArray)
     
     for shadePair in shadeStopAndStartIndexes:
-        plt.axvspan(shadePair[0]/samplingRate, shadePair[1]/samplingRate, facecolor='0.8', alpha=0.8, zorder=-100)
+        ax.axvspan(shadePair[0]/samplingRate, shadePair[1]/samplingRate, facecolor='0.8', alpha=0.8, zorder=-100)
         
 def get_t_f_is_now_highs_start_and_stop_indexes(floatArray):
     indexes = [0]
@@ -58,7 +63,7 @@ def plotAllAgentData(timeArray, nodesFiringMatrix):
 def plotBooleanStripWithSymbolAtHeight(boolStrip, agentIndex, tArray):
     for stripIndex in range(boolStrip.shape[0]):
         if boolStrip[stripIndex] == 1.0:
-            plt.plot(tArray[stripIndex], int(agentIndex+1), marker=symbols[agentIndex%len(symbols)], markersize=2.3, color=colors[agentIndex%len(colors)])
+            ax.plot(tArray[stripIndex], int(agentIndex+1), marker=symbols[agentIndex%len(symbols)], markersize=2.3, color=colors[agentIndex%len(colors)])
 
 def parseDataFrom(csv_filename):
     """ Reads all rows (apart from the header) into a numpy data-matrix, and returns that 'arrayOfDatapoints' and its corresponding vertical time-axis 't' """
@@ -83,8 +88,10 @@ def parseDataFrom(csv_filename):
             numOfRows += 1
             
     
+                             # FACT-CHECK THIS PLS.
     t = np.linspace(0, numOfRows*(1/samplingRate), numOfRows+1) # In reality we start sampling after a split-second long startup-phase in Unity.
     
+                                # FACT-CHECK THIS PLS.
     t_f_is_now_samples = arrayOfDatapoints[:,0]
     
     datapointArray = arrayOfDatapoints[:,1:]
@@ -92,12 +99,19 @@ def parseDataFrom(csv_filename):
     return t, t_f_is_now_samples, datapointArray # Slicing from index 2 due to initialization values being huuuuge.
 
 def finishAndShowPlot(timeArray, yticks):
-    plt.xlim(0, timeArray[-1])
-    plt.xlabel("Simulation time (seconds)")
-    plt.ylabel("Node # firing")
-    plt.yticks(yticks)
-    plt.gca().invert_yaxis()
-    plt.show()
+    ax.set_xlim(0, timeArray[-1])
+    ax.set_xlabel("simulation time (s)")
+    ax.set_ylabel("Node # firing at simulation time")
+    ax.set_yticks(yticks)
+    # plt.gca().invert_yaxis()
+    
+    # Making ticks look nice
+    ax.tick_params(axis='y', labelrotation=45, labelbottom=False)
+    myLocator = mticker.MultipleLocator(4)
+    ax.xaxis.set_major_locator(myLocator)
+    
+    fig.savefig("NodeFiringPlot.pdf")
+    fig.show(), time.sleep(10)
 
 if __name__ == "__main__":
     """ Functionality:
