@@ -34,3 +34,6 @@ Remember:
 	+ Høre med Kyrre om det er fryktelig nøye åssen referansene er skrevet opp, eller om Zoteros eksporterte .bib-filer er gode nok.
 * Polish/finish the page layouts:
 	+ Se til at alle figurene og tabellene er plassert der det gir mening for deg, ikke der det gir mening for LaTeX.
+* Plots and colors:
+	+ Read plot tips (incl. color-considerations, where my intuition is "neutral, RGB, and as contrastive colors as possible, or non-contrastive and similar if they are closely related"), and clean up and create existing figures and plots properly (if I'll want to keep said figure/plot).
+	+ Color-check (matplotlib guides, color-guide/-paper)—so that one avoids e.g. rainbow-plots or green-to-red heatmaps, and eventually look at 'kodeeksempler' for how to plot nicely.
