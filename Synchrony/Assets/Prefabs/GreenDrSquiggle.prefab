@@ -354,7 +354,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4db8b444f864bf479ad5b4eaa527a7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  alpha: 0.6
+  alpha: 0.2
   useNymoenPhaseAdj: 1
   useNymoenFreqAdj: 0
   beta: 0.8
