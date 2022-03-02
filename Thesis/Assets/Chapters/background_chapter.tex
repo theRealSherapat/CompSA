@@ -49,7 +49,23 @@ This phenomenon of fireflies synchronizing to each other has inspired scientists
 	
 	Teori og nyere cutting-edge/state-of-the-art metoder for fase-/frekvens-synkronisering i oscillatorer og liknende. Se Kristian Nymoens referanser i \cite{nymoen_synch} for eksempel. \nl
 	
-	Much of the terminology from \cite{nymoen_synch} is used here. An oscillator $i$ is characterized by its \textit{phase} $\phi_i(t)$, which is—at the start of its periodic signal period—initialized to 0 and evolves towards 1 at a rate of $\frac{d \phi_i(t)}{d t}$ — which is also called the \textit{frequency} of the oscillator. When oscillator $i$'s phase is equal to 1 (i.e. when $\phi_i(t)=1$, or when the periodic signal period is over), we say oscillator $i$ has \textit{phase-climaxed}.
+	\subsection{Phase and frequency}
+	
+	Much of the terminology from \cite{nymoen_synch} is used here. An oscillator $i$ is characterized by its \textit{phase} $\phi_i(t)$, which is—at the start of its periodic signal period—initialized to 0 and evolves towards 1 at a rate which is called the \textit{frequency} of the oscillator. So, in mathematical terms, the frequency $\omega_i(t)$ is then given by:
+	
+	\begin{equation}
+	\label{phase_freq}
+		\omega_i(t) = \frac{d \phi_i(t)}{d t} .
+	\end{equation}
+
+	When oscillator $i$'s phase is equal to 1 (i.e. when $\phi_i(t)=1$, or when the periodic signal period is over), we say oscillator $i$ has \textit{phase-climaxed}.
+	
+	An oscillator-period $T$ is defined as the inverse of the oscillator-frequency $\omega$. In mathematical terms:
+	
+	\begin{equation}
+	\label{period_freq}
+		T = 1/\omega .
+	\end{equation}
 	
 	\subsection{Phase-adjustment}
 	
@@ -66,8 +82,9 @@ This phenomenon of fireflies synchronizing to each other has inspired scientists
 	
 	Each musical agent gets a new phase, $\phi(t^+) = P(\phi(t))$, accoring to the \textbf{phase update function \eqref{strog_phase}} upon perceiving a ``fire''-event from one of the other musical nodes:
 	
-	\begin{equation}\label{strog_phase}
-	\phi(t^+) = P(\phi(t)) = (1 + \alpha)\phi(t)	,
+	\begin{equation}
+	\label{strog_phase}
+		\phi(t^+) = P(\phi(t)) = (1 + \alpha)\phi(t)	,
 	\end{equation}
 	
 	where ``\textit{$\alpha$ is the pulse coupling constant, denoting the strength between nodes}'' \cite{nymoen_synch}, $t^+$ denotes the time-step immediately after a ``fire''-event is heard, and $\phi(t)$ is the old frequency of the agent at time $t$. So, if e.g. $\alpha = 0.1$, then a musical agent's new and updated phase, immediately after hearing a ``fire''-signal from another agent, will be equal to $\phi(t^+) = P(\phi(t)) = (1 + 0.1)\phi(t) = 1.1\phi(t)$. 110\% of its old phase $\phi(t)$, that is. Hence, and in this way, the agent would be ``pushed'' to fire sooner than it would otherwise (as nodes fire once they have reached phase-climax $\phi(t)=1$).
