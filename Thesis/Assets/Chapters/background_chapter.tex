@@ -16,7 +16,7 @@ Essay-materiale.
 % SECTION 2
 
 \section{Taking inspiration from natural phenomena}
-The intriguing, diverse, and complex phenomena of nature have for long served as exciting inspirations to human engineers and researchers [ant-colonies, boids, swarms, beeclust]. One other such phenomena, studied and modelled, is the synchronously firing fireflies in forests, as can be seen an example of in Figure \ref{fig:synched_fireflies_phenomenon}.
+The intriguing, diverse, and complex phenomena of nature have for long served as exciting inspirations to human engineers and researchers [ant-colonies, boids, swarms, beeclust], and have been subject to a lot of study and modelling. An example of such a natural phenomenon is the synchronously flashing or pulsating fireflies, as a result of having observed, adapted, and synchronized to each other — as can e.g. be seen in a forest in Figure \ref{fig:synched_fireflies_phenomenon}.
 
 \begin{figure}[!ht]
 	\centering
@@ -25,7 +25,7 @@ The intriguing, diverse, and complex phenomena of nature have for long served as
 	\label{fig:synched_fireflies_phenomenon}
 \end{figure}
 
-This phenomenon of fireflies synchronizing to each other has inspired scientists like Mirollo \& Strogatz \cite{mirollo_strogatz_PCO_synch} and in later time Kristian Nymoen et al. \cite{nymoen_synch}, to model and replicate this natural phenomenon in human-engineered systems. It turns out that this is not a biological, but mathematical, problem. Given the periodic and repeating nature of the flashing/firing of the fireflies, modelling a firefly has been done by looking at each firefly as a periodic signal or oscillator. This work \cite{mirollo_strogatz_PCO_synch, nymoen_synch} then ties into the broader work on synchronizing oscillators which has been subject to study for some time now []. What separates Mirollo-Strogatz and K. Nymoen's approaches from these other and previous oscillator-synchronizing methods, is mainly that here the oscillators are \textit{pulse-coupled} (which the fireflies also can be said to be), as opposed to the more ``standard'' and constraining \textit{phase-coupled} oscillators. Additionally, K. Nymoen's approach accounts for synchronizing initially heterogenous frequencies as well.
+This phenomenon has inspired scientists like Mirollo \& Strogatz \cite{mirollo_strogatz_PCO_synch} and in later time Kristian Nymoen et al. \cite{nymoen_synch}, to model and replicate this natural phenomenon in human-engineered systems. Given the periodic and repeating nature of the flashing/firing of the fireflies, modelling a firefly has been done by looking at each firefly as a periodic signal or oscillator. This work \cite{mirollo_strogatz_PCO_synch, nymoen_synch} then ties into the broader work on synchronizing oscillators which has been subject to study for some time now []. What separates Mirollo-Strogatz and K. Nymoen's approaches from these other and previous oscillator-synchronizing methods, is mainly that here the oscillators are \textit{pulse-coupled} (which the fireflies also can be said to be), as opposed to the more ``standard'' and constraining \textit{phase-coupled} oscillators. Additionally, K. Nymoen's approach accounts for synchronizing initially heterogenous frequencies as well.
 
 	\subsection{Multi-agent systems concepts}
 	
@@ -87,7 +87,7 @@ This phenomenon of fireflies synchronizing to each other has inspired scientists
 		\phi(t^+) = P(\phi(t)) = (1 + \alpha)\phi(t)	,
 	\end{equation}
 	
-	where ``\textit{$\alpha$ is the pulse coupling constant, denoting the strength between nodes}'' \cite{nymoen_synch}, $t^+$ denotes the time-step immediately after a ``fire''-event is heard, and $\phi(t)$ is the old frequency of the agent at time $t$. So, if e.g. $\alpha = 0.1$, then a musical agent's new and updated phase, immediately after hearing a ``fire''-signal from another agent, will be equal to $\phi(t^+) = P(\phi(t)) = (1 + 0.1)\phi(t) = 1.1\phi(t)$. 110\% of its old phase $\phi(t)$, that is. Hence, and in this way, the agent would be ``pushed'' to fire sooner than it would otherwise (as nodes fire once they have reached phase-climax $\phi(t)=1$).
+	where $\alpha$ is the pulse coupling constant, denoting the strength between nodes \cite{nymoen_synch}, $t^+$ denotes the time-step immediately after a ``fire''-event is heard, and $\phi(t)$ is the old frequency of the agent at time $t$. So, if e.g. $\alpha = 0.1$, then a musical agent's new and updated phase, immediately after hearing a ``fire''-signal from another agent, will be equal to $\phi(t^+) = P(\phi(t)) = (1 + 0.1)\phi(t) = 1.1\phi(t)$. 110\% of its old phase $\phi(t)$, that is. Hence, and in this way, the agent would be ``pushed'' to fire sooner than it would otherwise (as nodes fire once they have reached phase-climax $\phi(t)=1$).
 
 	
 	

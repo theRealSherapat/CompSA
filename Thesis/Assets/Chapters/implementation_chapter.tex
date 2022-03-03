@@ -31,18 +31,18 @@ First, the system and the system components will be presented and introduced. Th
 		\centering
 			\begin{subfigure}[t]{.5\textwidth}
 				\centering\captionsetup{width=.9\linewidth}%
-				\includegraphics[width=0.9\linewidth]{Assets/Figures/squiggles_unsynched_in_simulation.jpg}
+				\includegraphics[width=0.9\linewidth]{Assets/Figures/Simulations/squiggles_unsynched_in_simulation.jpg}
 				\caption{Screenshot from the very beginning of a Synchronization-simulation.}
 				\label{fig:first_idea:second_fig:unsynched}
 			\end{subfigure}%
 			\begin{subfigure}[t]{.5\textwidth}
 				\centering\captionsetup{width=.9\linewidth}%
-				\includegraphics[width=0.9\linewidth]{Assets/Figures/squiggles_synched_in_simulation.jpg}
+				\includegraphics[width=0.9\linewidth]{Assets/Figures/Simulations/squiggles_synched_in_simulation.jpg}
 				\caption{Screenshot from the same Synchronization-simulation as in \ref{fig:first_idea:second_fig:unsynched}, a few moments later.}
 				\label{fig:first_idea:second_fig:synched}
 			\end{subfigure}
 		\caption[Synchronization-example/-screenshots from simulation in Unity]{From simulation: An example of the system target goal of harmonic synchrony being achieved in a musical robot collective, where oscillator-frequencies $\omega$ are constant and equal (1Hz), or in other words synchronized already, but oscillator-phases $\phi$ are unsynchronized and initially uniformly random numbers in the range of $[0,1]$. \nl
-		At first in \ref{fig:first_idea:second_fig:unsynched}, we see the agents firing, i.e. blinking with their eyes and turning their body yellow, asynchronously at first. Only two robots, one with pink and one with red tentacles, fire synchronously so far. Seconds later, after having listened to each others's adjustment-signals and adjusted themselves accordingly, all agents now fire simultaneously and synchronously, as can be seen in \ref{fig:first_idea:second_fig:synched}.}
+		At first in \ref{fig:first_idea:second_fig:unsynched}, we see the agents firing, i.e. blinking with their eyes and turning their body yellow, asynchronously at first. Only two robots, one with pink and one with red tentacles, fire synchronously so far. Seconds later in \ref{fig:first_idea:second_fig:synched}, after having listened to each others's adjustment-signals and adjusted themselves accordingly, all agents now fire simultaneously and synchronously.}
 		\label{fig:first_idea:second_fig}
 	\end{figure}
 
@@ -280,7 +280,7 @@ Accomodating for these aspects then, K. Nymoen et al. took inspiration for achie
 	\label{fig:frequency_spectrograms}
 \end{figure}
 
-More accurately then, and inspired by although not completely analagous to the integer-relationship frequencies like in Figure \ref{fig:sub:G3_hummed_waveform}, we introduce the formal and ``legal'' requirement the oscillator-frequencies in the musical robot collective have to fulfill in order for the oscillator-frequencies to be harmonically synchronized. All musical agents—in a harmonically synchronized state—will have frequencies $\in \omega_{0} \cdot 2^{\mathbb{N}_0}$, where $\omega_{0}$ is the agent with the lowest frequency's frequency (i.e. the fundamental frequency), and $\mathbb{N}_0$ is the mathematical set of natural numbers including the number zero. Hence, agents will typically have frequencies like $\omega_{0} \cdot 2^0 = \omega_{0}$, $\omega_{0} \cdot 2^1 = 2\omega_{0}$, $\omega_{0} \cdot 2^2 = 4\omega_{0}$, or $\omega_{0} \cdot 2^3 = 8\omega_{0}$. If all agents end up with these kind of frequencies, we say they have ``legal'' and harmonically synchronized frequencies.
+More accurately then, and inspired by—although not completely analagous to integer-relationship frequencies like in Figure \ref{fig:sub:G3_hummed_waveform} e.g.—K. Nymoen et al. introduce the formal and ``legal'' requirement the oscillator-frequencies in the musical robot collective have to fulfill in order for the oscillator-frequencies to be harmonically synchronized. All musical agents—in a harmonically synchronized state—will have frequencies $\in \omega_{0} \cdot 2^{\mathbb{N}_0}$, where $\omega_{0}$ is the agent with the lowest frequency's frequency (i.e. the fundamental frequency), and $\mathbb{N}_0$ is the mathematical set of natural numbers including the number zero. Hence, agents will typically have frequencies like $\omega_{0} \cdot 2^0 = \omega_{0}$, $\omega_{0} \cdot 2^1 = 2\omega_{0}$, $\omega_{0} \cdot 2^2 = 4\omega_{0}$, or $\omega_{0} \cdot 2^3 = 8\omega_{0}$. If all agents end up with these kind of frequencies, we say they have ``legal'' and harmonically synchronized frequencies.
 
 
 
@@ -313,6 +313,6 @@ An illustration of such a detection of harmonic synchrony is given below in Figu
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=\linewidth]{Assets/Figures/Illustrations/10AgentsPerformanceMeasure.pdf}
-	\caption[A node-firing (performance-)plot, demonstrating how the system target state of harmonic synchrony is detected]{A node-firing plot, demonstrating how the system target state of harmonic synchrony is detected eventually.}
+	\caption[A performance-measure plot, demonstrating the detection of the system target state of harmonic synchrony]{A node-firing plot, demonstrating how the system target state of harmonic synchrony is detected eventually.}
 	\label{fig:node_firing_plot}
 \end{figure}

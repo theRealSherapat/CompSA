@@ -56,7 +56,7 @@
 	
 	\begin{figure}[ht!]
 		\centering
-		\includegraphics[width=0.65\linewidth]{Assets/Figures/PhaseErrorFunction.pdf}
+		\includegraphics[width=0.65\linewidth]{Assets/Figures/Functions/PhaseErrorFunction.pdf}
 		\caption[Plot of error-measurement function for K. Nymoen's frequency-adjustment]{Error measurement \eqref{error_measurement} plotted as a function of phase}
 		\label{fig:error_measurement}
 	\end{figure}
@@ -88,7 +88,7 @@
 	
 	\begin{figure}[ht!]
 		\centering
-		\includegraphics[width=0.65\linewidth]{Assets/Figures/rho_n.pdf}
+		\includegraphics[width=0.65\linewidth]{Assets/Figures/Functions/rho_n.pdf}
 		\caption[Plot of amplitude- \& sign-factor for K. Nymoen's frequency-adjustment]{The amplitude- \& sign-factor, $\rho(\phi(t))$, where $\phi(t)$ is the phase of an agent at time $t$ when it heard ``fire''-event $n$. Notice how the amplitude is equal to 0 when the phase is equal to 0,5.}
 		\label{fig:rho_n}
 	\end{figure}
@@ -112,7 +112,7 @@
 	
 	\begin{figure}[ht!]
 		\centering
-		\includegraphics[width=0.65\linewidth]{Assets/Figures/all_possible_H_n_values.pdf}
+		\includegraphics[width=0.65\linewidth]{Assets/Figures/Functions/all_possible_H_n_values.pdf}
 		\caption[Plot of all possible frequency-adjustment contribution-values, $H(n)$-values, for K. Nymoen's frequency-adjustment]{All possible $H(n)$-values marked in green, given by $\rho(n) \cdot s(n)$, where $\rho(n)$ is defined as above and depicted in Figure \ref{fig:rho_n}, and the self-assessed synch-scores $s(n) \in [0, 1]$. The $s(n)$-scores were again simply the median of $m$ error-scores \{$\epsilon(n)$, $\epsilon(n-1)$, $\epsilon(n-2)$, ... , $\epsilon(n-m)$\} which again were given by the error-function \eqref{error_measurement} plotted in Figure \ref{fig:error_measurement}. Observe, in conjunction with Equation \eqref{freq_adj}, what the authors \cite{nymoen_synch} point out when describing their frequency update function, when saying that they specify a function that decreases frequency if a fire event is received in the first half of a node's cycle (i.e. phase $\phi(t)<0.5$), and speeds up if in the last half (to ``catch up' with the firing node). Also note how the wanted design of the authors, of causing (close to) 0 change to the frequency half-way through the cycle, is enabled by how the ``frequency-adjustment-contribution'' $H(n)$ can be equal to 0 despite the reacting node having high error scores and a high $s(n)$-score.}
 		\label{fig:all_possible_H_n_values}
 	\end{figure}
