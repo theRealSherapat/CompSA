@@ -5,46 +5,57 @@ using static DavidsUtils;
 public class SquiggleScript : MonoBehaviour {
     // ------- START OF Variable Declarations -------
 
-    // Phase-adjustment variables:
-    public float alpha = 0.05f; // pulse coupling constant, denoting coupling strength between nodes
-    public bool useNymoenPhaseAdj = true;
+    // ---- START OF Individual/Agent Hyper-parameters being recorded and displayed in the Inspector ----
 
-    // Frequency-adjustment variables:
-    public bool useNymoenFreqAdj = true;
-    public float beta = 0.8f; // frequency coupling constant
-    public int m = 5; // "running median-filter" length
-    public Vector2 minMaxInitialFreqs = new Vector2(0.5f, 8f);
+    // Phase-adjustment:
+    [Tooltip("Pulse coupling constant, denoting coupling strength between nodes, deciding how much robots adjust phases after detecting a pulse from a neighbour. The larger the constant, the larger (in absolute value) the phase-update?")]
+    public float alpha = 0.05f;
+    [Tooltip("Whether the agent is using Kristian Nymoen et al.'s phase-update function to adjust phases with after detecting a pulse from a neighbour, or not (implying the usage of Mirollo-Strogatz's phase-update function, as we only have implemented those two).")]
+    public bool useNymoenPhaseAdj = true;       // HAS TO BE GENERALIZED OR MADE LESS BINARY IF WE ARE TO USE MORE THAN TWO POSSIBLE Phase-Adjustment methods.
 
-    // Meta environment-variables:
-    public float t_ref_perc_of_period = 0.1f; // ISH LENGDEN I TID PÅ digitalQuickTone er 0.4s. Nymoen BRUKTE 50ms I SIN IMPLEMENTASJON. JEG PRØVDE OGSÅ 0.6f. possiblePool = {0.09f, 0.4f, 0.6f}.
-    public bool useSound = true;
-    public bool useVisuals = false;
+    // Frequency-adjustment:
+    [Tooltip("Frequency coupling constant, deciding how much robots adjust frequencies after detecting pulse onsets from neighbours. The larger the constant, the larger (in absolute value) the frequency-update?")]
+    public float beta = 0.8f;
+    [Tooltip("Whether the agent is using Kristian Nymoen et al.'s frequency-update function to adjust frequencies with after detecting a pulse from a neighbour, or not (implying an attempt at solving the simpler phase-problem with only Phase-Adj. and not Freq.-Adj., as we only have implemented Kristian's Freq.-Adj.-method so far).")]
+    public bool useNymoenFreqAdj = true;        // HAS TO BE GENERALIZED OR MADE LESS BINARY IF WE ARE TO USE MORE THAN TWO POSSIBLE Frequency-Adjustment methods.
+    [Tooltip("Degree of error-memory, i.e. the length of a list of the last m error-scores. The larger the length m, the more error-scores we calculate the self-assessed synch-score s(n) based upon.")]
+    public int m = 5;
+
+    // ---- END OF Individual/Agent Hyper-parameters being recorded and displayed in the Inspector ----
 
 
-    // Core (oscillator) synchronization-variables:
-    private float phase; // a number between 0 and 1
-    private float frequency; // Hz
-    private float t_ref; // seconds
-    private List<float> inPhaseErrorBuffer = new List<float>();
-    private List<float> HBuffer = new List<float>(); // a list of H(n)-values (which I calculated from the bottom up in the compiled reMarkable-note of mine)
 
-    // Helping-variables:
-    private AgentManager myCreator;
-    private List<SquiggleScript> otherSquiggles = new List<SquiggleScript>();
-    private AudioSource audioSource; // reference to Audio Source component on the Musical Node that is told to play the fire sound
-    private int agentID;
-    private bool firedLastClimax;
+    // PRIVATE VARIABLES NECESSARY TO MAKE THE COGS GO AROUND:
 
-    // Visual color-variables:
-    private Renderer corpsOfAgentRenderer;
-    private float colorLerpUntilPhase = 0.15f;
-    private Transform yellowEye;
-    private Transform pupil;
-    private Color bodyColor;
-    private Color fireColor = Color.yellow;
-    private bool inRefractoryPeriod = false; // if this is true, neither phase- or frequency-adjustment should happen.
-    private float unstableFrequencyPeriod = 1f/0.5f;
+    // Core for (oscillator-) synchronization:
+    private float phase;                        // The agents's progression through its oscillator-period. A number between 0 (at the beginning of its cycle) and 1 (at the end of its cycle).
+    private float frequency;                    // The agents's oscillator-frequency (Hz). How fast the agent traverses through its cycle — or in other words the rate of the phase's change.
+    private float t_ref;                        // The refractory period (s) being the period within which agents are "recovering" in, i.e. not adjusting themselves, after firing/sending a pulse.
+    private List<float> inPhaseErrorBuffer = new List<float>(); // The list of m error-scores (our error-memory).
+    private List<float> HBuffer = new List<float>(); // An accumulating and self-clearing list of H-values (which I calculated from the bottom up in the compiled reMarkable-note of mine).
+
+    // Special rules (to stabilize/optimize/implement correctly synchronization):
+    private bool inRefractoryPeriod = false;    // if this flag is true, neither phase- nor frequency-adjustment happens.
+    private bool firedLastClimax;               // A flag which is high after having fired at the previous phase-climax (so that the agent won't fire on the next one, but the one after).
+    // DEBUG FURTHER: Variables used to detect when the agent struggles phase-climaxing — so that we can help it and boost its frequency (double it e.g.).
     private float timeNotClimaxed;
+    private float unstableFrequencyPeriod = 1f / 0.5f;
+
+    // Identity / Existential:
+    private int agentID;                        // The numerical ID of the agent (from 1 to myCreator.collectiveSize).
+    private AgentManager myCreator;             // A reference to the Squiggle-/Agent-Manager that spawned this agent.
+    private List<SquiggleScript> otherSquiggles = new List<SquiggleScript>(); // A list of all the agent's neighbour-squiggles.
+
+    // Visual / Color:
+    private Renderer corpsOfAgentRenderer;      // A reference to the agent body Renderer (making the object visible or invisible, as well as giving access to the object's material).
+    private float colorLerpUntilPhase = 0.15f;  // Duration (a % of the oscillator-period) during which the body-color of the agent is "cooling down" after having fired/sent a pulse.
+    private Transform iris;                     // A reference to the iris of the agent's eye.
+    private Transform pupil;                    // A reference to the pupil of the agent's eye.
+    private Color bodyColor;                    // The initial/default color of the agent's body.
+    private Color fireColor = Color.yellow;     // The desired fire-color of the agent's body.
+
+    // Audible / Sound:
+    private AudioSource audioSource;            // A reference to the AudioSource-component on the agent that is told to play the fire sound.
 
     // ------- END OF Variable Declarations -------
 
@@ -70,12 +81,12 @@ public class SquiggleScript : MonoBehaviour {
         // Setting up for Frequency-Adjustment
         InitializeInPhaseErrorBuffer();
         if (useNymoenFreqAdj) {
-            frequency = Random.Range(minMaxInitialFreqs.x, minMaxInitialFreqs.y); // Initializing frequency in range Random.Range(0.5f, 8f) was found useful by Nymoen et al.
+            frequency = Random.Range(myCreator.minMaxInitialFreqs.x, myCreator.minMaxInitialFreqs.y); // Initializing frequency in range Random.Range(0.5f, 8f) was found useful by Nymoen et al.
         } else {
             frequency = 1f;
         }
 
-        t_ref = t_ref_perc_of_period * 1.0f / frequency;
+        t_ref = myCreator.t_ref_perc_of_period * 1.0f / frequency;
     }
 
     void Update() {
@@ -87,7 +98,7 @@ public class SquiggleScript : MonoBehaviour {
 
     void FixedUpdate() {
         // Eventually updating/lerping the agent-body's color                   CONSIDER PUTTING THIS FUNCTIONALITY INTO THE NotifyHuman()-FUNCTION
-        if (useVisuals && firedLastClimax) SetAgentCorpsColor();
+        if (myCreator.useVisuals && firedLastClimax) SetAgentCorpsColor();
 
         if (phase == 1f) {
             OnPhaseClimax();
@@ -113,19 +124,19 @@ public class SquiggleScript : MonoBehaviour {
     // ------- START OF Core-/Essential Functions/Methods -------
 
     private void OnPhaseClimax() {
-        if (!firedLastClimax) { // this should run only every other/second time it gets checked
-            FireNode(); // node firing at every other phase-climax
+        if (!firedLastClimax) { // This should run only every other/second time it gets checked.
+            FireNode(); // Node firing at every other phase-climax.
             firedLastClimax = true;
         } else {
             firedLastClimax = false;
         }
 
-        if (useNymoenFreqAdj) RFAAdjustFrequency(); // adjust frequency at phase-climax regardless of if the node fired or not last climax (if FrequencyAdjustment is to be used)
+        if (useNymoenFreqAdj) RFAAdjustFrequency(); // Adjusting frequency at each phase-climax regardless of if the node fired or not last climax (if FrequencyAdjustment is to be used).
 
-        t_ref = 0.1f * 1.0f / frequency; // updating the refractory period to 10% of the new period
+        t_ref = myCreator.t_ref_perc_of_period * 1.0f / frequency; // Updating the refractory period to myCreator.t_ref_perc_of_period times the the new period.
     }
 
-    void FireNode() {
+    private void FireNode() {
         NotifyMyCreator();
 
         NotifyTheHuman();
@@ -145,13 +156,13 @@ public class SquiggleScript : MonoBehaviour {
 
     private void NotifyTheHuman() {
         // Showing the human "visually" that a fire-event just happened (by changing the agent-color and blinking with the agent-eyes)
-        if (useVisuals) {
+        if (myCreator.useVisuals) {
             corpsOfAgentRenderer.material.color = fireColor;
             BlinkWithEyes();
         }
 
         // Showing the human "audially" that a fire-event just happened (by playing an audio clip)
-        if (useSound) audioSource.Play();
+        if (myCreator.useSound) audioSource.Play();
     }
 
     private void ToggleOffRefractoryMode() {
@@ -173,7 +184,7 @@ public class SquiggleScript : MonoBehaviour {
         AddNthFireEventsHToList(); // for the later Frequency-adjustment at each phase-climax
     }
 
-    void AdjustPhase() {
+    private void AdjustPhase() {
         if (!useNymoenPhaseAdj) {
             phase = Mathf.Clamp(phase *(1 + alpha), 0f, 1f); // using Phase Update Function (1); "standard" Mirollo-Strogatz
         } else {
@@ -237,7 +248,7 @@ public class SquiggleScript : MonoBehaviour {
 
     // ------- START OF Helping-/Utility Functions/Methods -------
 
-    void SetAgentCorpsColor() {
+    private void SetAgentCorpsColor() {
         // Sets the agent body's corps to a lerped color (ranging from the fire-color, to its standard corps-color).
 
         float t = Mathf.Clamp(phase / colorLerpUntilPhase, 0, 1); // a percentage going from 0 when phase=0, to 1 when phase=colorLerpUntilPhase
@@ -256,14 +267,14 @@ public class SquiggleScript : MonoBehaviour {
     }
 
     private void InitializeInPhaseErrorBuffer() {
-        for (int i = 0; i < m; i++) inPhaseErrorBuffer.Add(1f);
+        for (int i = 0; i < m; i++) inPhaseErrorBuffer.Add(1f); // BØR DENNE INITIALISERES MED 0f ISTEDENFOR 1f HVIS STØRRE FREKVENSOPPDATERINGS-BIDRAG FØRER TIL STØRRE (I ABSOLUTTVERDI) FREKVENS-OPPDATERINGER?
     }
 
     private void BlinkWithEyes() {
         Vector3 pupilScaleChange = new Vector3(0.273f, -0.1126f, 0);
         pupil.localScale += pupilScaleChange;
         Vector3 yellowEyeScaleChange = new Vector3(0, 0, 0.4465f);
-        yellowEye.localScale -= yellowEyeScaleChange;
+        iris.localScale -= yellowEyeScaleChange;
 
         Invoke("OpenEyes", 0.1f * (1.0f / frequency));
     }
@@ -272,13 +283,13 @@ public class SquiggleScript : MonoBehaviour {
         Vector3 pupilScaleChange = new Vector3(-0.273f, 0.1126f, 0);
         pupil.localScale += pupilScaleChange;
         Vector3 yellowEyeScaleChange = new Vector3(0, 0, 0.4465f);
-        yellowEye.localScale += yellowEyeScaleChange;
+        iris.localScale += yellowEyeScaleChange;
     }
 
     private void AssignVisualVariables() {
         corpsOfAgentRenderer = transform.GetChild(1).transform.GetChild(1).GetComponent<Renderer>();
         bodyColor = corpsOfAgentRenderer.material.color;
-        yellowEye = transform.GetChild(0).transform.GetChild(3);
+        iris = transform.GetChild(0).transform.GetChild(3);
         pupil = transform.GetChild(0).transform.GetChild(4);
         //tentacleColor = transform.GetChild(2).transform.GetChild(0).GetComponent<Renderer>().material.color;
     }

@@ -147,14 +147,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 475719185}
-  m_LocalRotation: {x: 0.0027186368, y: -0, z: -0, w: 0.99999636}
-  m_LocalPosition: {x: -0.30326933, y: 2.5812514, z: 12.936047}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0.312, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &475719187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,24 +167,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd775d64d8fb444d804ffc4263aeca8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectiveSize: 10
+  collectiveSize: 15
+  t_ref_perc_of_period: 0.1
+  minMaxInitialFreqs: {x: 0.5, y: 8}
+  k: 8
+  t_f: 0.08
+  useTQAverage: 0
   adjustedTimeScale: 1
   simulationRuns: 1
   runDurationLimit: 300
   debugSuccessOn: 1
   debugTqTfOn: 0
+  useSound: 1
+  useVisuals: 1
   squigglePrefabs:
   - {fileID: 2285719835394980754, guid: c314eb5130117ec42b02442ea979e2a7, type: 3}
   - {fileID: 8768706482228693545, guid: 99dff3106accb1b46a953f4ffd8d9d57, type: 3}
   - {fileID: 7619773679480578012, guid: 80b6bc4a677099a41b9e98ea3171fe5b, type: 3}
-  spawnRadius: 15
   phaseCSVPathStart: C:\Users\david\Documents\OrdentligeMapper\CompSA\Synchrony\SavedData\Phases\phases_over_time
   frequencyCSVPathStart: C:\Users\david\Documents\OrdentligeMapper\CompSA\Synchrony\SavedData\Frequencies\freqs_over_time
   nodeFiringDataPathStart: C:\Users\david\Documents\OrdentligeMapper\CompSA\Synchrony\SavedData\NodeFiringPlotMaterial\node_firing_data
   datasetPath: C:\Users\david\Documents\OrdentligeMapper\CompSA\Synchrony\SavedData\synchronyDataset.csv
-  t_f: 0.08
-  k: 8
-  useTQAverage: 0
 --- !u!1 &1150399571
 GameObject:
   m_ObjectHideFlags: 0

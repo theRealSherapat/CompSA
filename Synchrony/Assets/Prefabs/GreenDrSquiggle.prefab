@@ -354,15 +354,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4db8b444f864bf479ad5b4eaa527a7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  alpha: 0.1
+  alpha: 0.15
   useNymoenPhaseAdj: 0
-  useNymoenFreqAdj: 0
   beta: 0.8
+  useNymoenFreqAdj: 0
   m: 5
-  minMaxInitialFreqs: {x: 0.1, y: 4}
-  t_ref_perc_of_period: 0.1
-  useSound: 1
-  useVisuals: 1
 --- !u!1001 &2285719833623400587
 PrefabInstance:
   m_ObjectHideFlags: 0

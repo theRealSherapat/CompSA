@@ -6,69 +6,102 @@ using static DavidsUtils;
 public class AgentManager : MonoBehaviour {
     // ------- START OF Variable Declarations -------
 
-    // Simulation Hyperparameters/Covariates
+    // ---- START OF Collective/Environment Hyper-parameters being recorded and displayed in the Inspector ----
+
+    [Tooltip("The number of agents to be spawned and synchronized.")]
     public int collectiveSize = 3;
+    [Tooltip("The duration (%) of the refractory period in terms of a percentage of the agents's oscillator-periods.")]
+    public float t_ref_perc_of_period = 0.1f; // ISH LENGDEN I TID PÅ digitalQuickTone er 0.4s. Nymoen BRUKTE 50ms I SIN IMPLEMENTASJON. JEG PRØVDE OGSÅ 0.6f. possiblePool = {0.09f, 0.4f, 0.6f}.
+    [Tooltip("Minimum and maximum initialization-frequencies (Hz).")]
+    public Vector2 minMaxInitialFreqs = new Vector2(0.5f, 8f);
+
+    // Defined hyperparameters by user and constant throughout simulation-run:
+    [Tooltip("The number of times in a row the t_q-window (where no fire-events can be heard) must be equally long.")]
+    public int k = 8;
+    [Tooltip("The duration (s) of the short time-window the nodes are allowed to fire within.")]
+    public float t_f = 0.08f;
+    [Tooltip("Whether to use Avg. when defining new t_q-windows, or not (implying using Median, as these two estimators are the only two implemented).")]
+    public bool useTQAverage = false;
+
+    [Tooltip("The simulation-speed compared to real-time?")]
     public float adjustedTimeScale = 1.0f;
 
-    // General Meta-variables:
+    // ---- END OF Collective/Environment Hyper-parameters being recorded and displayed in the Inspector----
+
+    // ---- START OF General Meta/Environment not being recorded but displayed in the Inspector----
+
+    [Tooltip("The number of simulation-runs per Unity Game-run.")]
     public int simulationRuns = 1;
-    public float runDurationLimit = 300f; // 5 minutes (given in seconds)
-	public bool debugSuccessOn = false;
+    [Tooltip("The simulation-timelimit in seconds (i.e. the max simulation-time a simulation-run is allowed to run for before being regarded as a failed synchronization-run).")]
+    public float runDurationLimit = 300f;
+    [Tooltip("Whether to get logs about Synchrony-successes (in terms of the 'towards-k'-counter) or not.")]
+    public bool debugSuccessOn = false;
+    [Tooltip("Whether to get logs about t_f-/t_q-windows and corresponding timestamps or not.")]
     public bool debugTqTfOn = false;
+    [Tooltip("Whether to give the human observer a sound on every agent-pulse/-firing or not.")]
+    public bool useSound = true;
+    [Tooltip("Whether to give the human observer a visual and Lerped color-signal on every agent-pulse/-firing or not.")]
+    public bool useVisuals = false;
 
-    // Spawning variables:
+    // Spawning:
+    [Tooltip("All the DrSquiggle-prefabs we want to spawn and be synchronized.")]
     public GameObject[] squigglePrefabs;
-    public float spawnRadius = 10.0f; // units in radius from origo to the outermost Dr. Squiggle spawn-point
 
-    // CSV-Serialization variables:
+    // CSV-Serialization:
+    [Tooltip("The start of the filepath to all saved phase-values throughout all simulation-runs.")]
     public string phaseCSVPathStart = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Phases" + "\\" + "phases_over_time";
+    [Tooltip("The start of the filepath to all saved frequency-values throughout all simulation-runs.")]
     public string frequencyCSVPathStart = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Frequencies" + "\\" + "freqs_over_time";
+    [Tooltip("The start of the filepath to all saved performance measure plot-materials throughout all simulation-runs.")]
     public string nodeFiringDataPathStart = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "NodeFiringPlotMaterial" + "\\" + "node_firing_data";
+    [Tooltip("The filepath to the current Synchrony-Dataset being built (added datapoints cumulatively to).")]
     public string datasetPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "synchronyDataset.csv";
 
-	// Performance-/Synchronization-measure variables:
-	// Defined hyperparameters and constant throughout simulation-run:
-	public float t_f = 0.08f; // the duration of the time-window the nodes are allowed to fire during
-	public int k = 8; // the number of times in a row the 't_q'-/t_q-window (where no fire-events can be heard) must be equally long
-    public bool useTQAverage = false; // If true, it implies that TQMedian will be used.
+    // ---- END OF General Meta/Environment not being recorded but displayed in the Inspector----
 
 
 
-	// General Meta-variables:
-	private static int atSimRun = 0;
+    // PRIVATE VARIABLES NECESSARY TO MAKE THE COGS GO AROUND:
 
-    // Spawning variables:
+    // General Meta:
+    private static int atSimRun = 0;
+
+    // Spawning:
+    private float spawnRadius; // The radius from origo within which the agents are allowed to spawn without colliding.
     private float agentWidth = Mathf.Sqrt(Mathf.Pow(4.0f, 2) + Mathf.Pow(4.0f, 2)); // diameter from tentacle to tentacle (furthest from each other)
     private List<Vector2> spawnedPositions = new List<Vector2>();
     private List<SquiggleScript> spawnedAgentScripts = new List<SquiggleScript>();
 
-	// Node-firing plot variables:
+	// Node-firing plot:
     private List<int> agentWithAgentIDsJustFired = new List<int>(); // Initializing (used for creation of node-firing-plot) a list for all the agents with agent-ids that just fired. 
-	
-	// Performance-/Synchronization-measure variables:
-	// Helping variables implementing the synch-measure and enabling the wanted functionality for testing/evaluating a synch-simulation run:
-	private bool t_f_is_now = false; // A short "up-time" when all nodes are allowed to fire during. The duration itself is constant, but when in simulation-time it will be "up", depends largely on the t_q-variable.
-	private float t_q = 0f;
+
+    // ---- START OF Performance-/Synchronization-measure ----
+
+    // Helping variables implementing the synch-measure, as well as enabling the wanted functionality for testing/evaluating a 'Synchronization simulation-run':
+    private bool t_f_is_now = false; // A short "up-time"-flag when all nodes are allowed to fire during. The duration of how long this flag is positive itself is constant (t_f), but when in simulation-time it will be "up", depends largely on the t_q-variable as well as when the t_q-windows are triggered.
+	private float t_q = 0f; // The time-window in which the agents are not allowed to fire pulses within.
 	
 	private bool first_firing_is_perceived = false;
 	
-	private float reset_t_q_flag_raiser = 0f;
-	private bool reset_t_q_flag = false;
+	private float reset_t_q_flag_raiser = 0f; // The "syndebukk"-agent's firing-time (simulation time), who fired illegally and caused the initiation of a 'reset t_q'-process.
+    private bool reset_t_q_flag = false; // A flag. Is it positive, a 'reset t_q'-process is initiated, if negative, all is good and the agents are on their way to achieve harmonic synchrony.
 	
-	private int medians_acquired = 0;
+	private int defining_times_acquired = 0; // Will be 0 if the early defining time has not yet been found, 1 if the early defining time has been found, and reset to 0 if the late defining time has been found.
 	
-	private List<float> early_t_q_defining_times = new List<float>();
-	private bool first_early_reset_defining_time_added = false;
-	private float early_t_q_definer = 0f;
+	private List<float> early_t_q_defining_times = new List<float>(); // A list of early t_q-definers (the firing-times of agents who fired within t_f simulation-seconds after the agent who fired after more than t_f seconds after reset_t_q_flag_raiser).
+    private bool first_early_reset_defining_time_added = false;
+	private float early_t_q_definer = 0f; // The first t_q-definer (either an Avg.- or Median-estimate) being used to define a new t_q-window.
 	
-	private List<float> late_reset_defining_times = new List<float>();
-	private bool first_late_t_q_defining_time_added = false;
+	private List<float> late_reset_defining_times = new List<float>(); // A list of late t_q-definers (the firing-times of agents who fired within t_f simulation-seconds after the agent who fired after more than t_f seconds after early_t_q_definer).
+    private bool first_late_t_q_defining_time_added = false;
 	
-	private bool[] agentiHasFiredAtLeastOnce;
-	private bool hSynchConditionsAreMet = false; // A boolean that should be true no sooner than when all the conditions for the achievement of Harmonic Synchrony are fulfilled.
-	private int equal_t_q_streak_counter = 0; // to become equal to 'k'.
+	private bool[] agentiHasFiredAtLeastOnce; // An array with as many boolean values as there are agents, which are to be put "high"/true if agent with agentID fired at least once during the simulation-run.
+    private bool hSynchConditionsAreMet = false; // A boolean that should be true no sooner than when all the conditions (as defined the bulletpoints in section 5.5 in my MSc thesis, or the bulletpoints in section V.A. in Nymoen's "firefly"-paper) for the achievement of Harmonic Synchrony are fulfilled.
+    private int equal_t_q_streak_counter = 0; // 'towards-k'-counter to become equal to 'k'.
 
-	private int last_t_f_firers_counter = 0;
+	private int last_t_f_firers_counter = 0; // A counter for how many fire-events were heard throughout the last firing-period t_f, used as a safety-mechanism to detect firing-periods within which no agents fire — so that we don't increment the 'towards-k'-counter after those firing-periods.
+
+    // ---- END OF Performance-/Synchronization-measure ----
 
     // ------- END OF Variable Declarations -------
 
@@ -82,11 +115,11 @@ public class AgentManager : MonoBehaviour {
         // Speeding up or down the simulation if that is wanted
         Time.timeScale = adjustedTimeScale;
 
-		// Initializing an array with as many boolean values as there are agents, which are to be put "high"/true if agent with agentID fired at least once during the simulation-run.
+        spawnRadius = collectiveSize * 1.5f; // Simply an empirical model of the necessary space the agents need to spawn. Or just a guess I guess.
 		agentiHasFiredAtLeastOnce = new bool[collectiveSize];
 
-		// Spawning all agents randomly (but pretty naively as of now)
-		SpawnAgents();
+        // Spawning all agents randomly (but pretty naively as of now)
+        SpawnAgents();
 
         // Creating all .CSV-files I want to update throughout the simulation 
         CreateAllCSVFiles();
@@ -237,7 +270,7 @@ public class AgentManager : MonoBehaviour {
         } else {
             new_t_q_estimate = ListMedian(late_reset_defining_times) - early_t_q_definer - t_f;
         }
-		medians_acquired = 0; // Resetting median-counter despite its true-value of 2 (for the next possible TQ-resetting).
+		defining_times_acquired = 0; // Resetting median-counter despite its true-value of 2 (for the next possible TQ-resetting).
 		// the 4)-"t_q-reset"-processclosing is executed:
 		t_q = new_t_q_estimate;
         if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) New 't_q' set: " + t_q + ".");
@@ -306,7 +339,7 @@ public class AgentManager : MonoBehaviour {
 
         if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) 'early_median' defined: " + early_t_q_definer + ".");
         
-        medians_acquired ++;
+        defining_times_acquired ++;
 		TFLower();
 		// Variabel-opprydning:
 		early_t_q_defining_times.Clear();
@@ -343,13 +376,13 @@ public class AgentManager : MonoBehaviour {
 	private bool LateTQDefinerIsInTheMaking() {
 		// Returning true if the 3)-"reset t_q"-process is started, the candidate late median definer is far enough away from the early median time (to avoid negative numbers), the early median has been found but the late and second median still hasn't been used to define the new t_q-estimate through the DefineNewTQ()-function. Returns false otherwise.
 		
-		return (reset_t_q_flag && (Time.timeSinceLevelLoad > (early_t_q_definer + t_f)) && (medians_acquired == 1));
+		return (reset_t_q_flag && (Time.timeSinceLevelLoad > (early_t_q_definer + t_f)) && (defining_times_acquired == 1));
 	}
 	
 	private bool EarlyTQDefinerIsInTheMaking() {
 		// Returning true if the 3)-"reset t_q"-process is started, the candidate early median definer is far enough away from the reset-triggering firing-time (to avoid negative numbers), and the early and first median still haven't been acquired through the DefineEarlyMedian()-function. Returns false otherwise.
 		
-		return (reset_t_q_flag && (Time.timeSinceLevelLoad > (reset_t_q_flag_raiser + t_f)) && (medians_acquired == 0));
+		return (reset_t_q_flag && (Time.timeSinceLevelLoad > (reset_t_q_flag_raiser + t_f)) && (defining_times_acquired == 0));
 	}
 	
 	
@@ -503,12 +536,11 @@ public class AgentManager : MonoBehaviour {
     //private void CreateSynchDatasetCSV() {
         // Creating a .CSV-file for the MSc Synchrony-dataset, which are to contain the HSYNCHTIMEs with their covariates.
         //List<string> performanceAndCovariatesHeader = new List<string>(); // The covariates we want to record the performance-measure/outcome/response-variable for
-        //performanceAndCovariatesHeader.Add("HSYNCHTIME");
+        //performanceAndCovariatesHeader.Add("SIMTIME");
         //performanceAndCovariatesHeader.Add("SUCCESS");    // Binary covariate (no=0 or yes=1)
         //performanceAndCovariatesHeader.Add("PHASEADJ");
         //CreateCSVWithStringHeader(datasetPath, performanceAndCovariatesHeader);
     //}
-
 
 
     private void UpdateAllCSVFiles() {
@@ -560,92 +592,76 @@ public class AgentManager : MonoBehaviour {
     }
 
     private void SaveDatapointToDataset(float runDuration) {
-        // Saving the Performance Measure (HSYNCHTIME or Simulation-time in secs) and the current Simulator-covariates/-hyperparameters (currently assumed to be manually written in the existing .CSV already).
+        // Saving a datapoint to a .CSV-dataset containing data: Measurements Simulation time (s) (perf.-measure) and Simulation success, as well as Simulation hyper-parameters/covariates/explanators/predictors. (.CSV-header currently assumed to be manually written in the existing .CSV already)
 
-        // Initializing empty float-List soon-to-contain the performance measure and the covariates/explanators
+        // Initializing empty list soon-to-contain the data described above:
         List<float> performanceAndCovariateValues = new List<float>();
 
-        // Adding the performance measure HSYNCHTIME
-        float HSYNCHTIME = runDuration;
-        performanceAndCovariateValues.Add(HSYNCHTIME);
+        // Adding Response/Outcome Measurements that I don't know before simulating:
 
-        // Adding Covariate 1
+        float SIMTIME = runDuration;
+        performanceAndCovariateValues.Add(SIMTIME);
+
         float SUCCESS = System.Convert.ToSingle(hSynchConditionsAreMet);
         performanceAndCovariateValues.Add(SUCCESS);
         // (JUST FOR DEBUGGING) Telling the programmer in the console whether the simulation run was a success or not:
         if (hSynchConditionsAreMet) Debug.Log("CONGRATULATIONS! Harmonic synchrony in your musical multi-robot collective at simRun " + atSimRun + " was achieved in " + runDuration + " seconds!");
         else Debug.Log("TOO BAD... Harmonic synchrony, according to the performance-measure defined by K. Nymoen et al., was not achieved at simRun " + atSimRun + " within the run time-limit of " + runDurationLimit + " seconds..");
 
-        // Adding Covariate 2
+
+        // Adding Collective/Environment Hyper-parameters/Covariates that I know before simulating:
+
         float COLLSIZE = collectiveSize;
         performanceAndCovariateValues.Add(COLLSIZE);
 
-        // Adding Covariate 3
-        float PHASEADJ = System.Convert.ToSingle(spawnedAgentScripts[0].useNymoenPhaseAdj); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE
-        performanceAndCovariateValues.Add(PHASEADJ);
-
-        // Adding Covariate 4
-        float FREQADJ = System.Convert.ToSingle(spawnedAgentScripts[0].useNymoenFreqAdj); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE
-        performanceAndCovariateValues.Add(FREQADJ);
-
-        // Adding Covariate 5
-        float ALPHA = System.Convert.ToSingle(spawnedAgentScripts[0].alpha); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE
-        performanceAndCovariateValues.Add(ALPHA);
-
-        // Adding Covariate 6
-        float BETA = System.Convert.ToSingle(spawnedAgentScripts[0].beta); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE
-        performanceAndCovariateValues.Add(BETA);
-
-        // Adding Covariate 7
-        float TREFPERC = System.Convert.ToSingle(spawnedAgentScripts[0].t_ref_perc_of_period); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE
+        float TREFPERC = System.Convert.ToSingle(t_ref_perc_of_period);
         performanceAndCovariateValues.Add(TREFPERC);
 
-        // Adding Covariate 8
-        float M = System.Convert.ToSingle(spawnedAgentScripts[0].m); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE
-        performanceAndCovariateValues.Add(M);
-
-        // Adding Covariate 9
-        float MINFREQ = System.Convert.ToSingle(spawnedAgentScripts[0].minMaxInitialFreqs.x); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE
+        float MINFREQ = System.Convert.ToSingle(minMaxInitialFreqs.x);
         performanceAndCovariateValues.Add(MINFREQ);
 
-        // Adding Covariate 10
-        float MAXFREQ = System.Convert.ToSingle(spawnedAgentScripts[0].minMaxInitialFreqs.y); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE
+        float MAXFREQ = System.Convert.ToSingle(minMaxInitialFreqs.y);
         performanceAndCovariateValues.Add(MAXFREQ);
 
-        // Adding Covariate 11
-        float K = System.Convert.ToSingle(k); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE
+        float K = System.Convert.ToSingle(k);
         performanceAndCovariateValues.Add(K);
 
-        // Adding Covariate 12
         float T_F = t_f;
         performanceAndCovariateValues.Add(T_F);
 
-        // Adding Covariate 13
         float TQDEFINER = System.Convert.ToSingle(useTQAverage);
         performanceAndCovariateValues.Add(TQDEFINER);
 
-        // Adding (Environment-) Covariate 14
         float ADJTIMESCALE = adjustedTimeScale;
         performanceAndCovariateValues.Add(ADJTIMESCALE);
 
-        // POSSIBLE TODO:
-        // Splitting Covariates into collective-covariates and individual-covariates.
 
-        // Add Covariate N
+        // Adding Individual/Agent Hyper-parameters/Covariates (NB! Due to current design of datapoint-saving, these have to be equal for all agents) that I know before simulating:
 
-        // Saving one datapoint, a.k.a. writing one .CSV-row (Performance-measure, Covariates) to the .CSV-file at the datasetPath
+        float ALPHA = System.Convert.ToSingle(spawnedAgentScripts[0].alpha); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
+        performanceAndCovariateValues.Add(ALPHA);
+
+        float PHASEADJ = System.Convert.ToSingle(spawnedAgentScripts[0].useNymoenPhaseAdj); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
+        performanceAndCovariateValues.Add(PHASEADJ);
+
+        float BETA = System.Convert.ToSingle(spawnedAgentScripts[0].beta); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
+        performanceAndCovariateValues.Add(BETA);
+         
+        float FREQADJ = System.Convert.ToSingle(spawnedAgentScripts[0].useNymoenFreqAdj); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
+        performanceAndCovariateValues.Add(FREQADJ);
+
+        float M = System.Convert.ToSingle(spawnedAgentScripts[0].m); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
+        performanceAndCovariateValues.Add(M);
+
+
+        // POSSIBLE TODOs:
+            // - Make a prettier Inspector for grouping relevant variables with each other (cf. Unity bookmark in Brave).
+            // - Make a separate 'simulation-run dataset' with rows for each agent and columns for each Individual/Agent Hyper-parameters (so that the NB! on the reMarkable hyper-parameter note is taken care of) — if it is needed or wanted or useful.
+
+
+        // Saving one datapoint, a.k.a. writing one .CSV-row (Measurements, Covariates) to the .CSV-file at the datasetPath:
         FloatUpdateCSV(datasetPath, performanceAndCovariateValues);
     }
 
     // ------- END OF CSV-Serialization Functions/Methods -------
-
-
-
-
-
-
-
-    // ------- START OF Helping-/Utility Functions/Methods -------
-
-    // ------- END OF Helping-/Utility Functions/Methods -------
 }

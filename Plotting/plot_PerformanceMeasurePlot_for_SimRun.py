@@ -121,7 +121,7 @@ def finishAndShowPlot(timeArray, yticks, no_of_agents):
     plt.ylabel("Node # firing at simulation time")
     plt.yticks(yticks)
     plt.gca().invert_yaxis()
-    plt.savefig(str(no_of_agents) + "AgentsPerformanceMeasure.pdf")
+    # plt.savefig(str(no_of_agents) + "AgentsPerformanceMeasure.pdf", bbox_inches="tight") # UNCOMMENT FOR SAVING FIGURE!
     plt.show()
 
 if __name__ == "__main__":

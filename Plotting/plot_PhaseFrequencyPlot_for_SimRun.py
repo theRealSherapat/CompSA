@@ -44,7 +44,7 @@ def plotPhasesAndFrequencies(t, phaseDataMatrix, frequencyDataMatrix):
     
     # Printing out the whole sub-plot
     plt.tight_layout()
-    # plt.savefig("mySavedPDF.pdf", format="pdf", bbox_inches="tight") # Uncomment if you want to save the figure to .PDF.
+    # plt.savefig(str(frequencyDataMatrix.shape[1]) + "AgentsPhasesAndFrequencies.pdf", bbox_inches="tight") # UNCOMMENT FOR SAVING FIGURE!
     plt.show()
     
 def scatterPlotLegalMultiples(timeArray, freqsDataMatrix):
