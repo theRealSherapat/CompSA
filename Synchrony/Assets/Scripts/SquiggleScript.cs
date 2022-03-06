@@ -3,7 +3,7 @@ using UnityEngine;
 using static DavidsUtils;
 
 public class SquiggleScript : MonoBehaviour {
-    // ------- START OF Variable Declarations -------
+    // ------- START OF 'Variable-declarations' -------
 
     // ---- START OF Individual/Agent Hyper-parameters being recorded and displayed in the Inspector ----
 
@@ -57,13 +57,12 @@ public class SquiggleScript : MonoBehaviour {
     // Audible / Sound:
     private AudioSource audioSource;            // A reference to the AudioSource-component on the agent that is told to play the fire sound.
 
-    // ------- END OF Variable Declarations -------
+    // ------- END OF 'Variable-declarations' -------
 
 
 
 
-
-    // ------- START OF MonoBehaviour Functions/Methods -------
+    // ------- START OF 'MonoBehaviour-functions/-methods' -------
 
     void Start() {
         // Setting up for a human listener being able to see the ``fire''-events from the Dr. Squiggles
@@ -115,13 +114,12 @@ public class SquiggleScript : MonoBehaviour {
         }
     }
 
-    // ------- END OF MonoBehaviour Functions/Methods -------
+    // ------- END OF 'MonoBehaviour-functions/-methods' -------
 
 
 
 
-
-    // ------- START OF Core-/Essential Functions/Methods -------
+    // ------- START OF 'Core & essential functions/methods' -------
 
     private void OnPhaseClimax() {
         if (!firedLastClimax) { // This should run only every other/second time it gets checked.
@@ -239,14 +237,12 @@ public class SquiggleScript : MonoBehaviour {
         frequency = newFrequency;
     }
 
-    // ------- END OF Core-/Essential Functions/Methods -------
+    // ------- END OF 'Core & essential functions/methods' -------
 
 
 
 
-
-
-    // ------- START OF Helping-/Utility Functions/Methods -------
+    // ------- START OF 'Helping- & utility-functions/methods' -------
 
     private void SetAgentCorpsColor() {
         // Sets the agent body's corps to a lerped color (ranging from the fire-color, to its standard corps-color).
@@ -323,15 +319,12 @@ public class SquiggleScript : MonoBehaviour {
         return agentID;
     }
 
-    // ------- END OF Helping-/Utility Functions/Methods -------
+    // ------- END OF 'Helping- & utility-functions/methods' -------
 
 
 
 
-
-
-
-    // ------- START OF Testing Functions/Methods -------
+    // ------- START OF 'Testing-functions/-methods' -------
 
     private void UpdateFrequencyImmediately() {
         float epsilon_n;
@@ -357,5 +350,5 @@ public class SquiggleScript : MonoBehaviour {
         frequency = newFrequency;
     }
 
-    // ------- END OF Testing Functions/Methods -------
+    // ------- END OF 'Testing-functions/-methods' -------
 }
