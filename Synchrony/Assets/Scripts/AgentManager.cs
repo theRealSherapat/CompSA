@@ -4,18 +4,16 @@ using System.Linq;
 using static DavidsUtils;
 
 public class AgentManager : MonoBehaviour {
-    // ------- START OF Variable Declarations -------
+    // ------- START OF 'Variable-declarations' -------
 
-    // ---- START OF Collective/Environment Hyper-parameters being recorded and displayed in the Inspector ----
-
+        // ---- START OF 'Recorded collective-/environment-hyperparameters' ----
     [Tooltip("The number of agents to be spawned and synchronized.")]
     public int collectiveSize = 3;
     [Tooltip("The duration (%) of the refractory period in terms of a percentage of the agents's oscillator-periods.")]
-    public float t_ref_perc_of_period = 0.1f; // ISH LENGDEN I TID PÅ digitalQuickTone er 0.4s. Nymoen BRUKTE 50ms I SIN IMPLEMENTASJON. JEG PRØVDE OGSÅ 0.6f. possiblePool = {0.09f, 0.4f, 0.6f}.
+    public float t_ref_perc_of_period = 0.1f;       // ISH LENGDEN I TID PÅ digitalQuickTone er 0.4s. Nymoen BRUKTE 50ms I SIN IMPLEMENTASJON. JEG PRØVDE OGSÅ 0.6f. possiblePool = {0.09f, 0.4f, 0.6f}.
     [Tooltip("Minimum and maximum initialization-frequencies (Hz).")]
     public Vector2 minMaxInitialFreqs = new Vector2(0.5f, 8f);
 
-    // Defined hyperparameters by user and constant throughout simulation-run:
     [Tooltip("The number of times in a row the t_q-window (where no fire-events can be heard) must be equally long.")]
     public int k = 8;
     [Tooltip("The duration (s) of the short time-window the nodes are allowed to fire within.")]
@@ -25,11 +23,9 @@ public class AgentManager : MonoBehaviour {
 
     [Tooltip("The simulation-speed compared to real-time?")]
     public float adjustedTimeScale = 1.0f;
+        // ---- END OF 'Recorded collective-/environment-hyperparameters' ----
 
-    // ---- END OF Collective/Environment Hyper-parameters being recorded and displayed in the Inspector----
-
-    // ---- START OF General Meta/Environment not being recorded but displayed in the Inspector----
-
+        // ---- START OF 'Non-recorded general meta-/environment-hyperparemeters' ----
     [Tooltip("The number of simulation-runs per Unity Game-run.")]
     public int simulationRuns = 1;
     [Tooltip("The simulation-timelimit in seconds (i.e. the max simulation-time a simulation-run is allowed to run for before being regarded as a failed synchronization-run).")]
@@ -56,12 +52,10 @@ public class AgentManager : MonoBehaviour {
     public string nodeFiringDataPathStart = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "NodeFiringPlotMaterial" + "\\" + "node_firing_data";
     [Tooltip("The filepath to the current Synchrony-Dataset being built (added datapoints cumulatively to).")]
     public string datasetPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "synchronyDataset.csv";
-
-    // ---- END OF General Meta/Environment not being recorded but displayed in the Inspector----
-
+        // ---- END OF 'Non-recorded general meta-/environment-hyperparemeters' ----
 
 
-    // PRIVATE VARIABLES NECESSARY TO MAKE THE COGS GO AROUND:
+        // ---- START OF 'Private variables necessary to make the cogs go around' ----
 
     // General Meta:
     private static int atSimRun = 0;
@@ -75,9 +69,7 @@ public class AgentManager : MonoBehaviour {
 	// Node-firing plot:
     private List<int> agentWithAgentIDsJustFired = new List<int>(); // Initializing (used for creation of node-firing-plot) a list for all the agents with agent-ids that just fired. 
 
-    // ---- START OF Performance-/Synchronization-measure ----
-
-    // Helping variables implementing the synch-measure, as well as enabling the wanted functionality for testing/evaluating a 'Synchronization simulation-run':
+            // ---- START OF 'Synch.-Perf.-measure related' variables ----
     private bool t_f_is_now = false; // A short "up-time"-flag when all nodes are allowed to fire during. The duration of how long this flag is positive itself is constant (t_f), but when in simulation-time it will be "up", depends largely on the t_q-variable as well as when the t_q-windows are triggered.
 	private float t_q = 0f; // The time-window in which the agents are not allowed to fire pulses within.
 	
@@ -100,16 +92,16 @@ public class AgentManager : MonoBehaviour {
     private int equal_t_q_streak_counter = 0; // 'towards-k'-counter to become equal to 'k'.
 
 	private int last_t_f_firers_counter = 0; // A counter for how many fire-events were heard throughout the last firing-period t_f, used as a safety-mechanism to detect firing-periods within which no agents fire — so that we don't increment the 'towards-k'-counter after those firing-periods.
+            // ---- END OF 'Synch.-Perf.-measure related' variables ----
 
-    // ---- END OF Performance-/Synchronization-measure ----
+        // ---- END OF 'Private variables necessary to make the cogs go around' ----
 
-    // ------- END OF Variable Declarations -------
-
-
-
+    // ------- END OF 'Variable-declarations' -------
 
 
-    // ------- START OF MonoBehaviour Functions/Methods -------
+
+
+    // ------- START OF 'MonoBehaviour-functions/-methods' -------
 
     void Start() {
         // Speeding up or down the simulation if that is wanted
@@ -140,15 +132,14 @@ public class AgentManager : MonoBehaviour {
         UpdateAllCSVFiles();
     }
 
-    // ------- END OF MonoBehaviour Functions/Methods -------
+    // ------- END OF 'MonoBehaviour-functions/-methods' -------
 
 
 
 
+    // ------- START OF 'Synch.-Perf.-measure (termination-evaluation) functions/methods' -------
 
-    // ------- START OF Performance-measure Termination-evaluation Functions/Methods -------
-	
-	private void CheckHSynchConditions() {
+    private void CheckHSynchConditions() {
         // Checks 'Condition 2' and 'Condition 3' respectively: namely, '2': if the agents have beat evenly (with a constant t_q-value) k times in a row, as well as if all nodes have fired at least once throughout the evaluation-/testing-period (simulation-run).
 		
 		// The whole synchronization-measure implemented is assumed to facilitate and ensure the keeping of 'Condition 1', namely that only legal firing is happening (during a very short and white time-window t_f), not illegal firing (during the longer and gray t_q-window). Thus this 'Condition 1' is not explicitly checked here, but assumed.
@@ -424,16 +415,12 @@ public class AgentManager : MonoBehaviour {
 		return t_f_is_now;
 	}
 
-    // ------- END OF Performance-measure Termination-evaluation Functions/-Methods -------
+    // ------- END OF 'Synch.-Perf.-measure (termination-evaluation) functions/methods' -------
 
 
 
 
-
-
-
-
-    // ------- START OF Spawning-Functions/-Methods -------
+    // ------- START OF 'Agent spawning-functions/-methods' -------
 
     private void SpawnAgents() {
         for (int i = 0; i < collectiveSize; i++) {
@@ -481,15 +468,12 @@ public class AgentManager : MonoBehaviour {
         return currentGuess;
     }
 
-    // ------- END OF Spawning-Functions/-Methods -------
-
-
-    
+    // ------- END OF 'Agent spawning-functions/-methods' -------
 
 
 
 
-    // ------- START OF CSV-Serialization Functions/Methods -------
+    // ------- START OF '.CSV serialization (data-saving) functions/-methods' -------
 
     private void CreateAllCSVFiles() {
         // Obtaining the .CSV-header consisting of the agents's IDs
@@ -663,5 +647,5 @@ public class AgentManager : MonoBehaviour {
         FloatUpdateCSV(datasetPath, performanceAndCovariateValues);
     }
 
-    // ------- END OF CSV-Serialization Functions/Methods -------
+    // ------- END OF '.CSV serialization (data-saving) functions/-methods' -------
 }
