@@ -4,7 +4,75 @@ using System.IO;
 using System.Linq;
 using UnityEngine.SceneManagement;
 
-public static class DavidsUtils { // HUSK AT Å KALLE DET DavidsUtils KAN VÆRE UÆRLIG, SIDEN DU FIKK INSPIRASJON FRA PIERRES Unity-PROSJEKT.
+public static class SynchronyUtils {
+
+    // '.CSV -CREATE & -UPDATE':
+
+    public static void CreateCSVWithIntHeader(string path, List<int> headerEntries) {
+        // Summary: creates a .CSV-file at arg1, <path>, with the top-line/header according to arg2, <headerEntries>.
+        TextWriter tw = new StreamWriter(path, false);
+        string firstLine = "";
+
+        // Fyller inn firstLine med IDene til Dr. Squigglene f.eks.:
+        for (int i = 0; i < headerEntries.Count; i++) {
+            firstLine += headerEntries[i];
+
+            if (i != headerEntries.Count - 1) firstLine += ";";
+        }
+
+        tw.WriteLine(firstLine);
+        tw.Close();
+    }
+
+    public static void CreateCSVWithStringHeader(string path, List<string> headerEntries) {
+        // Summary: creates a .CSV-file at arg1, <path>, with the top-line/header according to arg2, <headerEntries>.
+        TextWriter tw = new StreamWriter(path, false);
+        string firstLine = "";
+
+        // Fyller inn firstLine med IDene til Dr. Squigglene f.eks.:
+        for (int i = 0; i < headerEntries.Count; i++) {
+            firstLine += headerEntries[i];
+
+            if (i != headerEntries.Count - 1) firstLine += ";";
+        }
+
+        tw.WriteLine(firstLine);
+        tw.Close();
+    }
+
+    public static void FloatUpdateCSV(string path, List<float> lineEntries) {
+        TextWriter tw = new StreamWriter(path, true);
+        string newLine = "";
+
+        for (int i = 0; i < lineEntries.Count; i++) {
+            newLine += string.Format("{0:N6}", lineEntries[i]);
+
+            if (i != lineEntries.Count - 1) newLine += ";";
+        }
+
+        tw.WriteLine(newLine);
+        tw.Close();
+    }
+
+
+
+
+    // 'Unity Scene & Game':
+
+    public static void LoadMySceneAgain() {
+        string currentScene = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(currentScene);
+    }
+
+    public static void QuitMyGame() {
+        UnityEditor.EditorApplication.isPlaying = false;
+    }
+
+
+
+
+    // 'LISTS':
+
     public static List<float> ShiftFloatListRightToLeftWith(List<float> thisList, float thisInput) {
         thisList.Add(thisInput);
         thisList.RemoveAt(0);
@@ -60,6 +128,11 @@ public static class DavidsUtils { // HUSK AT Å KALLE DET DavidsUtils KAN VÆRE UÆ
         Debug.Log("END.");
     }
 
+
+
+
+    // 'ARRAYS':
+
     public static void DebugLogMyIntArray(int[] arrayo) {
         Debug.Log("START:");
         for (int i = 0; i < arrayo.Length; i++) {                         // selvom 'for-in' loops i C# virker til å være ordered.
@@ -68,60 +141,10 @@ public static class DavidsUtils { // HUSK AT Å KALLE DET DavidsUtils KAN VÆRE UÆ
         Debug.Log("END.");
     }
 
-    public static void CreateCSVWithIntHeader(string path, List<int> headerEntries) {
-        // Summary: creates a .CSV-file at arg1, <path>, with the top-line/header according to arg2, <headerEntries>.
-        TextWriter tw = new StreamWriter(path, false);
-        string firstLine = "";
 
-        // Fyller inn firstLine med IDene til Dr. Squigglene f.eks.:
-        for (int i = 0; i < headerEntries.Count; i++) {
-            firstLine += headerEntries[i];
 
-            if (i != headerEntries.Count - 1) firstLine += ";";
-        }
 
-        tw.WriteLine(firstLine);
-        tw.Close();
-    }
-
-    public static void CreateCSVWithStringHeader(string path, List<string> headerEntries) {
-        // Summary: creates a .CSV-file at arg1, <path>, with the top-line/header according to arg2, <headerEntries>.
-        TextWriter tw = new StreamWriter(path, false);
-        string firstLine = "";
-
-        // Fyller inn firstLine med IDene til Dr. Squigglene f.eks.:
-        for (int i = 0; i < headerEntries.Count; i++) {
-            firstLine += headerEntries[i];
-
-            if (i != headerEntries.Count - 1) firstLine += ";";
-        }
-
-        tw.WriteLine(firstLine);
-        tw.Close();
-    }
-
-    public static void FloatUpdateCSV(string path, List<float> lineEntries) {
-        TextWriter tw = new StreamWriter(path, true);
-        string newLine = "";
-
-        for (int i = 0; i < lineEntries.Count; i++) {
-            newLine += string.Format("{0:N6}", lineEntries[i]);
-
-            if (i != lineEntries.Count - 1) newLine += ";";
-        }
-
-        tw.WriteLine(newLine);
-        tw.Close();
-    }
-
-    public static void LoadMySceneAgain() {
-        string currentScene = SceneManager.GetActiveScene().name;
-        SceneManager.LoadScene(currentScene);
-    }
-	
-	public static void QuitMyGame() {
-        UnityEditor.EditorApplication.isPlaying = false;
-    }
+    // 'DATATYPE CONVERSIONS':
 
     public static string BoolToString(bool value) {
         if (value) return "True";

@@ -1,31 +1,29 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static DavidsUtils;
+using static SynchronyUtils;
 
 public class SquiggleScript : MonoBehaviour {
-    // ------- START OF 'Variable-declarations' -------
+    
+    // 'VARIABLES':
 
-    // ---- START OF Individual/Agent Hyper-parameters being recorded and displayed in the Inspector ----
+    // Recorded individual-/agent-hyperparameters:
 
     // Phase-adjustment:
     [Tooltip("Pulse coupling constant, denoting coupling strength between nodes, deciding how much robots adjust phases after detecting a pulse from a neighbour. The larger the constant, the larger (in absolute value) the phase-update?")]
-    public float alpha = 0.05f;
+    public float alpha = 0.1f;
     [Tooltip("Whether the agent is using Kristian Nymoen et al.'s phase-update function to adjust phases with after detecting a pulse from a neighbour, or not (implying the usage of Mirollo-Strogatz's phase-update function, as we only have implemented those two).")]
-    public bool useNymoenPhaseAdj = true;       // HAS TO BE GENERALIZED OR MADE LESS BINARY IF WE ARE TO USE MORE THAN TWO POSSIBLE Phase-Adjustment methods.
+    public bool useNymoenPhaseAdj = false;       // HAS TO BE GENERALIZED OR MADE LESS BINARY IF WE ARE TO USE MORE THAN TWO POSSIBLE Phase-Adjustment methods.
 
     // Frequency-adjustment:
     [Tooltip("Frequency coupling constant, deciding how much robots adjust frequencies after detecting pulse onsets from neighbours. The larger the constant, the larger (in absolute value) the frequency-update?")]
     public float beta = 0.8f;
     [Tooltip("Whether the agent is using Kristian Nymoen et al.'s frequency-update function to adjust frequencies with after detecting a pulse from a neighbour, or not (implying an attempt at solving the simpler phase-problem with only Phase-Adj. and not Freq.-Adj., as we only have implemented Kristian's Freq.-Adj.-method so far).")]
-    public bool useNymoenFreqAdj = true;        // HAS TO BE GENERALIZED OR MADE LESS BINARY IF WE ARE TO USE MORE THAN TWO POSSIBLE Frequency-Adjustment methods.
+    public bool useNymoenFreqAdj = false;        // HAS TO BE GENERALIZED OR MADE LESS BINARY IF WE ARE TO USE MORE THAN TWO POSSIBLE Frequency-Adjustment methods.
     [Tooltip("Degree of error-memory, i.e. the length of a list of the last m error-scores. The larger the length m, the more error-scores we calculate the self-assessed synch-score s(n) based upon.")]
     public int m = 5;
 
-    // ---- END OF Individual/Agent Hyper-parameters being recorded and displayed in the Inspector ----
 
-
-
-    // PRIVATE VARIABLES NECESSARY TO MAKE THE COGS GO AROUND:
+    // 'Private variables necessary to make the cogs go around':
 
     // Core for (oscillator-) synchronization:
     private float phase;                        // The agents's progression through its oscillator-period. A number between 0 (at the beginning of its cycle) and 1 (at the end of its cycle).
@@ -57,93 +55,82 @@ public class SquiggleScript : MonoBehaviour {
     // Audible / Sound:
     private AudioSource audioSource;            // A reference to the AudioSource-component on the agent that is told to play the fire sound.
 
-    // ------- END OF 'Variable-declarations' -------
 
 
 
-
-    // ------- START OF 'MonoBehaviour-functions/-methods' -------
+    // 'MonoBehaviour':
 
     void Start() {
-        // Setting up for a human listener being able to see the ``fire''-events from the Dr. Squiggles
+            // 'simulation setup':
+
+        // Setting up for a human listener being able to see the ``fire''-events from the Dr. Squiggles.
         AssignVisualVariables();
 
-        // Setting up for a human listener being able to hear the ``fire''-events from the Dr. Squiggles
+        // Setting up for a human listener being able to hear the ``fire''-events from the Dr. Squiggles.
         AssignAudioVariables();
 
-        // Initializing all helping variables (including the reference to the Dr. Squiggle's creator, which is used for creating the Node-firing-plot later)
+        // Initializing all helping variables necessary to make the cogs go around.
         AssignHelpingVariables();
 
-        // Initializing the agent's phase randomly
-        phase = UnityEngine.Random.Range(0.0f, 1.0f);
 
-        // Setting up for Frequency-Adjustment
-        InitializeInPhaseErrorBuffer();
-        if (useNymoenFreqAdj) {
-            frequency = Random.Range(myCreator.minMaxInitialFreqs.x, myCreator.minMaxInitialFreqs.y); // Initializing frequency in range Random.Range(0.5f, 8f) was found useful by Nymoen et al.
-        } else {
-            frequency = 1f;
-        }
+            // 'synchronization setup':
 
-        t_ref = myCreator.t_ref_perc_of_period * 1.0f / frequency;
+        InitializeAgentPhase();
+
+        InitializeAgentFrequency();
+
+        UpdateTheRefractoryPeriod();
     }
 
     void Update() {
-        // Allowing phase-restarts for quick demonstrations. Stop doing this if errors occur because of it.
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            LoadMySceneAgain();
-        }
+        //// Brute-force (perhaps bad practice) simulation-restarting. Stop doing this if errors occur because of it.
+        //if (Input.GetKeyDown(KeyCode.Space)) {
+        //    LoadMySceneAgain();
+        //}
     }
 
     void FixedUpdate() {
-        // Eventually updating/lerping the agent-body's color                   CONSIDER PUTTING THIS FUNCTIONALITY INTO THE NotifyHuman()-FUNCTION
-        if (myCreator.useVisuals && firedLastClimax) SetAgentCorpsColor();
+        // Updating the agent-body's color so that it cools down from just having fired.
+        CoolDownAgentColorIfItJustFired();
 
-        if (phase == 1f) {
-            OnPhaseClimax();
-            phase = 0f;
-            timeNotClimaxed = 0f;
-        }
-        else if (timeNotClimaxed >= unstableFrequencyPeriod*5) {
-            frequency = 2f * frequency;
-        }
-        else {
-            // Increasing agent's phase according to its frequency if it did just hear a ``fire''-event
-            phase = Mathf.Clamp(phase + frequency * Time.fixedDeltaTime, 0f, 1f);
-            timeNotClimaxed += Time.fixedDeltaTime;
-        }
+        // Detecting a phase-climax, or increasing the phase according to the frequency (which will also be doubled if an unstable amount of time has gone without the agent climaxing).
+        DetectPhaseAnomaliesOrIncreaseIt();
     }
 
-    // ------- END OF 'MonoBehaviour-functions/-methods' -------
 
 
 
-
-    // ------- START OF 'Core & essential functions/methods' -------
+    // 'CORE & ESSENTIAL':
 
     private void OnPhaseClimax() {
-        if (!firedLastClimax) { // This should run only every other/second time it gets checked.
-            FireNode(); // Node firing at every other phase-climax.
+        FireIfWanted();
+
+        UpdateFrequencyIfAdjustingFrequency();
+
+        ResetPhaseClimaxValues();
+    }
+
+
+    private void FireIfWanted() {
+        if (!firedLastClimax) { // Node should only fire every other phase-climax.
+            FireNode();
             firedLastClimax = true;
         } else {
             firedLastClimax = false;
         }
-
-        if (useNymoenFreqAdj) RFAAdjustFrequency(); // Adjusting frequency at each phase-climax regardless of if the node fired or not last climax (if FrequencyAdjustment is to be used).
-
-        t_ref = myCreator.t_ref_perc_of_period * 1.0f / frequency; // Updating the refractory period to myCreator.t_ref_perc_of_period times the the new period.
     }
 
     private void FireNode() {
+        // Notifying creator I just fired so He can create a nice-looking Node-firing plot (performance-measure plot).
         NotifyMyCreator();
 
+        // Visually and audibly signalizing a human Unity-observer I just fired.
         NotifyTheHuman();
 
-        // FOR REFRACTORY PERIOD:
-        inRefractoryPeriod = true;
-        Invoke("ToggleOffRefractoryMode", t_ref);
+        // Turning off the "receiver" for t_ref seconds, not adjusting myself during that time.
+        TriggerRefractoryPeriod();
 
-        // Calling on all the agents to adjust their phases and calculate frequency-H-values
+        // Transmitting fire-/adjustment-signal: Calling on all the agents to adjust their phases and calculate frequency-H-values.
         NotifyTheAgents();
     }
 
@@ -163,6 +150,11 @@ public class SquiggleScript : MonoBehaviour {
         if (myCreator.useSound) audioSource.Play();
     }
 
+    private void TriggerRefractoryPeriod() {
+        inRefractoryPeriod = true;
+        Invoke("ToggleOffRefractoryMode", t_ref);
+    }
+
     private void ToggleOffRefractoryMode() {
         inRefractoryPeriod = false;
     }
@@ -175,6 +167,72 @@ public class SquiggleScript : MonoBehaviour {
         }
     }
 
+
+    private void UpdateFrequencyIfAdjustingFrequency() {
+        if (useNymoenFreqAdj) {
+            RFAAdjustFrequency(); // Adjusting frequency, according to K. Nymoen, at each phase-climax.
+
+            UpdateTheRefractoryPeriod(); // Given an updated oscillator-frequency (hence also oscillator-period), we update t_ref to be the right percentage of the new oscillator-period.
+        }
+    }
+
+    private void RFAAdjustFrequency() {
+        // Adjusting frequency according to the reachback firefly algorithm (RFA) with the values calculated since the start of previous oscillator-cycle until now.
+
+            // 'calculating F_n':
+
+        float cycleHSum = 0f;
+        float y = (float)HBuffer.Count;
+        foreach (float H in HBuffer) {
+            cycleHSum += H;
+        }
+
+        float F_n = 0f;
+        if (y != 0f) {
+            F_n = beta * cycleHSum / y;
+        }
+
+        // Clearing the buffer of H(n)-values and making it ready for the next cycle.
+        HBuffer.Clear();
+
+            // 'updating frequency':
+
+        float newFrequency = frequency * Mathf.Pow(2, F_n); // BØR MAKS VÆRE EN DOBLING AV DEN GAMLE FREKVENSEN
+
+        // BARE FOR TESTING:
+        Debug.Log("omega(t): " + frequency + ", omega(t+1): " + newFrequency + ", siden F(n)=" + F_n);
+
+        frequency = newFrequency;
+    }
+
+    private void UpdateTheRefractoryPeriod() {
+        float oscillator_period = 1.0f / frequency;
+        t_ref = myCreator.t_ref_perc_of_period * oscillator_period;
+    }
+
+
+    private void DetectPhaseAnomaliesOrIncreaseIt() {
+        if (phase == 1f) {  // Detecting (wanted) anomaly 1: the phase has climaxed (i.e. phase = 1.0).
+            OnPhaseClimax();
+        }
+        else {
+            timeNotClimaxed += Time.fixedDeltaTime;
+
+            if (timeNotClimaxed >= unstableFrequencyPeriod * 5) {    // Detected (not wanted) anomaly 2: the phase didn't climax within a stable time, and needs a frequency-boost.
+                frequency = 2f * frequency; // Giving the agent a frequency-boost since it never climaxes but only gets dragged down by others.
+            }
+
+            phase = Mathf.Clamp(phase + frequency * Time.fixedDeltaTime, 0f, 1f); // Increasing agent's phase according to its frequency = d(phi)/dt.
+        }
+    }
+
+    private void ResetPhaseClimaxValues() {
+        phase = 0f;                // Resetting the agent's own phase after phase-climax.
+        timeNotClimaxed = 0f;      // Stop feeling sorry for me, I can manage on my own and don't need no frequency-boost.
+    }
+
+
+        // 'after receiving a signal':
     public void OnHeardFireEvent() {
         // Gets called when an "audio"-fire-event-signal is "detected" by the agent.
 
@@ -192,78 +250,47 @@ public class SquiggleScript : MonoBehaviour {
     }
 
     private void AddNthFireEventsHToList() {
-        // Calculating and saving the n-th fire-event's corresponding H(n)-value capturing how much and in which direction frequency of an agent should be adjusted at phase-climax, judged at the time of hearing fire-event n.
+        // Calculating and saving the n-th fire-event's corresponding H(n)-value capturing how much and in which direction the frequency of an agent should be adjusted at the agent's phase-climax, judged at the time of the agent hearing fire-event n.
 
-        // Recording the n'th error-score, capturing whether the node itself is in synch with the node it hears the "fire"-event from or not
+        // Recording the n'th error-score, capturing whether the node itself is in synch with the node it hears the "fire"-event from or not.
         float epsilon_n;
         if (!inRefractoryPeriod) {
             epsilon_n = Mathf.Pow(Mathf.Sin(Mathf.PI * phase), 2);
         }
         else {
-            epsilon_n = 0f;
+            epsilon_n = 0f; // Special rule Kristian et al. implemented to achieve harmonic synchrony with unequal phases and frequencies.
         }
 
         inPhaseErrorBuffer = ShiftFloatListRightToLeftWith(inPhaseErrorBuffer, epsilon_n);
 
-        // Calculating the median of the inPhaseErrorBuffer, being the self-assessed synch-score
+        // Calculating the median of the inPhaseErrorBuffer, being the self-assessed synch-score s(n).
         float s_n = ListMedian(inPhaseErrorBuffer);
 
-        // Calculating the measure capturing the amplitude and sign of the frequency-modification of the n-th "fire"-event received
+        // Calculating the measure capturing the amplitude and sign of the frequency-modification of the n-th "fire"-event received.
         float rho_n = -Mathf.Sin(2 * Mathf.PI * phase); // negative for phase < 1/2, and positive for phase > 1/2, and element in [-1, 1]
 
         float H_n = rho_n * s_n;
-        HBuffer.Add(H_n); // H-values appended to the end of the list H(n)
+        HBuffer.Add(H_n); // H-value appended to the end of the list H(n).
     }
 
-    private void RFAAdjustFrequency() {
-        // Adjusting frequency according to the reachback firefly algorithm (RFA) with the values calculated since the start of previous oscillator cycle until now.
 
-        float averageCycleH = 0f;
-        float HBufferLength = (float)HBuffer.Count;
-        foreach (float H in HBuffer) {
-            averageCycleH += H;
-        }
 
-        float F_n = 0f;
-        if (HBufferLength != 0f) {
-            F_n = beta * averageCycleH / HBufferLength;
-        }
 
-        // Clearing the buffer of H(n)-values and making it ready for the next cycle
-        HBuffer.Clear();
 
-        float newFrequency = frequency * Mathf.Pow(2, F_n);
 
-        frequency = newFrequency;
+    // 'HELPING':
+
+        // 'visual':
+    private void CoolDownAgentColorIfItJustFired() {
+        if (myCreator.useVisuals && firedLastClimax) CoolDownAgentBodyColor();
     }
 
-    // ------- END OF 'Core & essential functions/methods' -------
-
-
-
-
-    // ------- START OF 'Helping- & utility-functions/methods' -------
-
-    private void SetAgentCorpsColor() {
+    private void CoolDownAgentBodyColor() {
         // Sets the agent body's corps to a lerped color (ranging from the fire-color, to its standard corps-color).
 
         float t = Mathf.Clamp(phase / colorLerpUntilPhase, 0, 1); // a percentage going from 0 when phase=0, to 1 when phase=colorLerpUntilPhase
         t = Mathf.Sin(t * Mathf.PI * 0.5f); // Lerping like a pro
         corpsOfAgentRenderer.material.color = Color.Lerp(fireColor, bodyColor, t);
-    }
-
-    private void FillUpNeighbourSquigglesList() {
-        // Filling up a Unity List with all other neighbouring Squiggles-GameObjects in the scene.
-
-        List<GameObject> allSquiggleObjs = new List<GameObject>();
-        this.gameObject.tag = "temp";
-        allSquiggleObjs.AddRange(GameObject.FindGameObjectsWithTag("Player"));
-        this.gameObject.tag = "Player";
-        foreach (GameObject squigObj in allSquiggleObjs) { otherSquiggles.Add(squigObj.GetComponent<SquiggleScript>()); }
-    }
-
-    private void InitializeInPhaseErrorBuffer() {
-        for (int i = 0; i < m; i++) inPhaseErrorBuffer.Add(1f); // BØR DENNE INITIALISERES MED 0f ISTEDENFOR 1f HVIS STØRRE FREKVENSOPPDATERINGS-BIDRAG FØRER TIL STØRRE (I ABSOLUTTVERDI) FREKVENS-OPPDATERINGER?
     }
 
     private void BlinkWithEyes() {
@@ -282,6 +309,7 @@ public class SquiggleScript : MonoBehaviour {
         iris.localScale += yellowEyeScaleChange;
     }
 
+        // 'variable-assigning':
     private void AssignVisualVariables() {
         corpsOfAgentRenderer = transform.GetChild(1).transform.GetChild(1).GetComponent<Renderer>();
         bodyColor = corpsOfAgentRenderer.material.color;
@@ -289,20 +317,51 @@ public class SquiggleScript : MonoBehaviour {
         pupil = transform.GetChild(0).transform.GetChild(4);
         //tentacleColor = transform.GetChild(2).transform.GetChild(0).GetComponent<Renderer>().material.color;
     }
-    
+
     private void AssignAudioVariables() {
         audioSource = GetComponent<AudioSource>();
         audioSource.volume = 1f / (2*(otherSquiggles.Count + 1)); // Remove the factor of 2 in the denominator to increase volume
     }
-
+    
     private void AssignHelpingVariables() {
         // Acquiring a reference to the creator (AgentManager) so that the Dr. Squiggle's agentId can be passed to it when saving some data to .CSV-files
         myCreator = FindObjectOfType<AgentManager>();
 
         // Acquiring a neighbour-list for each agent so that they can call on them when they themselves are firing
         FillUpNeighbourSquigglesList();
+
+        // Initializing the error-memory used in Nymoen's frequency-adjustment method.
+        InitializeInPhaseErrorBuffer();
     }
 
+    private void FillUpNeighbourSquigglesList() {
+        // Filling up a Unity List with all other neighbouring Squiggles-GameObjects in the scene.
+
+        List<GameObject> allSquiggleObjs = new List<GameObject>();
+        this.gameObject.tag = "temp";
+        allSquiggleObjs.AddRange(GameObject.FindGameObjectsWithTag("Player"));
+        this.gameObject.tag = "Player";
+        foreach (GameObject squigObj in allSquiggleObjs) { otherSquiggles.Add(squigObj.GetComponent<SquiggleScript>()); }
+    }
+
+    private void InitializeInPhaseErrorBuffer() {
+        for (int i = 0; i < m; i++) inPhaseErrorBuffer.Add(1f); // BØR DENNE INITIALISERES MED 0f ISTEDENFOR 1f HVIS STØRRE FREKVENSOPPDATERINGS-BIDRAG FØRER TIL STØRRE (I ABSOLUTTVERDI) FREKVENS-OPPDATERINGER?
+    }
+
+
+    private void InitializeAgentPhase() {
+        phase = Random.Range(0.0f, 1.0f); // Initializing the agent's phase randomly in the full range of [0.0, 1.0]?.
+    }
+
+    private void InitializeAgentFrequency() {
+        if (useNymoenFreqAdj) {
+            frequency = Random.Range(myCreator.minMaxInitialFreqs.x, myCreator.minMaxInitialFreqs.y); // Initializing frequency (Hz) in range Random.Range(0.5f, 8f) was found useful by Nymoen et al.
+        } else {
+            frequency = 1f; // Setting agent's frequency to default frequency of 1Hz.
+        }
+    }
+
+        // 'get-/set-functions':
     public float GetFrequency() {
         return frequency;
     }
@@ -310,21 +369,19 @@ public class SquiggleScript : MonoBehaviour {
     public float GetPhase() {
         return phase;
     }
+    
+    public int GetAgentID() {
+        return agentID;
+    }
 
     public void SetAgentID(int idNumber) {
         agentID = idNumber;
     }
 
-    public int GetAgentID() {
-        return agentID;
-    }
-
-    // ------- END OF 'Helping- & utility-functions/methods' -------
 
 
 
-
-    // ------- START OF 'Testing-functions/-methods' -------
+    // 'TESTING':
 
     private void UpdateFrequencyImmediately() {
         float epsilon_n;
@@ -349,6 +406,4 @@ public class SquiggleScript : MonoBehaviour {
         float newFrequency = frequency * Mathf.Pow(2, F_n);
         frequency = newFrequency;
     }
-
-    // ------- END OF 'Testing-functions/-methods' -------
 }
