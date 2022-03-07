@@ -276,8 +276,6 @@ public class SquiggleScript : MonoBehaviour {
 
 
 
-
-
     // 'HELPING':
 
         // 'visual':
