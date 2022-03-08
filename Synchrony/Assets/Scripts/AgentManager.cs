@@ -10,11 +10,11 @@ public class AgentManager : MonoBehaviour {
 
     // 'Recorded collective-/environment-hyperparameters':
     [Tooltip("The number of agents to be spawned and synchronized.")]
-    public int collectiveSize = 3;
+    public int collectiveSize = 6;
     [Tooltip("The duration (%) of the refractory period in terms of a percentage of the agents's oscillator-periods.")]
     public float t_ref_perc_of_period = 0.1f;       // ISH LENGDEN I TID PÅ digitalQuickTone er 0.4s. Nymoen BRUKTE 50ms I SIN IMPLEMENTASJON. JEG PRØVDE OGSÅ 0.6f. possiblePool = {0.09f, 0.4f, 0.6f}.
     [Tooltip("Minimum and maximum initialization-frequencies (Hz).")]
-    public Vector2 minMaxInitialFreqs = new Vector2(0.5f, 8f);
+    public Vector2 minMaxInitialFreqs = new Vector2(0.5f, 4f);
 
     [Tooltip("The number of times in a row the t_q-window (where no fire-events can be heard) must be equally long.")]
     public int k = 8;
@@ -32,27 +32,17 @@ public class AgentManager : MonoBehaviour {
     [Tooltip("The simulation-timelimit in seconds (i.e. the max simulation-time a simulation-run is allowed to run for before being regarded as a failed synchronization-run).")]
     public float runDurationLimit = 300f;
     [Tooltip("Whether to get logs about Synchrony-successes (in terms of the 'towards-k'-counter) or not.")]
-    public bool debugSuccessOn = false;
+    public bool debugSuccessOn = true;
     [Tooltip("Whether to get logs about t_f-/t_q-windows and corresponding timestamps or not.")]
     public bool debugTqTfOn = false;
     [Tooltip("Whether to give the human observer a sound on every agent-pulse/-firing or not.")]
     public bool useSound = true;
     [Tooltip("Whether to give the human observer a visual and Lerped color-signal on every agent-pulse/-firing or not.")]
-    public bool useVisuals = false;
+    public bool useVisuals = true;
 
     // Spawning:
     [Tooltip("All the DrSquiggle-prefabs we want to spawn and be synchronized.")]
     public GameObject[] squigglePrefabs;
-
-    // CSV-Serialization:
-    [Tooltip("The start of the filepath to all saved phase-values throughout all simulation-runs.")]
-    public string phasesFolderPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Phases" + "\\";
-    [Tooltip("The start of the filepath to all saved frequency-values throughout all simulation-runs.")]
-    public string frequenciesFolderPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Frequencies" + "\\";
-    [Tooltip("The start of the filepath to all saved performance measure plot-materials throughout all simulation-runs.")]
-    public string nodeFiringPlotMaterialFolderPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "NodeFiringPlotMaterial" + "\\";
-    [Tooltip("The filepath to the current Synchrony-Dataset being built (added datapoints cumulatively to).")]
-    public string datasetPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "synchronyDataset.csv";
 
 
     
@@ -67,7 +57,13 @@ public class AgentManager : MonoBehaviour {
     private List<Vector2> spawnedPositions = new List<Vector2>();
     private List<SquiggleScript> spawnedAgentScripts = new List<SquiggleScript>();
 
-	// Node-firing plot:
+    // CSV-Serialization:
+    private string savedDataPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\";
+    private string phasesFolderPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Phases" + "\\";
+    private string frequenciesFolderPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Frequencies" + "\\";
+    private string nodeFiringPlotMaterialFolderPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "NodeFiringPlotMaterial" + "\\";
+
+    // Node-firing plot:
     private List<int> agentWithAgentIDsJustFired = new List<int>(); // Initializing (used for creation of node-firing-plot) a list for all the agents with agent-ids that just fired. 
 
     // 'Synch.-Perf.-measure related':
@@ -100,13 +96,14 @@ public class AgentManager : MonoBehaviour {
     // 'MonoBehaviour':
 
     void Start() {
-        InitializeHelpingVariables();
+        InitializeVariables();
+
+        // Spawning all agents randomly (but pretty naively as of now)
+        SpawnAgents();
 
         // Creating all .CSV-files I want to update throughout the simulation 
         CreateAllCSVFiles();
 
-        // Spawning all agents randomly (but pretty naively as of now)
-        SpawnAgents();
     }
 
     void Update() {
@@ -462,11 +459,11 @@ public class AgentManager : MonoBehaviour {
 
     // 'HELPING':
 
-    private void InitializeHelpingVariables() {
+    private void InitializeVariables() {
         // Speeding up or down the simulation if that is wanted?
         Time.timeScale = adjustedTimeScale;
 
-        spawnRadius = collectiveSize * 1.5f; // Simply an empirical model of the necessary space the agents need to spawn. Or just a guess I guess.
+        spawnRadius = collectiveSize * 1.2f; // Simply an empirical model of the necessary space the agents need to spawn. Or just a guess I guess.
 
         agentiHasFiredAtLeastOnce = new bool[collectiveSize];
     }
@@ -499,6 +496,7 @@ public class AgentManager : MonoBehaviour {
     private void CreateFoldersIfNonExistant() {
         // Creating the directories/folders where the saved .CSV-data will reside:
 
+        Directory.CreateDirectory(savedDataPath);
         Directory.CreateDirectory(phasesFolderPath);
         Directory.CreateDirectory(frequenciesFolderPath);
         Directory.CreateDirectory(nodeFiringPlotMaterialFolderPath);
@@ -547,7 +545,7 @@ public class AgentManager : MonoBehaviour {
         performanceAndCovariatesHeader.Add("BETA");
         performanceAndCovariatesHeader.Add("FREQADJ");
         performanceAndCovariatesHeader.Add("M");
-        CreateCSVWithStringHeader(datasetPath, performanceAndCovariatesHeader);
+        CreateCSVWithStringHeader(savedDataPath + "synchronyDataset.csv", performanceAndCovariatesHeader);
     }
 
 
@@ -667,7 +665,7 @@ public class AgentManager : MonoBehaviour {
             // - Make a separate 'simulation-run dataset' with rows for each agent and columns for each Individual/Agent Hyper-parameters (so that the NB! on the reMarkable hyper-parameter note is taken care of) — if it is needed or wanted or useful.
 
 
-        // Saving one datapoint, a.k.a. writing one .CSV-row (Measurements, Covariates) to the .CSV-file at the datasetPath:
-        FloatUpdateCSV(datasetPath, performanceAndCovariateValues);
+        // Saving one datapoint, a.k.a. writing one .CSV-row (Measurements, Covariates) to the .CSV-file at the savedDataPath:
+        FloatUpdateCSV(savedDataPath + "synchronyDataset.csv", performanceAndCovariateValues);
     }
 }
