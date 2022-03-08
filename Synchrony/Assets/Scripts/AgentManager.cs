@@ -534,7 +534,7 @@ public class AgentManager : MonoBehaviour {
         performanceAndCovariatesHeader.Add("BETA");
         performanceAndCovariatesHeader.Add("FREQADJ");
         performanceAndCovariatesHeader.Add("M");
-        CreateCSVWithStringHeader(savedDataPath + "synchronyDataset.csv", performanceAndCovariatesHeader);
+        CreateCSVWithStringHeader(datasetPath + "synchronyDataset.csv", performanceAndCovariatesHeader);
     }
 
 
@@ -654,7 +654,7 @@ public class AgentManager : MonoBehaviour {
             // - Make a separate 'simulation-run dataset' with rows for each agent and columns for each Individual/Agent Hyper-parameters (so that the NB! on the reMarkable hyper-parameter note is taken care of) — if it is needed or wanted or useful.
 
 
-        // Saving one datapoint, a.k.a. writing one .CSV-row (Measurements, Covariates) to the .CSV-file at the savedDataPath:
-        FloatUpdateCSV(savedDataPath + "synchronyDataset.csv", performanceAndCovariateValues);
+        // Saving one datapoint, a.k.a. writing one .CSV-row (Measurements, Covariates) to the .CSV-file at the datasetPath:
+        FloatUpdateCSV(datasetPath + "synchronyDataset.csv", performanceAndCovariateValues);
     }
 }
