@@ -137,7 +137,7 @@ if __name__ == "__main__":
     """
     
     simRun = sys.argv[1]
-    filepath = "../Synchrony/SavedData/NodeFiringPlotMaterial/node_firing_data_atSimRun" + simRun + ".csv"
+    filepath = "../Synchrony/SavedData/PerformanceMeasurePlotMaterial/node_firing_data_atSimRun" + simRun + ".csv"
     
     
     main(filepath)

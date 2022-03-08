@@ -58,10 +58,10 @@ public class AgentManager : MonoBehaviour {
     private List<SquiggleScript> spawnedAgentScripts = new List<SquiggleScript>();
 
     // CSV-Serialization:
-    private string savedDataPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\";
     private string phasesFolderPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Phases" + "\\";
     private string frequenciesFolderPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Frequencies" + "\\";
-    private string nodeFiringPlotMaterialFolderPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "NodeFiringPlotMaterial" + "\\";
+    private string nodeFiringPlotMaterialFolderPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "PerformanceMeasurePlotMaterial" + "\\";
+    private string datasetPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "synchronyDataset.csv";
 
     // Node-firing plot:
     private List<int> agentWithAgentIDsJustFired = new List<int>(); // Initializing (used for creation of node-firing-plot) a list for all the agents with agent-ids that just fired. 
@@ -474,9 +474,6 @@ public class AgentManager : MonoBehaviour {
     // '.CSV -CREATE & -UPDATE':
 
     private void CreateAllCSVFiles() {
-        // First of all making sure all the necessary folders the .CSVs are gonna reside in exist.
-        CreateFoldersIfNonExistant();
-
         // Obtaining the .CSV-header consisting of the agents's IDs.
         List<string> agentIDHeader = GetAgentHeader();
 
@@ -489,18 +486,10 @@ public class AgentManager : MonoBehaviour {
         // Creating one .CSV-file for the node_firing_data (including t_f_is_now) needed to create the "Node-firing-plot" as in Nymoen's Fig. 6.
         CreateNodeFiringCSV(agentIDHeader);
 
-        // Automatically creating a Synchrony Dataset-.CSV.
-        CreateSynchDatasetCSV();
+        // Automatically creating a Synchrony Dataset-.CSV if it does not exist.
+        if (!File.Exists(datasetPath)) CreateSynchDatasetCSV();
     }
 
-    private void CreateFoldersIfNonExistant() {
-        // Creating the directories/folders where the saved .CSV-data will reside:
-
-        Directory.CreateDirectory(savedDataPath);
-        Directory.CreateDirectory(phasesFolderPath);
-        Directory.CreateDirectory(frequenciesFolderPath);
-        Directory.CreateDirectory(nodeFiringPlotMaterialFolderPath);
-    }
 
     private List<string> GetAgentHeader() {
         // Creating a .CSV-header consisting of the agents's IDs
