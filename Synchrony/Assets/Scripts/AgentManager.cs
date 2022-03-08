@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System.IO;
 using static SynchronyUtils;
 
 public class AgentManager : MonoBehaviour {
@@ -45,13 +46,13 @@ public class AgentManager : MonoBehaviour {
 
     // CSV-Serialization:
     [Tooltip("The start of the filepath to all saved phase-values throughout all simulation-runs.")]
-    public string phaseCSVPathStart = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Phases" + "\\" + "phases_over_time";
+    public string phasesFolderPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Phases" + "\\";
     [Tooltip("The start of the filepath to all saved frequency-values throughout all simulation-runs.")]
-    public string frequencyCSVPathStart = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Frequencies" + "\\" + "freqs_over_time";
+    public string frequenciesFolderPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Frequencies" + "\\";
     [Tooltip("The start of the filepath to all saved performance measure plot-materials throughout all simulation-runs.")]
-    public string nodeFiringDataPathStart = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "NodeFiringPlotMaterial" + "\\" + "node_firing_data";
+    public string nodeFiringPlotMaterialFolderPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "NodeFiringPlotMaterial" + "\\";
     [Tooltip("The filepath to the current Synchrony-Dataset being built (added datapoints cumulatively to).")]
-    public string datasetPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "synchronyDataset.csv";
+    public string datasetPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "synchronyDataset.csv";
 
 
     
@@ -476,20 +477,31 @@ public class AgentManager : MonoBehaviour {
     // '.CSV -CREATE & -UPDATE':
 
     private void CreateAllCSVFiles() {
-        // Obtaining the .CSV-header consisting of the agents's IDs
+        // First of all making sure all the necessary folders the .CSVs are gonna reside in exist.
+        CreateFoldersIfNonExistant();
+
+        // Obtaining the .CSV-header consisting of the agents's IDs.
         List<string> agentIDHeader = GetAgentHeader();
 
-        // Creating one .CSV-file for the agents's phases over time
+        // Creating one .CSV-file for the agents's phases over time.
         CreatePhaseCSV(agentIDHeader);
         
-        // Creating one .CSV-file for the agents's frequencies over time
+        // Creating one .CSV-file for the agents's frequencies over time.
         CreateFrequencyCSV(agentIDHeader);
 
-        // Creating one .CSV-file for the node_firing_data (including t_f_is_now) needed to create the "Node-firing-plot" as in Nymoen's Fig. 6
+        // Creating one .CSV-file for the node_firing_data (including t_f_is_now) needed to create the "Node-firing-plot" as in Nymoen's Fig. 6.
         CreateNodeFiringCSV(agentIDHeader);
 
-        // FOR AUTOMATIC (CURRENTLY IT IS MANUAL) SYNCHRONY-/PERFORMANCE-PLOT .CSV-FILE:
-        //CreateSynchDatasetCSV();
+        // Automatically creating a Synchrony Dataset-.CSV.
+        CreateSynchDatasetCSV();
+    }
+
+    private void CreateFoldersIfNonExistant() {
+        // Creating the directories/folders where the saved .CSV-data will reside:
+
+        Directory.CreateDirectory(phasesFolderPath);
+        Directory.CreateDirectory(frequenciesFolderPath);
+        Directory.CreateDirectory(nodeFiringPlotMaterialFolderPath);
     }
 
     private List<string> GetAgentHeader() {
@@ -504,27 +516,39 @@ public class AgentManager : MonoBehaviour {
     }
 
     private void CreatePhaseCSV(List<string> agentHeader) {
-        CreateCSVWithStringHeader(phaseCSVPathStart + "_atSimRun" + atSimRun + ".csv", agentHeader);
+        CreateCSVWithStringHeader(phasesFolderPath + "phases_over_time_atSimRun" + atSimRun + ".csv", agentHeader);
     }
 
     private void CreateFrequencyCSV(List<string> agentHeader) {
-        CreateCSVWithStringHeader(frequencyCSVPathStart + "_atSimRun" + atSimRun + ".csv", agentHeader);
+        CreateCSVWithStringHeader(frequenciesFolderPath + "freqs_over_time_atSimRun" + atSimRun + ".csv", agentHeader);
     }
 
     private void CreateNodeFiringCSV(List<string> agentHeader) {
         List<string> nodeFiringWithTfHeader = new List<string>(agentHeader);
         nodeFiringWithTfHeader.Insert(0, "t_f_is_now");
-        CreateCSVWithStringHeader(nodeFiringDataPathStart + "_atSimRun" + atSimRun + ".csv", nodeFiringWithTfHeader);
+        CreateCSVWithStringHeader(nodeFiringPlotMaterialFolderPath + "node_firing_data_atSimRun" + atSimRun + ".csv", nodeFiringWithTfHeader);
     }
 
-    //private void CreateSynchDatasetCSV() {
-        // Creating a .CSV-file for the MSc Synchrony-dataset, which are to contain the HSYNCHTIMEs with their covariates.
-        //List<string> performanceAndCovariatesHeader = new List<string>(); // The covariates we want to record the performance-measure/outcome/response-variable for
-        //performanceAndCovariatesHeader.Add("SIMTIME");
-        //performanceAndCovariatesHeader.Add("SUCCESS");    // Binary covariate (no=0 or yes=1)
-        //performanceAndCovariatesHeader.Add("PHASEADJ");
-        //CreateCSVWithStringHeader(datasetPath, performanceAndCovariatesHeader);
-    //}
+    private void CreateSynchDatasetCSV() {
+        // Creating a .CSV - file for the MSc Synchrony - dataset, which are to contain the measurements with their covariates.
+        List<string> performanceAndCovariatesHeader = new List<string>(); // The covariates we want to record the performance-measure/outcome/response-variable for
+        performanceAndCovariatesHeader.Add("SIMTIME");
+        performanceAndCovariatesHeader.Add("SUCCESS");    // Binary covariate (no=0 or yes=1)
+        performanceAndCovariatesHeader.Add("COLLSIZE");
+        performanceAndCovariatesHeader.Add("TREFPERC");
+        performanceAndCovariatesHeader.Add("MINFREQ");
+        performanceAndCovariatesHeader.Add("MAXFREQ");
+        performanceAndCovariatesHeader.Add("K");
+        performanceAndCovariatesHeader.Add("T_F");
+        performanceAndCovariatesHeader.Add("TQDEFINER");
+        performanceAndCovariatesHeader.Add("ADJTIMESCALE");
+        performanceAndCovariatesHeader.Add("ALPHA");
+        performanceAndCovariatesHeader.Add("PHASEADJ");
+        performanceAndCovariatesHeader.Add("BETA");
+        performanceAndCovariatesHeader.Add("FREQADJ");
+        performanceAndCovariatesHeader.Add("M");
+        CreateCSVWithStringHeader(datasetPath, performanceAndCovariatesHeader);
+    }
 
 
     private void UpdateAllCSVFiles() {
@@ -543,7 +567,7 @@ public class AgentManager : MonoBehaviour {
         foreach (SquiggleScript squiggScr in spawnedAgentScripts) {
             phaseIntervalEntries.Add(squiggScr.GetPhase());
         }
-        FloatUpdateCSV(phaseCSVPathStart + "_atSimRun" + atSimRun + ".csv", phaseIntervalEntries);
+        FloatUpdateCSV(phasesFolderPath + "phases_over_time_atSimRun" + atSimRun + ".csv", phaseIntervalEntries);
     }
 
     private void UpdateFrequencyCSV() {
@@ -551,7 +575,7 @@ public class AgentManager : MonoBehaviour {
         foreach (SquiggleScript squiggScr in spawnedAgentScripts) {
             frequencyIntervalEntries.Add(squiggScr.GetFrequency());
         }
-        FloatUpdateCSV(frequencyCSVPathStart + "_atSimRun" + atSimRun + ".csv", frequencyIntervalEntries);
+        FloatUpdateCSV(frequenciesFolderPath + "freqs_over_time_atSimRun" + atSimRun + ".csv", frequencyIntervalEntries);
     }
 
     private void UpdateNodeFiringCSV() {
@@ -572,7 +596,7 @@ public class AgentManager : MonoBehaviour {
         List<float> nodeFiringDataList = new List<float>(nodeFiringDataArray);
 
         // Updating the CSV with one time-row
-        FloatUpdateCSV(nodeFiringDataPathStart + "_atSimRun" + atSimRun + ".csv", nodeFiringDataList);
+        FloatUpdateCSV(nodeFiringPlotMaterialFolderPath + "node_firing_data_atSimRun" + atSimRun + ".csv", nodeFiringDataList);
     }
 
     private void SaveDatapointToDataset(float runDuration) {
