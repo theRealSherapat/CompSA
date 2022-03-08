@@ -2,7 +2,7 @@
 
 Only requirement/dependency: Having _Python 3_ of some version installed.
 
-There are currently two types of plots you can plot with the Python-scripts in this folder:
+There are currently **two types of plots** you can plot with the Python-scripts in this folder:
 
 ## Performance-measure plots (or "Node-firing"-plots)
 
