@@ -1,2 +1,4 @@
-# Achieving Decentralized Synchronization (cf. K. Nymoen, 2014) in Unity
-This folder is partly an image of a Unity project, having some project-files (mostly Unity-generated, binary and large) _.gitignored_.
+# Achieving Decentralized Synchronization in a Musical Robotic Collective in Unity
+This is the main Unity project-code for the developed Synchrony-Simulator.
+
+The Git-folder is partly an image of a full Unity-project, having some project-files (mostly Unity-generated, binary and large) _.gitignored_.
