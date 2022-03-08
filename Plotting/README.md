@@ -8,7 +8,7 @@ There are currently **two types of plots** you can plot with the Python-scripts 
 
 After having run one or more Synchrony simulation-runs in Unity, you can plot the corresponding performance-measure plot by running the following command when being in the _Plotting/_-folder:
 
-> py plot_PerformanceMeasurePlot_for_SimRun.py _SimRun_ ,
+> py plot_PerformanceMeasurePlot_for_SimRun.py _SimRun_     ,
 
 where _SimRun_ for the first (or zero'th) simulation-run is 0, the second (or one'th) is 1, etc. So if we want to see the performance-measure plot for the first run we ran in Unity, the command would look like this:
 
