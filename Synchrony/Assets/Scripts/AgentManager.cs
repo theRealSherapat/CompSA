@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using static DavidsUtils;
+using static SynchronyUtils;
 
 public class AgentManager : MonoBehaviour {
-    // ------- START OF 'Variable-declarations' -------
+    
+    // 'VARIABLES':
 
-        // ---- START OF 'Recorded collective-/environment-hyperparameters' ----
+    // 'Recorded collective-/environment-hyperparameters':
     [Tooltip("The number of agents to be spawned and synchronized.")]
     public int collectiveSize = 3;
     [Tooltip("The duration (%) of the refractory period in terms of a percentage of the agents's oscillator-periods.")]
@@ -23,9 +24,8 @@ public class AgentManager : MonoBehaviour {
 
     [Tooltip("The simulation-speed compared to real-time?")]
     public float adjustedTimeScale = 1.0f;
-        // ---- END OF 'Recorded collective-/environment-hyperparameters' ----
 
-        // ---- START OF 'Non-recorded general meta-/environment-hyperparemeters' ----
+    // 'Non-recorded general meta-/environment-hyperparemeters':
     [Tooltip("The number of simulation-runs per Unity Game-run.")]
     public int simulationRuns = 1;
     [Tooltip("The simulation-timelimit in seconds (i.e. the max simulation-time a simulation-run is allowed to run for before being regarded as a failed synchronization-run).")]
@@ -52,10 +52,10 @@ public class AgentManager : MonoBehaviour {
     public string nodeFiringDataPathStart = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "NodeFiringPlotMaterial" + "\\" + "node_firing_data";
     [Tooltip("The filepath to the current Synchrony-Dataset being built (added datapoints cumulatively to).")]
     public string datasetPath = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "synchronyDataset.csv";
-        // ---- END OF 'Non-recorded general meta-/environment-hyperparemeters' ----
 
 
-        // ---- START OF 'Private variables necessary to make the cogs go around' ----
+    
+    // 'Private variables necessary to make the cogs go around':
 
     // General Meta:
     private static int atSimRun = 0;
@@ -69,7 +69,7 @@ public class AgentManager : MonoBehaviour {
 	// Node-firing plot:
     private List<int> agentWithAgentIDsJustFired = new List<int>(); // Initializing (used for creation of node-firing-plot) a list for all the agents with agent-ids that just fired. 
 
-            // ---- START OF 'Synch.-Perf.-measure related' variables ----
+    // 'Synch.-Perf.-measure related':
     private bool t_f_is_now = false; // A short "up-time"-flag when all nodes are allowed to fire during. The duration of how long this flag is positive itself is constant (t_f), but when in simulation-time it will be "up", depends largely on the t_q-variable as well as when the t_q-windows are triggered.
 	private float t_q = 0f; // The time-window in which the agents are not allowed to fire pulses within.
 	
@@ -92,52 +92,36 @@ public class AgentManager : MonoBehaviour {
     private int equal_t_q_streak_counter = 0; // 'towards-k'-counter to become equal to 'k'.
 
 	private int last_t_f_firers_counter = 0; // A counter for how many fire-events were heard throughout the last firing-period t_f, used as a safety-mechanism to detect firing-periods within which no agents fire — so that we don't increment the 'towards-k'-counter after those firing-periods.
-            // ---- END OF 'Synch.-Perf.-measure related' variables ----
-
-        // ---- END OF 'Private variables necessary to make the cogs go around' ----
-
-    // ------- END OF 'Variable-declarations' -------
 
 
 
 
-    // ------- START OF 'MonoBehaviour-functions/-methods' -------
+    // 'MonoBehaviour':
 
     void Start() {
-        // Speeding up or down the simulation if that is wanted
-        Time.timeScale = adjustedTimeScale;
-
-        spawnRadius = collectiveSize * 1.5f; // Simply an empirical model of the necessary space the agents need to spawn. Or just a guess I guess.
-		agentiHasFiredAtLeastOnce = new bool[collectiveSize];
-
-        // Spawning all agents randomly (but pretty naively as of now)
-        SpawnAgents();
+        InitializeHelpingVariables();
 
         // Creating all .CSV-files I want to update throughout the simulation 
         CreateAllCSVFiles();
+
+        // Spawning all agents randomly (but pretty naively as of now)
+        SpawnAgents();
     }
 
     void Update() {
-        // POTENTIAL PERFORMANCE-GAIN:
-            // - Make the simulation quit immediately the even-beat-counter hits k, instead of at the next Update()-call.
-            // - Call EndSimulationIfHSynchConditionsAreReached() in FixedUpdate() instead of Update().
-
-        CheckHSynchConditions();
-
+        // Ending simulation-run if we deem it either a synchronization -success or -failure.
         EndSimulationRunIfTerminationCriteriaAreReached();
     }
 
     void FixedUpdate() {
-        // Updating all my CSV-files with a constant interval (here at the rate at which FixedUpdate() is called, hence at 50Hz atm)
+        // Updating all my CSV-files with a constant frequency (at the rate at which FixedUpdate() is called)?
         UpdateAllCSVFiles();
     }
 
-    // ------- END OF 'MonoBehaviour-functions/-methods' -------
 
 
 
-
-    // ------- START OF 'Synch.-Perf.-measure (termination-evaluation) functions/methods' -------
+    // 'PERFORMANCE-MEASURE':
 
     private void CheckHSynchConditions() {
         // Checks 'Condition 2' and 'Condition 3' respectively: namely, '2': if the agents have beat evenly (with a constant t_q-value) k times in a row, as well as if all nodes have fired at least once throughout the evaluation-/testing-period (simulation-run).
@@ -297,11 +281,17 @@ public class AgentManager : MonoBehaviour {
     }
 
 	private void IncrementTowardsKCounterIfWanted() {
-		// Ignoring the first counter-increment, so that the ending of the simulation-run actually follows 'Condition 2', relating to k.
-		// Ignoring, for the sake of 'Condition 2' and the TowardsKCounter equal_t_q_streak_counter, "successfully" finished t_f-windows if no nodes fired during it.
-		// Incrementing the counter otherwise.
+        // Ignoring the first counter-increment, so that the ending of the simulation-run actually follows 'Condition 2', relating to k.
+        // Ignoring, for the sake of 'Condition 2' and the TowardsKCounter equal_t_q_streak_counter, "successfully" finished t_f-windows if no nodes fired during it.
+        
+        // Incrementing the counter otherwise.
+        // Immediately checking the requirements/conditions for harmonic synchrony after, to see whether we now have achieved the system target goal.
 
-		if (!reset_t_q_flag && last_t_f_firers_counter != 0) equal_t_q_streak_counter++;
+        if (!reset_t_q_flag && last_t_f_firers_counter != 0) {
+            equal_t_q_streak_counter++;
+
+            CheckHSynchConditions();
+        }
 	}
 
 
@@ -415,12 +405,10 @@ public class AgentManager : MonoBehaviour {
 		return t_f_is_now;
 	}
 
-    // ------- END OF 'Synch.-Perf.-measure (termination-evaluation) functions/methods' -------
 
 
 
-
-    // ------- START OF 'Agent spawning-functions/-methods' -------
+    // 'SPAWNING':
 
     private void SpawnAgents() {
         for (int i = 0; i < collectiveSize; i++) {
@@ -468,12 +456,24 @@ public class AgentManager : MonoBehaviour {
         return currentGuess;
     }
 
-    // ------- END OF 'Agent spawning-functions/-methods' -------
+
+
+
+    // 'HELPING':
+
+    private void InitializeHelpingVariables() {
+        // Speeding up or down the simulation if that is wanted?
+        Time.timeScale = adjustedTimeScale;
+
+        spawnRadius = collectiveSize * 1.5f; // Simply an empirical model of the necessary space the agents need to spawn. Or just a guess I guess.
+
+        agentiHasFiredAtLeastOnce = new bool[collectiveSize];
+    }
 
 
 
 
-    // ------- START OF '.CSV serialization (data-saving) functions/-methods' -------
+    // '.CSV -CREATE & -UPDATE':
 
     private void CreateAllCSVFiles() {
         // Obtaining the .CSV-header consisting of the agents's IDs
@@ -646,6 +646,4 @@ public class AgentManager : MonoBehaviour {
         // Saving one datapoint, a.k.a. writing one .CSV-row (Measurements, Covariates) to the .CSV-file at the datasetPath:
         FloatUpdateCSV(datasetPath, performanceAndCovariateValues);
     }
-
-    // ------- END OF '.CSV serialization (data-saving) functions/-methods' -------
 }
