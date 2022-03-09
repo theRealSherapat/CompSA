@@ -1,6 +1,8 @@
 # Plotting Synchrony-plots from Synchrony-simulation(s)
 
-Only requirement/dependency: Having _Python 3_ of some version installed.
+Requirements/dependencies: Having Python 3.x, numpy, and matplotlib installed, e.g. by writing for the libraries:
+
+> pip install numpy
 
 There are currently **two types of plots** you can plot with the Python-scripts in this folder:
 
