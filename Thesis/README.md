@@ -37,3 +37,4 @@ Remember:
 * Plots and colors:
 	+ Read plot tips (incl. color-considerations, where my intuition is "neutral, RGB, and as contrastive colors as possible, or non-contrastive and similar if they are closely related"), and clean up and create existing figures and plots properly (if I'll want to keep said figure/plot).
 	+ Color-check (matplotlib guides, color-guide/-paper)—so that one avoids e.g. rainbow-plots or green-to-red heatmaps, and eventually look at 'kodeeksempler' for how to plot nicely.
+	+ Ensuring good enough DPI. 150 is too little, 300 is more standard. This can be changed in matplotlib.rcparams[figure.dpi] or something.
