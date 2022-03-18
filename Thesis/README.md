@@ -8,6 +8,7 @@ Remember:
 
 ## Specific TODOs
 * Fiks ordentlig kode-lint i Notepad++ sånn at jeg sparer mye tid og tekst-klassifiserings-krefter (ihvertfall for Python).
+* Lag en lettvint, ryddig, og ordentlig "oppskrift"/template/mal for en algoritme i LaTeX (og lagre den i Maler).
 * Execute 'GJØR: []'-clauses possible to execute now (remember Abe Lincoln).
 * Gå igjennom 'notert-på reMarkable Thesis-document(s)', 'implementation_chapter_pre_first_draft.tex' og 'Essay .tex'-fila, så rett på eller hent kritikk, INKL.:[]?'s, og concerns.
 
