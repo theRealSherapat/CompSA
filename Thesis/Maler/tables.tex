@@ -1,1 +1,39 @@
-% Including a tidy table in a LaTeX-document (optionally with certain cells or rows or columns highlighted)
+% Templates for tidy tables in a LaTeX-document:
+
+% Future TODOs:
+	% - Cleaner paddings (e.g. with \rule[raise-height]{width}{height}).
+
+% CLEAN
+\captionof{table}{}
+\begin{tabular}{SSSSSSSS} \toprule
+	{$a$} & {$b$} & {$c$} & {$d$} & {$e$} & {$f$} & {$g$} & {$h$} \\ \midrule
+	1 & 23.31  & +53.1  & -12.321 	 & 1 & 23.31 & +53.1  & -12.321 \\
+	2 & 43.324 & -12.12 & -1212.3213 & 0.012 	 & +12.32 & -32.12 \\ \bottomrule
+\end{tabular}
+
+
+% MATH
+\captionof{table}{}
+\begin{tabular}{SSSSSSSS} \toprule
+	{$m$} & {$\Re\underline{\mathfrak{X}}(m)\}$} & {&-\Im\{\underline{\mathfrak{X}}(m)\}$} & {$\mathfrak{X}(m)$} & {$\frac{\mathfrak{X}(m)}{23}$} & {$A_m$} & {$\varphi(m)\ /\ ^{\circ}$} & {$\varphi_m\ /\ ^{\circ}$} \\ \midrule
+	1 & 23.31  & +53.1  & -12.321 	 & 1 & 23.31 & +53.1  & -12.321 \\
+	2 & 43.324 & -12.12 & -1212.3213 & 0.012 	 & +12.32 & -32.12 \\ \bottomrule
+\end{tabular}
+
+
+% CELL-COLORED
+\captionof{table}{}
+\begin{tabular}{SSSSSSSS} \toprule
+	{$m$} & {$\Re\underline{\mathfrak{X}}(m)\}$} & {&-\Im\{\underline{\mathfrak{X}}(m)\}$} & {$\mathfrak{X}(m)$} & {$\frac{\mathfrak{X}(m)}{23}$} & {$A_m$} & {$\varphi(m)\ /\ ^{\circ}$} & {$\varphi_m\ /\ ^{\circ}$} \\ \midrule
+	1 & 23.31  & +53.1  & -12.321 	 & 1 & 23.31 & +53.1  & -12.321 \\
+	2 & 43.324 & -12.12 & \cellcolor[gray]{0.8}-1212.3213 & 0.012 	 & +12.32 & -32.12 \\ \bottomrule
+\end{tabular}
+
+
+% ROW-COLORED
+\captionof{table}{}
+\begin{tabular}{SSSSSSSS} \toprule
+	{$m$} & {$\Re\underline{\mathfrak{X}}(m)\}$} & {$-\Im\{\underline{\mathfrak{X}}(m)\}$} & {$\mathfrak{X}(m)$} & {$\frac{\mathfrak{X}(m)}{23}$} & {$A_m$} & {$\varphi(m)\ /\ ^{\circ}$} & {$\varphi_m\ /\ ^{\circ}$} \\ \midrule
+	\rowcolor{gray}1 & 23.31  & +53.1  & -12.321 	 & 1 & 23.31 & +53.1  & -12.321 \\
+	2 & 43.324 & -12.12 & \cellcolor[gray]{0.95}-1212.3213 & 0.012 	 & +12.32 & -32.12 \\ \bottomrule
+\end{tabular}
