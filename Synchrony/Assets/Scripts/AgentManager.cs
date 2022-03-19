@@ -61,6 +61,7 @@ public class AgentManager : MonoBehaviour {
     private string phasesFolderPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Phases" + "\\";
     private string frequenciesFolderPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Frequencies" + "\\";
     private string nodeFiringPlotMaterialFolderPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "PerformanceMeasurePlotMaterial" + "\\";
+    private string synchronyEvolutionsFolderPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "SynchronyEvolutions" + "\\";
     private string datasetPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "synchronyDataset.csv";
 
     // Node-firing plot:
@@ -86,7 +87,7 @@ public class AgentManager : MonoBehaviour {
 	
 	private bool[] agentiHasFiredAtLeastOnce; // An array with as many boolean values as there are agents, which are to be put "high"/true if agent with agentID fired at least once during the simulation-run.
     private bool hSynchConditionsAreMet = false; // A boolean that should be true no sooner than when all the conditions (as defined the bulletpoints in section 5.5 in my MSc thesis, or the bulletpoints in section V.A. in Nymoen's "firefly"-paper) for the achievement of Harmonic Synchrony are fulfilled.
-    private int equal_t_q_streak_counter = 0; // 'towards-k'-counter to become equal to 'k'.
+    private int towards_k_counter = 0; // 'towards-k'-counter to become equal to 'k'.
 
 	private int last_t_f_firers_counter = 0; // A counter for how many fire-events were heard throughout the last firing-period t_f, used as a safety-mechanism to detect firing-periods within which no agents fire — so that we don't increment the 'towards-k'-counter after those firing-periods.
 
@@ -128,7 +129,7 @@ public class AgentManager : MonoBehaviour {
 
 		// If all these conditions are true, the function is thus raising the (Congratulations-vibed) hSynchConditionsAreMet-signal/-flag high, for having achieved harmonic synchrony. If all conditions are true and the hSynchConditionsAreMet-flag is raised: Rejoice! Synchrony is obtained!
 
-        bool agentsHaveBeatenAtAnEvenRhythmKTimes = equal_t_q_streak_counter == k;
+        bool agentsHaveBeatenAtAnEvenRhythmKTimes = towards_k_counter == k;
         bool allAgentsHaveFiredAtLeastOnce = !(agentiHasFiredAtLeastOnce.AsQueryable().Any(val => val == false));
 
         if (agentsHaveBeatenAtAnEvenRhythmKTimes && allAgentsHaveFiredAtLeastOnce) hSynchConditionsAreMet = true; // IF TRUE: REJOICE!
@@ -173,7 +174,7 @@ public class AgentManager : MonoBehaviour {
 		
 		agentiHasFiredAtLeastOnce = new bool[collectiveSize];
 		hSynchConditionsAreMet = false;
-		equal_t_q_streak_counter = 0;
+		towards_k_counter = 0;
 	}
 	
 	public void IJustHeardAFireEvent(int firingAgentId) {
@@ -191,7 +192,7 @@ public class AgentManager : MonoBehaviour {
 		
 			// THE REAL PSEUDO-LOGIC:
 		if (!ItIsLegalToFireNow() && !reset_t_q_flag) { // the 3)-"reset t_q"-process is started if not started already
-			if (debugSuccessOn) Debug.Log("Illegal firing! Even-beat-counter towards k=" + k + ":    " + equal_t_q_streak_counter);
+			if (debugSuccessOn) Debug.Log("Illegal firing! Even-beat-counter towards k=" + k + ":    " + towards_k_counter);
 
 			StartTheResetTQProcess();
 		}
@@ -218,7 +219,7 @@ public class AgentManager : MonoBehaviour {
 			}
 		}
 
-		// Safety-mechanism prohibiting the TowardsKCounter, equal_t_q_streak_counter, to hit 'k' when no nodes are firing within the t_f-periods/-windows
+		// Safety-mechanism prohibiting the TowardsKCounter, towards_k_counter, to hit 'k' when no nodes are firing within the t_f-periods/-windows
 		if (FiringWasPerceivedDuringTF()) {
 			last_t_f_firers_counter++;
 		}
@@ -268,7 +269,7 @@ public class AgentManager : MonoBehaviour {
 		reset_t_q_flag = false;
 		ResetLastTFFirersCounter();
 
-		if (debugSuccessOn) Debug.Log("Even-beat-counter towards k=" + k + ":    " + equal_t_q_streak_counter);
+		if (debugSuccessOn) Debug.Log("Even-beat-counter towards k=" + k + ":    " + towards_k_counter);
 
 		Invoke("TriggerTFPeriod", t_q);
         if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) 't_f-EXIT' & 't_q-START'. Calling for a 't_q-EXIT' & 't_f-START' in 't_q'=" + t_q + " SimSecs.");
@@ -280,13 +281,13 @@ public class AgentManager : MonoBehaviour {
 
 	private void IncrementTowardsKCounterIfWanted() {
         // Ignoring the first counter-increment, so that the ending of the simulation-run actually follows 'Condition 2', relating to k.
-        // Ignoring, for the sake of 'Condition 2' and the TowardsKCounter equal_t_q_streak_counter, "successfully" finished t_f-windows if no nodes fired during it.
+        // Ignoring, for the sake of 'Condition 2' and the TowardsKCounter towards_k_counter, "successfully" finished t_f-windows if no nodes fired during it.
         
         // Incrementing the counter otherwise.
         // Immediately checking the requirements/conditions for harmonic synchrony after, to see whether we now have achieved the system target goal.
 
         if (!reset_t_q_flag && last_t_f_firers_counter != 0) {
-            equal_t_q_streak_counter++;
+            towards_k_counter++;
 
             CheckHSynchConditions();
         }
@@ -393,7 +394,7 @@ public class AgentManager : MonoBehaviour {
         CancelInvoke(); // Cancelling all currently ongoing Invoke-calls. 	PASS PÅ SÅ DU IKKE CANCELLER DefineEarlyMedian- ELLER DefineNewTQ-Invokesa MED ET UHELL HER.
         reset_t_q_flag_raiser 		= Time.timeSinceLevelLoad;
 		reset_t_q_flag 				= true;
-		equal_t_q_streak_counter 	= 0;
+		towards_k_counter 	= 0;
 
         if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) Illegal firing. 't_q-RESET' initiated.");
     }
@@ -463,7 +464,7 @@ public class AgentManager : MonoBehaviour {
         // Speeding up or down the simulation if that is wanted?
         Time.timeScale = adjustedTimeScale;
 
-        spawnRadius = collectiveSize * 1.2f; // Simply an empirical model of the necessary space the agents need to spawn. Or just a guess I guess.
+        spawnRadius = 100f; //collectiveSize * 2f; // Simply an empirical model of the necessary space the agents need to spawn. Or just a guess I guess. FIND A BETTER FUNCTION.
 
         agentiHasFiredAtLeastOnce = new bool[collectiveSize];
     }
@@ -485,6 +486,9 @@ public class AgentManager : MonoBehaviour {
 
         // Creating one .CSV-file for the node_firing_data (including t_f_is_now) needed to create the "Node-firing-plot" as in Nymoen's Fig. 6.
         CreateNodeFiringCSV(agentIDHeader);
+
+        // Creating one .CSV-file for the synchrony-evolution (or syncholution) plot (how the degree of synchrony evolves throughout the simulation run, given in how many even beats in a row they are currently at, where k is max and the requirement for synchrony).
+        CreateSynchronyEvolutionCSV();
 
         // Automatically creating a Synchrony Dataset-.CSV if it does not exist.
         if (!File.Exists(datasetPath)) CreateSynchDatasetCSV();
@@ -514,6 +518,12 @@ public class AgentManager : MonoBehaviour {
         List<string> nodeFiringWithTfHeader = new List<string>(agentHeader);
         nodeFiringWithTfHeader.Insert(0, "t_f_is_now");
         CreateCSVWithStringHeader(nodeFiringPlotMaterialFolderPath + "node_firing_data_atSimRun" + atSimRun + ".csv", nodeFiringWithTfHeader);
+    }
+
+    private void CreateSynchronyEvolutionCSV() {
+        List<string> syncholutionHeader = new List<string>();
+        syncholutionHeader.Add("towards_k_counter");
+        CreateCSVWithStringHeader(synchronyEvolutionsFolderPath + "synch_evolution_data_atSimRun" + atSimRun + ".csv", syncholutionHeader);
     }
 
     private void CreateSynchDatasetCSV() {
@@ -547,6 +557,9 @@ public class AgentManager : MonoBehaviour {
 
         // 3) Updating the .CSV-file for the t_f_is_now digital signal which is telling when it is legal for nodes to fire, together with 0s indicating no firing
         UpdateNodeFiringCSV();
+
+        // 4) Updating the .CSV-file for the towards_k_counter incrementing or resetting signal which is telling how many even beats the collective has hit in a row during the simulation-run.
+        UpdateSynchronyEvolutionCSV();
     }
 
     private void UpdatePhaseCSV() {
@@ -584,6 +597,12 @@ public class AgentManager : MonoBehaviour {
 
         // Updating the CSV with one time-row
         FloatUpdateCSV(nodeFiringPlotMaterialFolderPath + "node_firing_data_atSimRun" + atSimRun + ".csv", nodeFiringDataList);
+    }
+
+    private void UpdateSynchronyEvolutionCSV() {
+        List<float> lonelyTowardsKCounterList = new List<float>();
+        lonelyTowardsKCounterList.Add((float)towards_k_counter);
+        FloatUpdateCSV(synchronyEvolutionsFolderPath + "synch_evolution_data_atSimRun" + atSimRun + ".csv", lonelyTowardsKCounterList);
     }
 
     private void SaveDatapointToDataset(float runDuration) {

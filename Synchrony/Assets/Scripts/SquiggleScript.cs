@@ -170,7 +170,7 @@ public class SquiggleScript : MonoBehaviour {
 
     private void UpdateFrequencyIfAdjustingFrequency() {
         if (useNymoenFreqAdj) {
-            RFAAdjustFrequency(); // Adjusting frequency, according to K. Nymoen, at each phase-climax.
+            RFAAdjustFrequency(); // Adjusting frequency at each phase-climax, according to K. Nymoen's Freq.-Adj.-method and the Reachback Firefly Algorithm for frequency-update-contributions (not phase-update contributions).
 
             UpdateTheRefractoryPeriod(); // Given an updated oscillator-frequency (hence also oscillator-period), we update t_ref to be the right percentage of the new oscillator-period.
         }
@@ -218,7 +218,7 @@ public class SquiggleScript : MonoBehaviour {
         else {
             timeNotClimaxed += Time.fixedDeltaTime;
 
-            if (timeNotClimaxed >= unstableFrequencyPeriod * 5) {    // Detected (not wanted) anomaly 2: the phase didn't climax within a stable time, and needs a frequency-boost.
+            if (timeNotClimaxed >= unstableFrequencyPeriod * 5) {    // Detected (not wanted) anomaly 2: the phase didn't climax within a stable time, and needs a frequency-boost.             (UN-TESTED)
                 frequency = 2f * frequency; // Giving the agent a frequency-boost since it never climaxes but only gets dragged down by others.
             }
 
