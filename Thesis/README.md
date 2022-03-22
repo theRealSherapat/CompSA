@@ -7,10 +7,9 @@ Remember:
 
 
 ## Specific TODOs
-* Fiks ordentlig kode-lint i Notepad++ sånn at jeg sparer mye tid og tekst-klassifiserings-krefter (ihvertfall for Python).
+* Gå igjennom 'notert-på reMarkable Thesis-document(s)', 'implementation_chapter_pre_first_draft.tex' og 'Essay .tex'-fila, så rett på eller hent kritikk, INKL.:[]?'s, og concerns.
 * Lag en lettvint, ryddig, og ordentlig "oppskrift"/template/mal for en algoritme i LaTeX (og lagre den i Maler).
 * Execute 'GJØR: []'-clauses possible to execute now (remember Abe Lincoln).
-* Gå igjennom 'notert-på reMarkable Thesis-document(s)', 'implementation_chapter_pre_first_draft.tex' og 'Essay .tex'-fila, så rett på eller hent kritikk, INKL.:[]?'s, og concerns.
 
 
 
@@ -37,6 +36,7 @@ Remember:
 * Plots and colors:
 	+ Read plot tips (incl. color-considerations, where my intuition is "neutral, RGB, and as contrastive colors as possible, or non-contrastive and similar if they are closely related"), and clean up and create existing figures and plots properly (if I'll want to keep said figure/plot).
 	+ Color-check (matplotlib guides, color-guide/-paper)—so that one avoids e.g. rainbow-plots or green-to-red heatmaps, and eventually look at 'kodeeksempler' for how to plot nicely.
-	+ Ensuring good enough DPI. 150 is too little, 300 is more standard. This can be changed in matplotlib.rcparams[figure.dpi] or something.
+	+ Ensuring good enough DPI. 150 is too little, 300 is more standard. This can be changed in matplotlib.rcparams[figure.dpi] or something. But is 300 a bit little too? Or shouldn't it be higher (if it's not physically possible anyways)?
+	+ Use Matplotlib.show() to construct vector-graphics axes, e.g. for the frequency-spectra you want to use in your thesis (as Mia suggested regarding creating vector-graphics axes during a collective meeting).
 * Tables:
 	+ Nicer zero-paddings (in the case of coloring cells, rows, or columns). See Tønnes's MSc-thesis at his Table 2.4 at (proper) page 13.
