@@ -1,0 +1,23 @@
+% Commands = Macros.
+
+% Colors:
+	\newcommand{\tcol}[2][red]{\textcolor{#1}{#2}} % to colorize text. Args.: #1=textcolor (default-color is red), #2=text.
+
+% Page-Spacing, -Margins, and -Padding:
+	\newcommand{\nl}{\newline} % to create a new line here.
+	\newcommand{\np}{\newpage} % to create new page from here on.
+	\newcommand{\sep}{\vspace{15px}} % to vertically insert space.
+	\newcommand{\myparagraph}[1]{\paragraph{#1}\mbox{}\\}
+
+% Lists:
+	\newcommand{\subitemize}[1]{\begin{itemize} \item{#1} \end{itemize}} % to itemize #1.
+
+% Sentences-marking/-identifiers for quick classification of semantics of text:
+% TODO: Incorporate a better \nl-looking spacing/margin/padding above the classification-objects.
+	\newcommand{\inkl}[1]{\textbf{\tcol{INKL.: \Big[}} #1 \textbf{\tcol{\Big]{\Large ?}}}} % to question the Inclusion of Sentence(s). Args.: #1=sentence(s).
+	\newcommand{\gjor}[1]{\textbf{\tcol[blue]{GJØR: \Big[}} #1 \textbf{\tcol[blue]{\Big].}} \nl} % to mark the Sentence(s) for execution. Args.: #1=sentence(s).
+	\newcommand{\besk}[1]{\textbf{\tcol[ForestGreen]{BESKR.: \Big[}} #1 \textbf{\tcol[ForestGreen]{\Big].}} \nl} % to explain/describe the Section with sentence(s). Args.: #1=sentence(s).
+	
+	\newcommand{\lab}[2]{\textbf{\tcol[gray]{{\Large "#1":} \Large[}} \nl #2 \textbf{\tcol[gray]{\Large].}} \nl} % to generically label/caption a document segment. Args.: #1=label/caption, #2=document segment.
+	
+	\newcommand{\opphoy}[2][?]{#2\textsuperscript{#1}} % to raise text #2 to the power of #1 (default-power-of #1 is '?').

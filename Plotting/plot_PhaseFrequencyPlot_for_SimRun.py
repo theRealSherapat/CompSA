@@ -38,6 +38,7 @@ def plotPhasesAndFrequencies(t, phaseDataMatrix, frequencyDataMatrix, simRun, sa
     for col_index in range(frequencyDataMatrix.shape[1]):
         labelString = "Musical Agent " + str(col_index+1)
         plt.plot(t, frequencyDataMatrix[:,col_index], label=labelString)
+    
     # Scatter-plotting the legal multiples frequencies are allowed to lie on (defined by the lowest fundamental frequency)
     scatterPlotLegalMultiples(t, frequencyDataMatrix)
     

@@ -1,0 +1,26 @@
+% Including a figure (preferably .pdf) in a LaTeX-document
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.9\linewidth]{Assets/Figures/figure_filename.pdf}
+	\caption{a succinct and describing caption}
+	\label{fig:reference_label}
+\end{figure}
+
+% Including two figures (preferably .pdfs) in subfigures
+\begin{figure}[ht!]
+	\centering
+		\begin{subfigure}[t]{.5\textwidth}
+			\centering\captionsetup{width=.9\linewidth}%
+			\includegraphics[width=0.9\linewidth]{SUBFIGUREPATH_1}
+			\caption{SUBFIG_CAPTION_1}
+			\label{SUBFIG_LABEL_1}
+		\end{subfigure}%
+		\begin{subfigure}[t]{.5\textwidth}
+			\centering\captionsetup{width=.9\linewidth}%
+			\includegraphics[width=0.9\linewidth]{SUBFIGUREPATH_2}
+			\caption{SUBFIG_CAPTION_2}
+			\label{SUBFIG_LABEL_2}
+		\end{subfigure}
+	\caption{BOTH_FIGURES_CAPTION}
+	\label{BOTH_FIGURES_LABEL}
+\end{figure}
