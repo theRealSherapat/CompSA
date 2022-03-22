@@ -5,13 +5,13 @@ import matplotlib.pyplot as plt
 
 samplingRate = 100 # Hz                                                                             POTENTIAL SOURCE OF ERROR
 
-def main(csv_filename):
+def main(csv_filename, simRun, save_fig_pls):
     times, datapointArray = parseDataFrom(csv_filename)
     
-    plotAllColsVsTime(times, datapointArray)
+    plotAllColsVsTime(times, datapointArray, simRun, save_fig_pls)
     
 
-def plotAllColsVsTime(t, dataMatrix):
+def plotAllColsVsTime(t, dataMatrix, simRun, save_fig_pls):
     """ Plotting all columns in the numpy-array dataMatrix over the vertical time-axis 't' in the same figure. """
 
     plt.close("all") # First clearing all other opened figures.
@@ -24,7 +24,9 @@ def plotAllColsVsTime(t, dataMatrix):
     
     plt.ylabel("# of even beats in a row by agent collective")
     plt.xlabel("simulation time (sec)")
-    plt.savefig("myCSVDataPlotted.pdf", format="pdf", bbox_inches="tight") # Uncomment if you want to save the figure to .PDF.
+        
+    if save_fig_pls == 1:
+        plt.savefig("SynchronyEvolutionPlotForSimRun" + str(simRun) + ".pdf", dpi=300, format="pdf", bbox_inches="tight")
     plt.show()
 
 def parseDataFrom(csv_filename):
@@ -64,9 +66,12 @@ if __name__ == "__main__":
             It then plots all of the columns over the vertical time-axis in the same figure. """
 
     """ Arguments:
-            Python-script takes in command-line argument(s): 'filepath' (string), being the file-name/-path to .CSV. """
+            simRun (int)        : the simulation-run from the latest Unity-run
+            save_fig_pls (int) : whether or not we want to save—and not just plt.show()—the resulting figure/plot.
+    """
 
     simRun = sys.argv[1]
+    save_fig_pls = int(sys.argv[2])
     filepath = filepath = "../Synchrony/SavedData/SynchronyEvolutions/synch_evolution_data_atSimRun" + simRun + ".csv"
     
-    main(filepath)
+    main(filepath, simRun, save_fig_pls)

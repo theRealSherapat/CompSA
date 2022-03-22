@@ -10,12 +10,12 @@ fiveStepYLabelLimit = 30
 colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k']
 symbols = ['X', 'o', 's', 'p', 'P', 'D', '|', '*'] # symmetric markers
 
-def main(csv_filename):
+def main(csv_filename, simRun, save_fig_pls):
     times, t_f_is_now_samples, datapointArray = parseDataFrom(csv_filename)
     
-    plotANicePlot(times, t_f_is_now_samples, datapointArray)
+    plotANicePlot(times, t_f_is_now_samples, datapointArray, simRun, save_fig_pls)
     
-def plotANicePlot(timeArray, t_fArray, nodesFiringMatrix):
+def plotANicePlot(timeArray, t_fArray, nodesFiringMatrix, simRun, save_fig_pls):
     plt.close("all") # First clearing all other opened figures.
     
     plot_t_f_is_now_background(timeArray, t_fArray)
@@ -25,7 +25,7 @@ def plotANicePlot(timeArray, t_fArray, nodesFiringMatrix):
     no_of_agents = nodesFiringMatrix.shape[1]
     yticks = get_y_ticks(no_of_agents)
     
-    finishAndShowPlot(timeArray, yticks, no_of_agents)
+    finishAndShowPlot(timeArray, yticks, no_of_agents, simRun, save_fig_pls)
 
 def get_y_ticks(no_of_agents):
     if no_of_agents > tenStepYLabelLimit: # Going over to just marking/ytick-labeling every tenth agent-#
@@ -80,7 +80,7 @@ def plotAllAgentData(timeArray, nodesFiringMatrix):
 def plotBooleanStripWithSymbolAtHeight(boolStrip, agentIndex, tArray):
     for stripIndex in range(boolStrip.shape[0]):
         if boolStrip[stripIndex] == 1.0:
-            plt.plot(tArray[stripIndex], int(agentIndex+1), marker=symbols[agentIndex%len(symbols)], markersize=1, color=colors[agentIndex%len(colors)])
+            plt.plot(tArray[stripIndex], int(agentIndex+1), marker=symbols[agentIndex%len(symbols)], markersize=0.9, color=colors[agentIndex%len(colors)])
 
 def parseDataFrom(csv_filename):
     """ Reads all rows (apart from the header) into a numpy data-matrix, and returns that 'arrayOfDatapoints' and its corresponding vertical time-axis 't' """
@@ -115,13 +115,14 @@ def parseDataFrom(csv_filename):
     
     return t, t_f_is_now_samples, datapointArray # Slicing from index 2 due to initialization values being huuuuge.
 
-def finishAndShowPlot(timeArray, yticks, no_of_agents):
+def finishAndShowPlot(timeArray, yticks, no_of_agents, simRun, save_fig_pls):
     plt.xlim(0, timeArray[-1])
     plt.xlabel("simulation time (s)")
     plt.ylabel("Node # firing at simulation time")
     plt.yticks(yticks)
     plt.gca().invert_yaxis()
-    # plt.savefig(str(no_of_agents) + "AgentsPerformanceMeasure.pdf", bbox_inches="tight") # UNCOMMENT FOR SAVING FIGURE!
+    if save_fig_pls == 1:
+        plt.savefig(str(no_of_agents) + "AgentsPerformanceMeasureForSimRun" + str(simRun) + ".pdf", bbox_inches="tight")
     plt.show()
 
 if __name__ == "__main__":
@@ -133,11 +134,13 @@ if __name__ == "__main__":
             It then plots all of the columns (corresponding to an agents's data each) over the vertical time-axis in the same figure. """
             
     """ Arguments:
-            simRun (int): the simulation-run from the latest Unity-run
+            simRun (int)        : the simulation-run from the latest Unity-run
+            save_fig_pls (int) : whether or not we want to save—and not just plt.show()—the resulting figure/plot.
     """
     
     simRun = sys.argv[1]
+    save_fig_pls = int(sys.argv[2])
     filepath = "../Synchrony/SavedData/PerformanceMeasurePlotMaterial/node_firing_data_atSimRun" + simRun + ".csv"
     
     
-    main(filepath)
+    main(filepath, simRun, save_fig_pls)

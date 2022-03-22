@@ -4,21 +4,21 @@ import numpy as np
 import csv
 import matplotlib.pyplot as plt
 
-samplingRate = 100 # Hz                                                                             POTENTIAL SOURCE OF ERROR
+samplingRate = 100 # Hz                                                            POTENTIAL SOURCE OF ERROR
 
 # TODO WHEN DEBUGGING FREQUENCY-ADJUSTMENT: INVESTIGATE WHAT MAKES THE LEGAL-FREQUENCY GREEN CIRCLES LOOK SO WEIRD.
 
-def main(phase_filename, freqs_filename):        
+def main(phase_filename, freqs_filename, simRun, save_fig_pls):        
     plt.close("all") # First clearing all other opened figures.
     
     times, phasesDatapointArray = parseDataFrom(phase_filename)
     
     _, freqsDatapointArray = parseDataFrom(freqs_filename)
     
-    plotPhasesAndFrequencies(times, phasesDatapointArray, freqsDatapointArray)
+    plotPhasesAndFrequencies(times, phasesDatapointArray, freqsDatapointArray, simRun, save_fig_pls)
     
 
-def plotPhasesAndFrequencies(t, phaseDataMatrix, frequencyDataMatrix):
+def plotPhasesAndFrequencies(t, phaseDataMatrix, frequencyDataMatrix, simRun, save_fig_pls):
     """ Plots a connected Phase-Plot and Frequency-Plot """
 
     # Printing out Phase-data in the top sub-plot
@@ -28,7 +28,8 @@ def plotPhasesAndFrequencies(t, phaseDataMatrix, frequencyDataMatrix):
     for col_index in range(phaseDataMatrix.shape[1]):
         labelString = "Musical Agent " + str(col_index+1)
         plt.plot(t, phaseDataMatrix[:,col_index], label=labelString)
-    plt.legend()
+    
+    # plt.legend()                                              # MÅ FINNE NOEN FINERE MÅTE Å PRESENTERE DETTE PÅ ISÅFALL.
 
     # Printing out Frequency-data in the bottom sub-plot
     plt.subplot(2,1,2)
@@ -42,7 +43,9 @@ def plotPhasesAndFrequencies(t, phaseDataMatrix, frequencyDataMatrix):
     
     # Printing out the whole sub-plot
     plt.tight_layout()
-    # plt.savefig(str(frequencyDataMatrix.shape[1]) + "AgentsPhasesAndFrequencies.pdf", bbox_inches="tight") # UNCOMMENT FOR SAVING FIGURE!
+    noOfAgents = frequencyDataMatrix.shape[1]
+    if save_fig_pls == 1:
+        plt.savefig(str(noOfAgents) + "AgentsPhasesAndFrequenciesForSimRun" + str(simRun) + ".pdf", dpi=300, format="pdf", bbox_inches="tight")
     plt.show()
     
 def scatterPlotLegalMultiples(timeArray, freqsDataMatrix):
@@ -153,11 +156,18 @@ if __name__ == "__main__":
         
             It then plots all of the columns (corresponding to an agents's data each) over the vertical time-axis in a subplot with phase and frequencies. 
             
-            Lastly, legal multiples for frequency (in order to have achieved harmonic synchronization) are marked with green circles. """
+            Lastly, legal multiples for frequency (in order to have achieved harmonic synchronization) are marked with green circles. 
+    """
+    
+    """ Arguments:
+            simRun (int)        : the simulation-run from the latest Unity-run
+            save_fig_pls (int) : whether or not we want to save—and not just plt.show()—the resulting figure/plot.
+    """
     
     simRun = sys.argv[1]
+    save_fig_pls = int(sys.argv[2])
     phase_path = "../Synchrony/SavedData/Phases/phases_over_time_atSimRun" + simRun + ".csv"
     freqs_path = "../Synchrony/SavedData/Frequencies/freqs_over_time_atSimRun" + simRun + ".csv"
     
     
-    main(phase_path, freqs_path)
+    main(phase_path, freqs_path, simRun, save_fig_pls)
