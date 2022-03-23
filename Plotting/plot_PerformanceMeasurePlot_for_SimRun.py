@@ -80,7 +80,7 @@ def plotAllAgentData(timeArray, nodesFiringMatrix):
 def plotBooleanStripWithSymbolAtHeight(boolStrip, agentIndex, tArray):
     for stripIndex in range(boolStrip.shape[0]):
         if boolStrip[stripIndex] == 1.0:
-            plt.plot(tArray[stripIndex], int(agentIndex+1), marker=symbols[agentIndex%len(symbols)], markersize=0.9, color=colors[agentIndex%len(colors)])
+            plt.plot(tArray[stripIndex], int(agentIndex+1), marker=symbols[agentIndex%len(symbols)], markersize=2.2, color=colors[agentIndex%len(colors)])
 
 def parseDataFrom(csv_filename):
     """ Reads all rows (apart from the header) into a numpy data-matrix, and returns that 'arrayOfDatapoints' and its corresponding vertical time-axis 't' """

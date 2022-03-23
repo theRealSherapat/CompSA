@@ -544,7 +544,7 @@ public class AgentManager : MonoBehaviour {
         performanceAndCovariatesHeader.Add("BETA");
         performanceAndCovariatesHeader.Add("FREQADJ");
         performanceAndCovariatesHeader.Add("M");
-        CreateCSVWithStringHeader(datasetPath + "synchronyDataset.csv", performanceAndCovariatesHeader);
+        CreateCSVWithStringHeader(datasetPath, performanceAndCovariatesHeader);
     }
 
 
@@ -674,6 +674,6 @@ public class AgentManager : MonoBehaviour {
 
 
         // Saving one datapoint, a.k.a. writing one .CSV-row (Measurements, Covariates) to the .CSV-file at the datasetPath:
-        FloatUpdateCSV(datasetPath + "synchronyDataset.csv", performanceAndCovariateValues);
+        FloatUpdateCSV(datasetPath, performanceAndCovariateValues);
     }
 }
