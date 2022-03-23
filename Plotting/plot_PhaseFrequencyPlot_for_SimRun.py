@@ -23,8 +23,8 @@ def plotPhasesAndFrequencies(t, phaseDataMatrix, frequencyDataMatrix, simRun, sa
 
     # Printing out Phase-data in the top sub-plot
     plt.subplot(2,1,1)
-    plt.ylabel("Phase $\phi_i(t)$")
-    plt.xlabel("time (s)")
+    plt.ylabel("Phase")
+    plt.xlabel("Simulation-time (sec)")
     for col_index in range(phaseDataMatrix.shape[1]):
         labelString = "Musical Agent " + str(col_index+1)
         plt.plot(t, phaseDataMatrix[:,col_index], label=labelString)
@@ -33,12 +33,12 @@ def plotPhasesAndFrequencies(t, phaseDataMatrix, frequencyDataMatrix, simRun, sa
 
     # Printing out Frequency-data in the bottom sub-plot
     plt.subplot(2,1,2)
-    plt.ylabel("Frequency $\omega_i(t)$ (Hz)")
-    plt.xlabel("time (s)")
+    plt.ylabel("Frequency (Hz)")
+    plt.xlabel("Simulation-time (sec)")
     for col_index in range(frequencyDataMatrix.shape[1]):
         labelString = "Musical Agent " + str(col_index+1)
         plt.plot(t, frequencyDataMatrix[:,col_index], label=labelString)
-    
+
     # Scatter-plotting the legal multiples frequencies are allowed to lie on (defined by the lowest fundamental frequency)
     scatterPlotLegalMultiples(t, frequencyDataMatrix)
     
@@ -50,75 +50,18 @@ def plotPhasesAndFrequencies(t, phaseDataMatrix, frequencyDataMatrix, simRun, sa
     plt.show()
     
 def scatterPlotLegalMultiples(timeArray, freqsDataMatrix):
-    numOfLegalTimes = 15 # The amount of times we want legal harmonic frequencies to be calculated for
-    finalTime = timeArray[-1]
-    xCoordinates = np.linspace(0, finalTime, numOfLegalTimes)
+    lowestFrequenciesAcrossRun = freqsDataMatrix.min(axis=1)
+    
+    numberOfValidFrequenciesWanted = 3
+    validFrequenciesList = []
+    
+    for validFrequencyLayerIndex in range(1,numberOfValidFrequenciesWanted):
+        validFrequenciesArray = lowestFrequenciesAcrossRun * np.power(2, validFrequencyLayerIndex)
+        validFrequenciesList.append(validFrequenciesArray)
+        
 
-    for xCoordinate in xCoordinates[:-1]:
-        plotValidFrequenciesForX(int(round(xCoordinate)), freqsDataMatrix)
-    
-    plotLastValidFrequencies(xCoordinates[-1], freqsDataMatrix)
-
-def plotLastValidFrequencies(x, freqsDataMatrix):
-    lastRowIndex = freqsDataMatrix.shape[0]-1
-    fundamentalFrequency = freqsDataMatrix[lastRowIndex,:].min()
-    
-    highestFrequency = freqsDataMatrix.max(axis=1)[lastRowIndex]
-    
-    # Adding legal (x,y)-points (where x is the last t-value and y is a legal frequency to lie on) to yCoordinates
-    yCoordinates = []
-    yLabels = []
-    
-    topFreqToDraw = fundamentalFrequency
-    yCoordinates.append(topFreqToDraw)
-    yLabels.append("$\omega_0$")
-    
-    multipleCount = 1
-    while topFreqToDraw < highestFrequency:
-        topFreqToDraw = fundamentalFrequency * np.power(2, multipleCount)
-        yCoordinates.append(topFreqToDraw)
-        yLabels.append("$\omega_0 · 2^" + str(multipleCount) + "$")
-        multipleCount += 1
-    
-    # Plotting the legal frequency-multiples
-    for i in range(len(yCoordinates)):
-        yCoordinate = yCoordinates[i]
-        plt.plot(x, yCoordinate, color='lightgreen', marker='o', linestyle='dashed', linewidth=2, markersize=16, fillstyle='none')
-        plt.text(x*1.01, yCoordinate*1.01, yLabels[i], fontsize=12)
-    
-
-def plotValidFrequenciesForX(x, freqsDataMatrix):
-    # Finding the smallest frequency (aka. the fundamental frequency) in the last row of the freqsDataMatrix
-    if x == 0:
-        timeRowIndex = 1
-    # elif x == : # codeword (hack) for last x-coordinate
-        # timeRowIndex = freqsDataMatrix.shape[0]
-    else:
-        timeRowIndex = x*samplingRate
-    fundamentalFrequency = freqsDataMatrix[timeRowIndex-1,:].min()
-    
-    highestFrequency = freqsDataMatrix.max(axis=1)[timeRowIndex-1]
-    
-    # Adding legal (x,y)-points (where x is the last t-value and y is a legal frequency to lie on) to yCoordinates
-    yCoordinates = []
-    yLabels = []
-    
-    topFreqToDraw = fundamentalFrequency
-    yCoordinates.append(topFreqToDraw)
-    yLabels.append("$\omega_0$")
-    
-    multipleCount = 1
-    while topFreqToDraw < highestFrequency:
-        topFreqToDraw = fundamentalFrequency * np.power(2, multipleCount)
-        yCoordinates.append(topFreqToDraw)
-        yLabels.append("$\omega_0 · 2^" + str(multipleCount) + "$")
-        multipleCount += 1
-    
-    # Plotting the legal frequency-multiples
-    for i in range(len(yCoordinates)):
-        yCoordinate = yCoordinates[i]
-        plt.plot(x, yCoordinate, color='lightgreen', marker='o', linestyle='dashed', linewidth=2, markersize=16, fillstyle='none')
-        plt.text(x*1.01, yCoordinate*1.01, yLabels[i], fontsize=12)
+    for y in validFrequenciesList:
+        plt.plot(timeArray, y, color='lightgray', linestyle='dashed', linewidth=0.8)
 
 
 def parseDataFrom(csv_filename):

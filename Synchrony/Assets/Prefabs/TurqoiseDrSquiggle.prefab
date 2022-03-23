@@ -162,7 +162,7 @@ MonoBehaviour:
   alpha: 0.2
   useNymoenPhaseAdj: 1
   beta: 0.8
-  useNymoenFreqAdj: 0
+  useNymoenFreqAdj: 1
   m: 5
 --- !u!1 &7619773679695212229
 GameObject:
