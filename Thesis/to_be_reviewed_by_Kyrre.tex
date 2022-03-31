@@ -6,11 +6,97 @@
 	% Dummy-hack chapters to get correct Chapter-numbers: (COMMENT OUT WHEN NECESSARY)
 	\chapter{dummy-hack Introduction}
 	\chapter{dummy-hack Background}
+	\chapter{Baseline}
+		\section{K. Nymoen's bi-directional phase-adjustment}
+		\section{K. Nymoen's middle SA-leveled frequency-adjustment}
+		\section{System target state: harmonic synchrony}
+		\label{sec:harmonic_synchrony}
+
+		The state of harmonic synchrony is defined \cite{nymoen_synch} as the state in which all agents in the musical collective ``fire''/``flash'', as described in Subsection 5.1.2, at an even and underlying interval or pulse, a certain number of times in a row. This is not to say all agents will have to ``fire''/``flash'' simultaneously, as has traditionally been the case for pulse-coupled oscillators \cite{}. Exactly how this can look is shown in Section \ref{sec:performance_measure}, especially in Figure \ref{fig:perf_measure_plot}.
+
+		As one is designing and creating an interactive music technology system, one might want to encourage and allow for the playing of various musical instruments at various rhythms/paces, as it might be quite boring if all instruments were played at the exact same measure or pulse. As K. Nymoen et al. \cite{nymoen_synch} reason when discussing their own interactive ``Firefly'' music-system, as well as coining the term of \textit{harmonic synchrony}: \nl
+
+		\textit{Temporal components in music tend to appear in an integer-ratio relation to each other (e.g., beats, measures, phrases, or quarter notes, 8ths, 16ths)}. \nl
+
+		and \nl
+
+		\textit{Being an interactive music system, people may want their device to synchronize with different subdivisions of a measure (e.g. some play quarter notes while others play 8ths).} \nl
+
+		Accomodating for these aspects then, K. Nymoen et al. took inspiration for achieving synchronization in a decentralized system from the concept of \textit{harmonics} in the frequency spectrum of a waveform, in that each harmonic wave or overtone has a frequency with an integer-relationship to the fundamental (smallest) frequency. This phenomenon can e.g. be seen in the frequency spectrogram of a humanly hummed G3-tone, depicted in Figure \ref{fig:sub:G3_hummed_waveform}, where one can observe the presence of harmonics and overtones having frequencies with integer relationships to the fundamental (smallest) frequency which was intended to be at 195,99 Hz.
+
+		\begin{figure}[ht!]
+			\centering
+				\begin{subfigure}[t]{.5\textwidth}
+					\centering\captionsetup{width=.9\linewidth}%
+					\includegraphics[width=0.9\linewidth]{Assets/Figures/G3_196Hz_PureTone_waveform_spectrogram.pdf}
+					\caption{The frequency spectrogram of the audible waveform being a monotone and purely generated G3-tone at 195,99 Hz \cite{generate_tones}.}
+					\label{fig:sub:G3_pure_waveform}
+				\end{subfigure}%
+				\begin{subfigure}[t]{.5\textwidth}
+					\centering\captionsetup{width=.9\linewidth}%
+					\includegraphics[width=0.9\linewidth]{Assets/Figures/G3_196Hz_HummingWaveform_FrequencySpectrum.pdf}
+					\caption{The frequency spectrogram of the audible waveform being a more-or-less monotone but non-pure G3-tone, hummed and recorded by me \cite{}, as I tried to repeat the tone in \ref{fig:sub:G3_pure_waveform} with my voice.}
+					\label{fig:sub:G3_hummed_waveform}
+				\end{subfigure}
+			\caption[Frequency spectrograms illustrating the absence and presence of harmonics and overtones in audible waveforms]{Frequency spectrograms of two different-sounding waveforms of the same G3-tone at 195,99 Hz. Note the absence and presence of harmonics and overtones in waveform \ref{fig:sub:G3_pure_waveform} and \ref{fig:sub:G3_hummed_waveform} respectively. Frequencies in a harmonically synchronized agent collective will for the first $\phi$-problem resemble the frequencies in \ref{fig:sub:G3_pure_waveform}, where all frequencies are equal and constant. Conversely, when frequencies can be heterogenous and unequal, as in the $\phi$- \& $\omega$-problem, the frequencies in a harmonically synchronized agent collective will rather resemble the frequencies in \ref{fig:sub:G3_hummed_waveform}, where these higher frequencies with integer-relationships to the fundamental and lowest frequency can be present.}
+			\label{fig:frequency_spectrograms}
+		\end{figure}
+
+		More accurately then, and inspired by—although not completely analagous to integer-relationship frequencies like in Figure \ref{fig:sub:G3_hummed_waveform} e.g.—K. Nymoen et al. introduce the formal and ``legal'' requirement the oscillator-frequencies in the musical robot collective have to fulfill in order for the oscillator-frequencies to be harmonically synchronized. All musical agents—in a harmonically synchronized state—will have frequencies $\in \omega_{0} \cdot 2^{\mathbb{N}_0}$, where $\omega_{0}$ is the agent with the lowest frequency's frequency (i.e. the fundamental frequency), and $\mathbb{N}_0$ is the mathematical set of natural numbers including the number zero. Hence, agents will typically have frequencies like $\omega_{0} \cdot 2^0 = \omega_{0}$, $\omega_{0} \cdot 2^1 = 2\omega_{0}$, $\omega_{0} \cdot 2^2 = 4\omega_{0}$, or $\omega_{0} \cdot 2^3 = 8\omega_{0}$. If all agents end up with these kind of frequencies, we say they have ``legal'' and harmonically synchronized frequencies.
+
+		This state of \textit{harmonic synchrony} is then the system goal state K. Nymoen et al. achieve using their phase- and frequency-update/-adjustment functions, as explained above in Section 3.1 and 3.2.
+
+
+			\subsection{Detecting harmonic synchrony}
+			\label{subsec:harmonic_synchrony}
+			In order to test and evaluate synchrony-performance in their firefly-inspired oscillator-system, K. Nymoen et al. \cite{nymoen_synch} introduced some well-defined conditions the fireflies had to meet in order to be deemed \textit{harmonically synchronized}:
+			\begin{itemize}
+				\item Firing may only happen within a short time-period $t_f$.
+				\item Between each $t_f$, a period $t_q$ without fire events must be equally long $k$ times in a row.
+				\item All nodes must have fired at least once during the evaluation period.
+			\end{itemize}
+			
+			By utilizing transmitted firings/pulses from the robots in our robot-collective, these conditions can be enforced and checked throughout the synchronization-process, in order to detect if the oscillator-network becomes harmonically synchronized.
+			
+			For getting a better idea of how these conditions being met looks like, see the \textit{performance-measure plot} in Figure \ref{fig:perf_measure_plot} where the oscillators/robots fulfill the abovementioned requirements right before ending the synchronization process.
+			
+			These requirements, amongst other illustrations in Nymoen et al.'s paper \cite{nymoen_synch}, thus constitutes a blueprint for the design of a performance-/synchrony-measure able to detect the achievement of harmonic synchrony in a decentralized network of ``firing''—or pulse-coupled—oscillators. The time having passed from the start of the synchronization-process until the detection of harmonic synchrony will then be defined as the performance-score, indicating how fast or slow the oscillators are at synchronizing.
+			
+			The exact details of how such a performance-/synchrony-measure is implemented for our musical multi-robot oscillator-network, in the synchronization-simulator, will be given in Section \ref{sec:performance_measure}.
+	
 	\chapter{dummy-hack Tools and software}
 	
-	% What I'm gonna \input{} for Kyrre to see and review/comment on:
-	\input{Drafts/implementation_chapter_first_draft.tex}
-	
+	\chapter{Implementation}
+		\section{Simulator setup: the musical multi-robot collective}
+		\section{Synchronizing oscillator-phases}
+		\section{Synchronizing oscillator-frequencies}
+		\section{Performance-measure: time until harmonic synchrony is detected}
+		\label{sec:performance_measure}
+
+		\begin{figure}
+			\centering
+			\includegraphics[width=\linewidth]{Assets/Figures/Illustrations/IllustrativePerfMeasurePlot.pdf}
+			\caption[A \textbf{performance-measure plot}.]{A \textbf{performance-measure plot}, displaying the temporally recorded pulses/``firings'' transmitted by the robots in the Dr. Squiggles-collective throughout the synchronization-simulation in Unity. Short and white windows/strips in the figure represent the short `legal firing' time-periods $t_f$ during which nodes are allowed to fire within—unless the $t_q$-duration was just reset (in that case they are $t_f/2$ long, in order to in the future align pulses in the center of the $t_f$-windows). The larger gray windows represent the `silent' time-periods within which no nodes are allowed to fire—if the agent-collective is to be harmonically synchronized. In this particular simulation-run above, the robots had to fire evenly $k=8$ times in a row, within $t_f=80ms$ long time-windows. As we can observe, harmonic synchrony was eventually achieved after around 12.5 seconds—thereby terminating the simulation-run in Unity as a success (and behind the scenes saving a datapoint consisting of the success-result as well as the 12.5 seconds performance-score, along with the simulator-hyperparameters, to a dataset).}
+			\label{fig:perf_measure_plot}
+		\end{figure}
+
+		Our performance-measure will be used to evaluate and test our multi-robot collective's ability to harmonically synchronize to each other. As mentioned in Subsection \ref{subsec:harmonic_synchrony}, K. Nymoen et al.'s requirements for achieving \textit{harmonic synchrony} serve as a blueprint or guide for how to implement our synchrony-/performance-measure. This performance-measure should be able to, during synchronization-simulation, detect if harmonic synchronization has been achieved in our decentralized oscillator-network. The successful triggering of this detection will then in turn terminate the synchronization simulation-run and save to a dataset the time it took to synchronize (the performance-score), in the case of a `synchronization-success' — an example of which can be seen in Figure \ref{fig:perf_measure_plot}. If a certain amount of simulation-time has gone without the detection of harmonic synchrony occuring, the synchronization simulation-run is still terminated and datapoint still saved, but this time as a `synchronization-fail'.
+
+		The resulting and corresponding performance-scores obtained using this performance-measure will then take values of the simulation-time (in seconds) it takes for the robot-collective, from the start of the synchronization-simulation, to achieve the system target state of \textit{harmonic synchrony}, as specified in Section \ref{sec:harmonic_synchrony}.
+
+		My specific implementation of the performance-/synchrony-measure essentially consists of enforcing all the requirements or rules listed in \ref{subsec:harmonic_synchrony}, given some constant $t_f$- and $k$-values (e.g. $80ms$ and $8$ respectively \cite{nymoen_synch}). And again—to recall from \ref{subsec:harmonic_synchrony}—$t_f$ is the short time-window within which nodes are allowed to fire at each beat, and $k$ represents how many times nodes have to fire at even underlying pulses/beats in a row without changing the $t_q$-period—before becoming harmonically synchronized.
+
+		The requirement of firing evenly $k$ times in a row with identical $t_q$-periods can be—and in fact is in our implementation—enforced by incrementing an integer variable \textit{towards\_k\_counter} after a `legal' $t_f$-window has occured (i.e. one or more nodes fired inbetween the onset and ending of the $t_f$-window), and conversely by resetting \textit{towards\_k\_counter} to 0 when an illegally transmitted firing was heard during a `silent' (or so it was supposed to be at least) $t_q$-window, hence restarting the synchrony-detection process—as can be seen in Figure \ref{fig:synch_evolution_perf_measure_ill}.
+
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.8\linewidth]{Assets/Figures/Illustrations/SynchronyEvolutionPerfMeasureIllustration.pdf}
+			\caption{A \textbf{synchrony-evolution plot}, displaying the temporal recording of the \textit{towards\_k\_counter}-variable throughout a synchrony simulation-run in Unity. The counter is incremented as the robot-collective fires evenly within `legal' $t_f$-windows, and is conversely reset to 0 if illegal firings during `silent' $t_q$-windows are heard. Note that in this specific simulation-run above (same run as in Fig. \ref{fig:perf_measure_plot}), the agents were on their way to achieve harmonic synchrony five times before the 10th second already, but since one or more of them fired `illegally' (i.e. inside a $t_q$-window), they were consequently `punished'—or rather deemed `not synchronized enough yet'—by getting their counter reset to 0. Eventually however,  through further phase- \& frequency-synchronization, the multi-robot collective was after 12.5 seconds able to achieve harmonic synchrony, when \textit{towards\_k\_counter} became equal to $k$, as well as all other requirements for achieving \textit{harmonic synchrony} was met.}
+			\label{fig:synch_evolution_perf_measure_ill}
+		\end{figure}
+
+		Initially, the $t_q$-period/-window is not initialized, as it entirely depends on the frequencies to which the robot-collective converges to; however, when an illegal firing (i.e. a firing perceived during a $t_q$-window) occurs—$t_q$ is also then reset itself to a hopefully more correct value. (Regner kanskje med jeg bør utdype litt mer nøyere her med figur, matte, og evt. algoritme-pseudokode.. Eller hva?)
+			
 	% Document Footer (Bibliography, Appendices etc.).
 	\input{Assets/DocumentSegments/document_footer.tex}
 \end{document}

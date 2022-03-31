@@ -144,6 +144,9 @@ public class AgentManager : MonoBehaviour {
             // Signifying that I am done with one simulator-run
             atSimRun++;
 
+            // Ensuring we have updated the synchrony-evolution-plot, as this is most time-critical in the complete end of the simulation.
+            UpdateSynchronyEvolutionCSV();
+
             if (atSimRun != simulationRuns) {
                 ResetSimulationVariables();
                 LoadMySceneAgain();
@@ -152,7 +155,7 @@ public class AgentManager : MonoBehaviour {
             }
         }
     }
-	
+    
 	private bool SimulationRunEitherSucceededOrFailed() {
 		// If the first condition is true, harmonic synchrony has been achieved (the synchrony-conditions are fulfilled), and the simulation-run has succeeded. 
 		// If the latter condition is true, the simulation-run has exceeded the maximum time-limit allowed, and the simulation-run has failed.

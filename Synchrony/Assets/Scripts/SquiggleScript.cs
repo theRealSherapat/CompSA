@@ -200,7 +200,7 @@ public class SquiggleScript : MonoBehaviour {
         float newFrequency = frequency * Mathf.Pow(2, F_n); // BØR MAKS VÆRE EN DOBLING AV DEN GAMLE FREKVENSEN
 
         // BARE FOR TESTING:
-        Debug.Log("omega(t): " + frequency + ", omega(t+1): " + newFrequency + ", siden F(n)=" + F_n);
+        //Debug.Log("omega(t): " + frequency + ", omega(t+1): " + newFrequency + ", siden F(n)=" + F_n);
 
         frequency = newFrequency;
     }

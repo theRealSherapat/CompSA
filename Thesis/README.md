@@ -26,6 +26,8 @@ Remember:
 	+ Use bold face on Figure-captions (so that it's rather **Figure 4.1** instead of Figure 4.1)?
 * Writing/text:
 	+ Minimize the use of parentheses and '—'s. Jarka thought e.g. the use of a lot of '-'s and '—'s was confusing.
+	+ Check present vs. past-tense.
+	+ Check pronouns, and change if something else sounds better.
 * Citations and references throughout the master's report:
 	+ Add the right citations/references where there are empty \cite{}-clauses.
 	+ Ensure the right uses of \ref{}, so that 'Subsection \ref{}' doesn't e.g. refer to a Section or Paragraph.
@@ -37,6 +39,7 @@ Remember:
 	+ Read plot tips (incl. color-considerations, where my intuition is "neutral, RGB, and as contrastive colors as possible, or non-contrastive and similar if they are closely related"), and clean up and create existing figures and plots properly (if I'll want to keep said figure/plot).
 	+ Color-check (matplotlib guides, color-guide/-paper)—so that one avoids e.g. rainbow-plots or green-to-red heatmaps, and eventually look at 'kodeeksempler' for how to plot nicely.
 	+ Ensuring good enough DPI. 150 is too little, 300 is more standard. This can be changed in matplotlib.rcparams[figure.dpi] or something. But is 300 a bit little too? Or shouldn't it be higher (if it's not physically possible anyways)?
+	+ Bruke gjennomgående og konsistente og tema-belyste farger i plotte-fargene, eller til noen du liker og synes ser proffe og fine ut (f.eks. turkis og sort som du liker).
 * Frequency-spectra:
 	+ Save the raw spectrogram-.PDF from Audacity, and rather downscale the resolution in e.g. Inkscape or something (like Kyrre suggested at the same meeting as below).
 	+ Use Matplotlib.show() to construct vector-graphics axes, e.g. for the frequency-spectra you want to use in your thesis (as Mia suggested regarding creating vector-graphics axes during a collective meeting).
@@ -44,3 +47,4 @@ Remember:
 	+ Nicer zero-paddings (in the case of coloring cells, rows, or columns). See Tønnes's MSc-thesis at his Table 2.4 at (proper) page 13.
 * Page layouts:
 	+ Se til at alle figurene og tabellene er plassert der det gir mening for deg, ikke der det gir mening for LaTeX.
+	+ Sørge for at List of Figures ser grei ut og ikke noob (husk å sende med forkortede []-parametre i figure-captions).
