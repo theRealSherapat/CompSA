@@ -25,6 +25,8 @@ public class AgentManager : MonoBehaviour {
 
     [Tooltip("The simulation-speed compared to real-time?")]
     public float adjustedTimeScale = 1.0f;
+    [Tooltip("The random-seed for the pseudo-random number-generator in Unity.")]
+    public int randomSeed = 2000;
 
     // 'Non-recorded general meta-/environment-hyperparemeters':
     [Tooltip("The number of simulation-runs per Unity Game-run.")]
@@ -50,6 +52,7 @@ public class AgentManager : MonoBehaviour {
 
     // General Meta:
     private static int atSimRun = 0;
+    private System.Random randGen;
 
     // Spawning:
     private float spawnRadius; // The radius from origo within which the agents are allowed to spawn without colliding.
@@ -419,7 +422,7 @@ public class AgentManager : MonoBehaviour {
             spawnedPositions.Add(randomCirclePoint);
 
             // Spawning an agent from squigglePrefabs on the free position
-            GameObject newAgent = Instantiate(squigglePrefabs[Random.Range(0, squigglePrefabs.Length)],
+            GameObject newAgent = Instantiate(squigglePrefabs[randGen.Next(0, squigglePrefabs.Length)],
                                                                 new Vector3(randomCirclePoint.x, -0.96f, randomCirclePoint.y),
                                                                 Quaternion.identity);
 
@@ -440,13 +443,13 @@ public class AgentManager : MonoBehaviour {
     private Vector2 FindFreeSpawnPosition() {
         // TODO: Find the free spawn position in a much smarter manner (like with artificial potential fields, or Gauss-Neuton or the likes).
 
-        Vector2 currentGuess = Random.insideUnitCircle * spawnRadius;
+        Vector2 currentGuess = GetPredictableRandomUnitCircleCoord() * spawnRadius;
         bool foundFreeSpawnPoint = false;
 
         while (!foundFreeSpawnPoint) {
             foundFreeSpawnPoint = true;
 
-            currentGuess = (Random.insideUnitCircle) * spawnRadius;
+            currentGuess = GetPredictableRandomUnitCircleCoord() * spawnRadius;
 
             foreach (Vector2 spawnedPosition in spawnedPositions) {
                 if (Vector2.Distance(spawnedPosition, currentGuess) < agentWidth) {
@@ -458,14 +461,32 @@ public class AgentManager : MonoBehaviour {
         return currentGuess;
     }
 
+    private Vector2 GetPredictableRandomUnitCircleCoord() {
+        float x = (randGen.Next(0, 2) * 2 - 1) * (float)randGen.NextDouble();
+        float y = (randGen.Next(0, 2) * 2 - 1) * (float)randGen.NextDouble();
+        Vector2 withinUnitCircle = new Vector2(x, y);
+        if (withinUnitCircle.magnitude > 1.0f) {
+            withinUnitCircle = withinUnitCircle.normalized;
+        }
+
+        return withinUnitCircle;
+    }
+
 
 
 
     // 'HELPING':
 
+    public System.Random GetRandomNumberGenerator() {
+        return randGen;
+    }
+
     private void InitializeVariables() {
         // Speeding up or down the simulation if that is wanted?
         Time.timeScale = adjustedTimeScale;
+
+        // Creating the AgentManager's random-generator with its seed given by the user.
+        randGen = new System.Random(randomSeed);
 
         spawnRadius = 100f; //collectiveSize * 2f; // Simply an empirical model of the necessary space the agents need to spawn. Or just a guess I guess. FIND A BETTER FUNCTION.
 
@@ -542,6 +563,7 @@ public class AgentManager : MonoBehaviour {
         performanceAndCovariatesHeader.Add("T_F");
         performanceAndCovariatesHeader.Add("TQDEFINER");
         performanceAndCovariatesHeader.Add("ADJTIMESCALE");
+        performanceAndCovariatesHeader.Add("RANDOMSEED");
         performanceAndCovariatesHeader.Add("ALPHA");
         performanceAndCovariatesHeader.Add("PHASEADJ");
         performanceAndCovariatesHeader.Add("BETA");
@@ -651,6 +673,9 @@ public class AgentManager : MonoBehaviour {
 
         float ADJTIMESCALE = adjustedTimeScale;
         performanceAndCovariateValues.Add(ADJTIMESCALE);
+
+        float RANDOMSEED = System.Convert.ToSingle(randomSeed);
+        performanceAndCovariateValues.Add(RANDOMSEED);
 
 
         // Adding Individual/Agent Hyper-parameters/Covariates (NB! Due to current design of datapoint-saving, these have to be equal for all agents) that I know before simulating:

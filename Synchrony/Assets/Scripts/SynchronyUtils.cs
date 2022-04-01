@@ -3,6 +3,7 @@ using UnityEngine;
 using System.IO;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using System.Text;
 
 public static class SynchronyUtils {
 
@@ -10,7 +11,7 @@ public static class SynchronyUtils {
 
     public static void CreateCSVWithIntHeader(string path, List<int> headerEntries) {
         // Summary: creates a .CSV-file at arg1, <path>, with the top-line/header according to arg2, <headerEntries>.
-        TextWriter tw = new StreamWriter(path, false);
+        TextWriter tw = new StreamWriter(path, false, new UTF8Encoding(true));
         string firstLine = "";
 
         // Fyller inn firstLine med IDene til Dr. Squigglene f.eks.:
@@ -26,7 +27,7 @@ public static class SynchronyUtils {
 
     public static void CreateCSVWithStringHeader(string path, List<string> headerEntries) {
         // Summary: creates a .CSV-file at arg1, <path>, with the top-line/header according to arg2, <headerEntries>.
-        TextWriter tw = new StreamWriter(path, false);
+        TextWriter tw = new StreamWriter(path, false, new UTF8Encoding(true));
         string firstLine = "";
 
         // Fyller inn firstLine med IDene til Dr. Squigglene f.eks.:

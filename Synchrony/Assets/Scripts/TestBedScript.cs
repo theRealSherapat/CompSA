@@ -13,10 +13,14 @@ public class TestBedScript : MonoBehaviour {
     private List<float> errorBuffer = new List<float>();
     private List<float> squiggleIDer = new List<float> {2f,1f,3f,4f};
 
+    private System.Random randGen;
+
 
     // 'MonoBehaviour':
 
     void Start() {
+        randGen = new System.Random(4);
+
         // '"Array -> List"-conversion':
         //agentIDer = new int[10];
         //agentIDer[3] = 1;
@@ -50,60 +54,71 @@ public class TestBedScript : MonoBehaviour {
     void Update() {
         // 'KeyDown-if-clauses':
 
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            // 'list-shifting':
-            ShiftListWith(Random.Range(-20f, 20f));
-        } else if (Input.GetKeyDown(KeyCode.P)) {
-            // 'list-printing':
-            DebugLogMyFloatList(errorBuffer);
-        } else if (Input.GetKeyDown(KeyCode.S)) {
-            // 'list-sorting':
-            //List<float> sortertListe = GetMyDarnSortedList(errorBuffer);
-            //DebugLogMyFloatList(sortertListe);
-        } else if (Input.GetKeyDown(KeyCode.M)) {
-            // 'Median-testing':
-            float beTheMedianPls = ListMedian(errorBuffer);
-            print("Medianen er forhåpentligvis: " + beTheMedianPls);
-        } else if (Input.GetKeyDown(KeyCode.A)) {
-            // 'Avg.-testing':
-            float beTheAveragePls = ListAverage(errorBuffer);
-            print("Gjennomsnittet er forhåpentligvis: " + beTheAveragePls);
-        } else if (Input.GetKeyDown(KeyCode.H)) {
-            // 'Invoke-testing':
-            // Tester om Invoke's stopper sekvensen/koden, men det gjør den ikke. Linjene etter blir kjørt med en gang.
-            Invoke("PrintHelloFromTheOtherSideIn2Sec", 5f);
-            Debug.Log("Beat you to it suckah.");
-        } else if (Input.GetKeyDown(KeyCode.I)) {
-            // 'C# integer-increments':
-            // Checking C# integer increments
-            incrementVariable++;
-            Debug.Log(incrementVariable);
-        } else if (Input.GetKeyDown(KeyCode.A)) {
-            // 'C# Any()-method':
-            Debug.Log("Any-resultat: " + agentIHasFired.AsQueryable().Any(val => val == false));
-        } else if (Input.GetKeyDown(KeyCode.C)) {
-            // '.csv-saving':
-            //string path = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "minForsteDataFil.csv";
-            //FloatUpdateCSV(path, squiggleIDer);
+        // Generating random numbers:
+        //if (Input.GetKeyDown(KeyCode.A)) {
+        //    float x = (randGen.Next(0, 2) * 2 - 1) * (float)randGen.NextDouble();
+        //    float y = (randGen.Next(0, 2) * 2 - 1) * (float)randGen.NextDouble();
+        //    Vector2 suggestion = new Vector2(x, y);
+        //    if (suggestion.magnitude > 1.0f) {
+        //        suggestion = suggestion.normalized;
+        //    }
+        //    Debug.Log(suggestion);
+        //}
 
-            //Debug.Log(System.IO.Directory.GetCurrentDirectory() + "\\" + "minForsteDataFil.csv");
-            //foreach (int squig in squiggleIDer) {
-            //    Debug.Log(squig);
-            //}
-        } // 'boolean arrays in C#':
-        else if (Input.GetKeyDown(KeyCode.P)) {
-            for (int i = 0; i < agentIHasFired.Length; i++) {
-                Debug.Log("agentIHasFired[" + i + "]: " + agentIHasFired[i]);
-            }
-        } else if (Input.GetKeyDown(KeyCode.J)) {
-            agentIHasFired[0] = true;
-        } else if (Input.GetKeyDown(KeyCode.D)) {
-            agentIHasFired[1] = true;
-        } else if (Input.GetKeyDown(KeyCode.T)) {
-            agentIHasFired[2] = true;
-        } else if (Input.GetKeyDown(KeyCode.Q)) {
-            agentIHasFired[3] = true;
-        }
+        //if (Input.GetKeyDown(KeyCode.Space)) {
+        //    // 'list-shifting':
+        //    ShiftListWith(Random.Range(-20f, 20f));
+        //} else if (Input.GetKeyDown(KeyCode.P)) {
+        //    // 'list-printing':
+        //    DebugLogMyFloatList(errorBuffer);
+        //} else if (Input.GetKeyDown(KeyCode.S)) {
+        //    // 'list-sorting':
+        //    //List<float> sortertListe = GetMyDarnSortedList(errorBuffer);
+        //    //DebugLogMyFloatList(sortertListe);
+        //} else if (Input.GetKeyDown(KeyCode.M)) {
+        //    // 'Median-testing':
+        //    float beTheMedianPls = ListMedian(errorBuffer);
+        //    print("Medianen er forhåpentligvis: " + beTheMedianPls);
+        //} else if (Input.GetKeyDown(KeyCode.A)) {
+        //    // 'Avg.-testing':
+        //    float beTheAveragePls = ListAverage(errorBuffer);
+        //    print("Gjennomsnittet er forhåpentligvis: " + beTheAveragePls);
+        //} else if (Input.GetKeyDown(KeyCode.H)) {
+        //    // 'Invoke-testing':
+        //    // Tester om Invoke's stopper sekvensen/koden, men det gjør den ikke. Linjene etter blir kjørt med en gang.
+        //    Invoke("PrintHelloFromTheOtherSideIn2Sec", 5f);
+        //    Debug.Log("Beat you to it suckah.");
+        //} else if (Input.GetKeyDown(KeyCode.I)) {
+        //    // 'C# integer-increments':
+        //    // Checking C# integer increments
+        //    incrementVariable++;
+        //    Debug.Log(incrementVariable);
+        //} else if (Input.GetKeyDown(KeyCode.A)) {
+        //    // 'C# Any()-method':
+        //    Debug.Log("Any-resultat: " + agentIHasFired.AsQueryable().Any(val => val == false));
+        //} else if (Input.GetKeyDown(KeyCode.C)) {
+        //    // '.csv-saving':
+        //    //string path = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "minForsteDataFil.csv";
+        //    //FloatUpdateCSV(path, squiggleIDer);
+
+        //    //Debug.Log(System.IO.Directory.GetCurrentDirectory() + "\\" + "minForsteDataFil.csv");
+        //    //foreach (int squig in squiggleIDer) {
+        //    //    Debug.Log(squig);
+        //    //}
+        //} // 'boolean arrays in C#':
+        //else if (Input.GetKeyDown(KeyCode.P)) {
+        //    for (int i = 0; i < agentIHasFired.Length; i++) {
+        //        Debug.Log("agentIHasFired[" + i + "]: " + agentIHasFired[i]);
+        //    }
+        //} else if (Input.GetKeyDown(KeyCode.J)) {
+        //    agentIHasFired[0] = true;
+        //} else if (Input.GetKeyDown(KeyCode.D)) {
+        //    agentIHasFired[1] = true;
+        //} else if (Input.GetKeyDown(KeyCode.T)) {
+        //    agentIHasFired[2] = true;
+        //} else if (Input.GetKeyDown(KeyCode.Q)) {
+        //    agentIHasFired[3] = true;
+        //}
     }
 
 

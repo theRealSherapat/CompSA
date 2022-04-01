@@ -26,6 +26,7 @@ public class SquiggleScript : MonoBehaviour {
     // 'Private variables necessary to make the cogs go around':
 
     // Core for (oscillator-) synchronization:
+    private System.Random randGen;
     private float phase;                        // The agents's progression through its oscillator-period. A number between 0 (at the beginning of its cycle) and 1 (at the end of its cycle).
     private float frequency;                    // The agents's oscillator-frequency (Hz). How fast the agent traverses through its cycle — or in other words the rate of the phase's change.
     private float t_ref;                        // The refractory period (s) being the period within which agents are "recovering" in, i.e. not adjusting themselves, after firing/sending a pulse.
@@ -325,6 +326,8 @@ public class SquiggleScript : MonoBehaviour {
         // Acquiring a reference to the creator (AgentManager) so that the Dr. Squiggle's agentId can be passed to it when saving some data to .CSV-files
         myCreator = FindObjectOfType<AgentManager>();
 
+        randGen = myCreator.GetRandomNumberGenerator(); //new System.Random(myCreator.randomSeed);
+
         // Acquiring a neighbour-list for each agent so that they can call on them when they themselves are firing
         FillUpNeighbourSquigglesList();
 
@@ -348,12 +351,12 @@ public class SquiggleScript : MonoBehaviour {
 
 
     private void InitializeAgentPhase() {
-        phase = Random.Range(0.0f, 1.0f); // Initializing the agent's phase randomly in the full range of [0.0, 1.0]?.
+        phase = (float)randGen.NextDouble(); // Initializing the agent's phase randomly within the range of (0.0, 1.0)?.
     }
 
     private void InitializeAgentFrequency() {
         if (useNymoenFreqAdj) {
-            frequency = Random.Range(myCreator.minMaxInitialFreqs.x, myCreator.minMaxInitialFreqs.y); // Initializing frequency (Hz) in range Random.Range(0.5f, 8f) was found useful by Nymoen et al.
+            frequency = (float)randGen.NextDouble() * (myCreator.minMaxInitialFreqs.y - myCreator.minMaxInitialFreqs.x) + myCreator.minMaxInitialFreqs.x; // Initializing frequency (Hz) in range [0.5Hz, 8Hz] was found useful by Nymoen et al.
         } else {
             frequency = 1f; // Setting agent's frequency to default frequency of 1Hz.
         }
