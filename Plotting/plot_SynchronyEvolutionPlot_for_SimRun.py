@@ -55,6 +55,8 @@ def parseDataFrom(csv_filename):
     
     t = np.linspace(0, numOfRows*(1/samplingRate), numOfRows) # In reality we start sampling after a split-second long startup-phase in Unity.
     
+    # Possibility: Downsampling the data- and time-arrays (for really long arrays from failed Simulation-runs).
+    
     return t, arrayOfDatapoints[1:,:]
     
 if __name__ == "__main__":

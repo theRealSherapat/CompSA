@@ -6,8 +6,6 @@ import matplotlib.pyplot as plt
 
 samplingRate = 100 # Hz                                                            POTENTIAL SOURCE OF ERROR
 
-# TODO WHEN DEBUGGING FREQUENCY-ADJUSTMENT: INVESTIGATE WHAT MAKES THE LEGAL-FREQUENCY GREEN CIRCLES LOOK SO WEIRD.
-
 def main(phase_filename, freqs_filename, simRun, save_fig_pls):        
     plt.close("all") # First clearing all other opened figures.
     
@@ -89,6 +87,8 @@ def parseDataFrom(csv_filename):
             
     
     t = np.linspace(0, numOfRows*(1/samplingRate), numOfRows-1) # In reality we start sampling after a split-second long startup-phase in Unity.
+    
+    # Possibility: Downsampling the data- and time-arrays (for really long arrays from failed Simulation-runs).
     
     return t, arrayOfDatapoints[2:,:] # Slicing due to initialization values (being huuuuge).
     

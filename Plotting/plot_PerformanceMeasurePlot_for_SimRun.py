@@ -113,6 +113,8 @@ def parseDataFrom(csv_filename):
     
     datapointArray = arrayOfDatapoints[:,1:]
     
+    # Possibility: Downsampling the data- and time-arrays (for really long arrays from failed Simulation-runs).
+    
     return t, t_f_is_now_samples, datapointArray # Slicing from index 2 due to initialization values being huuuuge.
 
 def finishAndShowPlot(timeArray, yticks, no_of_agents, simRun, save_fig_pls):
