@@ -165,24 +165,6 @@ public class AgentManager : MonoBehaviour {
 		return hSynchConditionsAreMet || (Time.timeSinceLevelLoad >= runDurationLimit);
 	}
 	
-	private void ResetSimulationVariables() {
-		// Here we are resetting/reassigning the Performance-/Synchronization-measure variables to their default-values that they are set up to have before starting a simulation run. This way, we are "cleaning up" the current/previous simulation-run and setting up for another new simulation-run within the same Unity "Game-play-run".
-		
-		t_f_is_now = false;
-		t_q = 0f;
-		CancelInvoke(); // All t_q-/t_f-Invokes are ended/executed.
-		
-		first_firing_is_perceived = false;
-		
-		reset_t_q_flag_raiser = 0f;
-
-		early_t_q_definer = 0f;
-		
-		agentiHasFiredAtLeastOnce = new bool[collectiveSize];
-		hSynchConditionsAreMet = false;
-		towards_k_counter = 0;
-	}
-	
 	public void IJustHeardAFireEvent(int firingAgentId) {
 		// When this method gets called, it means the AgentManager has picked upon a Dr. Squiggle's method-call — meaning it "heard" a Dr. Squiggle's ``fire''-signal.
 
@@ -357,9 +339,8 @@ public class AgentManager : MonoBehaviour {
         //Debug.Log("Early Reset Defining Times: ");
 		//DebugLogMyFloatList(early_t_q_defining_times);
 	}
-	
-	
-	private bool LateTQDefinerIsInTheMaking() {
+
+    private bool LateTQDefinerIsInTheMaking() {
 		// Returning true if the 3)-"reset t_q"-process is started, the candidate late median definer is far enough away from the early median time (to avoid negative numbers), the early median has been found but the late and second median still hasn't been used to define the new t_q-estimate through the DefineNewTQ()-function. Returns false otherwise.
 		
 		return (reset_t_q_flag && (Time.timeSinceLevelLoad > (early_t_q_definer + t_f)) && (defining_times_acquired == 1));
@@ -410,6 +391,24 @@ public class AgentManager : MonoBehaviour {
 		return t_f_is_now;
 	}
 
+
+    private void ResetSimulationVariables() {
+        // Here we are resetting/reassigning the Performance-/Synchronization-measure variables to their default-values that they are set up to have before starting a simulation run. This way, we are "cleaning up" the current/previous simulation-run and setting up for another new simulation-run within the same Unity "Game-play-run".
+
+        t_f_is_now = false;
+        t_q = 0f;
+        CancelInvoke(); // All t_q-/t_f-Invokes are ended/executed.
+
+        first_firing_is_perceived = false;
+
+        reset_t_q_flag_raiser = 0f;
+
+        early_t_q_definer = 0f;
+
+        agentiHasFiredAtLeastOnce = new bool[collectiveSize];
+        hSynchConditionsAreMet = false;
+        towards_k_counter = 0;
+    }
 
 
 
@@ -479,6 +478,10 @@ public class AgentManager : MonoBehaviour {
 
     public System.Random GetRandomNumberGenerator() {
         return randGen;
+    }
+
+    public int GetRandomGeneratorSeed() {
+        return randomSeed;
     }
 
     private void InitializeVariables() {

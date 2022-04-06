@@ -355,9 +355,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alpha: 0.5
-  useNymoenPhaseAdj: 1
+  useNymoenPhaseAdj: 0
   beta: 0.8
-  useNymoenFreqAdj: 1
+  useNymoenFreqAdj: 0
   m: 5
 --- !u!1001 &2285719833623400587
 PrefabInstance:

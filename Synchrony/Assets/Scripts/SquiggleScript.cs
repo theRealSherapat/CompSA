@@ -3,10 +3,15 @@ using UnityEngine;
 using static SynchronyUtils;
 
 public class SquiggleScript : MonoBehaviour {
-    
+
     // 'VARIABLES':
 
     // Recorded individual-/agent-hyperparameters:
+
+        // GENIALT FRA TOMMY:
+    // List<float> phase = new List<float>;
+    // On FixedUpdate, append new value to this
+    // On termination, send list to FloatCSVCreator
 
     // Phase-adjustment:
     [Tooltip("Pulse coupling constant, denoting coupling strength between nodes, deciding how much robots adjust phases after detecting a pulse from a neighbour. The larger the constant, the larger (in absolute value) the phase-update?")]
@@ -223,7 +228,12 @@ public class SquiggleScript : MonoBehaviour {
                 frequency = 2f * frequency; // Giving the agent a frequency-boost since it never climaxes but only gets dragged down by others.
             }
 
-            phase = Mathf.Clamp(phase + frequency * Time.fixedDeltaTime, 0f, 1f); // Increasing agent's phase according to its frequency = d(phi)/dt.
+            if (!(Time.timeSinceLevelLoad == 0f)) { // Don't want to update the already-initialized phase-value at Simulationtime=0.
+                phase = Mathf.Clamp(phase + frequency * Time.fixedDeltaTime, 0f, 1f); // Increasing agent's phase according to its frequency = d(phi)/dt.
+
+                // BARE FOR TESTING
+                //if (agentID == 1) Debug.Log("Agent" + agentID + " updated phase = " + phase + " at Simulationtime=" + Time.timeSinceLevelLoad + ".");
+            }
         }
     }
 
@@ -323,10 +333,10 @@ public class SquiggleScript : MonoBehaviour {
     }
     
     private void AssignHelpingVariables() {
-        // Acquiring a reference to the creator (AgentManager) so that the Dr. Squiggle's agentId can be passed to it when saving some data to .CSV-files
         myCreator = FindObjectOfType<AgentManager>();
 
-        randGen = myCreator.GetRandomNumberGenerator(); //new System.Random(myCreator.randomSeed);
+        int randomSeed = myCreator.GetRandomGeneratorSeed() + agentID;
+        randGen = new System.Random(randomSeed);
 
         // Acquiring a neighbour-list for each agent so that they can call on them when they themselves are firing
         FillUpNeighbourSquigglesList();
@@ -352,6 +362,9 @@ public class SquiggleScript : MonoBehaviour {
 
     private void InitializeAgentPhase() {
         phase = (float)randGen.NextDouble(); // Initializing the agent's phase randomly within the range of (0.0, 1.0)?.
+        
+        // BARE FOR TESTING
+        //if (agentID == 1) Debug.Log("Agent" + agentID + " initialized phase = " + phase + " at Simulationtime=" + Time.timeSinceLevelLoad + ".");
     }
 
     private void InitializeAgentFrequency() {
@@ -360,6 +373,9 @@ public class SquiggleScript : MonoBehaviour {
         } else {
             frequency = 1f; // Setting agent's frequency to default frequency of 1Hz.
         }
+
+        // BARE FOR TESTING
+        //if (agentID == 1) Debug.Log("Agent" + agentID + " initialized frequency = " + frequency + " at Simulationtime=" + Time.timeSinceLevelLoad + ".");
     }
 
         // 'get-/set-functions':
