@@ -7,7 +7,6 @@ Remember:
 
 
 ## Specific TODOs
-* Lag en lettvint, ryddig, og ordentlig "oppskrift"/template/mal for en algoritme i LaTeX (og lagre den i Maler). Se f.eks. på Lukas Esterle et al.'s algoritmer i ARES-paperet deres for inspirasjon.
 * Gå igjennom 'notert-på reMarkable Thesis-document(s)', 'implementation_chapter_pre_first_draft.tex' og 'Essay .tex'-fila, så rett på eller hent kritikk, INKL.:[]?'s, og concerns.
 * Execute 'GJØR: []'-clauses possible to execute now (remember Abe Lincoln).
 

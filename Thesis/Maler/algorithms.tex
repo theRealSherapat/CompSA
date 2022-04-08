@@ -1,1 +1,16 @@
 % Templates for tidy algorithms in a LaTeX-document:
+
+\begin{algorithm}
+\caption{Thorvaldsen's Performance-/Synchrony-Measure}\label{amazing_algo}
+\begin{algorithmic}[1]
+\Procedure{}{$firing\_time_i, agentID$}
+	\State $r\gets a\bmod b$
+	\While{$r\not=0$} % \Comment{Kommentar her}
+		\State $a\gets b$
+		\State $b\gets r$
+		\State $r\gets a\bmod b$
+	\EndWhile\label{euclidendwhile}
+	\State\textbf{return} $b$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
