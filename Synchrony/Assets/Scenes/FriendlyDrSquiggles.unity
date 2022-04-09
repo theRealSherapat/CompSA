@@ -167,17 +167,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd775d64d8fb444d804ffc4263aeca8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectiveSize: 2
+  collectiveSize: 6
   t_ref_perc_of_period: 0.1
   minMaxInitialFreqs: {x: 0.5, y: 4}
   k: 8
   t_f: 0.08
   useTQAverage: 0
   adjustedTimeScale: 1
-  randomSeed: 2000
+  randomSeed: 2020
   simulationRuns: 1
   runDurationLimit: 300
-  debugSuccessOn: 0
+  debugSuccessOn: 1
   debugTqTfOn: 0
   useSound: 1
   useVisuals: 1
