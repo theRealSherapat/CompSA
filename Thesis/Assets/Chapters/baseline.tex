@@ -191,7 +191,7 @@ and \nl
 
 \textit{Being an interactive music system, people may want their device to synchronize with different subdivisions of a measure (e.g. some play quarter notes while others play 8ths).} \nl
 
-Accomodating for these aspects then, K. Nymoen et al. took inspiration for achieving synchronization in a decentralized system from the concept of \textit{harmonics} in the frequency spectrum of a waveform, in that each harmonic wave or overtone has a frequency with an integer-relationship to the fundamental (smallest) frequency. This phenomenon can e.g. be seen in the frequency spectrogram of a humanly hummed G3-tone, depicted in Figure \ref{fig:sub:G3_hummed_waveform}, where one can observe the presence of harmonics and overtones having frequencies with integer relationships to the fundamental (smallest) frequency which was intended to be at 195,99 Hz.
+Accomodating for these aspects then, K. Nymoen et al. took inspiration for achieving synchronization in a decentralized system from the concept of \textit{harmonics} in the frequency spectrum of a waveform, in that each harmonic wave or overtone has a frequency with an integer-relationship to the fundamental (smallest) frequency. This phenomenon can e.g. be seen in the frequency spectrogram of a humanly hummed G3-tone, depicted in Figure \ref{fig:sub:G3_hummed_waveform}, where one can observe the presence of harmonics and overtones having frequencies with integer relationships to the fundamental (smallest) frequency at around 196 Hz.
 
 \begin{figure}[ht!]
 	\centering
@@ -211,9 +211,27 @@ Accomodating for these aspects then, K. Nymoen et al. took inspiration for achie
 	\label{fig:frequency_spectrograms}
 \end{figure}
 
-More accurately then, and inspired by—although not completely analagous to integer-relationship frequencies like in Figure \ref{fig:sub:G3_hummed_waveform} e.g.—K. Nymoen et al. introduce the formal and ``legal'' requirement the oscillator-frequencies in the musical robot collective have to fulfill in order for the oscillator-frequencies to be harmonically synchronized. All musical agents—in a harmonically synchronized state—will have frequencies $\in \omega_{0} \cdot 2^{\mathbb{N}_0}$, where $\omega_{0}$ is the agent with the lowest frequency's frequency (i.e. the fundamental frequency), and $\mathbb{N}_0$ is the mathematical set of natural numbers including the number zero. Hence, agents will typically have frequencies like $\omega_{0} \cdot 2^0 = \omega_{0}$, $\omega_{0} \cdot 2^1 = 2\omega_{0}$, $\omega_{0} \cdot 2^2 = 4\omega_{0}$, or $\omega_{0} \cdot 2^3 = 8\omega_{0}$. If all agents end up with these kind of frequencies, we say they have ``legal'' and harmonically synchronized frequencies.
+More accurately then, and inspired by integer-relationships in the frequencies of harmonics and the fundamental frequency in the spectrogram of a waveform, K. Nymoen et al. \cite{nymoen_synch} describe the \textit{legal} frequencies the robots's oscillators in the musical robot collective have to adhere to in order for the oscillator-frequencies to be considered \textit{harmonically synchronized}:
 
-This state of \textit{harmonic synchrony} is then the system goal state K. Nymoen et al. achieve using their phase- and frequency-update/-adjustment functions, as explained above in Section \ref{nymoen_phase_adjust} and \ref{nymoen_freq_adjust}.
+All musical robots $i$, in a harmonically synchronized state, will have frequencies $\omega_i$ which are element in the mathematical set
+
+\begin{equation}\label{legal_freqs}
+\Omega_{legal}(\omega_0) = \omega_{0} \cdot 2^{\mathbb{N}_0} = \{\omega_{0}, 2\omega_{0}, 4\omega_{0}, 8\omega_{0}, ...\} ,
+\end{equation}
+
+where $\omega_{0}$ is the lowest frequency in the robot-collective (or the fundamental frequency if you will), and $\mathbb{N}_0$ are the natural numbers including the number zero. If e.g. the smallest oscillator-frequency in the musical robot collective ($\omega_0$) was equal to 1.5Hz, \textit{legal} oscillator-frequencies the rest of the musical robots in the collective could have would be $\Omega_{legal}$(1.5Hz) = \{1.5Hz, 3Hz, 6Hz, 12Hz, ...\}.
+
+Hence, in terms of oscillator-/robot-frequencies, we have a harmonically synchronized robot-collective if
+
+\begin{equation}\label{synced_freqs}
+\omega_i \in \Omega_{legal}(\omega_0) , \forall i ,
+\end{equation}
+
+where we then say all agents in the robot-collective have \textit{legal} frequencies.
+
+
+
+This state of \textit{harmonic synchrony} is then the system goal state K. Nymoen et al. achieve using their phase- and frequency-update/-adjustment functions, as explained above in Section \ref{nymoen_phase_adjust} and \ref{nymoen_freq_adjust}, and is also the target/goal state we want to continue achieving in this thesis, but hopefully with even more \textit{self-aware} methods (which are hopefully quicker and more robust).
 
 
 	\subsection{Detecting harmonic synchrony}
