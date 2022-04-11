@@ -33,7 +33,9 @@ public class SquiggleScript : MonoBehaviour {
     // Core for (oscillator-) synchronization:
     private System.Random randGen;
     private float phase;                        // The agents's progression through its oscillator-period. A number between 0 (at the beginning of its cycle) and 1 (at the end of its cycle).
+    private List<float> simRunPhases = new List<float>(); // A list for all the phases throughout a simulation-run for agent (sampled at the FixedUpdate-frequency).
     private float frequency;                    // The agents's oscillator-frequency (Hz). How fast the agent traverses through its cycle — or in other words the rate of the phase's change.
+    private List<float> simRunFrequencies = new List<float>();
     private float t_ref;                        // The refractory period (s) being the period within which agents are "recovering" in, i.e. not adjusting themselves, after firing/sending a pulse.
     private List<float> inPhaseErrorBuffer = new List<float>(); // The list of m error-scores (our error-memory).
     private List<float> HBuffer = new List<float>(); // An accumulating and self-clearing list of H-values (which I calculated from the bottom up in the compiled reMarkable-note of mine).
@@ -96,6 +98,10 @@ public class SquiggleScript : MonoBehaviour {
     }
 
     void FixedUpdate() {
+        // Logging simulation-run-values for plotting and data-serialization purposes:
+        simRunPhases.Add(phase);
+        simRunFrequencies.Add(frequency);
+
         // Updating the agent-body's color so that it cools down from just having fired.
         CoolDownAgentColorIfItJustFired();
 
@@ -383,8 +389,16 @@ public class SquiggleScript : MonoBehaviour {
         return frequency;
     }
 
+    public List<float> GetFrequencies() {
+        return simRunFrequencies;
+    }
+
     public float GetPhase() {
         return phase;
+    }
+
+    public List<float> GetPhases() {
+        return simRunPhases;
     }
     
     public int GetAgentID() {

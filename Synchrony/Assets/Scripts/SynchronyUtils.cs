@@ -41,6 +41,36 @@ public static class SynchronyUtils {
         tw.Close();
     }
 
+    public static void LoggedValuesToCSV(string path, List<string> headerEntries, List<List<float>> allValueColumns) {
+        // Summary: creates a .CSV-file at arg1, <path>, with the top-line/header according to arg2, <headerEntries>.
+        TextWriter tw = new StreamWriter(path, false, new UTF8Encoding(true));
+        string csvLine = "";
+        for (int i = 0; i < headerEntries.Count; i++) {
+            csvLine += headerEntries[i];
+
+            if (i != headerEntries.Count - 1) csvLine += ";";
+        }
+        csvLine += "\r\n";
+
+        for (int m = 0; m < allValueColumns[0].Count-1; m++) { // hardcoding the termination-criteria a bit to avoid the last CR/LF-symbols.
+            for (int n = 0; n < allValueColumns.Count; n++) {
+                csvLine += string.Format("{0:N6}", allValueColumns[n][m]);
+
+                if (n != allValueColumns.Count - 1) csvLine += ";";
+            }
+            csvLine += "\r\n";
+        }
+
+        for (int n = 0; n < allValueColumns.Count; n++) {
+            csvLine += string.Format("{0:N6}", allValueColumns[n][allValueColumns[0].Count-1]);
+
+            if (n != allValueColumns.Count - 1) csvLine += ";";
+        }
+
+        tw.WriteLine(csvLine);
+        tw.Close();
+    }
+
     public static void FloatUpdateCSV(string path, List<float> lineEntries) {
         TextWriter tw = new StreamWriter(path, true);
         string newLine = "";

@@ -505,12 +505,6 @@ public class AgentManager : MonoBehaviour {
         // Obtaining the .CSV-header consisting of the agents's IDs.
         List<string> agentIDHeader = GetAgentHeader();
 
-        // Creating one .CSV-file for the agents's phases over time.
-        CreatePhaseCSV(agentIDHeader);
-        
-        // Creating one .CSV-file for the agents's frequencies over time.
-        CreateFrequencyCSV(agentIDHeader);
-
         // Creating one .CSV-file for the node_firing_data (including t_f_is_now) needed to create the "Node-firing-plot" as in Nymoen's Fig. 6.
         CreateNodeFiringCSV(agentIDHeader);
 
@@ -531,14 +525,6 @@ public class AgentManager : MonoBehaviour {
         }
 
         return agentIDHeader;
-    }
-
-    private void CreatePhaseCSV(List<string> agentHeader) {
-        CreateCSVWithStringHeader(phasesFolderPath + "phases_over_time_atSimRun" + atSimRun + ".csv", agentHeader);
-    }
-
-    private void CreateFrequencyCSV(List<string> agentHeader) {
-        CreateCSVWithStringHeader(frequenciesFolderPath + "freqs_over_time_atSimRun" + atSimRun + ".csv", agentHeader);
     }
 
     private void CreateNodeFiringCSV(List<string> agentHeader) {
@@ -577,33 +563,11 @@ public class AgentManager : MonoBehaviour {
 
 
     private void UpdateAllCSVFiles() {
-        // 1) Updating the Frequencies-Over-Time-.CSV-file
-        UpdateFrequencyCSV();
-
-        // 2) Updating the Phases-Over-Time-.CSV-file
-        UpdatePhaseCSV();
-
         // 3) Updating the .CSV-file for the t_f_is_now digital signal which is telling when it is legal for nodes to fire, together with 0s indicating no firing
         UpdateNodeFiringCSV();
 
         // 4) Updating the .CSV-file for the towards_k_counter incrementing or resetting signal which is telling how many even beats the collective has hit in a row during the simulation-run.
         UpdateSynchronyEvolutionCSV();
-    }
-
-    private void UpdatePhaseCSV() {
-        List<float> phaseIntervalEntries = new List<float>();
-        foreach (SquiggleScript squiggScr in spawnedAgentScripts) {
-            phaseIntervalEntries.Add(squiggScr.GetPhase());
-        }
-        FloatUpdateCSV(phasesFolderPath + "phases_over_time_atSimRun" + atSimRun + ".csv", phaseIntervalEntries);
-    }
-
-    private void UpdateFrequencyCSV() {
-        List<float> frequencyIntervalEntries = new List<float>();
-        foreach (SquiggleScript squiggScr in spawnedAgentScripts) {
-            frequencyIntervalEntries.Add(squiggScr.GetFrequency());
-        }
-        FloatUpdateCSV(frequenciesFolderPath + "freqs_over_time_atSimRun" + atSimRun + ".csv", frequencyIntervalEntries);
     }
 
     private void UpdateNodeFiringCSV() {
@@ -706,5 +670,30 @@ public class AgentManager : MonoBehaviour {
 
         // Saving one datapoint, a.k.a. writing one .CSV-row (Measurements, Covariates) to the .CSV-file at the datasetPath:
         FloatUpdateCSV(datasetPath, performanceAndCovariateValues);
+
+        SaveAllLoggedValuesToCSVs();
+    }
+
+    private void SaveAllLoggedValuesToCSVs() {
+        // Saving all the logged values (like phases and frequencies) throughout the simulation-run in the genious way Tommy suggested.
+        SavePhasesToCSV();
+        SaveFrequenciesToCSV();
+
+    }
+
+    private void SavePhasesToCSV() {
+        List<List<float>> allPhaseColumns = new List<List<float>>();
+        foreach (SquiggleScript squiggScr in spawnedAgentScripts) {
+            allPhaseColumns.Add(squiggScr.GetPhases());
+        }
+        LoggedValuesToCSV(phasesFolderPath + "phases_over_time_atSimRun" + atSimRun + ".csv", GetAgentHeader(), allPhaseColumns);
+    }
+
+    private void SaveFrequenciesToCSV() {
+        List<List<float>> allFrequencyColumns = new List<List<float>>();
+        foreach (SquiggleScript squiggScr in spawnedAgentScripts) {
+            allFrequencyColumns.Add(squiggScr.GetFrequencies());
+        }
+        LoggedValuesToCSV(frequenciesFolderPath + "freqs_over_time_atSimRun" + atSimRun + ".csv", GetAgentHeader(), allFrequencyColumns);
     }
 }
