@@ -7,7 +7,7 @@ using System.Text;
 
 public static class SynchronyUtils {
 
-    // '.CSV -CREATE & -UPDATE':
+    // '.CSV -CREATING & -SAVING':
 
     public static void CreateCSVWithIntHeader(string path, List<int> headerEntries) {
         // Summary: creates a .CSV-file at arg1, <path>, with the top-line/header according to arg2, <headerEntries>.
@@ -41,7 +41,7 @@ public static class SynchronyUtils {
         tw.Close();
     }
 
-    public static void LoggedValuesToCSV(string path, List<string> headerEntries, List<List<float>> allValueColumns) {
+    public static void LoggedNestedValuesToCSV(string path, List<string> headerEntries, List<List<float>> allValueColumns) {
         // Summary: creates a .CSV-file at arg1, <path>, with the top-line/header according to arg2, <headerEntries>.
         TextWriter tw = new StreamWriter(path, false, new UTF8Encoding(true));
         string csvLine = "";
@@ -66,6 +66,23 @@ public static class SynchronyUtils {
 
             if (n != allValueColumns.Count - 1) csvLine += ";";
         }
+
+        tw.WriteLine(csvLine);
+        tw.Close();
+    }
+
+    public static void LoggedColumnToCSV(string path, string header, List<float> allValuesColumn) {
+        // Summary: creates a .CSV-file at arg1, <path>, with the top-line/header according to arg2, <headerEntries>.
+        TextWriter tw = new StreamWriter(path, false, new UTF8Encoding(true));
+        string csvLine = "";
+
+        csvLine += header + "\r\n";
+
+        for (int i = 0; i < allValuesColumn.Count - 1; i++) {
+            csvLine += allValuesColumn[i] + "\r\n";
+        }
+
+        csvLine += allValuesColumn[allValuesColumn.Count-1];
 
         tw.WriteLine(csvLine);
         tw.Close();

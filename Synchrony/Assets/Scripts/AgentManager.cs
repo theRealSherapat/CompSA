@@ -91,6 +91,7 @@ public class AgentManager : MonoBehaviour {
 	private bool[] agentiHasFiredAtLeastOnce; // An array with as many boolean values as there are agents, which are to be put "high"/true if agent with agentID fired at least once during the simulation-run.
     private bool hSynchConditionsAreMet = false; // A boolean that should be true no sooner than when all the conditions (as defined the bulletpoints in section 5.5 in my MSc thesis, or the bulletpoints in section V.A. in Nymoen's "firefly"-paper) for the achievement of Harmonic Synchrony are fulfilled.
     private int towards_k_counter = 0; // 'towards-k'-counter to become equal to 'k'.
+    private List<float> towards_k_counters = new List<float>(); // all the logged 'towards-k-counter'-variable-values throughout the simulation-run.
 
 	private int last_t_f_firers_counter = 0; // A counter for how many fire-events were heard throughout the last firing-period t_f, used as a safety-mechanism to detect firing-periods within which no agents fire — so that we don't increment the 'towards-k'-counter after those firing-periods.
 
@@ -118,6 +119,9 @@ public class AgentManager : MonoBehaviour {
     void FixedUpdate() {
         // Updating all my CSV-files with a constant frequency (at the rate at which FixedUpdate() is called)?
         UpdateAllCSVFiles();
+
+        // Logging simulation-run-values for plotting and data-serialization purposes:
+        towards_k_counters.Add(System.Convert.ToSingle(towards_k_counter));
     }
 
 
@@ -147,8 +151,8 @@ public class AgentManager : MonoBehaviour {
             // Signifying that I am done with one simulator-run
             atSimRun++;
 
-            // Ensuring we have updated the synchrony-evolution-plot, as this is most time-critical in the complete end of the simulation.
-            UpdateSynchronyEvolutionCSV();
+            // Ensuring we have updated the synchrony-evolution-plot, as this is most time-critical in the complete end of the simulation.                                          MULIGENS TENK PÅ
+            //UpdateSynchronyEvolutionCSV();
 
             if (atSimRun != simulationRuns) {
                 ResetSimulationVariables();
@@ -499,17 +503,16 @@ public class AgentManager : MonoBehaviour {
 
 
 
-    // '.CSV -CREATE & -UPDATE':
+    // '.CSV -CREATING & -SAVING':
 
+    // VIL FJØÆRNE:
     private void CreateAllCSVFiles() {
         // Obtaining the .CSV-header consisting of the agents's IDs.
         List<string> agentIDHeader = GetAgentHeader();
 
+                                                                                                                                                                 // VIL FJÆRNE:
         // Creating one .CSV-file for the node_firing_data (including t_f_is_now) needed to create the "Node-firing-plot" as in Nymoen's Fig. 6.
         CreateNodeFiringCSV(agentIDHeader);
-
-        // Creating one .CSV-file for the synchrony-evolution (or syncholution) plot (how the degree of synchrony evolves throughout the simulation run, given in how many even beats in a row they are currently at, where k is max and the requirement for synchrony).
-        CreateSynchronyEvolutionCSV();
 
         // Automatically creating a Synchrony Dataset-.CSV if it does not exist.
         if (!File.Exists(datasetPath)) CreateSynchDatasetCSV();
@@ -527,16 +530,11 @@ public class AgentManager : MonoBehaviour {
         return agentIDHeader;
     }
 
+    // VIL FJÆRNE:
     private void CreateNodeFiringCSV(List<string> agentHeader) {
         List<string> nodeFiringWithTfHeader = new List<string>(agentHeader);
         nodeFiringWithTfHeader.Insert(0, "t_f_is_now");
         CreateCSVWithStringHeader(nodeFiringPlotMaterialFolderPath + "node_firing_data_atSimRun" + atSimRun + ".csv", nodeFiringWithTfHeader);
-    }
-
-    private void CreateSynchronyEvolutionCSV() {
-        List<string> syncholutionHeader = new List<string>();
-        syncholutionHeader.Add("towards_k_counter");
-        CreateCSVWithStringHeader(synchronyEvolutionsFolderPath + "synch_evolution_data_atSimRun" + atSimRun + ".csv", syncholutionHeader);
     }
 
     private void CreateSynchDatasetCSV() {
@@ -562,14 +560,13 @@ public class AgentManager : MonoBehaviour {
     }
 
 
+    // VIL FJÆRNE:
     private void UpdateAllCSVFiles() {
         // 3) Updating the .CSV-file for the t_f_is_now digital signal which is telling when it is legal for nodes to fire, together with 0s indicating no firing
         UpdateNodeFiringCSV();
-
-        // 4) Updating the .CSV-file for the towards_k_counter incrementing or resetting signal which is telling how many even beats the collective has hit in a row during the simulation-run.
-        UpdateSynchronyEvolutionCSV();
     }
 
+    // VIL FJÆRNE:
     private void UpdateNodeFiringCSV() {
         float[] nodeFiringDataArray = new float[spawnedAgentScripts.Count + 1];
 
@@ -589,12 +586,6 @@ public class AgentManager : MonoBehaviour {
 
         // Updating the CSV with one time-row
         FloatUpdateCSV(nodeFiringPlotMaterialFolderPath + "node_firing_data_atSimRun" + atSimRun + ".csv", nodeFiringDataList);
-    }
-
-    private void UpdateSynchronyEvolutionCSV() {
-        List<float> lonelyTowardsKCounterList = new List<float>();
-        lonelyTowardsKCounterList.Add((float)towards_k_counter);
-        FloatUpdateCSV(synchronyEvolutionsFolderPath + "synch_evolution_data_atSimRun" + atSimRun + ".csv", lonelyTowardsKCounterList);
     }
 
     private void SaveDatapointToDataset(float runDuration) {
@@ -678,6 +669,7 @@ public class AgentManager : MonoBehaviour {
         // Saving all the logged values (like phases and frequencies) throughout the simulation-run in the genious way Tommy suggested.
         SavePhasesToCSV();
         SaveFrequenciesToCSV();
+        SaveTowardsKCountersToCSV();
 
     }
 
@@ -686,7 +678,7 @@ public class AgentManager : MonoBehaviour {
         foreach (SquiggleScript squiggScr in spawnedAgentScripts) {
             allPhaseColumns.Add(squiggScr.GetPhases());
         }
-        LoggedValuesToCSV(phasesFolderPath + "phases_over_time_atSimRun" + atSimRun + ".csv", GetAgentHeader(), allPhaseColumns);
+        LoggedNestedValuesToCSV(phasesFolderPath + "phases_over_time_atSimRun" + atSimRun + ".csv", GetAgentHeader(), allPhaseColumns);
     }
 
     private void SaveFrequenciesToCSV() {
@@ -694,6 +686,10 @@ public class AgentManager : MonoBehaviour {
         foreach (SquiggleScript squiggScr in spawnedAgentScripts) {
             allFrequencyColumns.Add(squiggScr.GetFrequencies());
         }
-        LoggedValuesToCSV(frequenciesFolderPath + "freqs_over_time_atSimRun" + atSimRun + ".csv", GetAgentHeader(), allFrequencyColumns);
+        LoggedNestedValuesToCSV(frequenciesFolderPath + "freqs_over_time_atSimRun" + atSimRun + ".csv", GetAgentHeader(), allFrequencyColumns);
+    }
+
+    private void SaveTowardsKCountersToCSV() {
+        LoggedColumnToCSV(synchronyEvolutionsFolderPath + "synch_evolution_data_atSimRun" + atSimRun + ".csv", "towards_k_counter", towards_k_counters);
     }
 }

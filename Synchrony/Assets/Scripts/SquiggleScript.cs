@@ -385,17 +385,17 @@ public class SquiggleScript : MonoBehaviour {
     }
 
         // 'get-/set-functions':
-    public float GetFrequency() {
-        return frequency;
-    }
+    //public float GetFrequency() {
+    //    return frequency;
+    //}
 
     public List<float> GetFrequencies() {
         return simRunFrequencies;
     }
 
-    public float GetPhase() {
-        return phase;
-    }
+    //public float GetPhase() {
+    //    return phase;
+    //}
 
     public List<float> GetPhases() {
         return simRunPhases;
