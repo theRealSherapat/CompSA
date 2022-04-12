@@ -6,10 +6,9 @@ using UnityEngine.SceneManagement;
 using System.Text;
 
 public static class SynchronyUtils {
+    // '.CSV -CREATING & -UPDATING & -SAVING':
 
-    // '.CSV -CREATING & -SAVING':
-
-    public static void CreateCSVWithIntHeader(string path, List<int> headerEntries) {
+    public static void CreateCSVWithStringHeader(string path, List<string> headerEntries) {
         // Summary: creates a .CSV-file at arg1, <path>, with the top-line/header according to arg2, <headerEntries>.
         TextWriter tw = new StreamWriter(path, false, new UTF8Encoding(true));
         string firstLine = "";
@@ -25,19 +24,34 @@ public static class SynchronyUtils {
         tw.Close();
     }
 
-    public static void CreateCSVWithStringHeader(string path, List<string> headerEntries) {
-        // Summary: creates a .CSV-file at arg1, <path>, with the top-line/header according to arg2, <headerEntries>.
-        TextWriter tw = new StreamWriter(path, false, new UTF8Encoding(true));
-        string firstLine = "";
+    public static void FloatUpdateCSV(string path, List<float> lineEntries) {
+        TextWriter tw = new StreamWriter(path, true);
+        string newLine = "";
 
-        // Fyller inn firstLine med IDene til Dr. Squigglene f.eks.:
-        for (int i = 0; i < headerEntries.Count; i++) {
-            firstLine += headerEntries[i];
+        for (int i = 0; i < lineEntries.Count; i++) {
+            newLine += string.Format("{0:N6}", lineEntries[i]);
 
-            if (i != headerEntries.Count - 1) firstLine += ";";
+            if (i != lineEntries.Count - 1) newLine += ";";
         }
 
-        tw.WriteLine(firstLine);
+        tw.WriteLine(newLine);
+        tw.Close();
+    }
+
+    public static void LoggedColumnToCSV(string path, string header, List<float> allValuesColumn) {
+        // Summary: creates a .CSV-file at arg1, <path>, with the top-line/header according to arg2, <headerEntries>.
+        TextWriter tw = new StreamWriter(path, false, new UTF8Encoding(true));
+        string csvLine = "";
+
+        csvLine += header + "\r\n";
+
+        for (int i = 0; i < allValuesColumn.Count - 1; i++) {
+            csvLine += allValuesColumn[i] + "\r\n";
+        }
+
+        csvLine += allValuesColumn[allValuesColumn.Count-1];
+
+        tw.WriteLine(csvLine);
         tw.Close();
     }
 
@@ -71,38 +85,7 @@ public static class SynchronyUtils {
         tw.Close();
     }
 
-    public static void LoggedColumnToCSV(string path, string header, List<float> allValuesColumn) {
-        // Summary: creates a .CSV-file at arg1, <path>, with the top-line/header according to arg2, <headerEntries>.
-        TextWriter tw = new StreamWriter(path, false, new UTF8Encoding(true));
-        string csvLine = "";
-
-        csvLine += header + "\r\n";
-
-        for (int i = 0; i < allValuesColumn.Count - 1; i++) {
-            csvLine += allValuesColumn[i] + "\r\n";
-        }
-
-        csvLine += allValuesColumn[allValuesColumn.Count-1];
-
-        tw.WriteLine(csvLine);
-        tw.Close();
-    }
-
-    public static void FloatUpdateCSV(string path, List<float> lineEntries) {
-        TextWriter tw = new StreamWriter(path, true);
-        string newLine = "";
-
-        for (int i = 0; i < lineEntries.Count; i++) {
-            newLine += string.Format("{0:N6}", lineEntries[i]);
-
-            if (i != lineEntries.Count - 1) newLine += ";";
-        }
-
-        tw.WriteLine(newLine);
-        tw.Close();
-    }
-
-
+    
 
 
     // 'Unity Scene & Game':

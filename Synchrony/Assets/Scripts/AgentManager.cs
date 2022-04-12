@@ -12,7 +12,7 @@ public class AgentManager : MonoBehaviour {
     [Tooltip("The number of agents to be spawned and synchronized.")]
     public int collectiveSize = 6;
     [Tooltip("The duration (%) of the refractory period in terms of a percentage of the agents's oscillator-periods.")]
-    public float t_ref_perc_of_period = 0.1f;       // ISH LENGDEN I TID PÅ digitalQuickTone er 0.4s. Nymoen BRUKTE 50ms I SIN IMPLEMENTASJON. JEG PRØVDE OGSÅ 0.6f. possiblePool = {0.09f, 0.4f, 0.6f}.
+    public float t_ref_perc_of_period = 0.05f;       // ISH LENGDEN I TID PÅ digitalQuickTone er 0.4s. Nymoen BRUKTE 50ms I SIN IMPLEMENTASJON. JEG PRØVDE OGSÅ 0.6f. possiblePool = {0.09f, 0.4f, 0.6f}.
     [Tooltip("Minimum and maximum initialization-frequencies (Hz).")]
     public Vector2 minMaxInitialFreqs = new Vector2(0.5f, 4f);
 
@@ -72,7 +72,11 @@ public class AgentManager : MonoBehaviour {
 
     // 'Synch.-Perf.-measure related':
     private bool t_f_is_now = false; // A short "up-time"-flag when all nodes are allowed to fire during. The duration of how long this flag is positive itself is constant (t_f), but when in simulation-time it will be "up", depends largely on the t_q-variable as well as when the t_q-windows are triggered.
-	private float t_q = 0f; // The time-window in which the agents are not allowed to fire pulses within.
+        // 'Node-firing-plot-materials related':
+    private List<float> t_f_is_nows = new List<float>();
+    private List<List<float>> agents_fired_matrix = new List<List<float>>();
+
+    private float t_q = 0f; // The time-window in which the agents are not allowed to fire pulses within.
 	
 	private bool first_firing_is_perceived = false;
 	
@@ -101,14 +105,13 @@ public class AgentManager : MonoBehaviour {
     // 'MonoBehaviour':
 
     void Start() {
-        InitializeVariables();
+        // Creating the AgentManager's random-generator with its seed given by the user.
+        randGen = new System.Random(randomSeed);
 
         // Spawning all agents randomly (but pretty naively as of now)
         SpawnAgents();
 
-        // Creating all .CSV-files I want to update throughout the simulation 
-        CreateAllCSVFiles();
-
+        InitializeVariables();
     }
 
     void Update() {
@@ -117,17 +120,26 @@ public class AgentManager : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        // Updating all my CSV-files with a constant frequency (at the rate at which FixedUpdate() is called)?
-        UpdateAllCSVFiles();
-
         // Logging simulation-run-values for plotting and data-serialization purposes:
         towards_k_counters.Add(System.Convert.ToSingle(towards_k_counter));
+            // Synch.-/Perf.-measure:
+        t_f_is_nows.Add(System.Convert.ToSingle(t_f_is_now));
+        UpdateAgentFiredMatrix();
+    }
+
+    private void UpdateAgentFiredMatrix() {
+        for (int i = 0; i < spawnedAgentScripts.Count; i++) { // for alle agentId'er
+            if (agentWithAgentIDsJustFired.Contains(i + 1)) agents_fired_matrix[i].Add(1f); // adding a positive/high digital binary signal signalling agent with agId just fired.
+            else agents_fired_matrix[i].Add(0f); // adding a negative/low digital binary signal signalling agent with agId did not just fire.
+        }
+
+        agentWithAgentIDsJustFired.Clear(); // clearing out the "nodes-that-just-fired"-list.
     }
 
 
 
 
-    // 'PERFORMANCE-MEASURE':
+    // 'PERFORMANCE-MEASURE' (detecting harmonic synchrony):
 
     private void CheckHSynchConditions() {
         // Checks 'Condition 2' and 'Condition 3' respectively: namely, '2': if the agents have beat evenly (with a constant t_q-value) k times in a row, as well as if all nodes have fired at least once throughout the evaluation-/testing-period (simulation-run).
@@ -146,7 +158,7 @@ public class AgentManager : MonoBehaviour {
         // If the simulation has either succeeded, or failed: save the corresponding datapoint and move on.
         if (SimulationRunEitherSucceededOrFailed()) {
             // Saving a successful or unsuccessful data-point
-            SaveDatapointToDataset(Time.timeSinceLevelLoad);
+            SaveDatapointToSynchDatasetCSV(Time.timeSinceLevelLoad);
 
             // Signifying that I am done with one simulator-run
             atSimRun++;
@@ -416,9 +428,12 @@ public class AgentManager : MonoBehaviour {
 
 
 
+
     // 'SPAWNING':
 
     private void SpawnAgents() {
+        spawnRadius = 100f; //collectiveSize * 2f; Simply an empirical model of the necessary space the agents need to spawn. Or just a guess I guess. FIND A BETTER FUNCTION.
+
         for (int i = 0; i < collectiveSize; i++) {
             // Finding a position in a circle free to spawn (taking into account not wanting to collide with each other)
             Vector2 randomCirclePoint = FindFreeSpawnPosition();
@@ -492,32 +507,23 @@ public class AgentManager : MonoBehaviour {
         // Speeding up or down the simulation if that is wanted?
         Time.timeScale = adjustedTimeScale;
 
-        // Creating the AgentManager's random-generator with its seed given by the user.
-        randGen = new System.Random(randomSeed);
-
-        spawnRadius = 100f; //collectiveSize * 2f; // Simply an empirical model of the necessary space the agents need to spawn. Or just a guess I guess. FIND A BETTER FUNCTION.
-
         agentiHasFiredAtLeastOnce = new bool[collectiveSize];
+
+        InitializeAgentsFiredMatrix();
+    }
+
+    private void InitializeAgentsFiredMatrix() {
+        // Initializing agents_fired_matrix so that it isn't an empty nested list, but one one can index and access.
+
+        for (int i = 0; i < spawnedAgentScripts.Count; i++) {
+            agents_fired_matrix.Add(new List<float>(100));
+        }
     }
 
 
 
 
-    // '.CSV -CREATING & -SAVING':
-
-    // VIL FJØÆRNE:
-    private void CreateAllCSVFiles() {
-        // Obtaining the .CSV-header consisting of the agents's IDs.
-        List<string> agentIDHeader = GetAgentHeader();
-
-                                                                                                                                                                 // VIL FJÆRNE:
-        // Creating one .CSV-file for the node_firing_data (including t_f_is_now) needed to create the "Node-firing-plot" as in Nymoen's Fig. 6.
-        CreateNodeFiringCSV(agentIDHeader);
-
-        // Automatically creating a Synchrony Dataset-.CSV if it does not exist.
-        if (!File.Exists(datasetPath)) CreateSynchDatasetCSV();
-    }
-
+    // '.CSV -CREATING & -UPDATING & -SAVING':
 
     private List<string> GetAgentHeader() {
         // Creating a .CSV-header consisting of the agents's IDs
@@ -528,13 +534,6 @@ public class AgentManager : MonoBehaviour {
         }
 
         return agentIDHeader;
-    }
-
-    // VIL FJÆRNE:
-    private void CreateNodeFiringCSV(List<string> agentHeader) {
-        List<string> nodeFiringWithTfHeader = new List<string>(agentHeader);
-        nodeFiringWithTfHeader.Insert(0, "t_f_is_now");
-        CreateCSVWithStringHeader(nodeFiringPlotMaterialFolderPath + "node_firing_data_atSimRun" + atSimRun + ".csv", nodeFiringWithTfHeader);
     }
 
     private void CreateSynchDatasetCSV() {
@@ -559,37 +558,11 @@ public class AgentManager : MonoBehaviour {
         CreateCSVWithStringHeader(datasetPath, performanceAndCovariatesHeader);
     }
 
+    private void SaveDatapointToSynchDatasetCSV(float runDuration) {
+        // Saving a datapoint to a .CSV-dataset containing data: Measurements Simulation time (s) (perf.-measure) and Simulation success, as well as Simulation hyper-parameters/covariates/explanators/predictors.
 
-    // VIL FJÆRNE:
-    private void UpdateAllCSVFiles() {
-        // 3) Updating the .CSV-file for the t_f_is_now digital signal which is telling when it is legal for nodes to fire, together with 0s indicating no firing
-        UpdateNodeFiringCSV();
-    }
-
-    // VIL FJÆRNE:
-    private void UpdateNodeFiringCSV() {
-        float[] nodeFiringDataArray = new float[spawnedAgentScripts.Count + 1];
-
-        // Marking the digital signal t_f_is_now
-        float t_f_is_nowFloat = System.Convert.ToSingle(t_f_is_now);
-        nodeFiringDataArray[0] = t_f_is_nowFloat;
-
-        // Marking the correct agents having fired if they just fired recently for the CSV-row.
-        foreach (int agentId in agentWithAgentIDsJustFired) {
-            nodeFiringDataArray[agentId] = 1f;
-        }
-
-        agentWithAgentIDsJustFired.Clear();
-
-        // Converting the nodeFiringData-array to a list
-        List<float> nodeFiringDataList = new List<float>(nodeFiringDataArray);
-
-        // Updating the CSV with one time-row
-        FloatUpdateCSV(nodeFiringPlotMaterialFolderPath + "node_firing_data_atSimRun" + atSimRun + ".csv", nodeFiringDataList);
-    }
-
-    private void SaveDatapointToDataset(float runDuration) {
-        // Saving a datapoint to a .CSV-dataset containing data: Measurements Simulation time (s) (perf.-measure) and Simulation success, as well as Simulation hyper-parameters/covariates/explanators/predictors. (.CSV-header currently assumed to be manually written in the existing .CSV already)
+        // Automatically creating a Synchrony Dataset-.CSV if it does not exist.
+        if (!File.Exists(datasetPath)) CreateSynchDatasetCSV();
 
         // Initializing empty list soon-to-contain the data described above:
         List<float> performanceAndCovariateValues = new List<float>();
@@ -666,13 +639,12 @@ public class AgentManager : MonoBehaviour {
     }
 
     private void SaveAllLoggedValuesToCSVs() {
-        // Saving all the logged values (like phases and frequencies) throughout the simulation-run in the genious way Tommy suggested.
+        // Saving all the logged values (like phases and frequencies) throughout the simulation-run in the genious way Tommy suggested:
         SavePhasesToCSV();
         SaveFrequenciesToCSV();
         SaveTowardsKCountersToCSV();
-
+        SavePerformanceMeasurePlotMaterialsToCSV();
     }
-
     private void SavePhasesToCSV() {
         List<List<float>> allPhaseColumns = new List<List<float>>();
         foreach (SquiggleScript squiggScr in spawnedAgentScripts) {
@@ -680,7 +652,6 @@ public class AgentManager : MonoBehaviour {
         }
         LoggedNestedValuesToCSV(phasesFolderPath + "phases_over_time_atSimRun" + atSimRun + ".csv", GetAgentHeader(), allPhaseColumns);
     }
-
     private void SaveFrequenciesToCSV() {
         List<List<float>> allFrequencyColumns = new List<List<float>>();
         foreach (SquiggleScript squiggScr in spawnedAgentScripts) {
@@ -688,7 +659,15 @@ public class AgentManager : MonoBehaviour {
         }
         LoggedNestedValuesToCSV(frequenciesFolderPath + "freqs_over_time_atSimRun" + atSimRun + ".csv", GetAgentHeader(), allFrequencyColumns);
     }
+    private void SavePerformanceMeasurePlotMaterialsToCSV() {
+        List<string> perfMeasureHeader = GetAgentHeader();
+        perfMeasureHeader.Insert(0, "t_f_is_now");
 
+        List<List<float>> t_f_and_agents_fired_matrix = new List<List<float>>(agents_fired_matrix);
+        t_f_and_agents_fired_matrix.Insert(0, t_f_is_nows);
+
+        LoggedNestedValuesToCSV(nodeFiringPlotMaterialFolderPath + "node_firing_data_atSimRun" + atSimRun + ".csv", perfMeasureHeader, t_f_and_agents_fired_matrix);
+    }
     private void SaveTowardsKCountersToCSV() {
         LoggedColumnToCSV(synchronyEvolutionsFolderPath + "synch_evolution_data_atSimRun" + atSimRun + ".csv", "towards_k_counter", towards_k_counters);
     }

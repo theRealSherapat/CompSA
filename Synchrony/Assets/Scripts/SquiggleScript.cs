@@ -8,11 +8,6 @@ public class SquiggleScript : MonoBehaviour {
 
     // Recorded individual-/agent-hyperparameters:
 
-        // GENIALT FRA TOMMY:
-    // List<float> phase = new List<float>;
-    // On FixedUpdate, append new value to this
-    // On termination, send list to FloatCSVCreator
-
     // Phase-adjustment:
     [Tooltip("Pulse coupling constant, denoting coupling strength between nodes, deciding how much robots adjust phases after detecting a pulse from a neighbour. The larger the constant, the larger (in absolute value) the phase-update?")]
     public float alpha = 0.1f;
@@ -112,7 +107,7 @@ public class SquiggleScript : MonoBehaviour {
 
 
 
-    // 'CORE & ESSENTIAL':
+    // 'CORE & ESSENTIAL' (incl. phase- & frequency-updating):
 
     private void OnPhaseClimax() {
         FireIfWanted();
@@ -385,17 +380,10 @@ public class SquiggleScript : MonoBehaviour {
     }
 
         // 'get-/set-functions':
-    //public float GetFrequency() {
-    //    return frequency;
-    //}
 
     public List<float> GetFrequencies() {
         return simRunFrequencies;
     }
-
-    //public float GetPhase() {
-    //    return phase;
-    //}
 
     public List<float> GetPhases() {
         return simRunPhases;
