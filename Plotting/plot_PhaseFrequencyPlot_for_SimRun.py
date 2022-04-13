@@ -21,8 +21,8 @@ def plotPhasesAndFrequencies(t, phaseDataMatrix, frequencyDataMatrix, simRun, sa
 
     # Printing out Phase-data in the top sub-plot
     plt.subplot(2,1,1)
-    plt.ylabel("Phase")
-    plt.xlabel("Simulation-time (sec)")
+    plt.ylabel("phase")
+    plt.xlabel("simulation-time (s)")
     for col_index in range(phaseDataMatrix.shape[1]):
         labelString = "Musical Agent " + str(col_index+1)
         plt.plot(t, phaseDataMatrix[:,col_index], label=labelString)
@@ -31,8 +31,8 @@ def plotPhasesAndFrequencies(t, phaseDataMatrix, frequencyDataMatrix, simRun, sa
 
     # Printing out Frequency-data in the bottom sub-plot
     plt.subplot(2,1,2)
-    plt.ylabel("Frequency (Hz)")
-    plt.xlabel("Simulation-time (sec)")
+    plt.ylabel("frequency (Hz)")
+    plt.xlabel("simulation-time (s)")
     for col_index in range(frequencyDataMatrix.shape[1]):
         labelString = "Musical Agent " + str(col_index+1)
         plt.plot(t, frequencyDataMatrix[:,col_index], label=labelString)

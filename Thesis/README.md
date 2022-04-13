@@ -7,6 +7,7 @@ Remember:
 
 
 ## Specific TODOs
+* Ordne med en annen farge på kommentarer i .tex-filer i notepad++.
 * Gå igjennom 'notert-på reMarkable Thesis-document(s)', 'implementation_chapter_pre_first_draft.tex' og 'Essay .tex'-fila, så rett på eller hent kritikk, INKL.:[]?'s, og concerns.
 * Execute 'GJØR: []'-clauses possible to execute now (remember Abe Lincoln).
 

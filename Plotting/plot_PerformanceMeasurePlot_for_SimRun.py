@@ -119,12 +119,12 @@ def parseDataFrom(csv_filename):
 
 def finishAndShowPlot(timeArray, yticks, no_of_agents, simRun, save_fig_pls):
     plt.xlim(0, timeArray[-1])
-    plt.xlabel("Simulation-time (sec)")
-    plt.ylabel("Node # firing at simulation-time")
+    plt.xlabel("simulation-time (s)")
+    plt.ylabel("robot # fired during synchrony simulation-run at")
     plt.yticks(yticks)
     plt.gca().invert_yaxis()
     if save_fig_pls == 1:
-        plt.savefig(str(no_of_agents) + "AgentsPerformanceMeasureForSimRun" + str(simRun) + ".pdf", bbox_inches="tight")
+        plt.savefig(str(no_of_agents) + "AgentsPerformanceMeasure.pdf", bbox_inches="tight")
     plt.show()
 
 if __name__ == "__main__":

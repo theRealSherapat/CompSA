@@ -23,7 +23,7 @@ def plotAllColsVsTime(t, dataMatrix, simRun, save_fig_pls):
         plt.plot(t, dataMatrix[:,col_index], label=labelString, linewidth=3)
     
     plt.ylabel("# of even beats in a row by agent collective")
-    plt.xlabel("Simulation-time (sec)")
+    plt.xlabel("simulation-time (s)")
         
     if save_fig_pls == 1:
         plt.savefig("SynchronyEvolutionPlotForSimRun" + str(simRun) + ".pdf", dpi=300, format="pdf", bbox_inches="tight")
