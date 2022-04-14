@@ -160,10 +160,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alpha: 0.1
-  useNymoenPhaseAdj: 0
+  useNymoenPhaseAdj: 1
   beta: 0.8
-  useNymoenFreqAdj: 0
+  useNymoenFreqAdj: 1
   m: 5
+  audioClips:
+  - {fileID: 8300000, guid: b696d843d9fcd114faf685011e357fc5, type: 3}
+  - {fileID: 8300000, guid: 97be02b29bbbf9e4094523a0a1e69b3f, type: 3}
+  - {fileID: 8300000, guid: 97250b5e77c261b4b88dd0992df8c427, type: 3}
+  - {fileID: 8300000, guid: 18470c9a211a8a84185e1ea3750de4d3, type: 3}
 --- !u!1 &7619773679695212229
 GameObject:
   m_ObjectHideFlags: 0

@@ -22,6 +22,9 @@ public class SquiggleScript : MonoBehaviour {
     [Tooltip("Degree of error-memory, i.e. the length of a list of the last m error-scores. The larger the length m, the more error-scores we calculate the self-assessed synch-score s(n) based upon.")]
     public int m = 5;
 
+    // Audio:
+    public AudioClip[] audioClips;
+
 
     // 'Private variables necessary to make the cogs go around':
 
@@ -57,7 +60,8 @@ public class SquiggleScript : MonoBehaviour {
 
     // Audible / Sound:
     private AudioSource audioSource;            // A reference to the AudioSource-component on the agent that is told to play the fire sound.
-
+    private static float highestRobotFrequency;
+    private static float smallestRobotFrequency;
 
 
 
@@ -209,7 +213,12 @@ public class SquiggleScript : MonoBehaviour {
         // BARE FOR TESTING:
         //Debug.Log("omega(t): " + frequency + ", omega(t+1): " + newFrequency + ", siden F(n)=" + F_n);
 
+        if (newFrequency > highestRobotFrequency) highestRobotFrequency = newFrequency;
+        else if (newFrequency < smallestRobotFrequency) smallestRobotFrequency = newFrequency;
+
         frequency = newFrequency;
+
+        audioSource.clip = audioClips[GetAudioIndex(frequency)];
     }
 
     private void UpdateTheRefractoryPeriod() {
@@ -335,6 +344,8 @@ public class SquiggleScript : MonoBehaviour {
     
     private void AssignHelpingVariables() {
         myCreator = FindObjectOfType<AgentManager>();
+        highestRobotFrequency = myCreator.minMaxInitialFreqs.y;
+        smallestRobotFrequency = myCreator.minMaxInitialFreqs.x;
 
         int randomSeed = myCreator.GetRandomGeneratorSeed() + agentID;
         randGen = new System.Random(randomSeed);
@@ -375,8 +386,21 @@ public class SquiggleScript : MonoBehaviour {
             frequency = 1f; // Setting agent's frequency to default frequency of 1Hz.
         }
 
+        audioSource.clip = audioClips[GetAudioIndex(frequency)];
+
         // BARE FOR TESTING
         //if (agentID == 1) Debug.Log("Agent" + agentID + " initialized frequency = " + frequency + " at Simulationtime=" + Time.timeSinceLevelLoad + ".");
+    }
+
+    private int GetAudioIndex(float freq) {
+        float freqDistributionPercentagePosition;
+        if ((highestRobotFrequency - smallestRobotFrequency) != 0f) freqDistributionPercentagePosition = (freq - smallestRobotFrequency) / (highestRobotFrequency - smallestRobotFrequency);
+        else return 0;
+
+        if (freqDistributionPercentagePosition < 0.25f) return 0;
+        else if (freqDistributionPercentagePosition < 0.5f) return 1;
+        else if (freqDistributionPercentagePosition < 075f) return 2;
+        else return 3;
     }
 
         // 'get-/set-functions':
