@@ -26,7 +26,7 @@ def plotAllColsVsTime(t, dataMatrix, simRun, save_fig_pls):
     plt.xlabel("simulation-time (s)")
         
     if save_fig_pls == 1:
-        plt.savefig("SynchronyEvolutionPlotForSimRun" + str(simRun) + ".pdf", dpi=300, format="pdf", bbox_inches="tight")
+        plt.savefig(str(no_of_agents) + "RobotsTerminatedAfter" + str(round(len(t)/samplingRate)) + "s_SyncEvolutionPlot.pdf", dpi=300, format="pdf", bbox_inches="tight")
     plt.show()
 
 def parseDataFrom(csv_filename):

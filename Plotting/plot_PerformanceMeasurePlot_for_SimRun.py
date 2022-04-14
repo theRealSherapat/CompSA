@@ -50,8 +50,14 @@ def get_y_ticks(no_of_agents):
 def plot_t_f_is_now_background(timeArray, t_fArray):
     shadeStopAndStartIndexes = get_t_f_is_now_highs_start_and_stop_indexes(t_fArray)
     
-    for shadePair in shadeStopAndStartIndexes:
-        plt.axvspan(shadePair[0]/samplingRate, shadePair[1]/samplingRate, facecolor='0.8', alpha=0.8, zorder=-100)
+    # Shading the 'start-up'-period (where no t_q-value is defined yet):
+    for i in range(3):
+        plt.axvspan(shadeStopAndStartIndexes[i][0]/samplingRate, shadeStopAndStartIndexes[i][1]/samplingRate, facecolor='r', alpha=0.2, zorder=-100)
+    
+    # Shading all the t_q-windows throughout the simulation run containing the variably defined t_q-windows:
+    for i in range(3, len(shadeStopAndStartIndexes)): # for hvert shadePair
+        plt.axvspan(shadeStopAndStartIndexes[i][0]/samplingRate, shadeStopAndStartIndexes[i][1]/samplingRate, facecolor='0.8', alpha=0.8, zorder=-100)
+        
         
 def get_t_f_is_now_highs_start_and_stop_indexes(floatArray):
     indexes = [0]
@@ -124,7 +130,7 @@ def finishAndShowPlot(timeArray, yticks, no_of_agents, simRun, save_fig_pls):
     plt.yticks(yticks)
     plt.gca().invert_yaxis()
     if save_fig_pls == 1:
-        plt.savefig(str(no_of_agents) + "AgentsPerformanceMeasure.pdf", bbox_inches="tight")
+        plt.savefig(str(no_of_agents) + "RobotsTerminatedAfter" + str(round(len(timeArray)/samplingRate)) + "s_PerfMeasurePlot.pdf", bbox_inches="tight")
     plt.show()
 
 if __name__ == "__main__":
