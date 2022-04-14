@@ -355,15 +355,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alpha: 0.1
-  useNymoenPhaseAdj: 1
+  useNymoenPhaseAdj: 0
   beta: 0.8
-  useNymoenFreqAdj: 1
+  useNymoenFreqAdj: 0
   m: 5
   audioClips:
-  - {fileID: 8300000, guid: b696d843d9fcd114faf685011e357fc5, type: 3}
-  - {fileID: 8300000, guid: 97be02b29bbbf9e4094523a0a1e69b3f, type: 3}
-  - {fileID: 8300000, guid: 97250b5e77c261b4b88dd0992df8c427, type: 3}
-  - {fileID: 8300000, guid: 18470c9a211a8a84185e1ea3750de4d3, type: 3}
+  - {fileID: 8300000, guid: 236067ffbbf34ea44916e1c83660bbcc, type: 3}
+  - {fileID: 8300000, guid: c8061b904dfe9314186c227c22eba07d, type: 3}
+  - {fileID: 8300000, guid: 0c0a32ce62591d042b632c5689590604, type: 3}
+  - {fileID: 8300000, guid: 7057eb46143701449a52f9ee1e05fc83, type: 3}
 --- !u!1001 &2285719833623400587
 PrefabInstance:
   m_ObjectHideFlags: 0
