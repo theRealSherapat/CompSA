@@ -113,18 +113,10 @@ First, the system and the system components will be presented and introduced. Th
 	
 	
 	
-	
-	
-	
-
-
-
-
-% SECTION 2, Presenting new Methods I implemented myself for Phase-Adjustment:
+% SEKSJON 2
+% Presenting new Methods I implemented myself for Phase-Adjustment:
 \section{Synchronizing oscillator-phases}
 \label{sec:phase_methods}
-	\gjor{Introduser det første $\phi$-problemet, uthevet og i fet skrift. Deretter fortsett til løsningene dens (Phase-Adj.-metodene). "This is the first and simpler problem to solve, namely synchronizing the phases $\phi_i$ of all agents $i$."}
-
 	If we first assume constant and equal oscillator-frequencies in our agents, we can take a look at how the agents adjust their|initially random|phases in order to synchronize to each other. We will from here on and out refer to this first problem as \textbf{the $\phi$-problem}, given that the phases ($\phi_i$) for all agents $i$ are what we need to adjust and synchronize — and that frequencies ($\omega_i$) technically already are synchronized.
 	
 	The goal state of the agents is now for all agents to fire/flash simultaneously, after having started firing/flashing at random initially. Note that this is a special case of the final and ultimate goal of \textit{harmonic synchrony}. This is due to how all agents in the collective firing/flashing simultaneously, is considered having achieved harmonic synchrony since its phases would be synchronized if fire-events are lined up in even pulses, as well as all frequencies in the agent collective being within the set of ``legal'' frequencies, $\omega_{0} \cdot 2^{\mathbb{N}_0}$, where $\omega_0$ is the fundamental (smallest) frequency in the agent collective, and $0 \in \mathbb{N}_0$ — leading to $\omega_0 \cdot 2^0 = \omega_0$ to be a legal frequency, which is what all agents in our case here have as frequences.
@@ -201,9 +193,6 @@ First, the system and the system components will be presented and introduced. Th
 % SECTION 3, Presenting new methods I implemented myself for frequency-synchronization:
 \section{Synchronizing oscillator-frequencies}
 \label{sec:frequency_methods}
-
-	\gjor{Introduser det andre, og mer utfordrende, $\phi$-\&$\omega$-problemet, uthevet og i fet skrift. Deretter løsningene dens (Freq.-Adj.-metodene), som man må bruke i tillegg til $\phi$-løsningene eller Phase-Adjustment-metodene. "This is the second and harder problem of synchronizing both phases $\phi_i$, as well as frequencies $\omega_i$, for all agents $i$."}
-
 	% Om Update-functions for frekvens-oppdateringene
 	When we open up for the possibility for heterogenous frequencies in our musical agent collective, we open up to exciting musical aspects like the playing of diverse rhythmic patterns as e.g. mentioned in Section \ref{sec:harmonic_synchrony}, but we then also need to not only synchronize phases, but also frequencies, simultaneously. This second problem of adjusting synchronizing both all phases $\phi_i$ and frequencies $\omega_i$, the values of which can all be heterogenous and initially random, for all agents $i$ in the agent collective — we will from here on and out refer to as \textbf{the $\phi$-\&$\omega$-problem}. This slightly more complex problem calls for us to also find solutions on how to adjust and synchronize frequencies. We already have methods by which we can adjust and synchronize the agents's phases $\phi$ with, described in Section \ref{sec:phase_methods}, but we do so-far lack methods by which we can adjust and synchronize the agents's frequencies $\omega$ with.
 	
@@ -256,30 +245,66 @@ First, the system and the system components will be presented and introduced. Th
 
 
 % Section presenting the Performance-measure used to evaluate the implemented methods:
-\section{Performance-/Synchrony-measure: detecting harmonic synchrony}
+\section{Performance-/synchrony-measure: detecting harmonic synchrony}
 \label{sec:performance_measure}
+
+The performance-measure will be used in our synchrony-simulator to evaluate and test the multi-robot collective's ability to harmonically synchronize to each other. As mentioned in Subsection \ref{subsec:harmonic_synchrony}, K. Nymoen et al.'s requirements and illustrations \cite{nymoen_synch} for achieving \textit{harmonic synchrony} serve as a blueprint or guide for how to similarly implement our synchrony-/performance-measure. This performance-measure should be able to, during synchronization-simulation, detect if harmonic synchronization has been achieved in our decentralized oscillator-network. The successful triggering of this detection will then in turn terminate the synchronization simulation-run and save to a dataset the time it took to synchronize (the performance-score), in the case of a `synchronization-success' — an example of which can be seen in Figure \ref{fig:perf_measure_plot}.
 
 \begin{figure}
 	\centering
 	\includegraphics[width=\linewidth]{Assets/Figures/Illustrations/ExplanatoryIllustrativePerfMeasurePlot.pdf}
-	\caption[A \textbf{performance-measure plot}.]{\textbf{Performance-/synchrony-measure plot}: recording a detection of harmonic synchrony. Initial red area represents the ``start-up''-period where no (gray) $t_q$-value is defined yet. \textbf{I)} First robot firing, initiating a process of defining such a ``silent'' time-window $t_q$ within which no nodes are allowed to fire, and a whole ``legal-firing'' $t_f$-window (here shaded in white and only 80ms long, as in \cite{nymoen_synch}) ensues. \textbf{II)} At least one robot firing, and with their firing-time(s) giving us the \textit{early $t_q$-defining} time-value (see schema below), as well as triggering second whole $t_f$-window to ensue. \textbf{III)} At least one robot firing after the \textit{early $t_q$-defining} time-value was found, hence (with their firing-time(s)) giving us the \textit{late $t_q$-defining} time-value right before using these when finishing the on-started process of defining the ``silent'' time-window $t_q$; triggering a half (due to stabilization purposes by future centering of fire-events) $t_f$-window to ensue. \textbf{IV)} A robot is caught firing illegally during a ``silent'' $t_q$-window and hence resets the \textit{towards\_k\_counter}-variable, as well as (re-) starts a process like in \textbf{I)} for (re-) defining a new $t_q$-value. \textbf{V)} Firing after this point only happens during short ``legal-firing'' $t_f$-windows, so \textbf{Condition 1} (cf. \ref{subsec:harmonic_synchrony}) is held. \textbf{VI)} All robots have fired at least once during the evaluation-period, so \textbf{Condition 2} is held. \textbf{VII)} The robot collective has fired legally and evenly, without resetting $t_q$, $k=8$ times in a row, so \textbf{Condition 3} is fulfilled — and harmonic synchrony is thus achieved and detected after 21.9 seconds of synchronization.}
+	\caption[A \textbf{performance-measure plot}.]{\textbf{Performance-/synchrony-measure plot}: recording a detection of harmonic synchrony. Initial red area represents the ``start-up''-period where no (gray) $t_q$-value is defined yet. \textbf{I)} First robot firing, initiating a process of defining such a ``silent'' time-window $t_q$ within which no nodes are allowed to fire, and a whole ``legal-firing'' $t_f$-window (here shaded in white and only 80ms long, as in \cite{nymoen_synch}) ensues. \textbf{II)} At least one robot firing, and with their firing-time(s) giving us the \textit{early $t_q$-defining} time-value (see schema below), as well as triggering second whole $t_f$-window to ensue. \textbf{III)} At least one robot firing after the \textit{early $t_q$-defining} time-value was found, hence (with their firing-time(s)) giving us the \textit{late $t_q$-defining} time-value right before using these when finishing the on-started process of defining the ``silent'' time-window $t_q$; triggering a half (due to stabilization purposes by future centering of fire-events) $t_f$-window to ensue. \textbf{IV)} A robot is caught firing illegally during a ``silent'' $t_q$-window and hence resets the \textit{towards\_k\_counter}-variable, as well as (re-) starts a process like in \textbf{I)} for (re-) defining a new $t_q$-value. \textbf{V)} Firing after this point only happens during short ``legal-firing'' $t_f$-windows, so \textbf{Condition 1} (cf. \ref{subsec:harmonic_synchrony}) is held. \textbf{VI)} All robots have fired at least once during the evaluation-period, so \textbf{Condition 2} is held. \textbf{VII)} The robot collective has fired legally and evenly, without resetting $t_q$, $k$ (equal to 8 in this case) times in a row, so \textbf{Condition 3} is fulfilled — and harmonic synchrony is thus achieved and detected after 21.9 seconds of synchronization.}
+	\label{fig:perf_measure_plot}
 \end{figure}
 
-The performance-measure will be used in our synchrony-simulator to evaluate and test the multi-robot collective's ability to harmonically synchronize to each other. As mentioned in Subsection \ref{subsec:harmonic_synchrony}, K. Nymoen et al.'s requirements and illustrations \cite{nymoen_synch} for achieving \textit{harmonic synchrony} serve as a blueprint or guide for how to similarly implement our synchrony-/performance-measure. This performance-measure should be able to, during synchronization-simulation, detect if harmonic synchronization has been achieved in our decentralized oscillator-network. The successful triggering of this detection will then in turn terminate the synchronization simulation-run and save to a dataset the time it took to synchronize (the performance-score), in the case of a `synchronization-success' — an example of which can be seen in Figure \ref{fig:perf_measure_plot}. If a certain amount of simulation-time has gone without the detection of harmonic synchrony occuring, the synchronization simulation-run is still terminated and datapoint still saved, but this time as a `synchronization-fail'.
-
-The resulting and corresponding performance-scores obtained using this performance-measure will then take values of the simulation-time (in seconds) it takes for the robot-collective, from the start of the synchronization-simulation, to achieve the system target state of \textit{harmonic synchrony}, as specified in Section \ref{sec:harmonic_synchrony}.
+The resulting and corresponding performance-scores obtained using this perf-ormance-measure will then take values of the simulation-time (in seconds) it takes for the robot-collective, from the start of the synchronization-simulation, to achieve the system target state of \textit{harmonic synchrony}, as specified in Section \ref{sec:harmonic_synchrony}.
 
 Now if \textbf{Conditions 1-3} from Subsection \ref{subsec:harmonic_synchrony} are kept, we have harmonic synchrony.
 
 My specific implementation of the performance-/synchrony-measure essentially consists of enforcing all the requirements or rules listed in \ref{subsec:harmonic_synchrony}, given some constant $t_f$- and $k$-values (e.g. $80ms$ and $8$ respectively \cite{nymoen_synch}). And again—to recall from \ref{subsec:harmonic_synchrony}—$t_f$ is the short time-window within which nodes are allowed to fire at each beat, and $k$ represents how many times nodes have to fire at even underlying pulses/beats in a row without changing the $t_q$-period—before becoming harmonically synchronized.
 
-The requirement of firing evenly $k$ times in a row with identical $t_q$-periods can be—and in fact is in our implementation—enforced by incrementing an integer variable \textit{towards\_k\_counter} after a `legal' $t_f$-window has occured (i.e. one or more nodes fired inbetween the onset and ending of the $t_f$-window), and conversely by resetting \textit{towards\_k\_counter} to 0 when an illegally transmitted firing was heard during a `silent' (or so it was supposed to be at least) $t_q$-window, hence restarting the synchrony-detection process—as can be seen in Figure \ref{fig:synch_evolution_perf_measure_ill}.
+The requirement of firing evenly $k$ times in a row with identical $t_q$-periods can be—and in fact is in our implementation—enforced by incrementing an integer variable \textit{towards\_k\_counter} after a `legal' $t_f$-window has occured (i.e. one or more nodes fired inbetween the onset and ending of the $t_f$-window), and conversely by resetting \textit{towards\_k\_counter} to 0 when an illegally transmitted firing was heard during a `silent' (or so it was supposed to be at least) $t_q$-window, hence restarting the synchrony-detection process—as can be seen occuring several times in Figure \ref{fig:synch_evolution_perf_measure_ill}.
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.85\linewidth]{Assets/Figures/Illustrations/SynchronyEvolutionPerfMeasureIllustration.pdf}
-	\caption[A \textbf{synchrony-evolution plot}.]{A \textbf{synchrony-evolution plot}, displaying the temporal recording of the \textit{towards\_k\_counter}-variable throughout a synchrony simulation-run in Unity. The counter is incremented as the robot-collective fires evenly within `legal' $t_f$-windows, and is conversely reset to 0 if illegal firings during `silent' $t_q$-windows are heard. Note that in this specific simulation-run above (same run as in Fig. \ref{fig:perf_measure_plot}), the agents were on their way to achieve harmonic synchrony five times before the 10th second already, but since one or more of them fired `illegally' (i.e. inside a $t_q$-window), they were consequently `punished'—or rather deemed `not synchronized enough yet'—by getting their counter reset to 0. Eventually however,  through further phase- \& frequency-synchronization, the multi-robot collective was after 12.5 seconds able to achieve harmonic synchrony, when \textit{towards\_k\_counter} became equal to $k$, as well as all other requirements for achieving \textit{harmonic synchrony} was met.}
+	\caption[A \textbf{synchrony-evolution plot}.]{A \textbf{synchrony-evolution plot}, displaying the temporal recording of the \textit{towards\_k\_counter}-variable throughout a synchrony simulation-run in Unity. The counter is incremented as the robot-collective fires evenly within `legal' $t_f$-windows, and is conversely reset to 0 if illegal firings during `silent' $t_q$-windows are heard. Note that in this specific simulation-run above, the agents were on their way to achieve harmonic synchrony five times before the 10th second of the synchronization-simulation already, but since one or more of them fired `illegally' (i.e. inside a $t_q$-window), they were consequently `punished'—or rather deemed `not synchronized enough yet'—by getting their counter reset to 0. Eventually however,  through further phase- \& frequency-synchronization, the multi-robot collective was in this case after 12.5 seconds able to achieve harmonic synchrony, when \textit{towards\_k\_counter} became equal to $k$, as well as all other requirements for achieving \textit{harmonic synchrony} was met.}
 	\label{fig:synch_evolution_perf_measure_ill}
 \end{figure}
 
-Initially, the $t_q$-period/-window is not initialized, as it entirely depends on the frequencies to which the robot-collective converges to; however, when an illegal firing (i.e. a firing perceived during a $t_q$-window) occurs—$t_q$ is also then reset itself to a hopefully more correct value. (Regner kanskje med jeg bør utdype litt mer nøyere her med figur, matte, og evt. algoritme-pseudokode.. Eller hva?)
+Initially, the $t_q$-period/-window is not initialized, as it entirely depends on the frequencies to which the robot-collective converges to; however, when an illegal firing (i.e. a firing perceived during a $t_q$-window) occurs—$t_q$ is also then reset itself to a hopefully more correct value, given by the following formula, which is visually explained further in the schema in Figure \ref{fig:t_q_schema}:
+
+\begin{equation}
+\label{t_q_definition}
+\begin{array}{rrclcl}
+t_q^* & = & late\_t_q^*\_defining\_timevalue - early\_t_q^*\_defining\_timevalue - t_f \\
+& = & median(t_1^`, t_2^`, ..., t_m^`) - median(t_1, t_2, ..., t_n) - t_f , \\
+\end{array}
+\end{equation}
+
+where $n$ fire-events were recorded during the earlier $t_f$-window, and $m$ fire-events were recorded during the later $t_f$-window.
+
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics[width=0.85\linewidth]{Assets/Figures/Illustrations/t_q_schema.pdf}
+	\caption{Schema: how ``silent'' $t_q$-windows are defined. \tcol[red]{Til Kyrre: Dette var bare grovt, som jeg tenker jeg må lage mer profesjonelt i Inkscape ellernoe.}}
+	\label{fig:t_q_schema}
+\end{figure}
+
+
+The specific steps and procedures needed to implement this performance-/synchrony-measure is expounded in detail in Algorithms \ref{perf_synch_measure_algo_A}, \ref{perf_synch_measure_algo_B}, and \ref{perf_synch_measure_algo_C}.
+
+\begin{algorithm}
+\caption{Performance-/synchrony-measure part A \tcol[red]{(må evt. fylles inn)}}\label{perf_synch_measure_algo_A}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Performance-/synchrony-measure part B \tcol[red]{(må evt. fylles inn)}}\label{perf_synch_measure_algo_B}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Performance-/synchrony-measure part C \tcol[red]{(må evt. fylles inn)}}\label{perf_synch_measure_algo_C}
+\end{algorithm}
+
+If a certain amount of time, e.g. 5 minutes \cite{nymoen_synch}, has gone without the detection of harmonic synchrony occuring, the simulation-run is terminated as a ``fail''.

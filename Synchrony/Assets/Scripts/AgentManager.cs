@@ -669,6 +669,9 @@ public class AgentManager : MonoBehaviour {
         LoggedNestedValuesToCSV(nodeFiringPlotMaterialFolderPath + "node_firing_data_atSimRun" + atSimRun + ".csv", perfMeasureHeader, t_f_and_agents_fired_matrix);
     }
     private void SaveTowardsKCountersToCSV() {
+        // Adding one last towards_k_counter-value right before saving/termination since it often gets left out (the last step to e.g. k=8).
+        towards_k_counters.Add(towards_k_counter);
+
         LoggedColumnToCSV(synchronyEvolutionsFolderPath + "synch_evolution_data_atSimRun" + atSimRun + ".csv", "towards_k_counter", towards_k_counters);
     }
 }

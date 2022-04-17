@@ -174,7 +174,7 @@ MonoBehaviour:
   t_f: 0.08
   useTQAverage: 0
   adjustedTimeScale: 1
-  randomSeed: 1543
+  randomSeed: 1564
   simulationRuns: 1
   runDurationLimit: 300
   debugSuccessOn: 1

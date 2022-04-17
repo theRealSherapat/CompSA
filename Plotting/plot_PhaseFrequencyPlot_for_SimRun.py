@@ -44,7 +44,7 @@ def plotPhasesAndFrequencies(t, phaseDataMatrix, frequencyDataMatrix, simRun, sa
     plt.tight_layout()
     noOfAgents = frequencyDataMatrix.shape[1]
     if save_fig_pls == 1:
-        plt.savefig(str(no_of_agents) + "RobotsTerminatedAfter" + str(round(len(t)/samplingRate)) + "s_PhaseFreqPlot.pdf", dpi=300, format="pdf", bbox_inches="tight")
+        plt.savefig(str(frequencyDataMatrix.shape[1]) + "RobotsTerminatedAfter" + str(round(len(t)/samplingRate)) + "s_PhaseFreqPlot.pdf", dpi=300, format="pdf", bbox_inches="tight")
     plt.show()
     
 def scatterPlotLegalMultiples(timeArray, freqsDataMatrix):
