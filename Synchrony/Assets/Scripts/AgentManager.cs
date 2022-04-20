@@ -23,8 +23,6 @@ public class AgentManager : MonoBehaviour {
     [Tooltip("Whether to use Avg. when defining new t_q-windows, or not (implying using Median, as these two estimators are the only two implemented).")]
     public bool useTQAverage = false;
 
-    [Tooltip("The simulation-speed compared to real-time?")]
-    public float adjustedTimeScale = 1.0f;
     [Tooltip("The random-seed for the pseudo-random number-generator in Unity.")]
     public int randomSeed = 2000;
 
@@ -100,7 +98,7 @@ public class AgentManager : MonoBehaviour {
 	private int last_t_f_firers_counter = 0; // A counter for how many fire-events were heard throughout the last firing-period t_f, used as a safety-mechanism to detect firing-periods within which no agents fire — so that we don't increment the 'towards-k'-counter after those firing-periods.
 
 
-
+    
 
     // 'MonoBehaviour':
 
@@ -504,9 +502,6 @@ public class AgentManager : MonoBehaviour {
     }
 
     private void InitializeVariables() {
-        // Speeding up or down the simulation if that is wanted?
-        Time.timeScale = adjustedTimeScale;
-
         agentiHasFiredAtLeastOnce = new bool[collectiveSize];
 
         InitializeAgentsFiredMatrix();
@@ -548,7 +543,6 @@ public class AgentManager : MonoBehaviour {
         performanceAndCovariatesHeader.Add("K");
         performanceAndCovariatesHeader.Add("T_F");
         performanceAndCovariatesHeader.Add("TQDEFINER");
-        performanceAndCovariatesHeader.Add("ADJTIMESCALE");
         performanceAndCovariatesHeader.Add("RANDOMSEED");
         performanceAndCovariatesHeader.Add("ALPHA");
         performanceAndCovariatesHeader.Add("PHASEADJ");
@@ -601,9 +595,6 @@ public class AgentManager : MonoBehaviour {
 
         float TQDEFINER = System.Convert.ToSingle(useTQAverage);
         performanceAndCovariateValues.Add(TQDEFINER);
-
-        float ADJTIMESCALE = adjustedTimeScale;
-        performanceAndCovariateValues.Add(ADJTIMESCALE);
 
         float RANDOMSEED = System.Convert.ToSingle(randomSeed);
         performanceAndCovariateValues.Add(RANDOMSEED);
