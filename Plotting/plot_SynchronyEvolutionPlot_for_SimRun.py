@@ -5,13 +5,13 @@ import matplotlib.pyplot as plt
 
 samplingRate = 100 # Hz                                                                             POTENTIAL SOURCE OF ERROR
 
-def main(csv_filename, simRun, save_fig_pls):
+def main(csv_filename, simRun, show_fig_pls, save_fig_pls):
     times, datapointArray = parseDataFrom(csv_filename)
     
-    plotAllColsVsTime(times, datapointArray, simRun, save_fig_pls)
+    plotAllColsVsTime(times, datapointArray, simRun, show_fig_pls, save_fig_pls)
     
 
-def plotAllColsVsTime(t, dataMatrix, simRun, save_fig_pls):
+def plotAllColsVsTime(t, dataMatrix, simRun, show_fig_pls, save_fig_pls):
     """ Plotting all columns in the numpy-array dataMatrix over the vertical time-axis 't' in the same figure. """
 
     plt.close("all") # First clearing all other opened figures.
@@ -19,15 +19,15 @@ def plotAllColsVsTime(t, dataMatrix, simRun, save_fig_pls):
     for col_index in range(dataMatrix.shape[1]):
         # Plots each column-slice from the dataMatrix over the vertical time-axis 't'
         labelString = "Column " + str(col_index+1)
-        # labelString = "Agent " + str(col_index+1) # FOR PLOTTING PHASE- OR FREQUENCY-VALUES BY THEMSELVES
         plt.plot(t, dataMatrix[:,col_index], label=labelString, linewidth=3)
     
     plt.ylabel("# of even beats in a row by agent collective")
     plt.xlabel("simulation-time (s)")
         
     if save_fig_pls == 1:
-        plt.savefig("RobotsTerminatedAfter" + str(round(len(t)/samplingRate)) + "s_SyncEvolutionPlot.pdf", dpi=300, format="pdf", bbox_inches="tight")
-    plt.show()
+        plt.savefig("../Synchrony/SavedData/Plots/RobotsTerminatedAfter" + str(round(len(t)/samplingRate)) + "s_SyncEvolutionPlot.pdf", dpi=300, format="pdf", bbox_inches="tight")
+    if show_fig_pls == 1:
+        plt.show()
 
 def parseDataFrom(csv_filename):
     """ Reads all rows (apart from the header) into a numpy data-matrix, and returns that 'arrayOfDatapoints' and its corresponding vertical time-axis 't' """
@@ -69,11 +69,15 @@ if __name__ == "__main__":
 
     """ Arguments:
             simRun (int)        : the simulation-run from the latest Unity-run
-            save_fig_pls (int) : whether or not we want to save—and not just plt.show()—the resulting figure/plot.
+            show_fig_pls (int)  : whether or not we want to show the resulting figure/plot.
+            save_fig_pls (int)  : whether or not we want to save the resulting figure/plot.
     """
+    
 
     simRun = sys.argv[1]
-    save_fig_pls = int(sys.argv[2])
-    filepath = filepath = "../Synchrony/SavedData/SynchronyEvolutions/synch_evolution_data_atSimRun" + simRun + ".csv"
+    show_fig_pls = int(sys.argv[2])
+    save_fig_pls = int(sys.argv[3])
     
-    main(filepath, simRun, save_fig_pls)
+    filepath = filepath = "../Synchrony/SavedData/SynchronyEvolutions/synch_evolution_data_atSimRun" + simRun + ".csv"
+
+    main(filepath, simRun, show_fig_pls, save_fig_pls)

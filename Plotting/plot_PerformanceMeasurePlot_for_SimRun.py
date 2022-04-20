@@ -10,12 +10,12 @@ fiveStepYLabelLimit = 30
 colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k']
 symbols = ['X', 'o', 's', 'p', 'P', 'D', '|', '*'] # symmetric markers
 
-def main(csv_filename, simRun, save_fig_pls):
+def main(csv_filename, simRun, show_fig_pls, save_fig_pls):
     times, t_f_is_now_samples, datapointArray = parseDataFrom(csv_filename)
     
-    plotANicePlot(times, t_f_is_now_samples, datapointArray, simRun, save_fig_pls)
+    plotANicePlot(times, t_f_is_now_samples, datapointArray, simRun, show_fig_pls, save_fig_pls)
     
-def plotANicePlot(timeArray, t_fArray, nodesFiringMatrix, simRun, save_fig_pls):
+def plotANicePlot(timeArray, t_fArray, nodesFiringMatrix, simRun, show_fig_pls, save_fig_pls):
     plt.close("all") # First clearing all other opened figures.
     
     plot_t_f_is_now_background(timeArray, t_fArray)
@@ -25,7 +25,7 @@ def plotANicePlot(timeArray, t_fArray, nodesFiringMatrix, simRun, save_fig_pls):
     no_of_agents = nodesFiringMatrix.shape[1]
     yticks = get_y_ticks(no_of_agents)
     
-    finishAndShowPlot(timeArray, yticks, no_of_agents, simRun, save_fig_pls)
+    finishAndShowPlot(timeArray, yticks, no_of_agents, simRun, show_fig_pls, save_fig_pls)
 
 def get_y_ticks(no_of_agents):
     if no_of_agents > tenStepYLabelLimit: # Going over to just marking/ytick-labeling every tenth agent-#
@@ -123,15 +123,16 @@ def parseDataFrom(csv_filename):
     
     return t, t_f_is_now_samples, datapointArray # Slicing from index 2 due to initialization values being huuuuge.
 
-def finishAndShowPlot(timeArray, yticks, no_of_agents, simRun, save_fig_pls):
+def finishAndShowPlot(timeArray, yticks, no_of_agents, simRun, show_fig_pls, save_fig_pls):
     plt.xlim(0, timeArray[-1])
     plt.xlabel("simulation-time (s)")
     plt.ylabel("robot # fired during synchrony simulation-run at")
     plt.yticks(yticks)
     plt.gca().invert_yaxis()
     if save_fig_pls == 1:
-        plt.savefig(str(no_of_agents) + "RobotsTerminatedAfter" + str(round(len(timeArray)/samplingRate)) + "s_PerfMeasurePlot.pdf", bbox_inches="tight")
-    plt.show()
+        plt.savefig("../Synchrony/SavedData/Plots/" + str(no_of_agents) + "RobotsTerminatedAfter" + str(round(len(timeArray)/samplingRate)) + "s_PerfMeasurePlot.pdf", bbox_inches="tight")
+    if show_fig_pls == 1:
+        plt.show()
 
 if __name__ == "__main__":
     """ Functionality:
@@ -143,12 +144,14 @@ if __name__ == "__main__":
             
     """ Arguments:
             simRun (int)        : the simulation-run from the latest Unity-run
-            save_fig_pls (int) : whether or not we want to save—and not just plt.show()—the resulting figure/plot.
+            show_fig_pls (int)  : whether or not we want to show the resulting figure/plot.
+            save_fig_pls (int) : whether or not we want to save the resulting figure/plot.
     """
     
     simRun = sys.argv[1]
-    save_fig_pls = int(sys.argv[2])
+    show_fig_pls = int(sys.argv[2])
+    save_fig_pls = int(sys.argv[3])
+    
     filepath = "../Synchrony/SavedData/PerformanceMeasurePlotMaterial/node_firing_data_atSimRun" + simRun + ".csv"
     
-    
-    main(filepath, simRun, save_fig_pls)
+    main(filepath, simRun, show_fig_pls, save_fig_pls)

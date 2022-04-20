@@ -419,7 +419,8 @@ public class AgentManager : MonoBehaviour {
     // 'SPAWNING':
 
     private void SpawnAgents() {
-        spawnRadius = 100f; //collectiveSize * 2f; Simply an empirical model of the necessary space the agents need to spawn. Or just a guess I guess. FIND A BETTER FUNCTION.
+        float slingringsmonn = 4.0f;
+        spawnRadius = (collectiveSize/6.0f)*agentWidth + slingringsmonn; // Simply an empirical model of the necessary space the agents need to spawn. Or just a guess I guess.
 
         for (int i = 0; i < collectiveSize; i++) {
             // Finding a position in a circle free to spawn (taking into account not wanting to collide with each other)
