@@ -173,7 +173,6 @@ MonoBehaviour:
   k: 8
   t_f: 0.08
   useTQAverage: 0
-  adjustedTimeScale: 1
   randomSeed: 1564
   simulationRuns: 1
   runDurationLimit: 300
