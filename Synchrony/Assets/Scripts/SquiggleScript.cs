@@ -90,13 +90,6 @@ public class SquiggleScript : MonoBehaviour {
         UpdateTheRefractoryPeriod();
     }
 
-    void Update() {
-        //// Brute-force (perhaps bad practice) simulation-restarting. Stop doing this if errors occur because of it.
-        //if (Input.GetKeyDown(KeyCode.Space)) {
-        //    LoadMySceneAgain();
-        //}
-    }
-
     void FixedUpdate() {
         // Logging simulation-run-values for plotting and data-serialization purposes:
         simRunPhases.Add(phase);

@@ -112,26 +112,15 @@ public class AgentManager : MonoBehaviour {
         InitializeVariables();
     }
 
-    void Update() {
+    void FixedUpdate() {
         // Ending simulation-run if we deem it either a synchronization -success or -failure.
         EndSimulationRunIfTerminationCriteriaAreReached();
-    }
 
-    void FixedUpdate() {
         // Logging simulation-run-values for plotting and data-serialization purposes:
         towards_k_counters.Add(System.Convert.ToSingle(towards_k_counter));
             // Synch.-/Perf.-measure:
         t_f_is_nows.Add(System.Convert.ToSingle(t_f_is_now));
         UpdateAgentFiredMatrix();
-    }
-
-    private void UpdateAgentFiredMatrix() {
-        for (int i = 0; i < spawnedAgentScripts.Count; i++) { // for alle agentId'er
-            if (agentWithAgentIDsJustFired.Contains(i + 1)) agents_fired_matrix[i].Add(1f); // adding a positive/high digital binary signal signalling agent with agId just fired.
-            else agents_fired_matrix[i].Add(0f); // adding a negative/low digital binary signal signalling agent with agId did not just fire.
-        }
-
-        agentWithAgentIDsJustFired.Clear(); // clearing out the "nodes-that-just-fired"-list.
     }
 
 
@@ -513,6 +502,15 @@ public class AgentManager : MonoBehaviour {
         for (int i = 0; i < spawnedAgentScripts.Count; i++) {
             agents_fired_matrix.Add(new List<float>(100));
         }
+    }
+
+    private void UpdateAgentFiredMatrix() {
+        for (int i = 0; i < spawnedAgentScripts.Count; i++) { // for alle agentId'er
+            if (agentWithAgentIDsJustFired.Contains(i + 1)) agents_fired_matrix[i].Add(1f); // adding a positive/high digital binary signal signalling agent with agId just fired.
+            else agents_fired_matrix[i].Add(0f); // adding a negative/low digital binary signal signalling agent with agId did not just fire.
+        }
+
+        agentWithAgentIDsJustFired.Clear(); // clearing out the "nodes-that-just-fired"-list.
     }
 
 
