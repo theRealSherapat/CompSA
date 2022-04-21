@@ -20,7 +20,7 @@ def plotPhases(t, phaseDataMatrix, simRun, show_fig_pls, save_fig_pls):
     # Printing out Phase-data
     for col_index in range(phaseDataMatrix.shape[1]):
         labelString = "Musical Agent " + str(col_index+1)
-        plt.plot(t, phaseDataMatrix[:,col_index], label=labelString)
+        plt.plot(t, phaseDataMatrix[:,col_index], label=labelString, linewidth=0.7)
     
     plt.ylabel("phase")
     plt.xlabel("simulation-time (s)")
@@ -31,7 +31,7 @@ def plotPhases(t, phaseDataMatrix, simRun, show_fig_pls, save_fig_pls):
     # plt.tight_layout()                                      # BLIR DETTA FINT DA?
     noOfAgents = phaseDataMatrix.shape[1]
     if save_fig_pls == 1:
-        plt.savefig("../Synchrony/SavedData/Plots/" + str(noOfAgents) + "RobotsTerminatedAfter" + str(round(len(t)/samplingRate)) + "s_PhaseFreqPlot.pdf", dpi=300, format="pdf") # BØR JEG INKLUDERE ', bbox_inches="tight"' ?
+        plt.savefig("../Synchrony/SavedData/Plots/" + str(noOfAgents) + "RobotsTerminatedAfter" + str(round(len(t)/samplingRate)) + "s_PhasePlot.pdf", dpi=300, format="pdf") # BØR JEG INKLUDERE ', bbox_inches="tight"' ?
     if show_fig_pls == 1:
         plt.show()
 

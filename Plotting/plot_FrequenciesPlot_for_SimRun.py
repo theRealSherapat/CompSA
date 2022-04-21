@@ -34,7 +34,7 @@ def plotFrequencies(t, frequencyDataMatrix, simRun, show_fig_pls, save_fig_pls):
     # plt.tight_layout()                                      # BLIR DETTA FINT DA?
     noOfAgents = frequencyDataMatrix.shape[1]
     if save_fig_pls == 1:
-        plt.savefig("../Synchrony/SavedData/Plots/" + str(noOfAgents) + "RobotsTerminatedAfter" + str(round(len(t)/samplingRate)) + "s_PhaseFreqPlot.pdf", dpi=300, format="pdf") # BØR JEG INKLUDERE ', bbox_inches="tight"' ?
+        plt.savefig("../Synchrony/SavedData/Plots/" + str(noOfAgents) + "RobotsTerminatedAfter" + str(round(len(t)/samplingRate)) + "s_FreqsPlot.pdf", dpi=300, format="pdf") # BØR JEG INKLUDERE ', bbox_inches="tight"' ?
     if show_fig_pls == 1:
         plt.show()
 

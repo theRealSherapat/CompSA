@@ -103,16 +103,9 @@ First, the system and the system components will be presented and introduced. Th
 		\paragraph{Envelope-design}
 		The fire-signal audible to the human observer watching and listening to the musical robots synchronizing to each other should be distinct and short enough so that one can clearly distinguish between which robots are firing and when. At the same time, the firing-sounds should to the human observer not be too sharp and loud to listen to so that it is uncomfortable observing the musical robot collective. Keeping these aspects in mind, some relatively soft and pleasant firing-sounds from an instrument usually associated with harmonious music—the harp—were produced and developed for the synchronization-simulator.
 		
-		Using the music-making system and digital synthesizer LMMS, some musical tones I thought sounded harmonious when played together (from the intro of Pogo's song ``Strangerous'') were digitally reproduced and recorded with a harp-instrument in LMMS, as can be seen in Figure \ref{fig:LMMS_harp}. 
+		Using the music-making system and digital synthesizer LMMS, and a string-instrument LMMS-plugin from DSK Music (fotnote m/ link https://www.dskmusic.com/dsk-world-stringz-updated/), some musical tones I thought sounded harmonious when played together were reproduced and recorded with a digital harp-instrument. The musical tones reproduced were some of the ones perceived in the intro of Pogo's song ``Strangerous.'' (fotnote?)
 		
 		However, these harp-sounds sounds most like monotone and constant harp-pluckings, potentially making it hard to distinguish to the human ear when multiple robots are playing these frequently and simultaneously. The harp-sounds thus need to be slightly edited—which they in our implementation were in the audio-editing program Audacity—so that the long and constant harp-pluck became more of a ``quick'' and distinguishable ``sound-bullet'' — essentially what we want in a solid ``fire''-signal sound. The ``before'' (\textbf{(a)}) and ``after'' (\textbf{(b)}) of this audio-editing process is depicted in Figure \ref{fig:fire_signal_designing}. Edits performed on waveform \textbf{(a)} to obtain waveform \textbf{(b)} consists of effects like e.g. ``Fade Out'' (to dampen the sound in the tail of the waveform and get a shorter ``sustain''), ``Amplify'' (in order to get a as high ``attack''/max-amplitude as wanted to make the fire-sound audible enough) — and obviously cutting the waveform so that it is shorter (giving a ``quicker'' sound).
-		
-		\begin{figure}[!ht]
-			\centering
-			\includegraphics[width=\linewidth]{Assets/Figures/ToolOverview/LMMS_harp.png}
-			\caption[Producing a digital harp-sound.]{Producing a digital harp-sound in the music-making and digital synthesizing program LMMS.}
-			\label{fig:LMMS_harp}
-		\end{figure}
 		
 		\begin{figure}[!ht]
 			\centering
