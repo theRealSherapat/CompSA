@@ -100,18 +100,27 @@ First, the system and the system components will be presented and introduced. Th
 	
 	\subsubsection{Audible to human simulator-observer}
 	
-		\paragraph{Envelope-design}
+		\paragraph{Fire-signal design}
 		The fire-signal audible to the human observer watching and listening to the musical robots synchronizing to each other should be distinct and short enough so that one can clearly distinguish between which robots are firing and when. At the same time, the firing-sounds should to the human observer not be too sharp and loud to listen to so that it is uncomfortable observing the musical robot collective. Keeping these aspects in mind, some relatively soft and pleasant firing-sounds from an instrument usually associated with harmonious music—the harp—were produced and developed for the synchronization-simulator.
 		
-		Using the music-making system and digital synthesizer LMMS, and a string-instrument LMMS-plugin from DSK Music (fotnote m/ link https://www.dskmusic.com/dsk-world-stringz-updated/), some musical tones I thought sounded harmonious when played together were reproduced and recorded with a digital harp-instrument. The musical tones reproduced were some of the ones perceived in the intro of Pogo's song ``Strangerous.'' (fotnote?)
+		Some empirically perceived harmonious musical tones when played together were digitally reproduced and recorded in the form of harp-plucks. This was achieved using the music-making system and digital synthesizer LMMS, and a digital string-instrument in the form of a LMMS-plugin from DSK Music (fotnote m/ link https://www.dskmusic.com/dsk-world-stringz-updated/). The musical tones reproduced with the digital harp-instrument were some of the tones perceived in the intro of Pogo's song ``Strangerous.'' (fotnote)
 		
-		However, these harp-sounds sounds most like monotone and constant harp-pluckings, potentially making it hard to distinguish to the human ear when multiple robots are playing these frequently and simultaneously. The harp-sounds thus need to be slightly edited—which they in our implementation were in the audio-editing program Audacity—so that the long and constant harp-pluck became more of a ``quick'' and distinguishable ``sound-bullet'' — essentially what we want in a solid ``fire''-signal sound. The ``before'' (\textbf{(a)}) and ``after'' (\textbf{(b)}) of this audio-editing process is depicted in Figure \ref{fig:fire_signal_designing}. Edits performed on waveform \textbf{(a)} to obtain waveform \textbf{(b)} consists of effects like e.g. ``Fade Out'' (to dampen the sound in the tail of the waveform and get a shorter ``sustain''), ``Amplify'' (in order to get a as high ``attack''/max-amplitude as wanted to make the fire-sound audible enough) — and obviously cutting the waveform so that it is shorter (giving a ``quicker'' sound).
+		However, the harp-sounds produced with DSK's LMMS-plugin are primarily long and constant harp-plucks, as shown in Figure \ref{fig:harp_sound}. Using such harp-plucks as a fire-sound directly can make it hard to distinguish to the human ear when multiple robots are playing these frequently and simultaneously. The harp-sounds thus need to be slightly edited—which they in our implementation were in the audio-editing program Audacity—so that the long and constant harp-pluck became more of a ``quick'' and distinguishable ``sound-bullet'' — essentially what we want in a solid ``fire''-signal sound. The ``before'' and ``after'' of such an audio-editing process is depicted in Figure \ref{fig:fire_signal_designing}. Edits performed on waveform \ref{fig:harp_sound} to obtain waveform \ref{fig:harp_fire_sound} consists of effects like ``Fade Out'' (to dampen the sound in the tail of the waveform \inkl{and get a shorter ``sustain''}, and hence obtaining a ``quicker'' sound), in the complete beginning ``Amplify'' (in order to get a as high ``attack''/max-amplitude as wanted to make the fire-sound audible enough before it quickly decays) — and obviously cutting the waveform accordingly (from where it had amplitude $\approx 0$ to the end of the waveform).
 		
-		\begin{figure}[!ht]
+		% Fire-sound design/editing: before and after.
+		\begin{figure}
+		\begin{minipage}[c][11cm][t]{\textwidth}
+			\vspace*{\fill}
 			\centering
-			\includegraphics[width=\linewidth]{Assets/Figures/Illustrations/fire_signal_designing.pdf}
-			\caption[Editing a pure harp-sound to become a fire-signal.]{Editing waveform \textbf{(a)}, being a ``raw'' harp plucking-sound, into waveform \textbf{(b)}, being a more distinguishable ``fire''-signal (although still sounding like a ``brief'' harp-sound).}
-			\label{fig:fire_signal_designing}
+			\includegraphics[width=\textwidth]{Assets/Figures/Illustrations/waveform_Strangerous_1_1.pdf}
+			\subcaption{A harp-sound (stereo audio waveform).}
+			\label{fig:harp_sound}\par\vfill
+			\includegraphics[width=\textwidth]{Assets/Figures/Illustrations/waveform_Strangerous_1_1_fire_signal.pdf}
+			\subcaption{A fire-sound transformed/designed harp-sound.}
+			\label{fig:harp_fire_sound}
+		\end{minipage}
+		\caption[Editing a long harp-pluck to become a fire-signal.]{Here we see the end-result of a fire-sound design process, where the longer harp-sound in \ref{fig:harp_sound} got edited and transformed into the more rapid—and amongst many other sounds like it played at the same time, more distinguishable—fire-sound in \ref{fig:harp_fire_sound}.}
+		\label{fig:fire_signal_designing}
 		\end{figure}
 	
 	

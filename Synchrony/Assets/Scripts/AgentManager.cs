@@ -256,7 +256,7 @@ public class AgentManager : MonoBehaviour {
 	private void TriggerTQPeriod() {
 		t_f_is_now = false;
 
-		IncrementTowardsKCounterIfWanted();
+		IncrementTowardsKCounterIfWantedAndResetTowardsKCounterIfNeeded();
 		reset_t_q_flag = false;
 		ResetLastTFFirersCounter();
 
@@ -270,14 +270,15 @@ public class AgentManager : MonoBehaviour {
 		last_t_f_firers_counter = 0;
     }
 
-	private void IncrementTowardsKCounterIfWanted() {
+	private void IncrementTowardsKCounterIfWantedAndResetTowardsKCounterIfNeeded() {
         // Ignoring the first counter-increment, so that the ending of the simulation-run actually follows 'Condition 2', relating to k.
         // Ignoring, for the sake of 'Condition 2' and the TowardsKCounter towards_k_counter, "successfully" finished t_f-windows if no nodes fired during it.
         
         // Incrementing the counter otherwise.
         // Immediately checking the requirements/conditions for harmonic synchrony after, to see whether we now have achieved the system target goal.
-
-        if (!reset_t_q_flag && last_t_f_firers_counter != 0) {
+        if (last_t_f_firers_counter == 0) {
+            towards_k_counter = 0;
+        } else if (!reset_t_q_flag) {
             towards_k_counter++;
 
             CheckHSynchConditions();
@@ -384,7 +385,7 @@ public class AgentManager : MonoBehaviour {
         CancelInvoke(); // Cancelling all currently ongoing Invoke-calls. 	PASS PÅ SÅ DU IKKE CANCELLER DefineEarlyMedian- ELLER DefineNewTQ-Invokesa MED ET UHELL HER.
         reset_t_q_flag_raiser 		= Time.timeSinceLevelLoad;
 		reset_t_q_flag 				= true;
-		towards_k_counter 	= 0;
+		towards_k_counter           = 0;
 
         if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) Illegal firing. 't_q-RESET' initiated.");
     }
