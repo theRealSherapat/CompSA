@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using static SynchronyUtils;
+using System.Collections;
 
 public class TestBedScript : MonoBehaviour {
 
@@ -49,6 +50,13 @@ public class TestBedScript : MonoBehaviour {
         //string path = System.IO.Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "minForsteDataFil.csv";
         //List<int> CSVHeaderEntries = new List<int> { 2, 1, 3, 4};
         //CreateCSVWithIntHeader(path, CSVHeaderEntries);
+    }
+
+    private void FixedUpdate() {
+        if (Input.GetMouseButtonDown(0)) {
+            Debug.Log("Now the time was " + Time.fixedTime);
+            StartCoroutine(DebugLogSomethingAfterSeconds(4.0f));
+        }
     }
 
     void Update() {
@@ -121,6 +129,17 @@ public class TestBedScript : MonoBehaviour {
         //}
     }
 
+    IEnumerator DebugLogSomethingAfterSeconds(float inFixedDeltaTimeSeconds) {
+        float timeTracker = 0.0f;
+        //Debug.Log("Initial timeTracker at Time.fixedTimeSinceLevelLoad=" + Time.fixedTime + ": " + timeTracker);
+        while (timeTracker < (inFixedDeltaTimeSeconds-0.0001f)) {
+            //Debug.Log("I think fixedDeltaTime is " + Time.fixedDeltaTime);
+            timeTracker += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+        Debug.Log("timeTracker at Time.fixedTimeSinceLevelLoad=" + Time.fixedTime + ": " + timeTracker);
+        //Debug.Log("'Something'. Now the time was " + Time.fixedTime);
+    }
 
     // 'HELPING':
 
