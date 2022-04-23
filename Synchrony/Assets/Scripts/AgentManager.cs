@@ -32,7 +32,7 @@ public class AgentManager : MonoBehaviour {
     [Tooltip("The simulation-timelimit in seconds (i.e. the max simulation-time a simulation-run is allowed to run for before being regarded as a failed synchronization-run).")]
     public float runDurationLimit = 300f;
     [Tooltip("Whether to get logs about Synchrony-successes (in terms of the 'towards-k'-counter) or not.")]
-    public bool debugSuccessOn = true;
+    public bool debugSuccessOn = false;
     [Tooltip("Whether to get logs about t_f-/t_q-windows and corresponding timestamps or not.")]
     public bool debugTqTfOn = false;
     [Tooltip("Whether to give the human observer a sound on every agent-pulse/-firing or not.")]
@@ -496,6 +496,34 @@ public class AgentManager : MonoBehaviour {
         agentiHasFiredAtLeastOnce = new bool[collectiveSize];
 
         InitializeAgentsFiredMatrix();
+
+        GetCameraIntoDecentFOVPosition();
+
+        ScaleGroundAccordingToSpawnRadius();
+    }
+
+    private void ScaleGroundAccordingToSpawnRadius() {
+        float spawnDiameter = 2.0f * spawnRadius;
+        GameObject.Find("Ground").transform.localScale = new Vector3(spawnDiameter, spawnDiameter, spawnDiameter);
+    }
+
+    private void GetCameraIntoDecentFOVPosition() {
+        float t = GetParameterizedT(collectiveSize);
+
+        GameObject.Find("Main Camera").transform.position = GetParameterizedR(t);
+    }
+
+    private float GetParameterizedT(int collectiveSize) {
+        float collectiveSizeFloat = System.Convert.ToSingle(collectiveSize);
+        return (collectiveSizeFloat-3.0f)/27.0f;
+    }
+
+    private Vector3 GetParameterizedR(float t) {
+        float x = 11.02f + 22.28f * t;
+        float y = 9.32f + 5.91f * t;
+        float z = 16.45f + 21.15f * t;
+
+        return new Vector3(x, y, z);
     }
 
     private void InitializeAgentsFiredMatrix() {

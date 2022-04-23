@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4368204, g: 0.48445576, b: 0.5647104, a: 1}
+  m_IndirectSpecularColor: {r: 0.34071937, g: 0.33703947, b: 0.2978981, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -167,7 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd775d64d8fb444d804ffc4263aeca8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectiveSize: 3
+  collectiveSize: 140
   t_ref_perc_of_period: 0.05
   minMaxInitialFreqs: {x: 0.5, y: 4}
   k: 8
@@ -176,7 +176,7 @@ MonoBehaviour:
   randomSeed: 1999
   simulationRuns: 1
   runDurationLimit: 300
-  debugSuccessOn: 1
+  debugSuccessOn: 0
   debugTqTfOn: 0
   useSound: 1
   useVisuals: 1
@@ -270,14 +270,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1150399571}
-  m_LocalRotation: {x: 0.68101, y: -0, z: -0, w: 0.7322742}
+  m_LocalRotation: {x: 0.47256455, y: 0.5272775, z: 0.49036452, w: 0.50813764}
   m_LocalPosition: {x: 0, y: 33.4, z: 1.27}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 85.845, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -2.112, y: 90.154, z: 85.842}
 --- !u!1 &1290060923
 GameObject:
   m_ObjectHideFlags: 0
@@ -452,11 +452,11 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1876033686}
-  m_LocalRotation: {x: 0.07283888, y: -0.89767295, z: 0.16216062, w: 0.40321442}
-  m_LocalPosition: {x: 8.12, y: 7.76, z: 15.18}
+  m_LocalRotation: {x: 0.09352177, y: -0.89240795, z: 0.21716084, w: 0.38432148}
+  m_LocalPosition: {x: 33.3, y: 15.23, z: 37.59}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 20.48, y: -131.623, z: 0}
+  m_LocalEulerAnglesHint: {x: 27.353, y: -133.401, z: 0}
