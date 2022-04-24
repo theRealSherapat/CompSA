@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static SynchronyUtils;
@@ -157,10 +158,15 @@ public class SquiggleScript : MonoBehaviour {
 
     private void TriggerRefractoryPeriod() {
         inRefractoryPeriod = true;
-        Invoke("ToggleOffRefractoryMode", t_ref);
+        StartCoroutine(ToggleRefractoryModeOffAfter(t_ref));
     }
 
-    private void ToggleOffRefractoryMode() {
+    IEnumerator ToggleRefractoryModeOffAfter(float inFixedDeltaTimeSeconds) {
+        float timeTracker = 0.0f;
+        while (timeTracker < (inFixedDeltaTimeSeconds - 0.0001f)) {
+            timeTracker += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
+        }
         inRefractoryPeriod = false;
     }
 

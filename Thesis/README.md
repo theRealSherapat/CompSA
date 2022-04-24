@@ -34,6 +34,7 @@ Remember:
 	+ Ensure the right uses of \ref{}, so that 'Subsection \ref{}' doesn't e.g. refer to a Section or Paragraph.
 	+ Change to using the [NOR04]-style (first author(s), Normann e.g.) instead of [3]-style (cf. https://www.overleaf.com/learn/latex/Bibliography_management_in_LaTeX).
 	+ Høre med Kyrre om det er fryktelig nøye åssen referansene er skrevet opp, eller om Zoteros eksporterte .bib-filer er gode nok.
+	+ Sjekke hva du har blitt fortalt om kilder (fra f.eks. de to master-ukene), og kildekompasset.no, og formater kildene dine ettersom.
 * Plots and colors:
 	+ (Så lenge det er profesjonelt og ikke noob (muligens forhør deg med Kyrre)) Marker alle plots (fra Python-scripts) slik at man utifra de kan se og vite om simulation-runnet var suksessfullt eller ikke (om agentene oppnådde harmonisk synkronitet eller ei):
 		- E.g. k-linja (mål-linja) agentene må nå i 'SynchronyEvolution'-plottet.

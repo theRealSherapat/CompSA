@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using System.Text;
 
 public static class SynchronyUtils {
+
     // '.CSV -CREATING & -UPDATING & -SAVING':
 
     public static void CreateCSVWithStringHeader(string path, List<string> headerEntries) {

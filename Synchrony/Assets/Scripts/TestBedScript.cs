@@ -53,10 +53,11 @@ public class TestBedScript : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        if (Input.GetMouseButtonDown(0)) {
-            Debug.Log("Now the time was " + Time.fixedTime);
-            StartCoroutine(DebugLogSomethingAfterSeconds(4.0f));
-        }
+        // TESTING MY FIRST PROPAH COROUTINE:
+        //if (Input.GetMouseButtonDown(0)) {
+        //    Debug.Log("Now the time was " + Time.fixedTime);
+        //    StartCoroutine(DebugLogSomethingAfterSeconds(4.0f));
+        //}
     }
 
     void Update() {

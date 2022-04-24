@@ -3,9 +3,10 @@ using UnityEngine;
 using System.Linq;
 using System.IO;
 using static SynchronyUtils;
+using System.Collections;
 
 public class AgentManager : MonoBehaviour {
-    
+
     // 'VARIABLES':
 
     // 'Recorded collective-/environment-hyperparameters':
@@ -223,7 +224,7 @@ public class AgentManager : MonoBehaviour {
 	private void TriggerDefineNewTQ() {
 		first_late_t_q_defining_time_added = true;
 		t_f_is_now = true; // Setting off a t_f_is_now-period.
-		Invoke("DefineNewTQ", t_f/2f);
+        StartCoroutine(TriggerPeriodAfter(2, t_f/2f));
         if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) 't_f-START' and setting new 't_q' in half a 't_f'-period = " + t_f/2.0 + " SimSecs.");
 
     }
@@ -247,10 +248,9 @@ public class AgentManager : MonoBehaviour {
 	}
 	
 	private void RestartTFTQWindows() {
-		CancelInvoke(); // Cancelling all currently ongoing Invoke-calls.
-        if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) Invoke-Cancellations and 't_q-START' with 't_q'=" + t_q + ".");
+        StopAllCoroutines(); // Stopping all currently ongoing or stored Coroutines.
+        if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) Coroutine-Stopping and 't_q-START' with 't_q'=" + t_q + ".");
 		TriggerTQPeriod();
-
     }
 	
 	private void TriggerTQPeriod() {
@@ -262,7 +262,7 @@ public class AgentManager : MonoBehaviour {
 
 		if (debugSuccessOn) Debug.Log("Even-beat-counter towards k=" + k + ":    " + towards_k_counter);
 
-		Invoke("TriggerTFPeriod", t_q);
+        StartCoroutine(TriggerPeriodAfter(3, t_q));
         if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) 't_f-EXIT' & 't_q-START'. Calling for a 't_q-EXIT' & 't_f-START' in 't_q'=" + t_q + " SimSecs.");
     }
 
@@ -288,7 +288,7 @@ public class AgentManager : MonoBehaviour {
 
 	private void TriggerTFPeriod() {
 		t_f_is_now = true;
-		Invoke("TriggerTQPeriod", t_f);
+        StartCoroutine(TriggerPeriodAfter(4, t_f));
         if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) 't_q-EXIT' & 't_f-START'. Called for 't_f-EXIT' & 't_q-START' in 't_f'=" + t_f + " SimSecs.");
 
     }
@@ -296,7 +296,7 @@ public class AgentManager : MonoBehaviour {
 	private void TriggerDefineEarlyMedian() {
 		first_early_reset_defining_time_added = true;
 		t_f_is_now = true;
-		Invoke("DefineEarlyMedian", t_f);
+        StartCoroutine(TriggerPeriodAfter(1, t_f));
 
         if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) 't_f-START'. Defining 'early_median' in 't_f'=" + t_f + " SimSecs.");
 
@@ -364,7 +364,7 @@ public class AgentManager : MonoBehaviour {
 	
 	private void TriggerFirstTFRise() {
 		t_f_is_now = true;
-		Invoke("TFLower", t_f);
+        StartCoroutine(TriggerPeriodAfter(0, t_f));
 
         if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) 't_f-START', supposedly the first. Also called for 't_f-EXIT' in 't_f'=" + t_f + " SimSecs.");
     }
@@ -382,7 +382,7 @@ public class AgentManager : MonoBehaviour {
 	
     
 	private void StartTheResetTQProcess() {
-        CancelInvoke(); // Cancelling all currently ongoing Invoke-calls. 	PASS PÅ SÅ DU IKKE CANCELLER DefineEarlyMedian- ELLER DefineNewTQ-Invokesa MED ET UHELL HER.
+        StopAllCoroutines(); // Stopping all currently ongoing Coroutines. PASS PÅ SÅ DU IKKE CANCELLER DefineEarlyMedian- ELLER DefineNewTQ-Coroutines MED ET UHELL HER.
         reset_t_q_flag_raiser 		= Time.timeSinceLevelLoad;
 		reset_t_q_flag 				= true;
 		towards_k_counter           = 0;
@@ -401,7 +401,7 @@ public class AgentManager : MonoBehaviour {
 
         t_f_is_now = false;
         t_q = 0f;
-        CancelInvoke(); // All t_q-/t_f-Invokes are ended/executed.
+        StopAllCoroutines(); // All t_q-/t_f-Coroutines are stopped.
 
         first_firing_is_perceived = false;
 
@@ -412,6 +412,26 @@ public class AgentManager : MonoBehaviour {
         agentiHasFiredAtLeastOnce = new bool[collectiveSize];
         hSynchConditionsAreMet = false;
         towards_k_counter = 0;
+    }
+
+    IEnumerator TriggerPeriodAfter(int periodType, float inFixedDeltaTimeSeconds) {
+        float timeTracker = 0.0f;
+        while (timeTracker < (inFixedDeltaTimeSeconds - 0.0001f)) {
+            timeTracker += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+        // Quick'n'dirty way of calling the right type of period after 4.0f seconds of fixed time (or so it is supposed to be):
+        if (periodType == 0) { // Triggering TFLower (since its Coroutine with a second-parameter appears firstly in the Synch-/perf.-measure's reM.-pseudocode).
+            TFLower();
+        } else if (periodType == 1) { // Triggering DefineEarlyMedian (since its Coroutine with a second-parameter appears secondly in the Synch-/perf.-measure's reM.-pseudocode).
+            DefineEarlyMedian();
+        } else if (periodType == 2) { // Triggering DefineNewTQ (since its Coroutine with a second-parameter appears thirdly in the Synch-/perf.-measure's reM.-pseudocode).
+            DefineNewTQ();
+        } else if (periodType == 3) { // Triggering TriggerTFPeriod (--||--).
+            TriggerTFPeriod();
+        } else { // Triggering TriggerTQPeriod (--||--).
+            TriggerTQPeriod();
+        }
     }
 
 
