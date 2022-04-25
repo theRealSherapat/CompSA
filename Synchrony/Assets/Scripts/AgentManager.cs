@@ -28,18 +28,29 @@ public class AgentManager : MonoBehaviour {
     public int randomSeed = 2000;
 
     // 'Non-recorded general meta-/environment-hyperparemeters':
+    public enum simulationModesEnum // Min customme enumeration
+    {
+        Experiment,
+        Analysis
+    };
+    [Tooltip("Whether to simply save the performance measure and datapoint (in experiment mode), or also saving all the plotting materials (in analysis mode).")]
+    public simulationModesEnum simulationMode = simulationModesEnum.Experiment;
+    [Tooltip("How frequently (Hz) we want to sample our simulator-values, potentially affecting saving times significantly.")]
+    public float dataSavingFrequency = 25.0f;
     [Tooltip("The number of simulation-runs per Unity Game-run.")]
     public int simulationRuns = 1;
     [Tooltip("The simulation-timelimit in seconds (i.e. the max simulation-time a simulation-run is allowed to run for before being regarded as a failed synchronization-run).")]
     public float runDurationLimit = 300f;
-    [Tooltip("Whether to get logs about Synchrony-successes (in terms of the 'towards-k'-counter) or not.")]
-    public bool debugSuccessOn = false;
-    [Tooltip("Whether to get logs about t_f-/t_q-windows and corresponding timestamps or not.")]
-    public bool debugTqTfOn = false;
     [Tooltip("Whether to give the human observer a sound on every agent-pulse/-firing or not.")]
     public bool useSound = true;
     [Tooltip("Whether to give the human observer a visual and Lerped color-signal on every agent-pulse/-firing or not.")]
     public bool useVisuals = true;
+
+    // 'Knobs for the nerds':
+    [Tooltip("Whether to get logs about Synchrony-successes (in terms of the 'towards-k'-counter) or not.")]
+    public bool debugSuccessOn = false;
+    [Tooltip("Whether to get logs about t_f-/t_q-windows and corresponding timestamps or not.")]
+    public bool debugTqTfOn = false;
 
     // Spawning:
     [Tooltip("All the DrSquiggle-prefabs we want to spawn and be synchronized.")]
@@ -60,6 +71,7 @@ public class AgentManager : MonoBehaviour {
     private List<SquiggleScript> spawnedAgentScripts = new List<SquiggleScript>();
 
     // CSV-Serialization:
+    private int dataSavingFrequencyY;
     private string phasesFolderPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Phases" + "\\";
     private string frequenciesFolderPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "Frequencies" + "\\";
     private string nodeFiringPlotMaterialFolderPath = Directory.GetCurrentDirectory() + "\\" + "SavedData" + "\\" + "PerformanceMeasurePlotMaterial" + "\\";
@@ -117,11 +129,8 @@ public class AgentManager : MonoBehaviour {
         // Ending simulation-run if we deem it either a synchronization -success or -failure.
         EndSimulationRunIfTerminationCriteriaAreReached();
 
-        // Logging simulation-run-values for plotting and data-serialization purposes:
-        towards_k_counters.Add(System.Convert.ToSingle(towards_k_counter));
-            // Synch.-/Perf.-measure:
-        t_f_is_nows.Add(System.Convert.ToSingle(t_f_is_now));
-        UpdateAgentFiredMatrix();
+        // Logging simulation-run-values for plotting and data-serialization purposes.
+        SavePlottingDataIfOnRightFrame();
     }
 
 
@@ -504,6 +513,7 @@ public class AgentManager : MonoBehaviour {
 
     // 'HELPING':
 
+        // Get-functions:
     public System.Random GetRandomNumberGenerator() {
         return randGen;
     }
@@ -511,9 +521,14 @@ public class AgentManager : MonoBehaviour {
     public int GetRandomGeneratorSeed() {
         return randomSeed;
     }
+    
+    public int GetDataSavingParameter() {
+        return dataSavingFrequencyY;
+    }
 
     private void InitializeVariables() {
         agentiHasFiredAtLeastOnce = new bool[collectiveSize];
+        dataSavingFrequencyY = Mathf.RoundToInt(Mathf.Clamp((100.0f/dataSavingFrequency), 1.0f, 100.0f));
 
         InitializeAgentsFiredMatrix();
 
@@ -653,13 +668,13 @@ public class AgentManager : MonoBehaviour {
         float ALPHA = System.Convert.ToSingle(spawnedAgentScripts[0].alpha); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
         performanceAndCovariateValues.Add(ALPHA);
 
-        float PHASEADJ = System.Convert.ToSingle(spawnedAgentScripts[0].useNymoenPhaseAdj); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
+        float PHASEADJ = System.Convert.ToSingle((int)spawnedAgentScripts[0].phaseAdjustment); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
         performanceAndCovariateValues.Add(PHASEADJ);
 
         float BETA = System.Convert.ToSingle(spawnedAgentScripts[0].beta); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
         performanceAndCovariateValues.Add(BETA);
          
-        float FREQADJ = System.Convert.ToSingle(spawnedAgentScripts[0].useNymoenFreqAdj); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
+        float FREQADJ = System.Convert.ToSingle((int)spawnedAgentScripts[0].frequencyAdjustment); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
         performanceAndCovariateValues.Add(FREQADJ);
 
         float M = System.Convert.ToSingle(spawnedAgentScripts[0].m); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
@@ -674,7 +689,16 @@ public class AgentManager : MonoBehaviour {
         // Saving one datapoint, a.k.a. writing one .CSV-row (Measurements, Covariates) to the .CSV-file at the datasetPath:
         FloatUpdateCSV(datasetPath, performanceAndCovariateValues);
 
-        SaveAllLoggedValuesToCSVs();
+        if ((int)simulationMode == 1) SaveAllLoggedValuesToCSVs();
+    }
+
+    private void SavePlottingDataIfOnRightFrame() {
+        if ((Mathf.RoundToInt(Time.fixedTime / Time.fixedDeltaTime) % dataSavingFrequencyY) == 0) { // Executing if the frame matches up with the wanted data-saving-frequency
+            towards_k_counters.Add(System.Convert.ToSingle(towards_k_counter));
+            // Synch.-/Perf.-measure:
+            t_f_is_nows.Add(System.Convert.ToSingle(t_f_is_now));
+            UpdateAgentFiredMatrix();
+        }
     }
 
     private void SaveAllLoggedValuesToCSVs() {

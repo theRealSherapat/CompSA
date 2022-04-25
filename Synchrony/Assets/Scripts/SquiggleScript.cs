@@ -12,14 +12,23 @@ public class SquiggleScript : MonoBehaviour {
     // Phase-adjustment:
     [Tooltip("Pulse coupling constant, denoting coupling strength between nodes, deciding how much robots adjust phases after detecting a pulse from a neighbour. The larger the constant, the larger (in absolute value) the phase-update?")]
     public float alpha = 0.1f;
-    [Tooltip("Whether the agent is using Kristian Nymoen et al.'s phase-update function to adjust phases with after detecting a pulse from a neighbour, or not (implying the usage of Mirollo-Strogatz's phase-update function, as we only have implemented those two).")]
-    public bool useNymoenPhaseAdj = false;       // HAS TO BE GENERALIZED OR MADE LESS BINARY IF WE ARE TO USE MORE THAN TWO POSSIBLE Phase-Adjustment methods.
+    public enum phaseSyncEnum {
+        None,
+        MirolloStrogatz,
+        Nymoen
+    };
+    [Tooltip("Which phase-adjustment / -update / -synchronization function or method we want our robots to synchronize their phases according to.")]
+    public phaseSyncEnum phaseAdjustment = phaseSyncEnum.MirolloStrogatz;
 
     // Frequency-adjustment:
     [Tooltip("Frequency coupling constant, deciding how much robots adjust frequencies after detecting pulse onsets from neighbours. The larger the constant, the larger (in absolute value) the frequency-update?")]
     public float beta = 0.8f;
-    [Tooltip("Whether the agent is using Kristian Nymoen et al.'s frequency-update function to adjust frequencies with after detecting a pulse from a neighbour, or not (implying an attempt at solving the simpler phase-problem with only Phase-Adj. and not Freq.-Adj., as we only have implemented Kristian's Freq.-Adj.-method so far).")]
-    public bool useNymoenFreqAdj = false;        // HAS TO BE GENERALIZED OR MADE LESS BINARY IF WE ARE TO USE MORE THAN TWO POSSIBLE Frequency-Adjustment methods.
+    public enum frequencySyncEnum { 
+        None,
+        Nymoen
+    };
+    [Tooltip("Which frequency-adjustment / -update / -synchronization function or method we want our robots to synchronize their frequencies according to.")]
+    public frequencySyncEnum frequencyAdjustment = frequencySyncEnum.None;
     [Tooltip("Degree of error-memory, i.e. the length of a list of the last m error-scores. The larger the length m, the more error-scores we calculate the self-assessed synch-score s(n) based upon.")]
     public int m = 5;
 
@@ -93,8 +102,7 @@ public class SquiggleScript : MonoBehaviour {
 
     void FixedUpdate() {
         // Logging simulation-run-values for plotting and data-serialization purposes:
-        simRunPhases.Add(phase);
-        simRunFrequencies.Add(frequency);
+        SavePlottingDataIfOnRightFrame();
 
         // Updating the agent-body's color so that it cools down from just having fired.
         CoolDownAgentColorIfItJustFired();
@@ -180,7 +188,7 @@ public class SquiggleScript : MonoBehaviour {
 
 
     private void UpdateFrequencyIfAdjustingFrequency() {
-        if (useNymoenFreqAdj) {
+        if ((int)frequencyAdjustment == 1) {
             RFAAdjustFrequency(); // Adjusting frequency at each phase-climax, according to K. Nymoen's Freq.-Adj.-method and the Reachback Firefly Algorithm for frequency-update-contributions (not phase-update contributions).
 
             UpdateTheRefractoryPeriod(); // Given an updated oscillator-frequency (hence also oscillator-period), we update t_ref to be the right percentage of the new oscillator-period.
@@ -262,11 +270,13 @@ public class SquiggleScript : MonoBehaviour {
     }
 
     private void AdjustPhase() {
-        if (!useNymoenPhaseAdj) {
-            phase = Mathf.Clamp(phase *(1 + alpha), 0f, 1f); // using Phase Update Function (1); "standard" Mirollo-Strogatz
-        } else {
+        if ((int)phaseAdjustment == 0) { // not using any phase adjustment functions
+            return;
+        } else if ((int)phaseAdjustment == 1) { // using Mirollo-Strogatz's "standard" phase update function
+            phase = Mathf.Clamp(phase * (1 + alpha), 0f, 1f);
+        } else if ((int)phaseAdjustment == 2) { // using Kristian et al.'s Bi-Directional phase sync function
             float wave = Mathf.Sin(2 * Mathf.PI * phase);
-            phase = Mathf.Clamp(phase - alpha * wave * Mathf.Abs(wave), 0f, 1f); // using Phase Update Function (2); Nymoen et al.'s Bi-Directional
+            phase = Mathf.Clamp(phase - alpha * wave * Mathf.Abs(wave), 0f, 1f);
         }
     }
 
@@ -380,16 +390,13 @@ public class SquiggleScript : MonoBehaviour {
     }
 
     private void InitializeAgentFrequency() {
-        if (useNymoenFreqAdj) {
-            frequency = (float)randGen.NextDouble() * (myCreator.minMaxInitialFreqs.y - myCreator.minMaxInitialFreqs.x) + myCreator.minMaxInitialFreqs.x; // Initializing frequency (Hz) in range [0.5Hz, 8Hz] was found useful by Nymoen et al.
-        } else {
+        if ((int)frequencyAdjustment == 0) { // frequencyAdjustment = None
             frequency = 1f; // Setting agent's frequency to default frequency of 1Hz.
+        } else if ((int)frequencyAdjustment == 1) { // frequencyAdjustment = Nymoen
+            frequency = (float)randGen.NextDouble() * (myCreator.minMaxInitialFreqs.y - myCreator.minMaxInitialFreqs.x) + myCreator.minMaxInitialFreqs.x; // Initializing frequency (Hz) in range [0.5Hz, 8Hz] was found useful by Nymoen et al.
         }
 
         audioSource.clip = audioClips[GetAudioIndex(frequency)];
-
-        // BARE FOR TESTING
-        //if (agentID == 1) Debug.Log("Agent" + agentID + " initialized frequency = " + frequency + " at Simulationtime=" + Time.timeSinceLevelLoad + ".");
     }
 
     private int GetAudioIndex(float freq) {
@@ -419,6 +426,13 @@ public class SquiggleScript : MonoBehaviour {
 
     public void SetAgentID(int idNumber) {
         agentID = idNumber;
+    }
+
+    private void SavePlottingDataIfOnRightFrame() {
+        if ((Mathf.RoundToInt(Time.fixedTime / Time.fixedDeltaTime) % myCreator.GetDataSavingParameter()) == 0) { // Executing if the frame matches up with the wanted data-saving-frequency
+            simRunPhases.Add(phase);
+            simRunFrequencies.Add(frequency);
+        }
     }
 
 

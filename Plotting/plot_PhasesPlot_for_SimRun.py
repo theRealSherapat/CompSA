@@ -20,7 +20,7 @@ def plotPhases(t, phaseDataMatrix, simRun, show_fig_pls, save_fig_pls):
     # Printing out Phase-data
     for col_index in range(phaseDataMatrix.shape[1]):
         labelString = "Musical Agent " + str(col_index+1)
-        plt.plot(t, phaseDataMatrix[:,col_index], label=labelString, linewidth=0.7)
+        plt.plot(t, phaseDataMatrix[:,col_index], label=labelString, linewidth=1)
     
     plt.ylabel("phase")
     plt.xlabel("simulation-time (s)")
