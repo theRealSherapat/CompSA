@@ -21,9 +21,13 @@ public class AgentManager : MonoBehaviour {
     public int k = 8;
     [Tooltip("The duration (s) of the short time-window the nodes are allowed to fire within.")]
     public float t_f = 0.08f;
-    [Tooltip("Whether to use Avg. when defining new t_q-windows, or not (implying using Median, as these two estimators are the only two implemented).")]
-    public bool useTQAverage = false;
-
+    public enum TQDefinerEnum // Min customme enumeration
+    {
+        Median,
+        Average
+    };
+    [Tooltip("Whether to use Averages when defining new t_q-windows, or Medians.")]
+    public TQDefinerEnum TQDefiner = TQDefinerEnum.Median;
     [Tooltip("The random-seed for the pseudo-random number-generator in Unity.")]
     public int randomSeed = 2000;
 
@@ -240,7 +244,7 @@ public class AgentManager : MonoBehaviour {
 	
 	private void DefineNewTQ() {
         float new_t_q_estimate;
-        if (useTQAverage) {
+        if ((int)TQDefiner == 1) {
 		    new_t_q_estimate = ListAverage(late_reset_defining_times) - early_t_q_definer - t_f;
         } else {
             new_t_q_estimate = ListMedian(late_reset_defining_times) - early_t_q_definer - t_f;
@@ -312,7 +316,7 @@ public class AgentManager : MonoBehaviour {
     }
 	
 	private void DefineEarlyMedian() {
-        if (useTQAverage) {
+        if ((int)TQDefiner==1) {
             early_t_q_definer = ListAverage(early_t_q_defining_times);
         } else {
             early_t_q_definer = ListMedian(early_t_q_defining_times);
@@ -656,7 +660,7 @@ public class AgentManager : MonoBehaviour {
         float T_F = t_f;
         performanceAndCovariateValues.Add(T_F);
 
-        float TQDEFINER = System.Convert.ToSingle(useTQAverage);
+        float TQDEFINER = System.Convert.ToSingle((int)TQDefiner);
         performanceAndCovariateValues.Add(TQDEFINER);
 
         float RANDOMSEED = System.Convert.ToSingle(randomSeed);
