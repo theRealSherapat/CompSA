@@ -21,10 +21,10 @@ First, the system and the system components will be presented and introduced. Th
 
 	% First Intro-illustration figure to easily get a quick idea of what the system/design does/consists of (to be exchanged with a describing system scheme/diagram):
 	\begin{figure}[h]
-	\centering
-	\includegraphics[width=0.9\linewidth]{Assets/Figures/schematic_initial_idea.pdf}
-	\caption[Illustration/schematic of the developed multi musical robot collective/system]{Illustration/Schematic: The musical robot collective entraining to synchronize to each other, or more specifically to achieve harmonic synchronization, through performing phase- \& frequency-adjustments. Agents that are not firing at the moment will adjust themselves after hearing a transmitted ``fire''-/adjustment-signal from a neighbouring firing agent.}
-	\label{fig:first_idea:first_fig}
+		\centering
+		\includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Illustrations/schematic_initial_idea.pdf}
+		\caption[Illustration/schematic of the developed multi musical robot collective/system]{Illustration/Schematic: The musical robot collective entraining to synchronize to each other, or more specifically to achieve harmonic synchronization, through performing phase- \& frequency-adjustments. Agents that are not firing at the moment will adjust themselves after hearing a transmitted ``fire''-/adjustment-signal from a neighbouring firing agent.}
+		\label{fig:first_idea:first_fig}
 	\end{figure}
 
 	% Second Intro-illustration figure to easily get a quick idea of what the system/design does/consists of (to be exchanged with a describing system scheme/diagram):
@@ -32,13 +32,13 @@ First, the system and the system components will be presented and introduced. Th
 		\centering
 			\begin{subfigure}[t]{.5\textwidth}
 				\centering\captionsetup{width=.9\linewidth}%
-				\includegraphics[width=0.9\linewidth]{Assets/Figures/Simulations/squiggles_unsynched_in_simulation.jpg}
+				\includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Simulations/squiggles_unsynched_in_simulation.jpg}
 				\caption{Screenshot from the very beginning of a Synchronization-simulation.}
 				\label{fig:first_idea:second_fig:unsynched}
 			\end{subfigure}%
 			\begin{subfigure}[t]{.5\textwidth}
 				\centering\captionsetup{width=.9\linewidth}%
-				\includegraphics[width=0.9\linewidth]{Assets/Figures/Simulations/squiggles_synched_in_simulation.jpg}
+				\includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Simulations/squiggles_synched_in_simulation.jpg}
 				\caption{Screenshot from the same Synchronization-simulation as in \ref{fig:first_idea:second_fig:unsynched}, a few moments later.}
 				\label{fig:first_idea:second_fig:synched}
 			\end{subfigure}
@@ -112,10 +112,10 @@ First, the system and the system components will be presented and introduced. Th
 		\begin{minipage}[c][11cm][t]{\textwidth}
 			\vspace*{\fill}
 			\centering
-			\includegraphics[width=\textwidth]{Assets/Figures/Illustrations/waveform_Strangerous_1_1.pdf}
+			\includegraphics[width=\textwidth]{Assets/DocSegments/Chapters/Implementation/Figures/Illustrations/waveform_Strangerous_1_1.pdf}
 			\subcaption{A harp-sound (stereo audio waveform).}
 			\label{fig:harp_sound}\par\vfill
-			\includegraphics[width=\textwidth]{Assets/Figures/Illustrations/waveform_Strangerous_1_1_fire_signal.pdf}
+			\includegraphics[width=\textwidth]{Assets/DocSegments/Chapters/Implementation/Figures/Illustrations/waveform_Strangerous_1_1_fire_signal.pdf}
 			\subcaption{A fire-sound transformed/designed harp-sound.}
 			\label{fig:harp_fire_sound}
 		\end{minipage}
@@ -158,7 +158,7 @@ First, the system and the system components will be presented and introduced. Th
 	
 	\begin{figure}[h]
 		\centering
-		\includegraphics[width=0.9\linewidth]{Assets/Figures/MirolloStrogatzPhaseAdjustmentSecondTry.pdf}
+		\includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Illustrations/MirolloStrogatzPhaseAdjustmentSecondTry.pdf}
 		\caption[Illustration of Mirollo-Strogatz's ``standard'' phase-adjustment]{``Standard'' phase-adjustment with Mirollo-Strogatz's approach}
 		\label{fig:strog_phase}
 	\end{figure}
@@ -174,7 +174,7 @@ First, the system and the system components will be presented and introduced. Th
 	
 	\begin{figure}[h]
 		\centering
-		\includegraphics[width=0.9\linewidth]{Assets/Figures/KNymoenPhaseAdjustmentSecondTry.pdf}
+		\includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Illustrations/KNymoenPhaseAdjustmentSecondTry.pdf}
 		\caption[Illustration of K. Nymoen's bi-directional phase-adjustment]{Bi-directional phase-adjustment with K. Nymoen et al.'s approach}
 		\label{fig:nymoen_phase}
 	\end{figure}
@@ -260,7 +260,7 @@ First, the system and the system components will be presented and introduced. Th
 
 	\begin{figure}
 		\centering
-		\includegraphics[width=\linewidth]{Assets/Figures/Illustrations/ExplanatoryIllustrativePerfMeasurePlot.pdf}
+		\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Illustrations/ExplanatoryIllustrativePerfMeasurePlot.pdf}
 		\caption[A \textbf{performance-measure plot}.]{\textbf{Performance-/synchrony-measure plot}: recording a detection of harmonic synchrony. Initial red area represents the ``start-up''-period where no (gray) $t_q$-value is defined yet. \textbf{I)} First robot firing, initiating a process of defining such a ``silent'' time-window $t_q$ within which no nodes are allowed to fire, and a whole ``legal-firing'' $t_f$-window (here shaded in white and only 80ms long, as in \cite{nymoen_synch}) ensues. \textbf{II)} At least one robot firing, and with their firing-time(s) giving us the \textit{early $t_q$-defining} time-value (see schema below), as well as triggering second whole $t_f$-window to ensue. \textbf{III)} At least one robot firing after the \textit{early $t_q$-defining} time-value was found, hence (with their firing-time(s)) giving us the \textit{late $t_q$-defining} time-value right before using these when finishing the on-started process of defining the ``silent'' time-window $t_q$; triggering a half (due to stabilization purposes by future centering of fire-events) $t_f$-window to ensue. \textbf{IV)} A robot is caught firing illegally during a ``silent'' $t_q$-window and hence resets the \textit{towards\_k\_counter}-variable, as well as (re-) starts a process like in \textbf{I)} for (re-) defining a new $t_q$-value. \textbf{V)} Firing after this point only happens during short ``legal-firing'' $t_f$-windows, so \textbf{Condition 1} (cf. \ref{subsec:harmonic_synchrony}) is held. \textbf{VI)} All robots have fired at least once during the evaluation-period, so \textbf{Condition 2} is held. \textbf{VII)} The robot collective has fired legally and evenly, without resetting $t_q$, $k$ (equal to 8 in this case) times in a row, so \textbf{Condition 3} is fulfilled — and harmonic synchrony is thus achieved and detected after 21.9 seconds of synchronization.}
 		\label{fig:perf_measure_plot}
 	\end{figure}
@@ -275,7 +275,7 @@ First, the system and the system components will be presented and introduced. Th
 
 	\begin{figure}[h]
 		\centering
-		\includegraphics[width=0.85\linewidth]{Assets/Figures/Illustrations/SynchronyEvolutionPerfMeasureIllustration.pdf}
+		\includegraphics[width=0.85\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Illustrations/SynchronyEvolutionPerfMeasureIllustration.pdf}
 		\caption[A \textbf{synchrony-evolution plot}.]{A \textbf{synchrony-evolution plot}, displaying the temporal recording of the \textit{towards\_k\_counter}-variable throughout a synchrony simulation-run in Unity. The counter is incremented as the robot-collective fires evenly within `legal' $t_f$-windows, and is conversely reset to 0 if illegal firings during `silent' $t_q$-windows are heard. Note that in this specific simulation-run above, the agents were on their way to achieve harmonic synchrony five times before the 10th second of the synchronization-simulation already, but since one or more of them fired `illegally' (i.e. inside a $t_q$-window), they were consequently `punished'—or rather deemed `not synchronized enough yet'—by getting their counter reset to 0. Eventually however,  through further phase- \& frequency-synchronization, the multi-robot collective was in this case after 12.5 seconds able to achieve harmonic synchrony, when \textit{towards\_k\_counter} became equal to $k$, as well as all other requirements for achieving \textit{harmonic synchrony} was met. Note that this gives us a sense of how synchronized the robot collective is over time; the more even beats the robots have in a row, the more synchronized they are.}
 		\label{fig:synch_evolution_perf_measure_ill}
 	\end{figure}
@@ -295,7 +295,7 @@ First, the system and the system components will be presented and introduced. Th
 
 	\begin{figure}[ht!]
 		\centering
-		\includegraphics[width=0.85\linewidth]{Assets/Figures/Illustrations/t_q_schema.pdf}
+		\includegraphics[width=0.85\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Illustrations/t_q_schema.pdf}
 		\caption{Schema: how ``silent'' $t_q$-windows are defined based on firing-times during $t_f$-windows. \tcol[red]{Til Kyrre: Dette var bare grovt, som jeg tenker jeg må lage mer profesjonelt i Inkscape ellernoe.}}
 		\label{fig:t_q_schema}
 	\end{figure}
