@@ -72,7 +72,7 @@ public class AgentManager : MonoBehaviour {
     private float spawnRadius; // The radius from origo within which the agents are allowed to spawn without colliding.
     private float agentWidth = Mathf.Sqrt(Mathf.Pow(4.0f, 2) + Mathf.Pow(4.0f, 2)); // diameter from tentacle to tentacle (furthest from each other)
     private List<Vector2> spawnedPositions = new List<Vector2>();
-    private List<SquiggleScript> spawnedAgentScripts = new List<SquiggleScript>();
+    private List<SquiggleScript> spawnedSquiggleScripts = new List<SquiggleScript>();
 
     // CSV-Serialization:
     private int dataSavingFrequencyY;
@@ -129,9 +129,16 @@ public class AgentManager : MonoBehaviour {
         InitializeVariables();
     }
 
-    void FixedUpdate() {
+    void FixedUpdate() { // having to do with physics, time-critical functionality (depends on fixedTime e.g.)
         // Ending simulation-run if we deem it either a synchronization -success or -failure.
         EndSimulationRunIfTerminationCriteriaAreReached();
+        
+        foreach (SquiggleScript squig in spawnedSquiggleScripts) {
+            // Detecting a phase-climax, or increasing the phase according to the frequency (which will also be doubled if an unstable amount of time has gone without the agent climaxing).
+            squig.DetectPhaseAnomaliesOrIncreaseIt();
+            // Logging simulation-run-values for plotting and data-serialization purposes.
+            squig.SavePlottingDataIfOnRightFrame(); // DETERMINISM PROBLEM DUE TO LONG SAVING EXECUTION TIME?
+        }
 
         // Logging simulation-run-values for plotting and data-serialization purposes.
         SavePlottingDataIfOnRightFrame();
@@ -469,7 +476,7 @@ public class AgentManager : MonoBehaviour {
             SquiggleScript extractedSquiggleScript = newAgent.GetComponent<SquiggleScript>();
 
             extractedSquiggleScript.SetAgentID(i + 1); // Setting AgentIDs so that agents have IDs {1, 2, 3, ..., N}, where N is the number of agents in the scene.
-            spawnedAgentScripts.Add(extractedSquiggleScript);
+            spawnedSquiggleScripts.Add(extractedSquiggleScript);
 
             // IF-TIME Debug-TODO: Figure out local vs. global Dr.Squiggle-rotations:
                 // Rotating agents to face each other
@@ -568,13 +575,13 @@ public class AgentManager : MonoBehaviour {
     private void InitializeAgentsFiredMatrix() {
         // Initializing agents_fired_matrix so that it isn't an empty nested list, but one one can index and access.
 
-        for (int i = 0; i < spawnedAgentScripts.Count; i++) {
+        for (int i = 0; i < spawnedSquiggleScripts.Count; i++) {
             agents_fired_matrix.Add(new List<float>(100));
         }
     }
 
     private void UpdateAgentFiredMatrix() {
-        for (int i = 0; i < spawnedAgentScripts.Count; i++) { // for alle agentId'er
+        for (int i = 0; i < spawnedSquiggleScripts.Count; i++) { // for alle agentId'er
             if (agentWithAgentIDsJustFired.Contains(i + 1)) agents_fired_matrix[i].Add(1f); // adding a positive/high digital binary signal signalling agent with agId just fired.
             else agents_fired_matrix[i].Add(0f); // adding a negative/low digital binary signal signalling agent with agId did not just fire.
         }
@@ -591,7 +598,7 @@ public class AgentManager : MonoBehaviour {
         // Creating a .CSV-header consisting of the agents's IDs
 
         List<string> agentIDHeader = new List<string>();
-        foreach (SquiggleScript squiggScr in spawnedAgentScripts) {
+        foreach (SquiggleScript squiggScr in spawnedSquiggleScripts) {
             agentIDHeader.Add("agent" + squiggScr.GetAgentID().ToString());
         }
 
@@ -669,19 +676,19 @@ public class AgentManager : MonoBehaviour {
 
         // Adding Individual/Agent Hyper-parameters/Covariates (NB! Due to current design of datapoint-saving, these have to be equal for all agents) that I know before simulating:
 
-        float ALPHA = System.Convert.ToSingle(spawnedAgentScripts[0].alpha); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
+        float ALPHA = System.Convert.ToSingle(spawnedSquiggleScripts[0].alpha); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
         performanceAndCovariateValues.Add(ALPHA);
 
-        float PHASEADJ = System.Convert.ToSingle((int)spawnedAgentScripts[0].phaseAdjustment); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
+        float PHASEADJ = System.Convert.ToSingle((int)spawnedSquiggleScripts[0].phaseAdjustment); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
         performanceAndCovariateValues.Add(PHASEADJ);
 
-        float BETA = System.Convert.ToSingle(spawnedAgentScripts[0].beta); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
+        float BETA = System.Convert.ToSingle(spawnedSquiggleScripts[0].beta); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
         performanceAndCovariateValues.Add(BETA);
          
-        float FREQADJ = System.Convert.ToSingle((int)spawnedAgentScripts[0].frequencyAdjustment); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
+        float FREQADJ = System.Convert.ToSingle((int)spawnedSquiggleScripts[0].frequencyAdjustment); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
         performanceAndCovariateValues.Add(FREQADJ);
 
-        float M = System.Convert.ToSingle(spawnedAgentScripts[0].m); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
+        float M = System.Convert.ToSingle(spawnedSquiggleScripts[0].m); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
         performanceAndCovariateValues.Add(M);
 
 
@@ -698,8 +705,9 @@ public class AgentManager : MonoBehaviour {
 
     private void SavePlottingDataIfOnRightFrame() {
         if ((Mathf.RoundToInt(Time.fixedTime / Time.fixedDeltaTime) % dataSavingFrequencyY) == 0) { // Executing if the frame matches up with the wanted data-saving-frequency
+            // For the synchrony evolution plot.
             towards_k_counters.Add(System.Convert.ToSingle(towards_k_counter));
-            // Synch.-/Perf.-measure:
+            // For the synchrony detection plot.
             t_f_is_nows.Add(System.Convert.ToSingle(t_f_is_now));
             UpdateAgentFiredMatrix();
         }
@@ -714,14 +722,14 @@ public class AgentManager : MonoBehaviour {
     }
     private void SavePhasesToCSV() {
         List<List<float>> allPhaseColumns = new List<List<float>>();
-        foreach (SquiggleScript squiggScr in spawnedAgentScripts) {
+        foreach (SquiggleScript squiggScr in spawnedSquiggleScripts) {
             allPhaseColumns.Add(squiggScr.GetPhases());
         }
         LoggedNestedValuesToCSV(phasesFolderPath + "phases_over_time_atSimRun" + atSimRun + ".csv", GetAgentHeader(), allPhaseColumns);
     }
     private void SaveFrequenciesToCSV() {
         List<List<float>> allFrequencyColumns = new List<List<float>>();
-        foreach (SquiggleScript squiggScr in spawnedAgentScripts) {
+        foreach (SquiggleScript squiggScr in spawnedSquiggleScripts) {
             allFrequencyColumns.Add(squiggScr.GetFrequencies());
         }
         LoggedNestedValuesToCSV(frequenciesFolderPath + "freqs_over_time_atSimRun" + atSimRun + ".csv", GetAgentHeader(), allFrequencyColumns);

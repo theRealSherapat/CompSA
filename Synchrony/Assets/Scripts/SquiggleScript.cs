@@ -78,17 +78,18 @@ public class SquiggleScript : MonoBehaviour {
 
     // 'MonoBehaviour':
 
+    private void Awake() { // A PROBLEM SINCE I DID NOT USE THIS AFTER SWITCHING TO COROUTINES WHEN THINGS SEEMED TO WORK NICELY?
+        // Initializing all helping variables necessary to make the cogs go around.
+        AssignHelpingVariables();
+    }
+
     void Start() {
             // 'simulation setup':
-
         // Setting up for a human listener being able to see the ``fire''-events from the Dr. Squiggles.
         AssignVisualVariables();
 
         // Setting up for a human listener being able to hear the ``fire''-events from the Dr. Squiggles.
         AssignAudioVariables();
-
-        // Initializing all helping variables necessary to make the cogs go around.
-        AssignHelpingVariables();
 
 
             // 'synchronization setup':
@@ -100,21 +101,34 @@ public class SquiggleScript : MonoBehaviour {
         UpdateTheRefractoryPeriod();
     }
 
-    void FixedUpdate() {
-        // Logging simulation-run-values for plotting and data-serialization purposes:
-        SavePlottingDataIfOnRightFrame();
-
+    private void Update() { // having to do with graphics and rendering (depends on FPS e.g.) BUT A PROBLEM SINCE I DID NOT USE THIS AFTER SWITCHING TO COROUTINES WHEN THINGS SEEMED TO WORK NICELY?
         // Updating the agent-body's color so that it cools down from just having fired.
         CoolDownAgentColorIfItJustFired();
-
-        // Detecting a phase-climax, or increasing the phase according to the frequency (which will also be doubled if an unstable amount of time has gone without the agent climaxing).
-        DetectPhaseAnomaliesOrIncreaseIt();
     }
 
 
 
 
     // 'CORE & ESSENTIAL' (incl. phase- & frequency-updating):
+
+    public void DetectPhaseAnomaliesOrIncreaseIt() {
+        if (phase == 1f) {  // Detecting (wanted) anomaly 1: the phase has climaxed (i.e. phase = 1.0).
+            OnPhaseClimax();
+        } else {
+            timeNotClimaxed += Time.fixedDeltaTime;
+
+            if (timeNotClimaxed >= unstableFrequencyPeriod * 5) {    // Detected (not wanted) anomaly 2: the phase didn't climax within a stable time, and needs a frequency-boost.             (UN-TESTED)
+                frequency = 2f * frequency; // Giving the agent a frequency-boost since it never climaxes but only gets dragged down by others.
+            }
+
+            if (!(Time.timeSinceLevelLoad == 0f)) { // Don't want to update the already-initialized phase-value at Simulationtime=0.
+                phase = Mathf.Clamp(phase + frequency * Time.fixedDeltaTime, 0f, 1f); // Increasing agent's phase according to its frequency = d(phi)/dt.
+
+                // BARE FOR TESTING
+                //if (agentID == 1) Debug.Log("Agent" + agentID + " updated phase = " + phase + " at Simulationtime=" + Time.timeSinceLevelLoad + ".");
+            }
+        }
+    }
 
     private void OnPhaseClimax() {
         FireIfWanted();
@@ -232,27 +246,6 @@ public class SquiggleScript : MonoBehaviour {
     private void UpdateTheRefractoryPeriod() {
         float oscillator_period = 1.0f / frequency;
         t_ref = myCreator.t_ref_perc_of_period * oscillator_period;
-    }
-
-
-    private void DetectPhaseAnomaliesOrIncreaseIt() {
-        if (phase == 1f) {  // Detecting (wanted) anomaly 1: the phase has climaxed (i.e. phase = 1.0).
-            OnPhaseClimax();
-        }
-        else {
-            timeNotClimaxed += Time.fixedDeltaTime;
-
-            if (timeNotClimaxed >= unstableFrequencyPeriod * 5) {    // Detected (not wanted) anomaly 2: the phase didn't climax within a stable time, and needs a frequency-boost.             (UN-TESTED)
-                frequency = 2f * frequency; // Giving the agent a frequency-boost since it never climaxes but only gets dragged down by others.
-            }
-
-            if (!(Time.timeSinceLevelLoad == 0f)) { // Don't want to update the already-initialized phase-value at Simulationtime=0.
-                phase = Mathf.Clamp(phase + frequency * Time.fixedDeltaTime, 0f, 1f); // Increasing agent's phase according to its frequency = d(phi)/dt.
-
-                // BARE FOR TESTING
-                //if (agentID == 1) Debug.Log("Agent" + agentID + " updated phase = " + phase + " at Simulationtime=" + Time.timeSinceLevelLoad + ".");
-            }
-        }
     }
 
     private void ResetPhaseClimaxValues() {
@@ -428,9 +421,11 @@ public class SquiggleScript : MonoBehaviour {
         agentID = idNumber;
     }
 
-    private void SavePlottingDataIfOnRightFrame() {
+    public void SavePlottingDataIfOnRightFrame() {
         if ((Mathf.RoundToInt(Time.fixedTime / Time.fixedDeltaTime) % myCreator.GetDataSavingParameter()) == 0) { // Executing if the frame matches up with the wanted data-saving-frequency
+            // For the phase plot.
             simRunPhases.Add(phase);
+            // For the frequency plot.
             simRunFrequencies.Add(frequency);
         }
     }
