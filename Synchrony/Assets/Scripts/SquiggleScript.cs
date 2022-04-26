@@ -318,8 +318,8 @@ public class SquiggleScript : MonoBehaviour {
     private void BlinkWithEyes() {
         Vector3 pupilScaleChange = new Vector3(0.273f, -0.1126f, 0);
         pupil.localScale += pupilScaleChange;
-        Vector3 yellowEyeScaleChange = new Vector3(0, 0, 0.4465f);
-        iris.localScale -= yellowEyeScaleChange;
+        Vector3 yellowEyeScaleChange = new Vector3(0, 0, -0.4465f);
+        iris.localScale += yellowEyeScaleChange;
 
         Invoke("OpenEyes", 0.1f * (1.0f / frequency));
     }

@@ -173,18 +173,10 @@ MonoBehaviour:
   k: 8
   t_f: 0.08
   TQDefiner: 0
-<<<<<<< HEAD
-<<<<<<< HEAD
-  randomSeed: 1999
-=======
   useDeterministicSeed: 0
-  randomSeed: 100000
->>>>>>> af9d380 (I got peace with the random-seeds and removed the 'BARE FOR TESTING'-comment.)
-=======
   randomSeed: 0
->>>>>>> c78cad0 (Amend pls.)
   simulationMode: 0
-  dataSavingFrequency: 15
+  dataSavingFrequency: 25
   simulationRuns: 1
   runDurationLimit: 300
   useSound: 1
