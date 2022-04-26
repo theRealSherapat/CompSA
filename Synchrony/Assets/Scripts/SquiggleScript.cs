@@ -84,7 +84,7 @@ public class SquiggleScript : MonoBehaviour {
     }
 
     void Start() {
-            // 'simulation setup':
+        // 'simulation setup':
         // Setting up for a human listener being able to see the ``fire''-events from the Dr. Squiggles.
         AssignVisualVariables();
 

@@ -28,8 +28,12 @@ public class AgentManager : MonoBehaviour {
     };
     [Tooltip("Whether to use Averages when defining new t_q-windows, or Medians.")]
     public TQDefinerEnum TQDefiner = TQDefinerEnum.Median;
+
+    // For recreating certain simulation-runs:
+    [Tooltip("Whether or not to use the deterministic user defined random seed, or just simply a randomly generated one.")]
+    public bool useDeterministicSeed;
     [Tooltip("The random-seed for the pseudo-random number-generator in Unity.")]
-    public int randomSeed = 2000;
+    public int randomSeed;
 
     // 'Non-recorded general meta-/environment-hyperparemeters':
     public enum simulationModesEnum // Min customme enumeration
@@ -41,7 +45,7 @@ public class AgentManager : MonoBehaviour {
     public simulationModesEnum simulationMode = simulationModesEnum.Experiment;
     [Tooltip("How frequently (Hz) we want to sample our simulator-values, potentially affecting saving times significantly.")]
     public float dataSavingFrequency = 25.0f;
-    [Tooltip("The number of simulation-runs per Unity Game-run.")]
+    [Tooltip("(HAS TO BE MADE DETERMINISTIC BY FRANK'S HELP BEFORE USAGE) The number of simulation-runs per Unity Game-run.")]
     public int simulationRuns = 1;
     [Tooltip("The simulation-timelimit in seconds (i.e. the max simulation-time a simulation-run is allowed to run for before being regarded as a failed synchronization-run).")]
     public float runDurationLimit = 300f;
@@ -120,8 +124,7 @@ public class AgentManager : MonoBehaviour {
     // 'MonoBehaviour':
 
     void Start() {
-        // Creating the AgentManager's random-generator with its seed given by the user.
-        randGen = new System.Random(randomSeed);
+        InitializeRandomGenerator();
 
         // Spawning all agents randomly (but pretty naively as of now)
         SpawnAgents();
@@ -432,6 +435,9 @@ public class AgentManager : MonoBehaviour {
         agentiHasFiredAtLeastOnce = new bool[collectiveSize];
         hSynchConditionsAreMet = false;
         towards_k_counter = 0;
+
+        //// Incrementing the seed-value so that if we run several simulation-runs consequtively, we won't get exactly the same results every time.
+        //randomSeed += 1;
     }
 
     IEnumerator TriggerPeriodAfter(int periodType, float inFixedDeltaTimeSeconds) {
@@ -537,6 +543,13 @@ public class AgentManager : MonoBehaviour {
         return dataSavingFrequencyY;
     }
 
+    public void InitializeRandomGenerator() {
+        // Generating a random random-seed if we don't want to use the Inspector random seed.
+        if (!useDeterministicSeed) randomSeed = Random.Range(1, 100000);
+        // Initializing the AgentManager's random-generator with either a random seed given by the user, or simply a randomly generated one.
+        randGen = new System.Random(randomSeed);
+    }
+
     private void InitializeVariables() {
         agentiHasFiredAtLeastOnce = new bool[collectiveSize];
         dataSavingFrequencyY = Mathf.RoundToInt(Mathf.Clamp((100.0f/dataSavingFrequency), 1.0f, 100.0f));
@@ -617,12 +630,12 @@ public class AgentManager : MonoBehaviour {
         performanceAndCovariatesHeader.Add("K");
         performanceAndCovariatesHeader.Add("T_F");
         performanceAndCovariatesHeader.Add("TQDEFINER");
-        performanceAndCovariatesHeader.Add("RANDOMSEED");
         performanceAndCovariatesHeader.Add("ALPHA");
         performanceAndCovariatesHeader.Add("PHASEADJ");
         performanceAndCovariatesHeader.Add("BETA");
         performanceAndCovariatesHeader.Add("FREQADJ");
         performanceAndCovariatesHeader.Add("M");
+        performanceAndCovariatesHeader.Add("RANDOMSEED");
         CreateCSVWithStringHeader(datasetPath, performanceAndCovariatesHeader);
     }
 
@@ -670,9 +683,6 @@ public class AgentManager : MonoBehaviour {
         float TQDEFINER = System.Convert.ToSingle((int)TQDefiner);
         performanceAndCovariateValues.Add(TQDEFINER);
 
-        float RANDOMSEED = System.Convert.ToSingle(randomSeed);
-        performanceAndCovariateValues.Add(RANDOMSEED);
-
 
         // Adding Individual/Agent Hyper-parameters/Covariates (NB! Due to current design of datapoint-saving, these have to be equal for all agents) that I know before simulating:
 
@@ -691,10 +701,14 @@ public class AgentManager : MonoBehaviour {
         float M = System.Convert.ToSingle(spawnedSquiggleScripts[0].m); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
         performanceAndCovariateValues.Add(M);
 
+        // Remember: this is not a "real" covariate.
+        float RANDOMSEED = System.Convert.ToSingle(randomSeed);
+        performanceAndCovariateValues.Add(RANDOMSEED);
+
 
         // POSSIBLE TODOs:
-            // - Make a prettier Inspector for grouping relevant variables with each other (cf. Unity bookmark in Brave).
-            // - Make a separate 'simulation-run dataset' with rows for each agent and columns for each Individual/Agent Hyper-parameters (so that the NB! on the reMarkable hyper-parameter note is taken care of) — if it is needed or wanted or useful.
+        // - Make a prettier Inspector for grouping relevant variables with each other (cf. Unity bookmark in Brave).
+        // - Make a separate 'simulation-run dataset' with rows for each agent and columns for each Individual/Agent Hyper-parameters (so that the NB! on the reMarkable hyper-parameter note is taken care of) — if it is needed or wanted or useful.
 
 
         // Saving one datapoint, a.k.a. writing one .CSV-row (Measurements, Covariates) to the .CSV-file at the datasetPath:
