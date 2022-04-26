@@ -12,7 +12,7 @@ def main(CSV_filepath, binaryFilename):
     
     
 def parseDataFrom(csv_filename):
-    """ Reads all rows (apart from the header) into a numpy data-matrix, and returns that 'arrayOfDatapoints' and its corresponding vertical time-axis 't' """
+    """ Reads all rows (apart from the header) into a numpy data-matrix, and returns that 'arrayOfDatapoints' """
 
     arrayOfDatapoints = np.empty((1, 1)) # initializing our numpy data-matrix with a dummy size (real size will be sat later on)
     
@@ -34,12 +34,12 @@ def parseDataFrom(csv_filename):
             
             numOfRows += 1
     
-    return arrayOfDatapoints[arrayOfDatapoints[:,1] == 1]
+    return arrayOfDatapoints
 
 if __name__ == "__main__":
     # Args: 1) dataset.csv filepath, 2) wanted binary.npy filename
     
-    # Takes as input and extracts non-failure synchronization times from a .CSV-file representing a dataset from several runs of the Harmonic Synchrony Simulation with the Dr. Squiggles Musical Multi-Robot System.
+    # Takes as input and extracts (both success and failure) synchronization times from a .CSV-file representing a dataset from several runs of the Harmonic Synchrony Simulation with the Dr. Squiggles Musical Multi-Robot System.
     
     # Saves .npy-binaries containing all the relevant performance-scores (harmonic synchronization times in simulation time (s)) from a given set of Simulation-runs with certain covariates (have to be kept control of manually).
     

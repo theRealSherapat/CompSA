@@ -180,7 +180,7 @@ MonoBehaviour:
   simulationRuns: 1
   runDurationLimit: 300
   useSound: 1
-  useVisuals: 1
+  useVisuals: 0
   debugSuccessOn: 0
   debugTqTfOn: 0
   squigglePrefabs:

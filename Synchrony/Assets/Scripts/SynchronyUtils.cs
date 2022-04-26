@@ -26,7 +26,7 @@ public static class SynchronyUtils {
     }
 
     public static void FloatUpdateCSV(string path, List<float> lineEntries) {
-        TextWriter tw = new StreamWriter(path, true);
+        TextWriter tw = new StreamWriter(path, true, new UTF8Encoding(true));
         string newLine = "";
 
         for (int i = 0; i < lineEntries.Count; i++) {

@@ -28,6 +28,7 @@ Remember:
 	+ Minimize the use of parentheses and '—'s. Jarka thought e.g. the use of a lot of '-'s and '—'s was confusing.
 	+ Check present vs. past-tense.
 	+ Check pronouns, and remove as many of them as possible (c.f. Jim Tørresen's masters-writing document).
+	+ Run the master's document through PDF -> Word document -> Grammarly.
 	+ Check the Harmonic Synchrony-conditions and consider whether to use bulletpoints, numbered list, or just 'Condition x:'.
 * Citations and references throughout the master's report:
 	+ Add the right citations/references where there are empty \cite{}-clauses.
