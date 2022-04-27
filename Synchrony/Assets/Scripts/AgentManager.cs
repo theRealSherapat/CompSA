@@ -45,8 +45,6 @@ public class AgentManager : MonoBehaviour {
     public simulationModesEnum simulationMode = simulationModesEnum.Experiment;
     [Tooltip("How frequently (Hz) we want to sample our simulator-values, potentially affecting saving times significantly.")]
     public float dataSavingFrequency = 50.0f;
-    //[Tooltip("(HAS TO BE MADE DETERMINISTIC BY FRANK'S HELP BEFORE USAGE) The number of simulation-runs per Unity Game-run.")]
-    //public int simulationRuns = 1;
     [Tooltip("The simulation-timelimit in seconds (i.e. the max simulation-time a simulation-run is allowed to run for before being regarded as a failed synchronization-run).")]
     public float runDurationLimit = 300f;
     [Tooltip("Whether to give the human observer a sound on every agent-pulse/-firing or not.")]
@@ -541,29 +539,6 @@ public class AgentManager : MonoBehaviour {
 
         ScaleGroundAccordingToSpawnRadius();
     }
-
-    //private void ResetSimulationVariables() {
-
-
-    //    // Here we are resetting/reassigning the Performance-/Synchronization-measure variables to their default-values that they are set up to have before starting a simulation run. This way, we are "cleaning up" the current/previous simulation-run and setting up for another new simulation-run within the same Unity "Game-play-run".
-
-    //    t_f_is_now = false;
-    //    t_q = 0f;
-    //    StopAllCoroutines(); // All t_q-/t_f-Coroutines are stopped.
-
-    //    first_firing_is_perceived = false;
-
-    //    reset_t_q_flag_raiser = 0f;
-
-    //    early_t_q_definer = 0f;
-
-    //    agentiHasFiredAtLeastOnce = new bool[collectiveSize];
-    //    hSynchConditionsAreMet = false;
-    //    towards_k_counter = 0;
-
-    //    //// Incrementing the seed-value so that if we run several simulation-runs consequtively, we won't get exactly the same results every time.
-    //    //randomSeed += 1; Random.Range(1, 100000);
-    //}
 
     private void ScaleGroundAccordingToSpawnRadius() {
         float spawnDiameter = 2.0f * spawnRadius;

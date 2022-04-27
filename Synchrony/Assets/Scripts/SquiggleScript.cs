@@ -13,7 +13,6 @@ public class SquiggleScript : MonoBehaviour {
     [Tooltip("Pulse coupling constant, denoting coupling strength between nodes, deciding how much robots adjust phases after detecting a pulse from a neighbour. The larger the constant, the larger (in absolute value) the phase-update?")]
     public float alpha = 0.1f;
     public enum phaseSyncEnum {
-        None,
         MirolloStrogatz,
         Nymoen
     };
@@ -260,11 +259,9 @@ public class SquiggleScript : MonoBehaviour {
     }
 
     private void AdjustPhase() {
-        if ((int)phaseAdjustment == 0) { // not using any phase adjustment functions
-            return;
-        } else if ((int)phaseAdjustment == 1) { // using Mirollo-Strogatz's "standard" phase update function
+        if ((int)phaseAdjustment == 0) { // using Mirollo-Strogatz's "standard" phase update function
             phase = Mathf.Clamp(phase * (1 + alpha), 0f, 1f);
-        } else if ((int)phaseAdjustment == 2) { // using Kristian et al.'s Bi-Directional phase sync function
+        } else if ((int)phaseAdjustment == 1) { // using Kristian et al.'s Bi-Directional phase sync function
             float wave = Mathf.Sin(2 * Mathf.PI * phase);
             phase = Mathf.Clamp(phase - alpha * wave * Mathf.Abs(wave), 0f, 1f);
         }

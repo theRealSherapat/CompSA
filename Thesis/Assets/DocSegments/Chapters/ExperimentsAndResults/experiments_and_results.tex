@@ -4,25 +4,27 @@
 
 \besk{Helst gode eksperimenter som motiveres og forklares, settes opp, og utføres m/resultater man diskuterer og analyserer. Det er bra å evaluere fra flere synspunkt \tcol[gray]{med flere research methods og hvis tid}}
 
+Unless otherwise is stated, the heterogenous visual looks of the Dr. Squiggles robots in Unity have no real difference in the simulator and is only that (for visual looks), not implying other values or methods used.
+
 	\section{Solving the simpler $\phi-$problem}
 	This is the section for the experiments attempting to solve the first and simpler problem, namely synchronizing the phases $\phi_i$ of all agents $i$. \nl
 	
 	\subsection{Reproducing K. Nymoen's phase synchronization}
-	In order to see that our developed synchronization simulator in Unity yields more or less the same results as K. Nymoen et al.'s firefly system \cite{nymoen_synch}, similar experiments as reported in their paper are performed. These tell us whether differences in performance, in terms of synchronization times (s), is simply due to implementation differences, or actually because of the synchronization methods and hyperparameters in question. First off, for the $\phi$ problem of synchronizing only phases (i.e. already having synchronized frequencies), K. Nymoen et al.'s phase adjustment method (presented in Section \ref{nymoen_phase_adjust}) will be experimented with for varying phase coupling constants $\alpha$, as also performed and reported in their paper (c.f. their Fig. 7). \nl
+	In order to see that our developed synchronization simulator in Unity yields more or less the same results as K. Nymoen et al.'s firefly system \cite{nymoen_synch}, similar experiments as reported in their paper are performed. These tell us whether differences in performance, in terms of synchronization times (s), is simply due to implementation differences, or actually because of the used synchronization methods and hyperparameters in question. First off, for the $\phi$ problem of synchronizing only phases (i.e. already having synchronized frequencies), K. Nymoen et al.'s phase adjustment method (presented in Section \ref{nymoen_phase_adjust}) is experimented with for varying phase coupling constants $\alpha$, as also performed and reported in K. Nymoen et al.'s paper \cite{nymoen_synch} (c.f. their Fig. 7):  \nl
 	
 	\tcol[blue]{FYLL INN}
 	
 	\begin{figure}[ht!]
 		\centering
 		% \includegraphics[width=0.7\]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/}
-		\caption{Synchronization times (s) for 6 robots with initially random and unsynchronized phases but equal and fixed frequencies (1Hz), with varying $\alpha$ values. 30 simulation runs per $\alpha$ value.}
+		\caption{Synchronization times (s) for 6 robots with initially random and unsynchronized phases but equal and fixed frequencies (1Hz), with varying $\alpha$ values. 30 simulation runs per $\alpha$ value. Other hyperparameters: $\beta=0$, $t_{ref\_percentage\_of\_period} = 5\%$ yields $t_{ref}=0.05*1s=50ms$, since the oscillator period for all robots is $1/fixed\_frequency=1/1Hz=1s$.}
 	\end{figure}
 	
 	
 	\subsection{Hyperparameter search}
 	
 	\subsection{Comparing phase adjustment methods}
-	Now, an experiment follows where we investigate the validity of the claimed [] benefits of performing bi directional phase adjustments—both inhibitory and excitatory—compared to simply adjusting phases in an excitatory way (i.e. only ``pushing'' other ocillators's phase higher when firing, not ``holding back'').
+	Now, an experiment follows where we investigate the validity of the claimed [] benefits of performing bi directional phase adjustments—both inhibitory and excitatory—compared to simply adjusting phases in an excitatory way (i.e. only ``pushing'' other ocillators's phase further or higher when firing, never ``holding'' or ``dragging'' it back).
 	
 	% \begin{figure}[ht!]
 		% \centering
