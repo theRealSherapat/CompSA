@@ -56,6 +56,12 @@ sysinfo.txt
 *.apk
 *.aab
 *.unitypackage
+*UnityPlayer.dll
+*WinPixEventRuntime.dll
+*UnityCrashHandler64.exe
+/MonoBleedingEdge/
+*.exe
+*_Data/
 
 # Crashlytics generated file
 crashlytics-build.properties

@@ -44,9 +44,9 @@ public class AgentManager : MonoBehaviour {
     [Tooltip("Whether to simply save the performance measure and datapoint (in experiment mode), or also saving all the plotting materials (in analysis mode).")]
     public simulationModesEnum simulationMode = simulationModesEnum.Experiment;
     [Tooltip("How frequently (Hz) we want to sample our simulator-values, potentially affecting saving times significantly.")]
-    public float dataSavingFrequency = 25.0f;
-    [Tooltip("(HAS TO BE MADE DETERMINISTIC BY FRANK'S HELP BEFORE USAGE) The number of simulation-runs per Unity Game-run.")]
-    public int simulationRuns = 1;
+    public float dataSavingFrequency = 50.0f;
+    //[Tooltip("(HAS TO BE MADE DETERMINISTIC BY FRANK'S HELP BEFORE USAGE) The number of simulation-runs per Unity Game-run.")]
+    //public int simulationRuns = 1;
     [Tooltip("The simulation-timelimit in seconds (i.e. the max simulation-time a simulation-run is allowed to run for before being regarded as a failed synchronization-run).")]
     public float runDurationLimit = 300f;
     [Tooltip("Whether to give the human observer a sound on every agent-pulse/-firing or not.")]
@@ -119,7 +119,7 @@ public class AgentManager : MonoBehaviour {
 	private int last_t_f_firers_counter = 0; // A counter for how many fire-events were heard throughout the last firing-period t_f, used as a safety-mechanism to detect firing-periods within which no agents fire — so that we don't increment the 'towards-k'-counter after those firing-periods.
 
 
-    
+
 
     // 'MonoBehaviour':
 
@@ -177,12 +177,14 @@ public class AgentManager : MonoBehaviour {
             // Ensuring we have updated the synchrony-evolution-plot, as this is most time-critical in the complete end of the simulation.                                          MULIGENS TENK PÅ
             //UpdateSynchronyEvolutionCSV();
 
-            if (atSimRun != simulationRuns) {
-                ResetSimulationVariables();
-                LoadMySceneAgain();
-            } else {
-                QuitMyGame();
-            }
+            QuitMyGame();
+
+            //if (atSimRun != simulationRuns) {
+            //    //ResetSimulationVariables();
+            //    LoadMySceneAgain();
+            //} else {
+            //    QuitMyGame();
+            //}
         }
     }
     
@@ -540,26 +542,28 @@ public class AgentManager : MonoBehaviour {
         ScaleGroundAccordingToSpawnRadius();
     }
 
-    private void ResetSimulationVariables() {
-        // Here we are resetting/reassigning the Performance-/Synchronization-measure variables to their default-values that they are set up to have before starting a simulation run. This way, we are "cleaning up" the current/previous simulation-run and setting up for another new simulation-run within the same Unity "Game-play-run".
+    //private void ResetSimulationVariables() {
 
-        t_f_is_now = false;
-        t_q = 0f;
-        StopAllCoroutines(); // All t_q-/t_f-Coroutines are stopped.
 
-        first_firing_is_perceived = false;
+    //    // Here we are resetting/reassigning the Performance-/Synchronization-measure variables to their default-values that they are set up to have before starting a simulation run. This way, we are "cleaning up" the current/previous simulation-run and setting up for another new simulation-run within the same Unity "Game-play-run".
 
-        reset_t_q_flag_raiser = 0f;
+    //    t_f_is_now = false;
+    //    t_q = 0f;
+    //    StopAllCoroutines(); // All t_q-/t_f-Coroutines are stopped.
 
-        early_t_q_definer = 0f;
+    //    first_firing_is_perceived = false;
 
-        agentiHasFiredAtLeastOnce = new bool[collectiveSize];
-        hSynchConditionsAreMet = false;
-        towards_k_counter = 0;
+    //    reset_t_q_flag_raiser = 0f;
 
-        //// Incrementing the seed-value so that if we run several simulation-runs consequtively, we won't get exactly the same results every time.
-        //randomSeed += 1; Random.Range(1, 100000);
-    }
+    //    early_t_q_definer = 0f;
+
+    //    agentiHasFiredAtLeastOnce = new bool[collectiveSize];
+    //    hSynchConditionsAreMet = false;
+    //    towards_k_counter = 0;
+
+    //    //// Incrementing the seed-value so that if we run several simulation-runs consequtively, we won't get exactly the same results every time.
+    //    //randomSeed += 1; Random.Range(1, 100000);
+    //}
 
     private void ScaleGroundAccordingToSpawnRadius() {
         float spawnDiameter = 2.0f * spawnRadius;

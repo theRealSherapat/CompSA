@@ -30,7 +30,8 @@ public static class SynchronyUtils {
         string newLine = "";
 
         for (int i = 0; i < lineEntries.Count; i++) {
-            newLine += string.Format("{0:N6}", lineEntries[i]);
+            newLine += $"{lineEntries[i]}";
+            //newLine += string.Format("{0:N6}", lineEntries[i]);
 
             if (i != lineEntries.Count - 1) newLine += ";";
         }
@@ -69,7 +70,8 @@ public static class SynchronyUtils {
 
         for (int m = 0; m < allValueColumns[0].Count-1; m++) { // hardcoding the termination-criteria a bit to avoid the last CR/LF-symbols.
             for (int n = 0; n < allValueColumns.Count; n++) {
-                csvLine += string.Format("{0:N6}", allValueColumns[n][m]);
+                //csvLine += string.Format("{0:N6}", allValueColumns[n][m]);
+                csvLine += $"{allValueColumns[n][m]}";
 
                 if (n != allValueColumns.Count - 1) csvLine += ";";
             }
@@ -77,7 +79,8 @@ public static class SynchronyUtils {
         }
 
         for (int n = 0; n < allValueColumns.Count; n++) {
-            csvLine += string.Format("{0:N6}", allValueColumns[n][allValueColumns[0].Count-1]);
+            //csvLine += string.Format("{0:N6}", allValueColumns[n][allValueColumns[0].Count-1]);
+            csvLine += $"{allValueColumns[n][allValueColumns[0].Count - 1]}";
 
             if (n != allValueColumns.Count - 1) csvLine += ";";
         }
@@ -91,13 +94,12 @@ public static class SynchronyUtils {
 
     // 'Unity Scene & Game':
 
-    public static void LoadMySceneAgain() {
-        string currentScene = SceneManager.GetActiveScene().name;
-        SceneManager.LoadScene(currentScene);
-    }
-
     public static void QuitMyGame() {
+#if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
+#else
+        UnityEngine.Application.Quit();
+#endif
     }
 
 

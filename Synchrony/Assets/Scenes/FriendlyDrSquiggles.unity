@@ -173,14 +173,13 @@ MonoBehaviour:
   k: 8
   t_f: 0.08
   TQDefiner: 0
-  useDeterministicSeed: 0
-  randomSeed: 0
-  simulationMode: 0
-  dataSavingFrequency: 25
-  simulationRuns: 1
+  useDeterministicSeed: 1
+  randomSeed: 1999
+  simulationMode: 1
+  dataSavingFrequency: 50
   runDurationLimit: 300
   useSound: 1
-  useVisuals: 0
+  useVisuals: 1
   debugSuccessOn: 0
   debugTqTfOn: 0
   squigglePrefabs:

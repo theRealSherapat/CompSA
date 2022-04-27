@@ -26,7 +26,9 @@ def parseDataFrom(csv_filename):
         
             col_array = np.array([])
             for col_index in range(len(row)):
-                col_element = float(row[col_index].replace(',','.'))
+                col_element_string = row[col_index].replace(',','.')
+                print("col_element_string:", col_element_string)
+                col_element = float(col_element_string)
                 col_array = np.append(col_array, col_element)
             
             col_array = np.reshape(col_array, (1, len(row)))
