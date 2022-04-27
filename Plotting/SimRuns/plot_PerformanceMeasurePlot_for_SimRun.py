@@ -152,6 +152,6 @@ if __name__ == "__main__":
     show_fig_pls = int(sys.argv[2])
     save_fig_pls = int(sys.argv[3])
     
-    filepath = "../Synchrony/SavedData/PerformanceMeasurePlotMaterial/node_firing_data_atSimRun" + simRun + ".csv"
+    filepath = "../../Synchrony/SavedData/PerformanceMeasurePlotMaterial/node_firing_data_atSimRun" + simRun + ".csv"
     
     main(filepath, simRun, show_fig_pls, save_fig_pls)

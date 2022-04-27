@@ -78,6 +78,6 @@ if __name__ == "__main__":
     show_fig_pls = int(sys.argv[2])
     save_fig_pls = int(sys.argv[3])
     
-    filepath = filepath = "../Synchrony/SavedData/SynchronyEvolutions/synch_evolution_data_atSimRun" + simRun + ".csv"
+    filepath = filepath = "../../Synchrony/SavedData/SynchronyEvolutions/synch_evolution_data_atSimRun" + simRun + ".csv"
 
     main(filepath, simRun, show_fig_pls, save_fig_pls)

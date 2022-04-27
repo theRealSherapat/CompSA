@@ -98,6 +98,6 @@ if __name__ == "__main__":
     simRun = sys.argv[1]
     show_fig_pls = int(sys.argv[2])
     save_fig_pls = int(sys.argv[3])
-    freqs_path = "../Synchrony/SavedData/Frequencies/freqs_over_time_atSimRun" + simRun + ".csv"
+    freqs_path = "../../Synchrony/SavedData/Frequencies/freqs_over_time_atSimRun" + simRun + ".csv"
     
     main(freqs_path, simRun, show_fig_pls, save_fig_pls)

@@ -5,9 +5,9 @@ import csv
 
 def main(CSV_filepath, binaryFilename):
     matrixOfCSVValues = parseDataFrom(CSV_filepath)
-    HSYNCHTIMES = matrixOfCSVValues[:,0] # Slicing the first column only
+    HSYNCHTIMES = matrixOfCSVValues[1:,0] # Slicing the first column only    
+    fullBinaryFilename = "./" + binaryFilename
     
-    fullBinaryFilename = "./" + binaryFilename + ".npy"
     np.save(fullBinaryFilename, HSYNCHTIMES)
     
     
@@ -27,7 +27,6 @@ def parseDataFrom(csv_filename):
             col_array = np.array([])
             for col_index in range(len(row)):
                 col_element_string = row[col_index].replace(',','.')
-                print("col_element_string:", col_element_string)
                 col_element = float(col_element_string)
                 col_array = np.append(col_array, col_element)
             
