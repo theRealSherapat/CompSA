@@ -123,7 +123,7 @@ public class AgentManager : MonoBehaviour {
 
     // 'MonoBehaviour':
 
-    void Start() {
+    void Awake() {
         InitializeRandomGenerator();
 
         // Spawning all agents randomly (but pretty naively as of now)

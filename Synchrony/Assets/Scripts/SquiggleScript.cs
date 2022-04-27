@@ -78,13 +78,10 @@ public class SquiggleScript : MonoBehaviour {
 
     // 'MonoBehaviour':
 
-    private void Awake() { // A PROBLEM SINCE I DID NOT USE THIS AFTER SWITCHING TO COROUTINES WHEN THINGS SEEMED TO WORK NICELY?
-        // Initializing all helping variables necessary to make the cogs go around.
-        AssignHelpingVariables();
-    }
-
     void Start() {
         // 'simulation setup':
+        AssignHelpingVariables();
+
         // Setting up for a human listener being able to see the ``fire''-events from the Dr. Squiggles.
         AssignVisualVariables();
 
@@ -376,10 +373,7 @@ public class SquiggleScript : MonoBehaviour {
 
 
     private void InitializeAgentPhase() {
-        phase = (float)randGen.NextDouble(); // Initializing the agent's phase randomly within the range of (0.0, 1.0)?.
-        
-        // BARE FOR TESTING
-        //if (agentID == 1) Debug.Log("Agent" + agentID + " initialized phase = " + phase + " at Simulationtime=" + Time.timeSinceLevelLoad + ".");
+        phase = (float)randGen.NextDouble(); // Initializing the agent's phase randomly within the range of (0.0, 1.0).
     }
 
     private void InitializeAgentFrequency() {
