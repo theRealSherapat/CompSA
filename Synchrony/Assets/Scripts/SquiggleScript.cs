@@ -52,7 +52,8 @@ public class SquiggleScript : MonoBehaviour {
     private bool firedLastClimax;               // A flag which is high after having fired at the previous phase-climax (so that the agent won't fire on the next one, but the one after).
     // DEBUG FURTHER: Variables used to detect when the agent struggles phase-climaxing — so that we can help it and boost its frequency (double it e.g.).
     private float timeNotClimaxed;
-    private float unstableFrequencyPeriod = 1f / 0.5f;
+    float longestLegalPeriod;
+    //private float unstableFrequencyPeriod = 1f / 0.5f;
 
     // Identity / Existential:
     private int agentID;                        // The numerical ID of the agent (from 1 to myCreator.collectiveSize).
@@ -113,15 +114,15 @@ public class SquiggleScript : MonoBehaviour {
         } else {
             timeNotClimaxed += Time.fixedDeltaTime;
 
-            if (timeNotClimaxed >= unstableFrequencyPeriod * 5) {    // Detected (not wanted) anomaly 2: the phase didn't climax within a stable time, and needs a frequency-boost.             (UN-TESTED)
+            if (timeNotClimaxed >= longestLegalPeriod * myCreator.allowRobotsToStruggleForlPeriods) {    // Detected (not wanted) anomaly 2: the phase didn't climax within l=5 periods, and needs a frequency-boost.             (UN-TESTED)
+                //Debug.Log("(Time.fixedTime: " + Time.fixedTime + ") En stakkar hadde " + frequency + "i frekvens..");
                 frequency = 2f * frequency; // Giving the agent a frequency-boost since it never climaxes but only gets dragged down by others.
+                //Debug.Log("(Time.fixedTime: " + Time.fixedTime + ") så vi ga han " + frequency + " i ny frekvens og satte counteren hans til 0..");
+                timeNotClimaxed = 0.0f;
             }
 
             if (!(Time.timeSinceLevelLoad == 0f)) { // Don't want to update the already-initialized phase-value at Simulationtime=0.
                 phase = Mathf.Clamp(phase + frequency * Time.fixedDeltaTime, 0f, 1f); // Increasing agent's phase according to its frequency = d(phi)/dt.
-
-                // BARE FOR TESTING
-                //if (agentID == 1) Debug.Log("Agent" + agentID + " updated phase = " + phase + " at Simulationtime=" + Time.timeSinceLevelLoad + ".");
             }
         }
     }
@@ -348,6 +349,7 @@ public class SquiggleScript : MonoBehaviour {
         myCreator = FindObjectOfType<AgentManager>();
         highestRobotFrequency = myCreator.minMaxInitialFreqs.y;
         smallestRobotFrequency = myCreator.minMaxInitialFreqs.x;
+        longestLegalPeriod = 1.0f / smallestRobotFrequency;
 
         int randomSeed = myCreator.GetRandomGeneratorSeed() + agentID;
         randGen = new System.Random(randomSeed);

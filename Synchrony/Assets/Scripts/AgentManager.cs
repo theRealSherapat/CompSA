@@ -59,6 +59,8 @@ public class AgentManager : MonoBehaviour {
     public bool debugSuccessOn = false;
     [Tooltip("Whether to get logs about t_f-/t_q-windows and corresponding timestamps or not.")]
     public bool debugTqTfOn = false;
+    [Tooltip("How many 'longest possible' periods we are to let robots with low frequencies struggle before we double their frequency.")]
+    public int allowRobotsToStruggleForlPeriods = 3;
 
     // Spawning:
     [Tooltip("All the DrSquiggle-prefabs we want to spawn and be synchronized.")]

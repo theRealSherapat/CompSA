@@ -176,13 +176,14 @@ MonoBehaviour:
   TQDefiner: 0
   useDeterministicSeed: 0
   randomSeed: 0
-  simulationMode: 0
+  simulationMode: 1
   dataSavingFrequency: 60
   runDurationLimit: 300
   useSound: 0
   useVisuals: 1
   debugSuccessOn: 0
   debugTqTfOn: 0
+  allowRobotsToStruggleForlPeriods: 3
   squigglePrefabs:
   - {fileID: 2285719835394980754, guid: c314eb5130117ec42b02442ea979e2a7, type: 3}
   - {fileID: 8768706482228693545, guid: 99dff3106accb1b46a953f4ffd8d9d57, type: 3}
