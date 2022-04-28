@@ -12,6 +12,8 @@ public class AgentManager : MonoBehaviour {
     // 'Recorded collective-/environment-hyperparameters':
     [Tooltip("The number of agents to be spawned and synchronized.")]
     public int collectiveSize = 6;
+    [Tooltip("Whether or not to use Kristian Nymoen et al.'s fixed 50ms refractory period duration (t_ref).")]
+    public bool useFixedNymoenTRef;    
     [Tooltip("The duration (%) of the refractory period in terms of a percentage of the agents's oscillator-periods.")]
     public float t_ref_perc_of_period = 0.05f;       // ISH LENGDEN I TID PÅ digitalQuickTone er 0.4s. Nymoen BRUKTE 50ms I SIN IMPLEMENTASJON. JEG PRØVDE OGSÅ 0.6f. possiblePool = {0.09f, 0.4f, 0.6f}.
     [Tooltip("Minimum and maximum initialization-frequencies (Hz).")]

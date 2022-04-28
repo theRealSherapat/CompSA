@@ -81,4 +81,4 @@ if __name__ == "__main__":
     filepath = "../../Synchrony/SavedData/SynchronyEvolutions/synch_evolution_data_atSimRun" + simRun + ".csv"
     temp_filepath = "synch_evolution_data_atSimRun" + simRun + ".csv"
     
-    main(temp_filepath, simRun, show_fig_pls, save_fig_pls)
+    main(filepath, simRun, show_fig_pls, save_fig_pls) # temp_filepath

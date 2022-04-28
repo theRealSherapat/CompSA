@@ -26,7 +26,7 @@ public class SquiggleScript : MonoBehaviour {
         None,
         Nymoen
     };
-    [Tooltip("Which frequency-adjustment / -update / -synchronization function or method we want our robots to synchronize their frequencies according to.")]
+    [Tooltip("Which frequency-adjustment / -update / -synchronization function or method we want our robots to synchronize their frequencies according to. If 'None' is selected, the robots in question will have 1Hz fixed frequency.")]
     public frequencySyncEnum frequencyAdjustment = frequencySyncEnum.None;
     [Tooltip("Degree of error-memory, i.e. the length of a list of the last m error-scores. The larger the length m, the more error-scores we calculate the self-assessed synch-score s(n) based upon.")]
     public int m = 5;
@@ -241,7 +241,12 @@ public class SquiggleScript : MonoBehaviour {
 
     private void UpdateTheRefractoryPeriod() {
         float oscillator_period = 1.0f / frequency;
-        t_ref = myCreator.t_ref_perc_of_period * oscillator_period;
+        if (myCreator.useFixedNymoenTRef) {
+            t_ref = 0.05f;
+        }
+        else {
+            t_ref = myCreator.t_ref_perc_of_period * oscillator_period;
+        }
     }
 
     private void ResetPhaseClimaxValues() {

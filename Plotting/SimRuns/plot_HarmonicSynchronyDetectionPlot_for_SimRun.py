@@ -155,4 +155,4 @@ if __name__ == "__main__":
     filepath = "../../Synchrony/SavedData/PerformanceMeasurePlotMaterial/node_firing_data_atSimRun" + simRun + ".csv"
     temp_filepath = "node_firing_data_atSimRun" + simRun + ".csv"
     
-    main(temp_filepath, simRun, show_fig_pls, save_fig_pls) # filepath
+    main(filepath, simRun, show_fig_pls, save_fig_pls) # temp_filepath

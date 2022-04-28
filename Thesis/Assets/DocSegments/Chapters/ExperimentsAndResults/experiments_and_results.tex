@@ -17,8 +17,9 @@ Unless otherwise is stated, the heterogenous visual looks of the Dr. Squiggles r
 	\begin{figure}[ht!]
 		\centering
 		% \includegraphics[width=0.7\]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/}
-		\caption{Synchronization times (s) for 6 robots with initially random and unsynchronized phases but equal and fixed frequencies (1Hz), with varying $\alpha$ values. 30 simulation runs per $\alpha$ value. Other hyperparameters: $\beta=0$, $t_{ref\_percentage\_of\_period} = 5\%$ yields $t_{ref}=0.05*1s=50ms$, since the oscillator period for all robots is $1/fixed\_frequency=1/1Hz=1s$.}
+		\caption{Synchronization times (s) for 6 robots with initially random and unsynchronized phases but equal and fixed frequencies (1Hz), with varying $\alpha$ values. 30 simulation runs per $\alpha$ value. $\beta=0$, $t_{ref\_percentage\_of\_period} = 5\%$ yields $t_{ref}=0.05*1s=50ms$, since the oscillator period for all robots is $1/fixed\_frequency=1/1Hz=1s$.}
 	\end{figure}
+	
 	
 	
 	\subsection{Hyperparameter search}
@@ -35,7 +36,16 @@ Unless otherwise is stated, the heterogenous visual looks of the Dr. Squiggles r
 	\section{Solving the harder $\phi\&\omega-$problem}
 	
 	This is the section for the experiments attempting to solve the second and harder problem of synchronizing both phases $\phi_i$, as well as frequencies $\omega_i$, for all agents $i$.
-	
+
 	\subsection{Reproducing K. Nymoen's frequency synchronization}
+	
+	\paragraph{Ordering by phase couplings}
+	Given that K. Nymoen et al. \cite{nymoen_synch} do not mention their $\beta$ value in their frequency synchronization experiment where they order for different phase coupling values $\alpha$, an \textit{empirically decent} $\beta$ value of 0.4 is chosen for this experiment. What \textit{empirically decent} refers to in this case are K. Nymoen et al.'s findings in the results of their last experiment where (frequency) synchronization times for various $\beta$ values were evaluated; yielding $\beta=0.4$ to be a good value, with no further improvement in synchronization performance when increased further. Also, when empirically observing the visual and aural signals being transmitted through the synchrony simulator in Unity, this value of $\beta=0.4$ leads to stable simulation runs where the robot collective manages to achieve harmonic synchrony, which is very desirable when testing how fast they can synchronize. If we increase $\beta$ much more in the Unity simulator, we quickly start to observe highly unstable simulation runs, hence calling for special rules like K. Nymoen et al. implemented in their firefly system—which we so far have managed without.
+	
+	\tcol[blue]{FYLL INN}
+	
+	As explained earlier, in the this system we rather use $t_{ref\_percentage\_of\_period}$ that depends on each robot's individual oscillator frequency, rather than a fixed $t_{ref}$ for all robots (for stabilization purposes). Hence, our systems cannot for the frequency synchronization problem be said to be completely analogous to K. Nymoen et al.'s firefly system, as the novel Unity simulator uses more dynamical and ever-changing refractory periods than those used by K. Nymoen et al. \cite{nymoen_synch}.
+	
+	\paragraph{Ordering by frequency couplings}
 	
 	\subsection{Hyperparameter search?}
