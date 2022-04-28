@@ -130,7 +130,7 @@ def finishAndShowPlot(timeArray, yticks, no_of_agents, simRun, show_fig_pls, sav
     plt.yticks(yticks)
     plt.gca().invert_yaxis()
     if save_fig_pls == 1:
-        plt.savefig("../Synchrony/SavedData/Plots/" + str(no_of_agents) + "RobotsTerminatedAfter" + str(round(len(timeArray)/samplingRate)) + "s_PerfMeasurePlot.pdf", bbox_inches="tight")
+        plt.savefig("../../Synchrony/SavedData/Plots/" + str(no_of_agents) + "RobotsTerminatedAfter" + str(round(len(timeArray)/samplingRate)) + "s_PerfMeasurePlot.pdf", bbox_inches="tight")
     if show_fig_pls == 1:
         plt.show()
 
@@ -153,5 +153,6 @@ if __name__ == "__main__":
     save_fig_pls = int(sys.argv[3])
     
     filepath = "../../Synchrony/SavedData/PerformanceMeasurePlotMaterial/node_firing_data_atSimRun" + simRun + ".csv"
+    temp_filepath = "node_firing_data_atSimRun" + simRun + ".csv"
     
-    main(filepath, simRun, show_fig_pls, save_fig_pls)
+    main(temp_filepath, simRun, show_fig_pls, save_fig_pls) # filepath

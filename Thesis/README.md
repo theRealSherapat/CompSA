@@ -25,7 +25,7 @@ Remember:
 	+ Be consistent about using italization on variables and words of emphasis, but not on operators (in equations).
 	+ Use bold face on Figure-captions (so that it's rather **Figure 4.1** instead of Figure 4.1)?
 * Writing/text:
-	+ Minimize the use of parentheses and '—'s. Jarka thought e.g. the use of a lot of '-'s and '—'s was confusing.
+	+ Minimize the use of parentheses and '—'s. Jarka thought e.g. the use of a lot of '-'s and '—'s was confusing and Kyrre said it was not common in English language.
 	+ Check present vs. past-tense.
 	+ Check pronouns, and remove as many of them as possible (c.f. Jim Tørresen's masters-writing document).
 	+ Run the master's document through PDF -> Word document -> Grammarly.

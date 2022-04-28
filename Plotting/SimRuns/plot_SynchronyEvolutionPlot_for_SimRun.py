@@ -25,7 +25,7 @@ def plotAllColsVsTime(t, dataMatrix, simRun, show_fig_pls, save_fig_pls):
     plt.xlabel("simulation-time (s)")
         
     if save_fig_pls == 1:
-        plt.savefig("../Synchrony/SavedData/Plots/RobotsTerminatedAfter" + str(round(len(t)/samplingRate)) + "s_SyncEvolutionPlot.pdf", dpi=300, format="pdf", bbox_inches="tight")
+        plt.savefig("../../Synchrony/SavedData/Plots/RobotsTerminatedAfter" + str(round(len(t)/samplingRate)) + "s_SyncEvolutionPlot.pdf", dpi=300, format="pdf", bbox_inches="tight")
     if show_fig_pls == 1:
         plt.show()
 
@@ -78,6 +78,7 @@ if __name__ == "__main__":
     show_fig_pls = int(sys.argv[2])
     save_fig_pls = int(sys.argv[3])
     
-    filepath = filepath = "../../Synchrony/SavedData/SynchronyEvolutions/synch_evolution_data_atSimRun" + simRun + ".csv"
-
-    main(filepath, simRun, show_fig_pls, save_fig_pls)
+    filepath = "../../Synchrony/SavedData/SynchronyEvolutions/synch_evolution_data_atSimRun" + simRun + ".csv"
+    temp_filepath = "synch_evolution_data_atSimRun" + simRun + ".csv"
+    
+    main(temp_filepath, simRun, show_fig_pls, save_fig_pls)

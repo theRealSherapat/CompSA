@@ -19,7 +19,7 @@ def plotFrequencies(t, frequencyDataMatrix, simRun, show_fig_pls, save_fig_pls):
 
     # Printing out Frequency-data
     for col_index in range(frequencyDataMatrix.shape[1]):
-        labelString = "Musical Agent " + str(col_index+1)
+        labelString = "musical robot " + str(col_index+1)
         plt.plot(t, frequencyDataMatrix[:,col_index], label=labelString)
     plt.ylabel("frequency (Hz)")
     plt.xlabel("simulation-time (s)")
@@ -28,13 +28,13 @@ def plotFrequencies(t, frequencyDataMatrix, simRun, show_fig_pls, save_fig_pls):
     scatterPlotLegalMultiples(t, frequencyDataMatrix)
     
     
-    # plt.legend(loc="upper center")                                              # MÅ FINNE NOEN FINERE MÅTE Å PRESENTERE DETTE PÅ ISÅFALL.
+    plt.legend(loc="best")                                              # BØR FINNE NOEN FINERE MÅTE Å PRESENTERE DETTE PÅ.
 
     # Plotting out the whole plot:
     # plt.tight_layout()                                      # BLIR DETTA FINT DA?
     noOfAgents = frequencyDataMatrix.shape[1]
     if save_fig_pls == 1:
-        plt.savefig("../Synchrony/SavedData/Plots/" + str(noOfAgents) + "RobotsTerminatedAfter" + str(round(len(t)/samplingRate)) + "s_FreqsPlot.pdf", dpi=300, format="pdf") # BØR JEG INKLUDERE ', bbox_inches="tight"' ?
+        plt.savefig("../../Synchrony/SavedData/Plots/" + str(noOfAgents) + "RobotsTerminatedAfter" + str(round(len(t)/samplingRate)) + "s_FreqsPlot.pdf", dpi=300, format="pdf") # BØR JEG INKLUDERE ', bbox_inches="tight"' ?
     if show_fig_pls == 1:
         plt.show()
 
@@ -98,6 +98,7 @@ if __name__ == "__main__":
     simRun = sys.argv[1]
     show_fig_pls = int(sys.argv[2])
     save_fig_pls = int(sys.argv[3])
-    freqs_path = "../../Synchrony/SavedData/Frequencies/freqs_over_time_atSimRun" + simRun + ".csv"
+    # freqs_path = "../../Synchrony/SavedData/Frequencies/freqs_over_time_atSimRun" + simRun + ".csv"
+    temp_freqs_path = "freqs_over_time_atSimRun" + simRun + ".csv"
     
-    main(freqs_path, simRun, show_fig_pls, save_fig_pls)
+    main(temp_freqs_path, simRun, show_fig_pls, save_fig_pls) # freqs_path

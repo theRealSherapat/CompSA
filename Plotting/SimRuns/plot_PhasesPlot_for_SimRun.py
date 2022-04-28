@@ -4,7 +4,7 @@ import numpy as np
 import csv
 import matplotlib.pyplot as plt
 
-samplingRate = 100 # Hz                                                            POTENTIAL SOURCE OF ERROR
+samplingRate = 100 # Hz                                                        POTENTIAL SOURCE OF ERROR
 
 def main(phase_filename, simRun, show_fig_pls, save_fig_pls):        
     plt.close("all") # First clearing all other opened figures.
@@ -19,19 +19,19 @@ def plotPhases(t, phaseDataMatrix, simRun, show_fig_pls, save_fig_pls):
 
     # Printing out Phase-data
     for col_index in range(phaseDataMatrix.shape[1]):
-        labelString = "Musical Agent " + str(col_index+1)
-        plt.plot(t, phaseDataMatrix[:,col_index], label=labelString, linewidth=1)
+        labelString = "musical robot " + str(col_index+1)
+        plt.plot(t, phaseDataMatrix[:,col_index], label=labelString)
     
     plt.ylabel("phase")
     plt.xlabel("simulation-time (s)")
     
-    plt.legend(loc="upper center")                                              # MÅ FINNE NOEN FINERE MÅTE Å PRESENTERE DETTE PÅ ISÅFALL.
+    plt.legend(loc="best")                                              # BØR FINNE NOEN FINERE MÅTE Å PRESENTERE DETTE PÅ.
 
     
     # plt.tight_layout()                                      # BLIR DETTA FINT DA?
     noOfAgents = phaseDataMatrix.shape[1]
     if save_fig_pls == 1:
-        plt.savefig("../Synchrony/SavedData/Plots/" + str(noOfAgents) + "RobotsTerminatedAfter" + str(round(len(t)/samplingRate)) + "s_PhasePlot.pdf", dpi=300, format="pdf") # BØR JEG INKLUDERE ', bbox_inches="tight"' ?
+        plt.savefig("../../Synchrony/SavedData/Plots/" + str(noOfAgents) + "RobotsTerminatedAfter" + str(round(len(t)/samplingRate)) + "s_PhasePlot.pdf", dpi=300, format="pdf") # BØR JEG INKLUDERE ', bbox_inches="tight"' ?
     if show_fig_pls == 1:
         plt.show()
 
@@ -60,9 +60,7 @@ def parseDataFrom(csv_filename):
             numOfRows += 1
             
     
-    t = np.linspace(0, numOfRows*(1/samplingRate), numOfRows-1) # In reality we start sampling after a split-second long startup-phase in Unity.
-    
-    # Possibility: Downsampling the data- and time-arrays (for really long arrays from failed Simulation-runs).
+    t = np.linspace(0, numOfRows*(1/samplingRate), numOfRows-1) # In reality we start sampling after a split-second long startup-phase in Unity?
     
     return t, arrayOfDatapoints[2:,:] # Slicing due to initialization values (being huuuuge).
     
@@ -81,6 +79,7 @@ if __name__ == "__main__":
     simRun = sys.argv[1]
     show_fig_pls = int(sys.argv[2])
     save_fig_pls = int(sys.argv[3])
-    phase_path = "../../Synchrony/SavedData/Phases/phases_over_time_atSimRun" + simRun + ".csv"
+    # phase_path = "../../Synchrony/SavedData/Phases/phases_over_time_atSimRun" + simRun + ".csv"
+    temp_phase_path = "phases_over_time_atSimRun" + simRun + ".csv"
     
-    main(phase_path, simRun, show_fig_pls, save_fig_pls)
+    main(temp_phase_path, simRun, show_fig_pls, save_fig_pls) # phase_path

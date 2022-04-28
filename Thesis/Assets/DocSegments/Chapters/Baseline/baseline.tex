@@ -241,7 +241,7 @@ This state of \textit{harmonic synchrony} is then the system goal state K. Nymoe
 
 	\subsection{Detecting harmonic synchrony}
 	\label{subsec:harmonic_synchrony}
-	In order to test and evaluate synchronization-performance in their firefly-inspired oscillator-system, K. Nymoen et al. \cite{nymoen_synch} develop a measure used to detect when the system has reached a state of synchrony. Using the firings of the fireflies, some well-defined conditions have to be met in order for the fireflies to be deemed \textit{harmonically synchronized}:
+	In order to test and evaluate synchronization performance in their firefly-inspired oscillator-system, K. Nymoen et al. \cite{nymoen_synch} develop a measurement used to detect when the system has reached a state of synchrony. Using the firings of the fireflies, some well-defined conditions have to be met in order for the fireflies to be deemed \textit{harmonically synchronized}:
 	\begin{itemize}
 		\item \textbf{Condition 1}: Firing may only happen within a short time-period $t_f$.
 		\item \textbf{Condition 2}: All nodes must have fired at least once during the evaluation period.
@@ -250,11 +250,11 @@ This state of \textit{harmonic synchrony} is then the system goal state K. Nymoe
 	
 	By utilizing transmitted firings/pulses from the robots in our robot-collective, these conditions can be enforced and checked throughout the synchronization-process, in order to detect if the oscillator-network becomes harmonically synchronized.
 	
-	For getting a better idea of how these conditions being met looks like, see the \textit{performance-measure plot} in Figure \ref{fig:perf_measure_plot} where the oscillators/robots fulfill the abovementioned requirements right before ending the synchronization process.
+	For getting a better idea of how these conditions being met looks like, see the \textbf{Harmonic synchrony detection plot} in Figure \ref{fig:harmonic_synchrony_detection_plot} where the oscillators/robots fulfill the abovementioned requirements right before ending the synchronization process.
 	
-	These requirements, amongst other illustrations in Nymoen et al.'s paper \cite{nymoen_synch}, thus constitutes a blueprint for the design of a performance-/synchrony-measure able to detect the achievement of harmonic synchrony in a decentralized network of ``firing''—or pulse-coupled—oscillators. The time having passed from the start of the synchronization-process until the detection of harmonic synchrony will then be defined as the performance-score, indicating how fast or slow the oscillators are at synchronizing.
+	These requirements, amongst other illustrations in Nymoen et al.'s paper \cite{nymoen_synch}, thus constitutes a blueprint for the design of a performance or synchrony measurement able to detect the achievement of harmonic synchrony in a decentralized network of ``firing''—or pulse-coupled—oscillators. The time having passed from the start of the synchronization-process until the detection of harmonic synchrony will then be defined as the performance score, indicating how fast or slow the oscillators are at synchronizing.
 	
-	The exact details of how such a performance-/synchrony-measure is implemented for our musical multi-robot oscillator-network, in the synchronization-simulator, will be given in Section \ref{sec:detecting_harmonic_synchrony}.
+	The exact details of how such a performance or synchrony measurement is implemented for our musical multi-robot oscillator-network, in the synchronization-simulator, will be given in Section \ref{sec:detecting_harmonic_synchrony}.
 
 
 
