@@ -356,7 +356,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   alpha: 0.1
   phaseAdjustment: 1
-  beta: 0.8
+  beta: 0.4
   frequencyAdjustment: 1
   m: 5
   audioClips:

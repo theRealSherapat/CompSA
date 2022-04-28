@@ -21,7 +21,7 @@ public class SquiggleScript : MonoBehaviour {
 
     // Frequency-adjustment:
     [Tooltip("Frequency coupling constant, deciding how much robots adjust frequencies after detecting pulse onsets from neighbours. The larger the constant, the larger (in absolute value) the frequency-update?")]
-    public float beta = 0.8f;
+    public float beta = 0.4f;
     public enum frequencySyncEnum { 
         None,
         Nymoen
@@ -229,9 +229,6 @@ public class SquiggleScript : MonoBehaviour {
 
         float newFrequency = frequency * Mathf.Pow(2, F_n); // BØR MAKS VÆRE EN DOBLING AV DEN GAMLE FREKVENSEN
 
-        // BARE FOR TESTING:
-        //Debug.Log("omega(t): " + frequency + ", omega(t+1): " + newFrequency + ", siden F(n)=" + F_n);
-
         if (newFrequency > highestRobotFrequency) highestRobotFrequency = newFrequency;
         else if (newFrequency < smallestRobotFrequency) smallestRobotFrequency = newFrequency;
 
@@ -242,12 +239,7 @@ public class SquiggleScript : MonoBehaviour {
 
     private void UpdateTheRefractoryPeriod() {
         float oscillator_period = 1.0f / frequency;
-        if (myCreator.useFixedNymoenTRef) {
-            t_ref = 0.05f;
-        }
-        else {
-            t_ref = myCreator.t_ref_perc_of_period * oscillator_period;
-        }
+        t_ref = myCreator.t_ref_perc_of_period * oscillator_period;
     }
 
     private void ResetPhaseClimaxValues() {
