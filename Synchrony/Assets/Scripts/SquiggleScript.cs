@@ -114,10 +114,8 @@ public class SquiggleScript : MonoBehaviour {
         } else {
             timeNotClimaxed += Time.fixedDeltaTime;
 
-            if (timeNotClimaxed >= longestLegalPeriod * myCreator.allowRobotsToStruggleForlPeriods) {    // Detected (not wanted) anomaly 2: the phase didn't climax within l=5 periods, and needs a frequency-boost.             (UN-TESTED)
-                //Debug.Log("(Time.fixedTime: " + Time.fixedTime + ") En stakkar hadde " + frequency + "i frekvens..");
+            if (timeNotClimaxed >= longestLegalPeriod * myCreator.allowRobotsToStruggleForPeriods) {    // Detected (not wanted) anomaly 2: the phase didn't climax within l=5 periods, and needs a frequency-boost.
                 frequency = 2f * frequency; // Giving the agent a frequency-boost since it never climaxes but only gets dragged down by others.
-                //Debug.Log("(Time.fixedTime: " + Time.fixedTime + ") så vi ga han " + frequency + " i ny frekvens og satte counteren hans til 0..");
                 timeNotClimaxed = 0.0f;
             }
 
@@ -239,7 +237,8 @@ public class SquiggleScript : MonoBehaviour {
 
     private void UpdateTheRefractoryPeriod() {
         float oscillator_period = 1.0f / frequency;
-        t_ref = myCreator.t_ref_perc_of_period * oscillator_period;
+        if (myCreator.recreatingNymoenResults)  t_ref = 0.05f;
+        else                                    t_ref = myCreator.t_ref_perc_of_period * oscillator_period;
     }
 
     private void ResetPhaseClimaxValues() {
@@ -334,7 +333,8 @@ public class SquiggleScript : MonoBehaviour {
 
     private void AssignAudioVariables() {
         audioSource = GetComponent<AudioSource>();
-        audioSource.volume = 1f / (2*(otherSquiggles.Count + 1)); // Remove the factor of 2 in the denominator to increase volume
+        float utgangspunkt = 1f / (2 * (otherSquiggles.Count + 1)); // Remove the factor of 2 in the denominator to increase volume
+        audioSource.volume = myCreator.volumePercentage * utgangspunkt;
     }
     
     private void AssignHelpingVariables() {
@@ -405,6 +405,10 @@ public class SquiggleScript : MonoBehaviour {
     
     public int GetAgentID() {
         return agentID;
+    }
+
+    public float GetTRef() {
+        return t_ref;
     }
 
     public void SetAgentID(int idNumber) {

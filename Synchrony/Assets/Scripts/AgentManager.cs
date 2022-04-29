@@ -36,6 +36,8 @@ public class AgentManager : MonoBehaviour {
     public int randomSeed;
 
     // 'Non-recorded general meta-/environment-hyperparemeters':
+    [Tooltip("Whether we are trying to recreate a Nymoen experiment as closely as his one, or using our own system's variables.")]
+    public bool recreatingNymoenResults;
     public enum simulationModesEnum // Min customme enumeration
     {
         Experiment,
@@ -49,6 +51,8 @@ public class AgentManager : MonoBehaviour {
     public float runDurationLimit = 300f;
     [Tooltip("Whether to give the human observer a sound on every agent-pulse/-firing or not.")]
     public bool useSound = true;
+    [Tooltip("Volume knob (%).")]
+    public float volumePercentage = 0.5f;
     [Tooltip("Whether to give the human observer a visual and Lerped color-signal on every agent-pulse/-firing or not.")]
     public bool useVisuals = true;
 
@@ -58,7 +62,7 @@ public class AgentManager : MonoBehaviour {
     [Tooltip("Whether to get logs about t_f-/t_q-windows and corresponding timestamps or not.")]
     public bool debugTqTfOn = false;
     [Tooltip("How many 'longest possible' periods we are to let robots with low frequencies struggle before we double their frequency.")]
-    public int allowRobotsToStruggleForlPeriods = 3;
+    public int allowRobotsToStruggleForPeriods = 3;
 
     // Spawning:
     [Tooltip("All the DrSquiggle-prefabs we want to spawn and be synchronized.")]
@@ -605,7 +609,8 @@ public class AgentManager : MonoBehaviour {
         performanceAndCovariatesHeader.Add("SIMTIME");
         performanceAndCovariatesHeader.Add("SUCCESS");    // Binary covariate (no=0 or yes=1)
         performanceAndCovariatesHeader.Add("COLLSIZE");
-        performanceAndCovariatesHeader.Add("TREFPERC");
+        if (recreatingNymoenResults) performanceAndCovariatesHeader.Add("TREF");
+        else performanceAndCovariatesHeader.Add("TREFPERC");
         performanceAndCovariatesHeader.Add("MINFREQ");
         performanceAndCovariatesHeader.Add("MAXFREQ");
         performanceAndCovariatesHeader.Add("K");
@@ -646,8 +651,14 @@ public class AgentManager : MonoBehaviour {
         float COLLSIZE = collectiveSize;
         performanceAndCovariateValues.Add(COLLSIZE);
 
-        float TREFPERC = System.Convert.ToSingle(t_ref_perc_of_period);
-        performanceAndCovariateValues.Add(TREFPERC);
+        if (recreatingNymoenResults) {
+            float TREF = System.Convert.ToSingle(spawnedSquiggleScripts[0].GetTRef());
+            performanceAndCovariateValues.Add(TREF);
+        } else {
+            float TREFPERC = System.Convert.ToSingle(t_ref_perc_of_period);
+            performanceAndCovariateValues.Add(TREFPERC);
+        }
+        
 
         float MINFREQ = System.Convert.ToSingle(minMaxInitialFreqs.x);
         performanceAndCovariateValues.Add(MINFREQ);
