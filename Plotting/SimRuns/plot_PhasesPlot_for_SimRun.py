@@ -22,7 +22,7 @@ def plotPhases(t, phaseDataMatrix, simRun, show_fig_pls, save_fig_pls):
         labelString = "musical robot " + str(col_index+1)
         plt.plot(t, phaseDataMatrix[:,col_index], label=labelString)
     
-    plt.ylabel("phase")
+    plt.ylabel("oscillator phase")
     plt.xlabel("simulation-time (s)")
     
     plt.legend(loc="best")                                              # BØR FINNE NOEN FINERE MÅTE Å PRESENTERE DETTE PÅ.

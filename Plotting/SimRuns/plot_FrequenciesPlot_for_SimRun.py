@@ -21,7 +21,7 @@ def plotFrequencies(t, frequencyDataMatrix, simRun, show_fig_pls, save_fig_pls):
     for col_index in range(frequencyDataMatrix.shape[1]):
         labelString = "musical robot " + str(col_index+1)
         plt.plot(t, frequencyDataMatrix[:,col_index], label=labelString)
-    plt.ylabel("frequency (Hz)")
+    plt.ylabel("oscillator frequency (Hz)")
     plt.xlabel("simulation-time (s)")
     
     # Scatter-plotting the legal multiples frequencies are allowed to lie on (defined by the lowest fundamental frequency)

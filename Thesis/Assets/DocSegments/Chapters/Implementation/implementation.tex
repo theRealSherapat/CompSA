@@ -240,7 +240,7 @@ First, the system and the system components will be presented and introduced. Th
 	\begin{figure}
 		\centering
 		\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Plots/FrequencySynchronizationPlot.pdf}
-		\caption{Frequency synchronization for five robots in a Unity synchronization simulation run achieving harmonic synchrony after 30 seconds. Note how the legal harmonic frequencies (dashed gray lines) are defined by the lowest—fundamental—frequency in the robot collective.}
+		\caption{Frequency synchronization for five robots in a Unity synchronization simulation run achieving harmonic synchrony after 30 seconds. Note how the legal harmonic frequencies (dashed gray lines) are defined by the lowest—fundamental—frequency $\omega_0$ in the robot collective fluctuating slightly below 1Hz, correctly leading to the legal frequencies right below 2 and 4 Hz.}
 		\label{fig:frequency_synch}
 	\end{figure}
 	
@@ -258,10 +258,7 @@ First, the system and the system components will be presented and introduced. Th
 	\end{itemize}
 	}
 
-
-
-
-% SEKSJON 4: Presenting the measurement (yardstick?) used to evaluate the implemented methods:
+	% SEKSJON 4: Presenting the measurement (yardstick?) used to evaluate the implemented methods:
 \section{Detecting harmonic synchrony}
 \label{sec:detecting_harmonic_synchrony}
 
@@ -280,15 +277,17 @@ First, the system and the system components will be presented and introduced. Th
 
 	My specific implementation of the synchrony measurement essentially consists of enforcing all the requirements or rules listed in \ref{subsec:harmonic_synchrony}, given some constant $t_f$- and $k$-values (e.g. $80ms$ and $8$ respectively \cite{nymoen_synch}). And again—to recall from \ref{subsec:harmonic_synchrony}—$t_f$ is the short time-window within which nodes are allowed to fire at each beat, and $k$ represents how many times nodes have to fire at even underlying pulses/beats in a row without changing the $t_q$-period—before becoming harmonically synchronized.
 
-	The requirement of firing evenly $k$ times in a row with identical $t_q$-periods can be—and in fact is in our implementation—enforced by incrementing an integer variable \textit{towards\_k\_counter} after a `legal' $t_f$-window has occured (i.e. one or more nodes fired inbetween the onset and ending of the $t_f$-window), and conversely by resetting \textit{towards\_k\_counter} to 0 when an illegally transmitted firing was heard during a `silent' (or so it was supposed to be at least) $t_q$-window, hence restarting the synchrony-detection process—as can be seen occuring several times in Figure \ref{fig:harmonic_synch_evolution}.
+	The requirement of firing evenly $k$ times in a row with identical $t_q$-periods can be—and in fact is in our implementation—enforced by incrementing an integer variable \textit{towards\_k\_counter} after a `legal' $t_f$-window has occured (i.e. one or more nodes fired inbetween the onset and ending of the $t_f$-window), and conversely by resetting \textit{towards\_k\_counter} to 0 when an illegally transmitted firing was heard during a `silent' (or so it was supposed to be at least) $t_q$-window, hence restarting the synchrony-detection process—as can be seen occuring several times in Figure \ref{fig:harmonic_synch_evolution}. \tcol[red]{Note that in this specific simulation run above, the agents were on their way to achieve harmonic synchrony five times before the 10th second of the synchronization-simulation already, but since one or more of them fired `illegally' (i.e. inside a $t_q$-window), they were consequently `punished'—or rather deemed `not synchronized enough yet'—by getting their counter reset to 0. Eventually however,  through further phase- \& frequency-synchronization, the multi robot collective was in this case after 12.5 seconds able to achieve harmonic synchrony, when \textit{towards\_k\_counter} became equal to $k$, as well as all other requirements for achieving \textit{harmonic synchrony} was met. Note that this gives us a sense of how synchronized the robot collective is over time; the more even beats the robots have in a row, the more synchronized they are.}
 
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.85\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Plots/SynchronyEvolutionPlot.pdf}
-		\caption[A \textbf{synchrony evolution plot}.]{A \textbf{synchrony evolution plot}, displaying the temporal recording of the \textit{towards\_k\_counter} variable throughout a synchrony simulation-run in Unity. The counter is incremented as the robot collective fires evenly within `legal' $t_f$ windows, and is conversely reset to 0 if illegal firings during `silent' $t_q$ windows are heard. Note that in this specific simulation run above, the agents were on their way to achieve harmonic synchrony five times before the 10th second of the synchronization-simulation already, but since one or more of them fired `illegally' (i.e. inside a $t_q$-window), they were consequently `punished'—or rather deemed `not synchronized enough yet'—by getting their counter reset to 0. Eventually however,  through further phase- \& frequency-synchronization, the multi robot collective was in this case after 12.5 seconds able to achieve harmonic synchrony, when \textit{towards\_k\_counter} became equal to $k$, as well as all other requirements for achieving \textit{harmonic synchrony} was met. Note that this gives us a sense of how synchronized the robot collective is over time; the more even beats the robots have in a row, the more synchronized they are.}
+		\caption[A \textbf{synchrony evolution plot}.]{A \textbf{synchrony evolution plot}, displaying the temporal recording of the \textit{towards\_k\_counter} variable throughout a synchrony simulation-run in Unity. The counter is incremented as the robot collective fires evenly within `legal' $t_f$ windows, and is conversely reset to 0 if illegal firings during `silent' $t_q$ windows are heard.}
 		\label{fig:harmonic_synch_evolution}
 	\end{figure}
 
+	
+	
 	Initially, the $t_q$-period/-window is not initialized, as it entirely depends on the frequencies to which the robot-collective converges to; however, when an illegal firing (i.e. a firing perceived during a $t_q$-window) occurs—$t_q$ is also then reset itself to a hopefully more correct value, given by the following formula, which is visually explained further in the schema in Figure \ref{fig:t_q_schema}:
 
 	\begin{equation}
@@ -317,3 +316,5 @@ First, the system and the system components will be presented and introduced. Th
 	\end{algorithm}
 
 	If a certain amount of time, e.g. 5 minutes \cite{nymoen_synch}, has gone without the detection of harmonic synchrony occuring, the simulation-run is terminated as a ``fail''. Hey hey there.
+
+

@@ -179,12 +179,12 @@ MonoBehaviour:
   simulationMode: 0
   dataSavingFrequency: 60
   runDurationLimit: 300
-  useSound: 1
+  useSound: 0
   volumePercentage: 0.3
-  useVisuals: 1
+  useVisuals: 0
   debugSuccessOn: 0
   debugTqTfOn: 0
-  allowRobotsToStruggleForlPeriods: 3
+  allowRobotsToStruggleForPeriods: 3
   squigglePrefabs:
   - {fileID: 2285719835394980754, guid: c314eb5130117ec42b02442ea979e2a7, type: 3}
   - {fileID: 8768706482228693545, guid: 99dff3106accb1b46a953f4ffd8d9d57, type: 3}
