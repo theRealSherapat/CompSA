@@ -3,12 +3,23 @@ import matplotlib.pyplot as plt
 import numpy as np
 import csv
 
-def main(CSV_filepath, binaryFilename):
+def main(CSV_filepath, binaryFilename, plotFailuresPls):
     matrixOfCSVValues = parseDataFrom(CSV_filepath)
-    HSYNCHTIMES = matrixOfCSVValues[1:,0] # Slicing the first column only    
+    
+    simTimePerfScores = matrixOfCSVValues[1:,0]
+    simSuccessesPerfScores = matrixOfCSVValues[1:,1]
+    
+    # BARE FOR TESTING:
+    print("simTimePerfScores: ", simTimePerfScores)
+    print("\n simSuccessesPerfScores: ", simSuccessesPerfScores)
+    
+    if plotFailuresPls == 0:
+        simTimePerfScores = simTimePerfScores[simSuccessesPerfScores == 1]
+    
     fullBinaryFilename = "./" + binaryFilename
     
-    np.save(fullBinaryFilename, HSYNCHTIMES)
+    np.save(fullBinaryFilename + "_simTimes", simTimePerfScores)
+    np.save(fullBinaryFilename + "_successes", simSuccessesPerfScores)
     
     
 def parseDataFrom(csv_filename):
@@ -38,7 +49,7 @@ def parseDataFrom(csv_filename):
     return arrayOfDatapoints
 
 if __name__ == "__main__":
-    # Args: 1) dataset.csv filepath, 2) wanted binary.npy filename
+    # Args: 1) dataset.csv filepath, 2) wanted binary.npy filename, 3) (int) whether we want to plot failures or not (0: no, 1: yes)
     
     # Takes as input and extracts (both success and failure) synchronization times from a .CSV-file representing a dataset from several runs of the Harmonic Synchrony Simulation with the Dr. Squiggles Musical Multi-Robot System.
     
@@ -46,5 +57,6 @@ if __name__ == "__main__":
     
     filepath = sys.argv[1]
     npyBinaryFilename = sys.argv[2]
+    plotFailuresPls = int(sys.argv[3])
     
-    main(filepath, npyBinaryFilename)
+    main(filepath, npyBinaryFilename, plotFailuresPls)

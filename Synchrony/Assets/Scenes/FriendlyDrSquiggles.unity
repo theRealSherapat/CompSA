@@ -181,7 +181,7 @@ MonoBehaviour:
   runDurationLimit: 300
   useSound: 0
   volumePercentage: 0.3
-  useVisuals: 0
+  useVisuals: 1
   debugSuccessOn: 0
   debugTqTfOn: 0
   allowRobotsToStruggleForPeriods: 3
