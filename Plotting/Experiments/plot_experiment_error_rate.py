@@ -2,6 +2,11 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.pyplot import figure
+from matplotlib import rcParams
+
+labelSize = 16
+rcParams['xtick.labelsize'] = labelSize
+rcParams['ytick.labelsize'] = labelSize
 
 # figure(figsize=((8,3)), dpi=300)
 
@@ -23,9 +28,9 @@ def main(binaryArrays):
     
     # Plotting stacked data
     plt.bar(["0.1", "0.2", "0.3", "0.4", "0.5", "0.6", "0.7", "0.8", "0.9"], errorRatesInPercentages) # Kan ha med whis=(0,100) for å få whiskerne til å dekke hele data-samplet (til og med outliersa).
-    plt.ylabel("error rate (%)")
-    plt.xlabel("α")
-    plt.savefig("experiment_errorRates.svg", dpi=300)
+    plt.ylabel("error rate (%)", fontsize=16)
+    plt.xlabel("α", fontsize=16)
+    plt.savefig("experiment_errorRates.svg", dpi=300, bbox_inches="tight"))
     plt.show()
 
 

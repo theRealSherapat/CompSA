@@ -21,6 +21,7 @@ The main performance scores presented in this chapter will consist of synchroniz
 This is the section where experiments attempting to solve the first and simpler problem, namely synchronizing only the phases $\phi_i$ of all agents $i$, are presented and analyzed. These are then experiments where all musical robots have an equal and fixed frequency, only adjusting phases, in order to entrain to synchronize their phases to each other until reaching harmonic synchrony.
 	
 	\subsection{Reproducing K. Nymoen's phase synchronization}
+	
 	In order to see that our developed synchronization simulator in Unity yields more or less the same results as K. Nymoen et al.'s firefly system \cite{nymoen_synch}, similar experiments as reported in their paper are performed. These tell us whether differences in performance, in terms of synchronization times (s), is simply due to implementation differences, or actually because of the utilized synchronization methods and hyperparameters in question. 
 	
 	First off, and as performed and reported in K. Nymoen et al.'s paper \cite{nymoen_synch} (c.f. their Fig. 7), Mirollo \& Strogatz's phase adjustment method (as presented in \ref{mirollo_strogatz_phase_adjust}) is experimented with for varying phase coupling constants $\alpha$, as seen in Figure \ref{fig:exp1}.
@@ -34,7 +35,8 @@ This is the section where experiments attempting to solve the first and simpler 
 	
 	
 	\subsection{Hyperparameter tuning}
-	Tuning hyperparameters $\alpha$ and $t_{ref\_percentage\_of\_period}$ for several robot collective sizes, according to the performance scores of how long it takes the robot collective to achieve harmonic synchrony. Exactly these two specific hyperparameters are experimented with since they empirically seem to be the most important ones to set correctly before starting the simulator; that is, in terms of the robots actually managing to achieve harmonic synchrony.
+	
+	Here we tune the hyperparameters $\alpha$ and $t_{ref\_percentage\_of\_period}$ for several robot collective sizes, according to the performance scores of how long it takes the robot collective to achieve harmonic synchrony. Exactly these two specific hyperparameters are experimented with since they empirically seem to be the most important ones to set correctly before starting the simulator; that is, in terms of the robots actually managing to achieve harmonic synchrony.
 	
 	The specific choices of hyperparameter values to test synchronization times and error rates for, when wanting to tune the phase coupling constant $\alpha$ and the dynamic refractory period variable $t_{ref\_percentage\_of\_period}$, were chosen based on hunches for what might work well, according to experience, in order to facilitate stable and successful synchronization simulation runs—for varying robot collective sizes. An hypothesis and such hunch is e.g. that larger robot collectives do not require as large of a phase coupling constant $\alpha$ in order to synchronize compared to smaller robot collectives; as we remember $\alpha$ tells each robot how much to adjust its oscillator phase when hearing a ''fire`` signal, and when more neighbours are present to transmit ``fire'' signals to a robot—a larger quantity of small adjustment can in theory be equivalent to a few large adjustments. This is something we want to investigate more quantitatively and thoroughly by the following experiment.
 	
@@ -60,12 +62,13 @@ This is the section where experiments attempting to solve the first and simpler 
 This is the section for the experiments attempting to solve the second and harder problem of synchronizing both phases $\phi_i$, as well as frequencies $\omega_i$, for all agents $i$. These are then experiments where all musical robots originally have unequal and ever-changing phases  and frequencies, adjusting both phases and frequencies in order to entrain to synchronize their phases and frequencies until reaching harmonic synchrony.
 
 	\subsection{Reproducing K. Nymoen's phase and frequency synchronization}
-		Here we present attempts made in the novel Unity synchronization simulator at recreating K. Nymoen et al.'s first results with their novel frequency synchronization method, which is utilizing, amongst other aspects, self awareness \cite{nymoen_synch}.
-		
+	Here we present attempts made in the novel Unity synchronization simulator at recreating K. Nymoen et al.'s first results with their novel frequency synchronization method, which is utilizing, amongst other aspects, self awareness \cite{nymoen_synch}.
+	
 		\paragraph{Ordering by phase couplings}
+		
 		Given that K. Nymoen et al. do not mention their $\beta$ value in their frequency synchronization experiment where they order for different phase coupling values $\alpha$, an \textit{empirically decent} $\beta$ value of 0.4 is chosen for this experiment. What \textit{empirically decent} refers to in this case are K. Nymoen et al.'s findings in the results of their last experiment \cite{nymoen_synch} where synchronization times for various $\beta$ values were evaluated; deeming $\beta=0.4$ to be a good value, with no further improvement in synchronization performance when $\beta$ is increased further. Also, when empirically observing the visual and aural signals being transmitted through the synchrony simulator in Unity, this value of $\beta=0.4$ seemed to lead to relatively stable—given original instability—simulation runs where the robot collective does manage to achieve harmonic synchrony, which is desirable when testing how fast they can synchronize.
 		
-		Here, K. Nymoen et al.'s self aware frequency adjustment, as implemented in the novel synchrony simulator in Unity, is experimented with for varying phase coupling constants $\alpha$ as in Figure \ref{fig:exp1} — only that this time not only phases are initially un-synchronized; robot frequencies are also initially un-synchronized. See the results in Figure \ref{fig:exp2}.
+		Here, K. Nymoen et al.'s self aware frequency adjustment, as implemented in the novel synchrony simulator in Unity, is experimented with for varying phase coupling constants $\alpha$ as in Figure \ref{fig:exp1} — only that this time not only phases are initially unsynchronized; robot frequencies are also initially unsynchronized. See the results in Figure \ref{fig:exp2}.
 		
 		\begin{figure}[ht!]
 			\centering
@@ -73,13 +76,13 @@ This is the section for the experiments attempting to solve the second and harde
 			\caption{Synchronization times (s) for 6 robots with both initially random and unsynchronized phases, and frequencies, for varying phase coupling constants $\alpha$. 30 simulation runs per $\alpha$. $t_{ref}=50ms$, $m=5$, $t_f=80ms$, and $k=8$. Maximum time limit was 5 minutes.}
 			\label{fig:exp2}
 		\end{figure}
-		
-		
+	
+	
 		\paragraph{Ordering by frequency couplings}
 		
 		Now, we perform the same phase \& frequency synchronization experiment as in Figure \ref{fig:exp2}, except that this time we will fix the phase coupling constant $\alpha$ and instead test how the individual musical robots's various frequency coupling constants $\beta$ affect the performance of the musical robot collective. These results are shown in Figure \ref{fig:exp3}
 		
-		Again, K. Nymoen et al. does not specify exactly the phase coupling constant they use in this latter experiment when testing their firefly-inspired synchronization system for various $\beta$ values. Hence, the now fixed phase coupling constant $\alpha$ is here selected by reusing the $\alpha$ value found in the similar experiment presented in Figure \ref{fig:exp2} to yield the lowest error rate in the musical robot collective when synchronizing to each other. This then gives us a fixed $\alpha = 0.2$.
+		Again, K. Nymoen et al. does not specify exactly the phase coupling constant they use in this latter experiment when testing their firefly-inspired synchronization system for various $\beta$ values. Hence, the now fixed phase coupling constant $\alpha$ is here selected by reusing the $\alpha$ value found in the similar experiment presented in Figure \ref{fig:exp3} to yield the lowest error rate in the musical robot collective when synchronizing to each other. This then gives us a fixed $\alpha = 0.2$.
 		
 		\begin{figure}[ht!]
 			\centering
@@ -90,4 +93,20 @@ This is the section for the experiments attempting to solve the second and harde
 		
 		
 	\subsection{Hyperparameter tuning}
-	Tuning hyperparameters $\beta$ and $m$ for several robot collective sizes according to performance scores. The reason for tuning exactly these two hyperparameters, the frequency coupling constant $\beta$ and the error score list length (or memory length) $m$, is again since they seem the most significant for the synchronization performance.
+	
+	Here we tune the hyperparameters $\beta$ and $m$ for several robot collective sizes according to performance scores. The reason for tuning exactly these two hyperparameters, the frequency coupling constant $\beta$ and the error score list length (or memory length) $m$, is again since they seem the most significant for the synchronization performance.
+	
+	
+	\subsection{Increasing degree of self awareness}
+	
+	Here the hypothesis of whether increasing musical robots's degrees of self awareness, specifically referring to the robots's \textit{self awareness scope} \cite{sacs17_ch3}, is tested in Unity for the more challenging $\phi \& \omega$ problem of harmonically synchronizing both phases and frequencies. Perhaps a larger self awareness scope will lead to the robots having a better ``overview'' of the environment; hence leading to shorter simulation time (s) before reaching the goal state of harmonic synchrony. Or perhaps hearing more ``fire'' signals on average simply will be disturbing to the robots and hence disturb and slow down their entrainment towards harmonic synchrony. This experiments attempts to answer questions like these by for the following three scenarios evaluating collective synchronization performance:
+	
+	\begin{enumerate}
+		\item \textbf{Minimal self awareness scope}: Each individual robot only hears the nearest neighbouring robot's ``fire'' signals [].
+		\item \textbf{Radial self awareness scope}: Each individual robot hears neigbouring robots's ``fire'' signals within a radius $d$ around it [].
+		\item \textbf{Global self awareness scope}: Each individual robot hears all other neigbouring robots's ``fire'' signals [].
+	\end{enumerate}
+	
+	In this way, the degree to which robots are self aware of or communicating with other robots is increasing. The effects of increasing the degree of self awareness in this sense are shown in [].
+	
+	

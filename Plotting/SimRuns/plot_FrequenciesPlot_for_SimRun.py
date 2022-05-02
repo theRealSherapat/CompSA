@@ -3,6 +3,11 @@ import sys
 import numpy as np
 import csv
 import matplotlib.pyplot as plt
+from matplotlib import rcParams
+
+labelSize = 16
+rcParams['xtick.labelsize'] = labelSize
+rcParams['ytick.labelsize'] = labelSize
 
 samplingRate = 100 # Hz                                                            POTENTIAL SOURCE OF ERROR
 
@@ -21,8 +26,8 @@ def plotFrequencies(t, frequencyDataMatrix, simRun, show_fig_pls, save_fig_pls):
     for col_index in range(frequencyDataMatrix.shape[1]):
         labelString = "musical robot " + str(col_index+1)
         plt.plot(t, frequencyDataMatrix[:,col_index], label=labelString)
-    plt.ylabel("oscillator frequency (Hz)")
-    plt.xlabel("simulation-time (s)")
+    plt.ylabel("oscillator frequency (Hz)", fontsize=16)
+    plt.xlabel("simulation-time (s)", fontsize=16)
     
     # Scatter-plotting the legal multiples frequencies are allowed to lie on (defined by the lowest fundamental frequency)
     scatterPlotLegalMultiples(t, frequencyDataMatrix)
@@ -34,7 +39,7 @@ def plotFrequencies(t, frequencyDataMatrix, simRun, show_fig_pls, save_fig_pls):
     # plt.tight_layout()                                      # BLIR DETTA FINT DA?
     noOfAgents = frequencyDataMatrix.shape[1]
     if save_fig_pls == 1:
-        plt.savefig("../../Synchrony/SavedData/Plots/" + str(noOfAgents) + "RobotsTerminatedAfter" + str(round(len(t)/samplingRate)) + "s_FreqsPlot.pdf", dpi=300, format="pdf") # BØR JEG INKLUDERE ', bbox_inches="tight"' ?
+        plt.savefig("../../Synchrony/SavedData/Plots/" + str(noOfAgents) + "RobotsTerminatedAfter" + str(round(len(t)/samplingRate)) + "s_FreqsPlot.pdf", dpi=300, format="pdf", bbox_inches="tight") # BØR JEG INKLUDERE ', bbox_inches="tight"' ?
     if show_fig_pls == 1:
         plt.show()
 

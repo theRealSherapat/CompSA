@@ -2,6 +2,11 @@ import sys
 import numpy as np
 import csv
 import matplotlib.pyplot as plt
+from matplotlib import rcParams
+
+labelSize = 16
+rcParams['xtick.labelsize'] = labelSize
+rcParams['ytick.labelsize'] = labelSize
 
 samplingRate = 100 # Hz                                                                             POTENTIAL SOURCE OF ERROR
 
@@ -21,8 +26,8 @@ def plotAllColsVsTime(t, dataMatrix, simRun, show_fig_pls, save_fig_pls):
         labelString = "Column " + str(col_index+1)
         plt.plot(t, dataMatrix[:,col_index], label=labelString, linewidth=3)
     
-    plt.ylabel("# of even beats in a row by agent collective")
-    plt.xlabel("simulation-time (s)")
+    plt.ylabel("# of even beats in a row by agent collective", fontsize=16)
+    plt.xlabel("simulation-time (s)", fontsize=16)
         
     if save_fig_pls == 1:
         plt.savefig("../../Synchrony/SavedData/Plots/RobotsTerminatedAfter" + str(round(len(t)/samplingRate)) + "s_SyncEvolutionPlot.pdf", dpi=300, format="pdf", bbox_inches="tight")

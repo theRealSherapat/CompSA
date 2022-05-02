@@ -2,6 +2,11 @@ import sys
 import numpy as np
 import csv
 import matplotlib.pyplot as plt
+from matplotlib import rcParams
+
+labelSize = 16
+rcParams['xtick.labelsize'] = labelSize
+rcParams['ytick.labelsize'] = labelSize
 
 samplingRate = 100 # Hz                                                                 POTENTIAL SOURCE OF ERROR
 tenStepYLabelLimit = 50
@@ -125,8 +130,8 @@ def parseDataFrom(csv_filename):
 
 def finishAndShowPlot(timeArray, yticks, no_of_agents, simRun, show_fig_pls, save_fig_pls):
     plt.xlim(0, timeArray[-1])
-    plt.xlabel("simulation-time (s)")
-    plt.ylabel("robot # fired during synchrony simulation-run at")
+    plt.xlabel("simulation-time (s)", fontsize=16)
+    plt.ylabel("robot # fired during synchrony simulation-run at", fontsize=16)
     plt.yticks(yticks)
     plt.gca().invert_yaxis()
     if save_fig_pls == 1:
