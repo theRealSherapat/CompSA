@@ -9,11 +9,11 @@
 	\chapter{Baseline}
 	\chapter{dummy Tools and software}
 	\chapter{dummy Implementation}
-	
 	\chapter{Experiments and results}
+	\setcounter{page}{1}
 	\label{chap:experiments_and_results}
 	
-	This chapter presents the experiments and results set up and performed in the novel synchronization simulator in Unity, as presented in Chapter \ref{chap:implementation}, for certain configurations of musical robot collectives. Effects of the individual musical robots's hyperparameters on the collective achievement and performance of achieving harmonic synchrony are presented. Some examples are hyperparameters which determines how much each musical robot will adjust itself after hearing a transmitted fire signal from a neighbouring robot; $\alpha$ for phase adjustment and $\beta$ for frequency adjustment.
+	This chapter presents the experiments and results set up and performed in the novel synchronization simulator in Unity, as presented in Chapter 5, for certain configurations of musical robot collectives. Effects of the individual musical robots's hyperparameters on the collective achievement and performance of achieving harmonic synchrony are presented. Some examples are hyperparameters which determines how much each musical robot will adjust itself after hearing a transmitted fire signal from a neighbouring robot; $\alpha$ for phase adjustment and $\beta$ for frequency adjustment.
 
 	The main performance scores presented in this chapter will consist of synchronization times / simulation time (s) (i.e. how long it takes robots to reach the state of harmonic synchrony if they ever do), accompanied by the respective and corresponding error rates during the belonging simulation runs (i.e. the percentage of robot collectives out of e.g. 30 runs failing to reach harmonic synchrony before the maximum time limit of e.g. 5 minutes).
 
@@ -23,7 +23,7 @@
 		\subsection{Reproducing K. Nymoen's phase synchronization}
 		In order to see that our developed synchronization simulator in Unity yields more or less the same results as K. Nymoen et al.'s firefly system \cite{nymoen_synch}, similar experiments as reported in their paper are performed. These tell us whether differences in performance, in terms of synchronization times (s), is simply due to implementation differences, or actually because of the utilized synchronization methods and hyperparameters in question. 
 		
-		First off, and as performed and reported in K. Nymoen et al.'s paper \cite{nymoen_synch} (c.f. their Fig. 7), Mirollo \& Strogatz's phase adjustment method (as presented in \ref{mirollo_strogatz_phase_adjust}) is experimented with for varying phase coupling constants $\alpha$, as seen in Figure \ref{fig:exp1}.
+		First off, and as performed and reported in K. Nymoen et al.'s paper \cite{nymoen_synch} (c.f. their Fig. 7), Mirollo \& Strogatz's phase adjustment method (as presented in 2.4.2.1) is experimented with for varying phase coupling constants $\alpha$, as seen in Figure \ref{fig:exp1}.
 		
 		\begin{figure}[ht!]
 			\centering
