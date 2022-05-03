@@ -1,9 +1,24 @@
 \chapter{Baseline}
+
+
+% >>> META INFO START.
+
 \label{chap:baseline}
 \besk{Mellomkapittel om K. Nymoens approach og teori \cite{nymoen_synch}. Her presenterer jeg teoriene og metodene jeg har brukt mesteparten av masterjobbings-tiden på å etterlikne/implementere i Unity}
 
-% SEKSJON 1
+% <<< META INFO END.
+
+
+Kristian Nymoen et al. \cite{nymoen_synch} showed how one can, by amongst other measures endowing oscillators with self awareness capabilities, achieve synchronization (\textit{harmonic} at that, cf. \ref{subsec:harmonic_synchrony}) of pulse coupled oscillators while synchronizing both phases and frequencies.
+
+Other than endowing their firefly oscillators with self awareness capabilities, they developed update functions for both phases and frequencies which cause (close to) 0 change half-way through the oscillator cycle. These (close to) 0 changes half-way through robots's oscillator cycles enable individual musical robots to play e.g. half as quickly as other individuals—which typically characterizes musical interaction—as well as the possibility of achieving the target state of harmonic synchrony. Their contribution also differs from previous approaches in that Nymoen et al.'s fireflies only need to transmit ``fire'' signals every other phase climax, not every single phase climax. 
+
+The aforementioned update functions, as well as how additional self awareness capabilities are incorporated in one of them, are now presented in \ref{subsec:nymoen_phase_adjust} and \ref{subsec:nymoen_freq_adjust}. Then, the relatively new system target state of \textit{harmonic synchrony} will be expounded and explained in \ref{sec:harmonic_synchrony}.
+
+
+
 \section{Phase synchronization}
+\label{sec:nymoen_phase_updates}
 \gjor{Introduser det første $\phi$-problemet, uthevet og i fet skrift. Deretter fortsett til løsningene dens (Phase-Adj.-metodene). "This is the first and simpler problem to solve, namely synchronizing the phases $\phi_i$ of all agents $i$."}
 
 	% K. Nymoen's bi directional phase adjustment
@@ -25,9 +40,6 @@
 
 
 
-
-
-% SEKSJON 2
 \section{Phase \& frequency synchronization}
 \gjor{Introduser det andre, og mer utfordrende, $\phi$-\&$\omega$-problemet, uthevet og i fet skrift. Deretter løsningene dens (Freq.-Adj.-metodene), som man må bruke i tillegg til $\phi$-løsningene eller Phase-Adjustment-metodene. "This is the second and harder problem of synchronizing both phases $\phi_i$, as well as frequencies $\omega_i$, for all agents $i$."}
 
