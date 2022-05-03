@@ -411,6 +411,10 @@ public class SquiggleScript : MonoBehaviour {
         return t_ref;
     }
 
+    public float GetHighestRobotFrequency() {
+        return highestRobotFrequency;
+    }
+
     public void SetAgentID(int idNumber) {
         agentID = idNumber;
     }

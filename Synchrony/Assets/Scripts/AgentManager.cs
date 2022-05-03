@@ -260,12 +260,19 @@ public class AgentManager : MonoBehaviour {
 	
 	private void DefineNewTQ() {
         float new_t_q_estimate;
+        
         if ((int)TQDefiner == 1) {
 		    new_t_q_estimate = ListAverage(late_reset_defining_times) - early_t_q_definer - t_f;
         } else {
             new_t_q_estimate = ListMedian(late_reset_defining_times) - early_t_q_definer - t_f;
         }
-		defining_times_acquired = 0; // Resetting median-counter despite its true-value of 2 (for the next possible TQ-resetting).
+        // Performing a safety measure so that no errors where t_q -> 0 leads to any false positives (like it did mid phase sync hyperparam. tuning experiment) e.g.
+        float smallest_legal_t_q_value = 1.0f / spawnedSquiggleScripts[0].GetHighestRobotFrequency() - t_f;
+        if (new_t_q_estimate < smallest_legal_t_q_value) {
+            new_t_q_estimate = smallest_legal_t_q_value;
+        }
+		
+        defining_times_acquired = 0; // Resetting median-counter despite its true-value of 2 (for the next possible TQ-resetting).
 		// the 4)-"t_q-reset"-processclosing is executed:
 		t_q = new_t_q_estimate;
         if (debugTqTfOn) Debug.Log("(SimTime: - " + Time.timeSinceLevelLoad + " -) New 't_q' set: " + t_q + ".");

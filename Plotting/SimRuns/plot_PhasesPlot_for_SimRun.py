@@ -84,7 +84,7 @@ if __name__ == "__main__":
     simRun = sys.argv[1]
     show_fig_pls = int(sys.argv[2])
     save_fig_pls = int(sys.argv[3])
-    # phase_path = "../../Synchrony/SavedData/Phases/phases_over_time_atSimRun" + simRun + ".csv"
+    phase_path = "../../Synchrony/SavedData/Phases/phases_over_time_atSimRun" + simRun + ".csv"
     temp_phase_path = "phases_over_time_atSimRun" + simRun + ".csv"
     
-    main(temp_phase_path, simRun, show_fig_pls, save_fig_pls) # phase_path
+    main(phase_path, simRun, show_fig_pls, save_fig_pls) # phase_path
