@@ -167,7 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbd775d64d8fb444d804ffc4263aeca8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectiveSize: 50
+  collectiveSize: 25
   t_ref_perc_of_period: 0.5
   minMaxInitialFreqs: {x: 0.5, y: 4}
   k: 8
