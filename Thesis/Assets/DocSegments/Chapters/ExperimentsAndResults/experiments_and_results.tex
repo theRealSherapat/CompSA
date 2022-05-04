@@ -36,19 +36,16 @@ This is the section where experiments attempting to solve the first and simpler 
 	
 	\subsection{Hyperparameter tuning}
 	
-	Here we tune the hyperparameters $\alpha$ and $t_{ref\_percentage\_of\_period}$ for several robot collective sizes, according to the performance scores of how long it takes the robot collective to achieve harmonic synchrony. Exactly these two specific hyperparameters are experimented with since they empirically seem to be the most important ones to set correctly before starting the simulator; that is, in terms of the robots actually managing to achieve harmonic synchrony.
+	Here we tune the hyperparameters $\alpha$ and $t_{ref\_percentage\_of\_period}$ for several robot collective sizes, according to performance scores of how long it takes robot collectives on average to achieve harmonic synchrony. Exactly these two specific hyperparameters are experimented with since they empirically seem to be the most important ones to set correctly before starting the simulator; that is, in order for the robots to actually manage achieving harmonic synchrony.
 	
-	The specific choices of hyperparameter values to test synchronization times and error rates for, when wanting to tune the phase coupling constant $\alpha$ and the dynamic refractory period variable $t_{ref\_percentage\_of\_period}$, were chosen based on hunches for what might work well, according to experience, in order to facilitate stable and successful synchronization simulation runs—for varying robot collective sizes. An hypothesis and such hunch is e.g. that larger robot collectives do not require as large of a phase coupling constant $\alpha$ in order to synchronize compared to smaller robot collectives; as we remember $\alpha$ tells each robot how much to adjust its oscillator phase when hearing a ''fire`` signal, and when more neighbours are present to transmit ``fire'' signals to a robot—a larger quantity of small adjustment can in theory be equivalent to a few large adjustments. This is something we want to investigate more quantitatively and thoroughly by the following experiment.
+	The specific choices of hyperparameter values to test synchronization times for, when wanting to tune the phase coupling constant $\alpha$ and the dynamic refractory period variable $t_{ref\_percentage\_of\_period}$, were chosen based on empirical hunches (gotten during observation of the synchronization simulator in Unity when playing with the hyperparameters) for what might might be acceptable, according to experience, in order to facilitate stable and successful synchronization simulation runs—for varying robot collective sizes. 
 	
-	Here, the simpler phase synchronization problem of only synchronizing phases is solved for varying values of $\alpha$ and $t_{ref\_percentage\_of\_period}$, given a few randomly chosen robot collective sizes. Results can be seen in \tcol[blue]{FYLL INN HER}.
+	An hypothesis and aforementioned hunch is e.g. that larger robot collectives do not require as large of a phase coupling constant $\alpha$ in order to synchronize to each other compared to that which smaller robot collectives require; as we remember $\alpha$ tells each robot how much to adjust its oscillator phase when hearing a ''fire`` signal, and when more neighbours are present to transmit ``fire'' signals to a robot—a larger quantity of small adjustments can in theory be equivalent to a few large adjustments. This is something we want to investigate more quantitatively and thoroughly by the following experiment.
 	
-	\tcol[blue]{FYLL INN HER}
-	% \begin{figure}[ht!]
-		% \centering
-		% \includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/experiment4_perfScores.pdf}
-		% \caption{Synchronization times (s) for various collective sizes with initially random and unsynchronized phases but equal and fixed frequencies (1Hz), for varying phase coupling constants $\alpha$ and dynamic refractory periods $t_{ref\_percentage\_of\_period}$. 30 simulation runs per $\alpha$ and $t_{ref\_percentage\_of\_period}$ pair. $t_f=80ms$, and $k=8$. Maximum time limit was 5 minutes.}
-		% \label{fig:exp4}
-	% \end{figure}
+	In the Experiment 6.1.2 results, as seen below, various musical robot collectives's performance in terms of mean simulation times (s) from start of synchronization until harmonic synchrony is detected, along with their standard deviations, are presented. Again, since we are solving the phase ($\phi$) synchronization problem, now only phases are initially unsynchronized, and frequencies are fixed and constant (1Hz) throughout the simulation runs.
+	
+	% Experiment 6.1.2 results input'ed.
+	\input{Assets/DocSegments/Chapters/ExperimentsAndResults/Tables/experiment_6_1_2_table.tex}
 	
 	
 	\subsection{Comparing phase adjustment methods}
