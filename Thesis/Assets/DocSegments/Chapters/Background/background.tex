@@ -2,25 +2,25 @@
 \label{chap:background}
 
 
-% >>> META INFO START:
+	% >>> META INFO START:
 
-\besk{ Surveying of past and related work }
+	\besk{ Surveying of past and related work }
 
-\besk{ Clustering and classifications of main concepts and ideas used in the thesis } \nl
+	\besk{ Clustering and classifications of main concepts and ideas used in the thesis } \nl
 
-% <<< META INFO STOP.
+	% <<< META INFO STOP.
 
 
 \section{Taking inspiration from psychology}
 
 
-% >>> META INFO START:
+	% >>> META INFO START:
 
-\gjor{ Hent inn Essay-materiale inn hit }
+	\gjor{ Hent inn Essay-materiale inn hit }
 
-\gjor{ Merge 1) Essay . Conceptual Framework med 2) ``\tcol{self awareness scope (i.e. individual robots are aware of and susceptible to a larger number of neighbouring robots and their transmitted ``fire'' signals)}'' } \nl
+	\gjor{ Merge 1) Essay . Conceptual Framework med 2) ``\tcol{self awareness scope (i.e. individual robots are aware of and susceptible to a larger number of neighbouring robots and their transmitted ``fire'' signals)}'' } \nl
 
-% <<< META INFO STOP.
+	% <<< META INFO STOP.
 
 
 % <<< \section END.
@@ -46,11 +46,11 @@ This phenomenon has inspired scientists like Mirollo \& Strogatz \cite{mirollo_s
 \section{Signals and their responses}
 
 
-% >>> META INFO START:
+	% >>> META INFO START:
 
-\gjor{Forklare hva et signal eller et (lyd-)signal/waveform egentlig er (ift. harmonics/harmonic wave/overtones (og deres typiske integer-relationship frekvenser), og hvis tid timbre med varierende frekvenser (jf. Jay Eller hva han Andriy Burkov eller hva han het anbefalte), amplitude/gain, envelope/attack-decay)}
+	\gjor{Forklare hva et signal eller et (lyd-)signal/waveform egentlig er (ift. harmonics/harmonic wave/overtones (og deres typiske integer-relationship frekvenser), og hvis tid timbre med varierende frekvenser (jf. Jay Eller hva han Andriy Burkov eller hva han het anbefalte), amplitude/gain, envelope/attack-decay)}
 
-% <<< META INFO STOP.
+	% <<< META INFO STOP.
 
 
 Signals, in various forms, are omnipresent in our world, whether we notice it or not. They are used for guidance: e.g. traffic-lights send visual light-signals to drivers to ensure traffic-flow and collision-avoidance; sirens and alarms fire away with the loudest of audio-signals (sounds) so that its listeners will get out of harms way; our nerves send pain-signals through our nervous-system if we touch something burning hot to ensure we do not damage our hand severely. If you have ever tried to make a scary sound to scare away an animal—like a cat or crow—they might in fact flee from you if they think your audible signal was scary enough for them.
@@ -76,15 +76,15 @@ A signal can also be called a waveform.
 \section{Oscillators and oscillator-synchronization}
 
 
-% >>> META INFO START:
+	% >>> META INFO START:
 
-\gjor{ Beskriv dette så godt at du kan snakke fritt om oscillatorers \textbf{faser} og \textbf{frekvenser} senere (i Implementation f.eks.), spesielt i tilfelle for noen ikke har vært borti det før, eller tatt et Signalbehandlings-kurs }
+	\gjor{ Beskriv dette så godt at du kan snakke fritt om oscillatorers \textbf{faser} og \textbf{frekvenser} senere (i Implementation f.eks.), spesielt i tilfelle for noen ikke har vært borti det før, eller tatt et Signalbehandlings-kurs }
 
-\gjor{ Skill på Pulse-coupled Oscillators, og Phase-coupled Oscillators. Nevn fordelene, spesielt for roboter, med å synkronisere seg basert på diskret tid [Sandsbots-paperet Kyrre sendte deg (iaff. slutt-tabellen), SandBots-arkitekturen som åpner for lave oppdaterings-rater], sammenliknet med kontinuerlig tid }
+	\gjor{ Skill på Pulse-coupled Oscillators, og Phase-coupled Oscillators. Nevn fordelene, spesielt for roboter, med å synkronisere seg basert på diskret tid [Sandsbots-paperet Kyrre sendte deg (iaff. slutt-tabellen), SandBots-arkitekturen som åpner for lave oppdaterings-rater], sammenliknet med kontinuerlig tid }
 
-\besk{ Teori og nyere cutting-edge/state-of-the-art metoder for fase-/frekvens-synkronisering i oscillatorer og liknende. Se Kristian Nymoens referanser \cite{nymoen_synch} og artikler funnet i denne veinen } \nl
+	\besk{ Teori og nyere cutting-edge/state-of-the-art metoder for fase-/frekvens-synkronisering i oscillatorer og liknende. Se Kristian Nymoens referanser \cite{nymoen_synch} og artikler funnet i denne veinen } \nl
 
-% <<< META INFO STOP.
+	% <<< META INFO STOP.
 
 
 Oscillators have been used to implement and model a plethora of systems, also biological ones, ranging from designing the locomotion-patterns of swimming robot-amphibia through central pattern generators \cite{ijspeert_cpg}, ..., and as we have already established, modelling synchronously flashing or firing fireflies.
@@ -112,9 +112,9 @@ Oscillators have been used to implement and model a plethora of systems, also bi
 	
 	% >> META INFO START:
 	
-	\gjor{ Muligens inkluder introen i Section \ref{sec:phase_methods} her også (eller bare her?) }
-	
-	\besk{\tcol[gray]{(Hvis relevante og ønskede)} Tidligere metoder til Fase-synkronisering i oscillatorer (puls- og/eller fase-koplede)}
+		\gjor{ Muligens inkluder introen i Section \ref{sec:phase_methods} her også (eller bare her?) }
+		
+		\besk{\tcol[gray]{(Hvis relevante og ønskede)} Tidligere metoder til Fase-synkronisering i oscillatorer (puls- og/eller fase-koplede)}
 	
 	% << META INFO STOP.
 	
@@ -137,11 +137,11 @@ Oscillators have been used to implement and model a plethora of systems, also bi
 	
 	% >> META INFO START:
 	
-	\gjor{ Muligens inkluder introen i Section \ref{sec:frequency_methods} her også (eller bare her?) }
-	
-	\besk{ \tcol[gray]{(If relevant and wanted)} Previous approaches to Frequency-synchronization in oscillators (pulse- and/or phase-coupled) [nymoen-referanser e.g.] where the oscillators's frequencies are either equal and fixed, or where frequencies are bound to initialize and stay within a fixed interval/range. }
-	
-	\besk{ \tcol[gray]{(If it exists)} A ``simpler'' frequency synchronization approach, to solve the phase and frequency ($\phi$ \& $\omega$) problem with, without any self awareness components }
+		\gjor{ Muligens inkluder introen i Section \ref{sec:frequency_methods} her også (eller bare her?) }
+		
+		\besk{ \tcol[gray]{(If relevant and wanted)} Previous approaches to Frequency-synchronization in oscillators (pulse- and/or phase-coupled) [nymoen-referanser e.g.] where the oscillators's frequencies are either equal and fixed, or where frequencies are bound to initialize and stay within a fixed interval/range. }
+		
+		\besk{ \tcol[gray]{(If it exists)} A ``simpler'' frequency synchronization approach, to solve the phase and frequency ($\phi$ \& $\omega$) problem with, without any self awareness components }
 	
 	% << META INFO STOP.
 	
@@ -152,11 +152,11 @@ Oscillators have been used to implement and model a plethora of systems, also bi
 \section{Musical robots in music technology systems}
 
 
-% >>> META INFO START:
+	% >>> META INFO START:
 
-\gjor{ Hent inn Essay-materiale om music technology systems her, spesielt om Solojam og kanskje Nymoen et al.s Firefly-system kjapt også (for å få en første idé før du går mer i detalj på dette systemet i \textbf{Baseline}) }
+	\gjor{ Hent inn Essay-materiale om music technology systems her, spesielt om Solojam og kanskje Nymoen et al.s Firefly-system kjapt også (for å få en første idé før du går mer i detalj på dette systemet i \textbf{Baseline}) }
 
-% <<< META INFO STOP.
+	% <<< META INFO STOP.
 
 
 M. J. Krzyzaniak and RITMO's musical robots, the Dr. Squiggles, have been used in various music technology systems previously (fotnote) \cite{dr_squiggles}. Corresponding 3D-models of these robots were designed by Pierre Potel \cite{pierre_potel} and are reused, with permission, for the simulation system designed during this thesis project.

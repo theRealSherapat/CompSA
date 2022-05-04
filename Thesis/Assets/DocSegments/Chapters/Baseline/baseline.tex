@@ -2,12 +2,11 @@
 \label{chap:baseline}
 
 
-% >>> META INFO START:
+	% >>> META INFO START:
 
-\label{chap:baseline}
-\besk{Mellomkapittel om K. Nymoens approach og teori \cite{nymoen_synch}. Her presenterer jeg teoriene og metodene jeg har brukt mesteparten av masterjobbings-tiden i starten på å implementere og teste i Unity}
+	\besk{ Mellomkapittel om K. Nymoens allerede-eksisterende approach og teori \cite{nymoen_synch}. Her presenterer jeg teoriene og metodene jeg har brukt mesteparten av masterjobbings-tiden i starten på å implementere og teste i Unity }
 
-% <<< META INFO STOP.
+	% <<< META INFO STOP.
 
 
 Kristian Nymoen et al. \cite{nymoen_synch} showed how one can, by amongst other measures endowing oscillators with self awareness capabilities, achieve synchronization (\textit{harmonic} at that, cf. \ref{subsec:harmonic_synchrony}) of pulse coupled oscillators while synchronizing both phases and frequencies.
@@ -24,7 +23,7 @@ The aforementioned update functions, as well as how additional self awareness ca
 
 % >>> META INFO START:
 
-\gjor{Introduser det første phase ($\phi$) synchronization problemet, uthevet og i fet skrift. Deretter fortsett til løsningene dens (Phase-Adj.-metodene). "This is the first and simpler problem to solve, namely synchronizing the phases $\phi_i$ of all agents $i$."}
+\gjor{ Introduser det første phase ($\phi$) synchronization problemet, uthevet og i fet skrift. Deretter fortsett til løsningene dens (Phase-Adj.-metodene). "This is the first and simpler problem to solve, namely synchronizing the phases $\phi_i$ of all agents $i$." }
 
 % <<< META INFO STOP.
 
@@ -162,11 +161,11 @@ The aforementioned update functions, as well as how additional self awareness ca
 
 		\paragraph{The final step: the frequency update function, $\omega_i(t^+)$}
 		
-		% >> META INFO START:
-		
-		\besk{ Om F(n) og selve oppdateringen av frekvens }
-		
-		% << META INFO STOP.
+			% >> META INFO START:
+			
+			\besk{ Om F(n) og selve oppdateringen av frekvens }
+			
+			% << META INFO STOP.
 		
 		Now, we can pull it all together, for Nymoen et al.'s Frequency Adjustment approach for achieving harmonic synchrony with initially randomized and heterogenous frequencies.
 
@@ -196,11 +195,11 @@ The aforementioned update functions, as well as how additional self awareness ca
 \label{sec:harmonic_synchrony}
 
 
-% >>> META INFO START:
+	% >>> META INFO START:
 
-\besk{ Om target-staten til systemet, som oppfunnet av Kristian Nymoen et al. (?) }
+	\besk{ Om target-staten til systemet, som oppfunnet av Kristian Nymoen et al. (?) }
 
-% <<< META INFO STOP.
+	% <<< META INFO STOP.
 
 
 The state of harmonic synchrony is defined \cite{nymoen_synch} as the state in which all agents in the musical collective ``fire''/``flash'', as described in Subsection \ref{subsec:fire_signal}, at an even and underlying interval or pulse, a certain number of times in a row. This is not to say all agents will have to ``fire''/``flash'' simultaneously, as has traditionally been the case for pulse-coupled oscillators \cite{}. But somehow, for phases $\phi$ to be harmonically synchronized, all agent ``fire''-signals will have to coincide in a way, even though they don't all have to incur exactly at the same time always. Exactly how this looks is shown visually in Section \ref{sec:detecting_harmonic_synchrony}, especially in Figure \ref{fig:harmonic_synchrony_detection_plot}.
