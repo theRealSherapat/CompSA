@@ -15,8 +15,8 @@ def main(filepath):
     if synchronizationTimes.size == 0:
         print("'-'. Sorry, this type / configuration of musical robot collectives did not once (out of 30 independent simulation runs) achieve harmonic synchrony during the max time limit of 5 minutes.")
     else:
-        print(filepath + " average:",np.average(filepathBinary))
-        print(filepath + " standard deviation:",np.std(filepathBinary))
+        print(filepath + " average:", np.average(synchronizationTimes))
+        print(filepath + " standard deviation:", np.std(synchronizationTimes))
 
 
 if __name__ == "__main__":
