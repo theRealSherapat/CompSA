@@ -2,11 +2,11 @@
 \label{chap:baseline}
 
 
-	% >>> META INFO START:
+	% --- META INFO START: ---
 
 	\besk{ Mellomkapittel om K. Nymoens allerede-eksisterende approach og teori \cite{nymoen_synch}. Her presenterer jeg teoriene og metodene jeg har brukt mesteparten av masterjobbings-tiden i starten på å implementere og teste i Unity }
 
-	% <<< META INFO STOP.
+	% --- META INFO STOP. ---
 
 
 Kristian Nymoen et al. \cite{nymoen_synch} showed how one can, by amongst other measures endowing oscillators with self awareness capabilities, achieve synchronization (\textit{harmonic} at that, cf. \ref{subsec:harmonic_synchrony}) of pulse coupled oscillators while synchronizing both phases and frequencies.
@@ -21,11 +21,11 @@ The aforementioned update functions, as well as how additional self awareness ca
 \label{sec:nymoen_phase_updates}
 
 
-% >>> META INFO START:
+% --- META INFO START: ---
 
 \gjor{ Introduser det første phase ($\phi$) synchronization problemet, uthevet og i fet skrift. Deretter fortsett til løsningene dens (Phase-Adj.-metodene). "This is the first and simpler problem to solve, namely synchronizing the phases $\phi_i$ of all agents $i$." }
 
-% <<< META INFO STOP.
+% --- META INFO STOP. ---
 
 
 	\subsection{K. Nymoen's bi-directional phase adjustment} % or 'shifts', as used before.
@@ -44,18 +44,18 @@ The aforementioned update functions, as well as how additional self awareness ca
 
 	The effects then of adjusting phases—upon hearing ``fire''-events, according to this newest update-function \eqref{nymoen_phase}—are that the nodes's updated phases $\phi(t^+)$, compared to their old phases $\phi(t)$, now get decreased if $\phi(t)$ is lower than 0.5, increased if $\phi(t)$ is higher than 0.5, and neither—at least almost—if the phases are close to $0.5$. This is due to the negative and positive sign of the sinewave-component in Equation \eqref{nymoen_phase}, as well as the last attenuating factor in it of $| sin(2\pi\phi) | \approx | sin(2\pi \frac{1}{2}) | = | sin(\pi) | = | 0 | = 0$, then if we have $\phi(t) \approx 0.5 = \frac{1}{2}$.
 
-% <<< \section END.
+% --- \section END. ---
 
 
 
 \section{Phase \& frequency synchronization}
 
 
-% >>> META INFO START:
+% --- META INFO START: ---
 
 \gjor{ Introduser det andre, og mer utfordrende, phase \& frequency ($\phi$-\&$\omega$) synchronization problemet, uthevet og i fet skrift. Deretter løsningene dens (Freq.-Adj.-metodene), som man må bruke i tillegg til $\phi$-løsningene eller Phase-Adjustment-metodene. "This is the second and harder problem of synchronizing both phases $\phi_i$, as well as frequencies $\omega_i$, for all agents $i$ more or less simultaneously." }
 
-% <<< META INFO STOP.
+% --- META INFO STOP. ---
 
 
 	\subsection{K. Nymoen's frequency adjustment}
@@ -161,11 +161,11 @@ The aforementioned update functions, as well as how additional self awareness ca
 
 		\paragraph{The final step: the frequency update function, $\omega_i(t^+)$}
 		
-			% >> META INFO START:
+			% --- META INFO START: ---
 			
 			\besk{ Om F(n) og selve oppdateringen av frekvens }
 			
-			% << META INFO STOP.
+			% --- META INFO STOP. ---
 		
 		Now, we can pull it all together, for Nymoen et al.'s Frequency Adjustment approach for achieving harmonic synchrony with initially randomized and heterogenous frequencies.
 
@@ -187,7 +187,7 @@ The aforementioned update functions, as well as how additional self awareness ca
 
 		This $F(n)$-value then, as we see in Equation \eqref{f_value}, is a weighted average of all the agent's $H(n)$-values accumulated throughout the agent's last cycle.
 
-% <<< \section END.
+% --- \section END. ---
 
 
 
@@ -195,11 +195,11 @@ The aforementioned update functions, as well as how additional self awareness ca
 \label{sec:harmonic_synchrony}
 
 
-	% >>> META INFO START:
+	% --- META INFO START: ---
 
 	\besk{ Om target-staten til systemet, som oppfunnet av Kristian Nymoen et al. (?) }
 
-	% <<< META INFO STOP.
+	% --- META INFO STOP. ---
 
 
 The state of harmonic synchrony is defined \cite{nymoen_synch} as the state in which all agents in the musical collective ``fire''/``flash'', as described in Subsection \ref{subsec:fire_signal}, at an even and underlying interval or pulse, a certain number of times in a row. This is not to say all agents will have to ``fire''/``flash'' simultaneously, as has traditionally been the case for pulse-coupled oscillators \cite{}. But somehow, for phases $\phi$ to be harmonically synchronized, all agent ``fire''-signals will have to coincide in a way, even though they don't all have to incur exactly at the same time always. Exactly how this looks is shown visually in Section \ref{sec:detecting_harmonic_synchrony}, especially in Figure \ref{fig:harmonic_synchrony_detection_plot}.
@@ -271,4 +271,4 @@ This state of \textit{harmonic synchrony} is then the system goal state K. Nymoe
 	
 	The exact details of how such a performance or synchrony measurement is implemented for our musical multi-robot oscillator-network, in the synchronization-simulator, will be given in Section \ref{sec:detecting_harmonic_synchrony}.
 	
-% <<< \section END.
+% --- \section END. ---

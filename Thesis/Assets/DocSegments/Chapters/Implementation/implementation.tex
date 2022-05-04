@@ -1,8 +1,16 @@
 \chapter{Implementation} % Method-equivalent.
 \label{chap:implementation}
-\besk{Her presenterer jeg re-implementasjonen/etterlikningen/implementasjonsspesifikke-valg av K. Nymoens approach og teori i det nye systemet/simulatoren min i Unity — samt hvordan jeg har verifisert at mekanismene fungerer (e.g. fase-synkroniseringsplott)}
 
-% Introducing the Chapter to what I've done/developed
+
+	% --- META INFO START: ---
+
+	\besk{ What I've done / developed }
+
+	\besk{ Her presenterer jeg re-implementasjonen / etterlikningen / implementasjonsspesifikke valg av K. Nymoens approach og teori i det nye systemet / simulatoren min i Unity — samt hvordan jeg har verifisert at mekanismene fungerer (e.g. fase-synkroniseringsplott) }
+	
+	% --- META INFO STOP. ---
+
+
 This chapter gives an overview of the developed musical multi-robot system, methods implemented for it, as well as the performance measurement used to evaluate these methods with. The main goal of the implemented system is to allow for individual musical agents in a musical multi-agent collective to interact with each other, in order to achieve emergent and co-ordinating behaviour—in our case synchronization—with varying degrees of self-awareness, collective-sizes, and of difficulty and certainty in the environment and communication. More specifically, the goal with the design is to enable the robot collective to achieve so-called \textit{harmonic synchronization} within a relatively short time. Exactly what is meant by \textit{harmonic synchronization} will be expounded in Section \ref{sec:harmonic_synchrony}.
 
 These goals firstly require of the agents the modelling of oscillators with their properties, like phase and frequency, as explained further in Subsection \ref{subsec:agent}. To allow for interaction and communication between the agents, mechanisms so that the agents can transmit "fire"-signals, as well as listen for other agents's "fire"-signals, is necessary as well, and is presented in Subsection \ref{subsec:fire_signal}.
@@ -11,133 +19,138 @@ First, the system and the system components will be presented and introduced. Th
 
 
 
-
-% SEKSJON 1, Introducing my System and its System-components:
 \section{Simulator setup: the musical multi-robot collective}
 \label{sec:developed_system}
-	\besk{Introduserer og presenterer det utviklede (simulator-)systemet du har utviklet i Unity selv, veldig gjerne med et fint Unity-/Simulator-system-skjema}
-
-	Envision that we have a decentralized (i.e. no central control) multi-agent collective scenario consisting of musical robots modelled as oscillators. These are solely communicating through brief ``fire''-like audio-signals—greatly inspired by K. Nymoen et al.'s synchronizing ``fireflies'' \cite{nymoen_synch}. They are not initially synchronized in their firing of audio-signals; but as time goes, they are entraining to synchronize to each other by adjusting their phases and frequencies when/after hearing each other's audio-/fire-signals. If they then, after some time of listening to each other and adjusting themselves accordingly, succeed in becoming synchronized — we then will eventually see ``fire''-events/-signals line up at an even underlying pulse or rhythm. Examples and demonstrations of this process are depicted in Figure \ref{fig:first_idea:first_fig} and Figure \ref{fig:first_idea:second_fig}.
-
-	% First Intro-illustration figure to easily get a quick idea of what the system/design does/consists of (to be exchanged with a describing system scheme/diagram):
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Illustrations/schematic_initial_idea.pdf}
-		\caption[Illustration/schematic of the developed multi musical robot collective/system]{Illustration/Schematic: The musical robot collective entraining to synchronize to each other, or more specifically to achieve harmonic synchronization, through performing phase- \& frequency-adjustments. Agents that are not firing at the moment will adjust themselves after hearing a transmitted ``fire''-/adjustment-signal from a neighbouring firing agent.}
-		\label{fig:first_idea:first_fig}
-	\end{figure}
-
-	% Second Intro-illustration figure to easily get a quick idea of what the system/design does/consists of (to be exchanged with a describing system scheme/diagram):
-	\begin{figure}[ht!]
-		\centering
-			\begin{subfigure}[t]{.5\textwidth}
-				\centering\captionsetup{width=.9\linewidth}%
-				\includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Simulations/squiggles_unsynched_in_simulation.jpg}
-				\caption{Screenshot from the very beginning of a Synchronization-simulation.}
-				\label{fig:first_idea:second_fig:unsynched}
-			\end{subfigure}%
-			\begin{subfigure}[t]{.5\textwidth}
-				\centering\captionsetup{width=.9\linewidth}%
-				\includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Simulations/squiggles_synched_in_simulation.jpg}
-				\caption{Screenshot from the same Synchronization-simulation as in \ref{fig:first_idea:second_fig:unsynched}, a few moments later.}
-				\label{fig:first_idea:second_fig:synched}
-			\end{subfigure}
-		\caption[Synchronization-example/-screenshots from simulation in Unity]{From simulation: An example of the system target goal of harmonic synchrony being achieved in a musical robot collective, where oscillator-frequencies $\omega$ are constant and equal (1Hz), or in other words synchronized already, but oscillator-phases $\phi$ are unsynchronized and initially uniformly random numbers in the range of $[0,1]$. \nl
-		At first in \ref{fig:first_idea:second_fig:unsynched}, we see the agents firing, i.e. blinking with their eyes and turning their body yellow, asynchronously at first. Only two robots, one with pink and one with red tentacles, fire synchronously so far. Seconds later in \ref{fig:first_idea:second_fig:synched}, after having listened to each others's adjustment-signals and adjusted themselves accordingly, all agents now fire simultaneously and synchronously.}
-		\label{fig:first_idea:second_fig}
-	\end{figure}
-
-	% \inkl{Noe om hyperparameterne?}
-
-	% INCLUDE PHASES UNSYNCHED VS. SYNCHED PLOT? See 'Relevant MSc-thesis Concerns'.
-		% % Phase-/time-plot Figure with two Subplots. Subplot 1: phase-/time-plot when oscillators are unsynchronized. Subplot 2: phase-/time-plot when oscillators are synchronized
-		% \begin{figure}[h]
-			% \centering
-				% \begin{subfigure}[t]{.5\textwidth}
-					% \centering\captionsetup{width=.9\linewidth}%
-					% \includegraphics[width=0.9\linewidth]{Assets/Figures/phases_unsynched.png}
-					% \caption{Oscillators are initially not (phase-) synchronized.}
-					% \label{fig:phases_unsynched}
-				% \end{subfigure}%
-				% \begin{subfigure}[t]{.5\textwidth}
-					% \centering\captionsetup{width=.9\linewidth}%
-					% \includegraphics[width=0.9\linewidth]{Assets/Figures/phases_synched.png}
-					% \caption{Oscillators are now, seconds later, (phase-) synchronized.}
-					% \label{fig:phases_synched}
-				% \end{subfigure}
-			% \caption{Phase-plots for the agents}
-			% \label{fig:initial}
-		% \end{figure}
 
 
+	% --- META INFO START: ---
 
-	% Introducing my own System Components:
-	
-	% Om den enkelte noden/agenten min med alle egenskaper den har osv.
+	\besk{ Introduserer og presenterer det utviklede (simulator-)systemet og dets system-komponenter du har utviklet i Unity selv, veldig gjerne med et fint Unity-/Simulator-system-skjema }
+
+	% --- META INFO STOP. ---
+
+
+Envision that we have a decentralized (i.e. no central control) multi-agent collective scenario consisting of musical robots modelled as oscillators. These are solely communicating through brief ``fire''-like audio-signals—greatly inspired by K. Nymoen et al.'s synchronizing ``fireflies'' \cite{nymoen_synch}. They are not initially synchronized in their firing of audio-signals; but as time goes, they are entraining to synchronize to each other by adjusting their phases and frequencies when/after hearing each other's audio-/fire-signals. If they then, after some time of listening to each other and adjusting themselves accordingly, succeed in becoming synchronized — we then will eventually see ``fire''-events/-signals line up at an even underlying pulse or rhythm. Examples and demonstrations of this process are depicted in Figure \ref{fig:first_idea:first_fig} and Figure \ref{fig:first_idea:second_fig}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Illustrations/schematic_initial_idea.pdf}
+	\caption[Illustration/schematic of the developed multi musical robot collective/system]{Illustration/Schematic: The musical robot collective entraining to synchronize to each other, or more specifically to achieve harmonic synchronization, through performing phase- \& frequency-adjustments. Agents that are not firing at the moment will adjust themselves after hearing a transmitted ``fire''-/adjustment-signal from a neighbouring firing agent.}
+	\label{fig:first_idea:first_fig}
+\end{figure}
+
+% Second Intro-illustration figure to easily get a quick idea of what the system/design does/consists of (to be exchanged with a describing system scheme/diagram):
+\begin{figure}[ht!]
+\centering
+	\begin{subfigure}[t]{.5\textwidth}
+		\centering\captionsetup{width=.9\linewidth}%
+		\includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Simulations/squiggles_unsynched_in_simulation.jpg}
+		\caption{Screenshot from the very beginning of a Synchronization-simulation.}
+		\label{fig:first_idea:second_fig:unsynched}
+	\end{subfigure}%
+	\begin{subfigure}[t]{.5\textwidth}
+		\centering\captionsetup{width=.9\linewidth}%
+		\includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Simulations/squiggles_synched_in_simulation.jpg}
+		\caption{Screenshot from the same Synchronization-simulation as in \ref{fig:first_idea:second_fig:unsynched}, a few moments later.}
+		\label{fig:first_idea:second_fig:synched}
+	\end{subfigure}
+\caption[Synchronization-example/-screenshots from simulation in Unity]{From simulation: An example of the system target goal of harmonic synchrony being achieved in a musical robot collective, where oscillator-frequencies $\omega$ are constant and equal (1Hz), or in other words synchronized already, but oscillator-phases $\phi$ are unsynchronized and initially uniformly random numbers in the range of $[0,1]$. \nl
+At first in \ref{fig:first_idea:second_fig:unsynched}, we see the agents firing, i.e. blinking with their eyes and turning their body yellow, asynchronously at first. Only two robots, one with pink and one with red tentacles, fire synchronously so far. Seconds later in \ref{fig:first_idea:second_fig:synched}, after having listened to each others's adjustment-signals and adjusted themselves accordingly, all agents now fire simultaneously and synchronously.}
+\label{fig:first_idea:second_fig}
+\end{figure}
+
+Now, the synchrony simulator system components will be expounded and explained in detail.
+
+
 	\subsection{The individual agent: a musical robot}
 	\label{subsec:agent}
-		As introduced and presented earlier, our musical robot collective will then consist of models of M. J. Krzyzaniak and RITMO's \textit{Dr. Squiggles}, 3D-models of which can be seen in Figure \ref{fig:first_idea:second_fig}.
+
+		% --- META INFO START: ---
+
+		\besk{ Om den enkelte roboten / agenten min med alle egenskaper den har osv. }
+
+		% --- META INFO STOP. ---
+
+	As introduced and presented earlier, our musical robot collective will then consist of models of M. J. Krzyzaniak and RITMO's \textit{Dr. Squiggles}, 3D-models of which can be seen in Figure \ref{fig:first_idea:second_fig}.
+
+	Every musical robot or node have certain components, attributes, and characteristics that make it what it is. Such include an oscillator-component, consisting of the agent's oscillator-phase $\phi$ and oscillator-frequency $\omega$. Notions like ``agent'', ``robot'', ``firefly'', and ``oscillator'' will be used interchangeably throughout the thesis. The agents have an input-mechanism for hearing/detecting transmitted ``fire''-event signals from other agents, as well as an output-mechanism for transmitting or playing such ``fire''-/adjust-signals or tones, as is illustrated with the microphone and megaphone respectively in Figure \ref{fig:first_idea:first_fig}.
 	
-		Every musical robot or node have certain components, attributes, and characteristics that make it what it is. Such include an oscillator-component, consisting of the agent's oscillator-phase $\phi$ and oscillator-frequency $\omega$. Notions like ``agent'', ``robot'', ``firefly'', and ``oscillator'' will be used interchangeably throughout the thesis. The agents have an input-mechanism for hearing/detecting transmitted ``fire''-event signals from other agents, as well as an output-mechanism for transmitting or playing such ``fire''-/adjust-signals or tones, as is illustrated with the microphone and megaphone respectively in Figure \ref{fig:first_idea:first_fig}.
-		
-		In order to be able to analyse the musical scenario within which they are situated (self-assessment), as well as for adapting their musical output accordingly (self-adaptation), the agents are to some extent endowed with artificial intelligence and self-awareness capabilities. The robots are self-aware of their own phase and frequency, but are unaware of other agents's true phases and frequencies. They also possess the self-assessment capability of evaluating how much in- or out-of-synch they are, as seen in the greater context of the entire robot collective. When the agents hear the transmitted ``fire''-/adjust-signals, the agents are intelligent enough to adjust themselves in the direction of the system goal/target state.
+	In order to be able to analyse the musical scenario within which they are situated (self-assessment), as well as for adapting their musical output accordingly (self-adaptation), the agents are to some extent endowed with artificial intelligence and self-awareness capabilities. The robots are self-aware of their own phase and frequency, but are unaware of other agents's true phases and frequencies. They also possess the self-assessment capability of evaluating how much in- or out-of-synch they are, as seen in the greater context of the entire robot collective. When the agents hear the transmitted ``fire''-/adjust-signals, the agents are intelligent enough to adjust themselves in the direction of the system goal/target state.
 
-		Unless otherwise is stated, the heterogenous visual looks of the Dr. Squiggles robots in Unity have no real difference in the simulator and is only that (for visual looks), not implying other values or methods used.
+	Unless otherwise is stated, the heterogenous visual looks of the Dr. Squiggles robots in Unity have no real difference in the simulator and is only that (for visual looks), not implying other values or methods used.
 
-		
-	% Om kommunikasjonen til agentene mine: audio-/``fire''-signalet
+	
 	\subsection{Robot communication: the ``fire''-signal}
 	\label{subsec:fire_signal}
 	
+		% --- META INFO START: ---
+		
+		\besk{ Om kommunikasjonen til robotene mine: \textit{audio / ``fire'' signalet} }
+		
+		% --- META INFO STOP. ---
+
 	These aforementioned audio-signals, also referred to as ``fire''-signals, ``flash''-signals, or adjust-signals, are transmitted whenever an agent's oscillator \textit{peaks} or \textit{climaxes} (i.e. after its cycle or period is finished, having phase $\phi(t)=1$) — or actually after every second \textit{peak}, as a way (discovered by K. Nymoen et al. \cite{nymoen_synch}) to attain the system target goal of \textit{harmonic synchrony}, to be elaborated upon in Section \ref{sec:harmonic_synchrony}.
 
 	The ``fire''-signals are short and impulsive tones that the agents output through their loudspeakers. These short audio-signals/sounds ``wildly'' transmitted or played into the environment are then the only means of communication within the multi-agent collective, implying that are agents are pulse-coupled, not phase-coupled, oscillators. In other words, our agents will communicate and co-ordinate with each other through the very typical multi-agent system concept of \textit{stigmergy}.
-	
+
 	When an agent detects a ``fire''-/adjust-signal, the agent will adjust its own oscillator-properties (phase $\phi$ and frequency $\omega$), depending on which type of problem the agents are to solve. No individual agent is directly able to adjust or modify the state or properties of any other agent, only its own. Exactly the type of problems we attempt to solve in this thesis will be presented now in Section \ref{sec:phase_methods} and Section \ref{sec:frequency_methods}.
 	
-	\subsubsection{Under the hood in the simulator}
-		\gjor{Fyll inn her med megafon-/mikrofon-pollingen hvis du implementerer det}
+
+		\subsubsection{Under the hood in the simulator}
+		
+			% --- META INFO START: ---
+			
+			\gjor{ Fyll inn her med megafon-/mikrofon-pollingen hvis du implementerer det }
+			
+			% --- META INFO STOP. ---
+		
 		Pretty basic and kinda like poking another robot immediately after a phase-climax.
-	
-	\subsubsection{Audible to human simulator-observer}
-	\label{human_audible_fire_signals}
-	
-		\paragraph{Fire-signal design}
-		The fire-signal audible to the human observer watching and listening to the musical robots synchronizing to each other should be distinct and short enough so that one can clearly distinguish between which robots are firing and when. At the same time, the firing-sounds should to the human observer not be too sharp and loud to listen to so that it is uncomfortable observing the musical robot collective. Keeping these aspects in mind, some relatively soft and pleasant firing-sounds from an instrument usually associated with harmonious music—the harp—were produced and developed for the synchronization-simulator.
 		
-		Some manually and empirically perceived harmonious (in terms of sounding good when played together) musical tones were digitally reproduced and recorded in the form of harp-plucks. This was achieved using the music-making system and digital synthesizer LMMS, and a digital string-instrument in the form of a LMMS-plugin from DSK Music (fotnote m/ link https://www.dskmusic.com/dsk-world-stringz-updated/). The musical tones reproduced with the digital harp-instrument were some of the tones perceived in the intro of Pogo's song ``Strangerous.'' (fotnote) One possible avenue to explore in order to find harmonious chords or tones—when played together—in a more automatic approach, live and online during simulation, is discussed in Further work in Chapter \ref{chap:conclusions}.
-		
-		However, the harp-sounds produced with DSK's LMMS-plugin are primarily long and constant harp-plucks, as shown in Figure \ref{fig:harp_sound}. Using such harp-plucks as a fire-sound directly can make it hard to distinguish to the human ear when multiple robots are playing these frequently and simultaneously. The harp-sounds thus need to be slightly edited—which they in our implementation were in the audio-editing program Audacity—so that the long and constant harp-pluck became more of a ``quick'' and distinguishable ``sound-bullet'' — essentially what we want in a solid ``fire''-signal sound. The ``before'' and ``after'' of such an audio-editing process is depicted in Figure \ref{fig:fire_signal_designing}. Edits performed on waveform \ref{fig:harp_sound} to obtain waveform \ref{fig:harp_fire_sound} consists of effects like ``Fade Out'' (to dampen the sound in the tail of the waveform \inkl{and get a shorter ``sustain''}, and hence obtaining a ``quicker'' sound), in the complete beginning ``Amplify'' (in order to get a as high ``attack''/max-amplitude as wanted to make the fire-sound audible enough before it quickly decays) — and obviously cutting the waveform accordingly (from where it had amplitude $\approx 0$ to the end of the waveform).
-		
-		% Fire-sound design/editing: before and after.
-		\begin{figure}
-		\begin{minipage}[c][11cm][t]{\textwidth}
-			\vspace*{\fill}
-			\centering
-			\includegraphics[width=\textwidth]{Assets/DocSegments/Chapters/Implementation/Figures/Illustrations/waveform_Strangerous_1_1.pdf}
-			\subcaption{A harp-sound (stereo audio waveform).}
-			\label{fig:harp_sound}\par\vfill
-			\includegraphics[width=\textwidth]{Assets/DocSegments/Chapters/Implementation/Figures/Illustrations/waveform_Strangerous_1_1_fire_signal.pdf}
-			\subcaption{A fire-sound transformed/designed harp-sound.}
-			\label{fig:harp_fire_sound}
-		\end{minipage}
-		\caption[Editing a long harp-pluck to become a fire-signal.]{Here we see the end-result of a fire-sound design process, where the longer harp-sound in \ref{fig:harp_sound} got edited and transformed into the more rapid—and amongst many other sounds like it played at the same time, more distinguishable—fire-sound in \ref{fig:harp_fire_sound}.}
-		\label{fig:fire_signal_designing}
-		\end{figure}
-	
-	
-		\paragraph{Frequency based fire-sound assignment}
-		\besk{Presenting the assignment of firing-sounds, as developed in \textbf{Envelope-design}, (with varying fundamental frequencies) based on robot-frequencies}
-		\inkl{Skisse som i Logs\&History-rM-notatet ditt kombinert med implementasjons-spesifikke detaljer som hvordan jeg fikk til å bytte}
-		
-		Given that our developed system is not simply a synchronization-system, which could have been implemented with simpler electrical circuits e.g. \cite{}, but also a musical robot system — the displayal and expression of the robots synchronizing and becoming synchronized should have a musical dimension, as well as providing a clear way to see whether the robots are getting synchronized or not. Therefore, a musically interesting and meaningful way of signalizing the synchronization-process was needed. The answers to the question of what is different between robots throughout the simulation plays a key part here; namely, e.g. the robot's oscillator-frequencies. 
-		Different musical tones were recorded (again with a harp-instrument) and later edited into ``fire''-signals, as described above, with various signal lengths given their pitch.
-		The idea was to assign, online and dynamically throughout the simulation-run, ``fire''-signal-transformed musical tones with higher pitch (or waveform-frequencies) to musical robots with the highest oscillator-frequencies in the robot-collective.
-	
-	
-	
-	
-% SEKSJON 2
+
+		\subsubsection{Audible to human simulator-observer}
+		\label{human_audible_fire_signals}
+
+			\paragraph{Fire signal design}
+			The fire-signal audible to the human observer watching and listening to the musical robots synchronizing to each other should be distinct and short enough so that one can clearly distinguish between which robots are firing and when. At the same time, the firing-sounds should to the human observer not be too sharp and loud to listen to so that it is uncomfortable observing the musical robot collective. Keeping these aspects in mind, some relatively soft and pleasant firing-sounds from an instrument usually associated with harmonious music—the harp—were produced and developed for the synchronization-simulator.
+			
+			Some manually and empirically perceived harmonious (in terms of sounding good when played together) musical tones were digitally reproduced and recorded in the form of harp-plucks. This was achieved using the music-making system and digital synthesizer LMMS, and a digital string-instrument in the form of a LMMS-plugin from DSK Music (fotnote m/ link https://www.dskmusic.com/dsk-world-stringz-updated/). The musical tones reproduced with the digital harp-instrument were some of the tones perceived in the intro of Pogo's song ``Strangerous.'' (fotnote) One possible avenue to explore in order to find harmonious chords or tones—when played together—in a more automatic approach, live and online during simulation, is discussed in Further work in Chapter \ref{chap:conclusions}.
+			
+			However, the harp-sounds produced with DSK's LMMS-plugin are primarily long and constant harp-plucks, as shown in Figure \ref{fig:harp_sound}. Using such harp-plucks as a fire-sound directly can make it hard to distinguish to the human ear when multiple robots are playing these frequently and simultaneously. The harp-sounds thus need to be slightly edited—which they in our implementation were in the audio-editing program Audacity—so that the long and constant harp-pluck became more of a ``quick'' and distinguishable ``sound-bullet'' — essentially what we want in a solid ``fire''-signal sound. The ``before'' and ``after'' of such an audio-editing process is depicted in Figure \ref{fig:fire_signal_designing}. Edits performed on waveform \ref{fig:harp_sound} to obtain waveform \ref{fig:harp_fire_sound} consists of effects like ``Fade Out'' (to dampen the sound in the tail of the waveform \inkl{and get a shorter ``sustain''}, and hence obtaining a ``quicker'' sound), in the complete beginning ``Amplify'' (in order to get a as high ``attack''/max-amplitude as wanted to make the fire-sound audible enough before it quickly decays) — and obviously cutting the waveform accordingly (from where it had amplitude $\approx 0$ to the end of the waveform).
+			
+			\begin{figure}
+			\begin{minipage}[c][11cm][t]{\textwidth}
+				\vspace*{\fill}
+				\centering
+				\includegraphics[width=\textwidth]{Assets/DocSegments/Chapters/Implementation/Figures/Illustrations/waveform_Strangerous_1_1.pdf}
+				\subcaption{A harp-sound (stereo audio waveform).}
+				\label{fig:harp_sound}\par\vfill
+				\includegraphics[width=\textwidth]{Assets/DocSegments/Chapters/Implementation/Figures/Illustrations/waveform_Strangerous_1_1_fire_signal.pdf}
+				\subcaption{A fire-sound transformed/designed harp-sound.}
+				\label{fig:harp_fire_sound}
+			\end{minipage}
+			\caption[Editing a long harp-pluck to become a fire-signal.]{Here we see the starting point and end result (before and after) of a fire-sound design process, where the longer harp-sound in \ref{fig:harp_sound} got edited and transformed into the more rapid—and amongst many other sounds like it played at the same time, more distinguishable—fire-sound in \ref{fig:harp_fire_sound}.}
+			\label{fig:fire_signal_designing}
+			\end{figure}
+
+
+			\paragraph{Frequency based fire-sound assignment}
+			
+				% --- META INFO START: ---
+				
+				\besk{ Presenting the assignment of firing-sounds, as developed in \textbf{Fire signal design}, (with varying fundamental frequencies) based on robot-frequencies }
+				
+				\gjor{ Lag kjapt en skisse som i Logs\&History-rM-notatet og kombiner dee med implementasjons-spesifikke detaljer som hvordan jeg fikk til å bytte frekvens }
+				
+				% --- META INFO STOP. ---
+			
+			Given that our developed system is not simply a synchronization-system, which could have been implemented with simpler electrical circuits e.g. \cite{}, but also a musical robot system — the displayal and expression of the robots synchronizing and becoming synchronized should have a musical dimension, as well as providing a clear way to see whether the robots are getting synchronized or not. Therefore, a musically interesting and meaningful way of signalizing the synchronization-process was needed. The answers to the question of what is different between robots throughout the simulation plays a key part here; namely, e.g. the robot's oscillator-frequencies. 
+			Different musical tones were recorded (again with a harp-instrument) and later edited into ``fire''-signals, as described above, with various signal lengths given their pitch.
+			The idea was to assign, online and dynamically throughout the simulation-run, ``fire''-signal-transformed musical tones with higher pitch (or waveform-frequencies) to musical robots with the highest oscillator-frequencies in the robot-collective.
+
+% --- \section END. ---
+
+
+
 % Presenting new Methods I implemented myself for Phase-Adjustment:
 \section{Synchronizing oscillator-phases}
 \label{sec:phase_methods}

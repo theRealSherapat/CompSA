@@ -2,13 +2,13 @@
 \label{chap:experiments_and_results}
 
 
-	% >>> META INFO START:
+	% --- META INFO START: ---
 
 	\besk{Et kapittel der du har satt opp (med hyper-parametere og miljø-variabler f.eks. i en oversiktlig tabell) eksperimenter, kjørt simulation-runs med disse verdiene, og viser hva resultatene ble. Resultater kan være \textbf{performance plot}s (ift. harmonic synch.-times for diverse hyper-parametere og miljøvariabler (samt om robotene er homogene eller heterogene og isåfall hvordan), der plottet må lages spesifikt for hvert eksperiment, og kan f.eks. være boxplot eller tabeller med performance-/hsynchtime-/simulation-time(s)-verdier), \textbf{harmonic synchrony detection plot}s (altså hvordan harmonic synch. ble detectet i et simulation-run), \textbf{phase-\&frequency-plot}s (altså hvilke fase- og frekvens-verdier robotene hadde iløpet av simulation-run'et, via \textit{plot\_PhaseFrequencyPlot\_for\_SimRun.py}), eller \textbf{synchrony-evolution plot}s (der 'towards\_k\_counter'en iløpet av simulation-run'et plottes, via \textit{plot\_SynchronyEvolutionPlot\_for\_SimRun.py})}
 
 	\besk{Helst gode eksperimenter som motiveres og forklares, settes opp, og utføres m/resultater man diskuterer og analyserer. Det er bra å evaluere fra flere synspunkt \tcol[gray]{med flere research methods og hvis tid}}
 
-	% <<< META INFO STOP.
+	% --- META INFO STOP. ---
 
 
 This chapter presents the experiments and results set up and performed in the novel synchronization simulator in Unity, as presented in Chapter \ref{chap:implementation}, for certain configurations of musical robot collectives. Effects of the individual musical robots's hyperparameters on the collective achievement and performance of achieving harmonic synchrony are presented. Some examples are hyperparameters which determines how much each musical robot will adjust itself after hearing a transmitted fire signal from a neighbouring robot; $\alpha$ for phase adjustment and $\beta$ for frequency adjustment.
@@ -53,7 +53,7 @@ This is the section where experiments attempting to solve the first and simpler 
 	
 	% GAMMEL EPA1-CAPTION: Performance-plot: harmonic synchronization-times from initial simulator-experiment when synchronizing phases $\phi_i$ for all agents $i$, where all phases are initially uniformly randomized between 0 and 1, and eventually synchronize and align. We here measure how long it takes 6 agents to synchronize their phases to each other, given the two different phase-adjustment methods. 30 individual runs per phase-adjustment method were performed in Unity for a collective-size of 6 agents, and $\alpha=0.2$ e.g.
 	
-% <<< \section END.
+% --- \section END. ---
 	
 	
 	
@@ -108,4 +108,4 @@ This is the section for the experiments attempting to solve the second and harde
 	
 	In this way, the degree to which robots are self aware of or communicating with other robots is increasing. The effects of increasing the degree of self awareness in this sense are shown in [].
 	
-% <<< \section END.
+% --- \section END. ---

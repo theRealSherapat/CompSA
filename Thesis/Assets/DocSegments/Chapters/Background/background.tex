@@ -2,28 +2,28 @@
 \label{chap:background}
 
 
-	% >>> META INFO START:
+	% --- META INFO START: ---
 
 	\besk{ Surveying of past and related work }
 
 	\besk{ Clustering and classifications of main concepts and ideas used in the thesis } \nl
 
-	% <<< META INFO STOP.
+	% --- META INFO STOP. ---
 
 
 \section{Taking inspiration from psychology}
 
 
-	% >>> META INFO START:
+	% --- META INFO START: ---
 
 	\gjor{ Hent inn Essay-materiale inn hit }
 
 	\gjor{ Merge 1) Essay . Conceptual Framework med 2) ``\tcol{self awareness scope (i.e. individual robots are aware of and susceptible to a larger number of neighbouring robots and their transmitted ``fire'' signals)}'' } \nl
 
-	% <<< META INFO STOP.
+	% --- META INFO STOP. ---
 
 
-% <<< \section END.
+% --- \section END. ---
 
 
 
@@ -39,18 +39,18 @@ The intriguing, diverse, and complex phenomena of nature have for long served as
 
 This phenomenon has inspired scientists like Mirollo \& Strogatz \cite{mirollo_strogatz_PCO_synch} and in later time Kristian Nymoen et al. \cite{nymoen_synch}, to model and replicate this natural phenomenon in human-engineered systems. Given the periodic and repeating nature of the flashing/firing of the fireflies, modelling a firefly has been done by looking at each firefly as a periodic signal or oscillator. This work \cite{mirollo_strogatz_PCO_synch, nymoen_synch} then ties into the broader work on synchronizing oscillators which has been subject to study for some time now []. What separates Mirollo-Strogatz and K. Nymoen's approaches from these other and previous oscillator-synchronizing methods, is mainly that here the oscillators are \textit{pulse-coupled} (which the fireflies also can be said to be), as opposed to the more ``standard'' and constraining \textit{phase-coupled} oscillators. Additionally, K. Nymoen's approach accounts for synchronizing initially heterogenous frequencies as well.
 
-% <<< \section END.
+% --- \section END. ---
 
 
 
 \section{Signals and their responses}
 
 
-	% >>> META INFO START:
+	% --- META INFO START: ---
 
 	\gjor{Forklare hva et signal eller et (lyd-)signal/waveform egentlig er (ift. harmonics/harmonic wave/overtones (og deres typiske integer-relationship frekvenser), og hvis tid timbre med varierende frekvenser (jf. Jay Eller hva han Andriy Burkov eller hva han het anbefalte), amplitude/gain, envelope/attack-decay)}
 
-	% <<< META INFO STOP.
+	% --- META INFO STOP. ---
 
 
 Signals, in various forms, are omnipresent in our world, whether we notice it or not. They are used for guidance: e.g. traffic-lights send visual light-signals to drivers to ensure traffic-flow and collision-avoidance; sirens and alarms fire away with the loudest of audio-signals (sounds) so that its listeners will get out of harms way; our nerves send pain-signals through our nervous-system if we touch something burning hot to ensure we do not damage our hand severely. If you have ever tried to make a scary sound to scare away an animal—like a cat or crow—they might in fact flee from you if they think your audible signal was scary enough for them.
@@ -69,14 +69,14 @@ A signal can also be called a waveform.
 	\subsection{Frequency}
 		\subsubsection{Spectra / Spectrograms}
 
-% <<< \section END.
+% --- \section END. ---
 
 
 
 \section{Oscillators and oscillator-synchronization}
 
 
-	% >>> META INFO START:
+	% --- META INFO START: ---
 
 	\gjor{ Beskriv dette så godt at du kan snakke fritt om oscillatorers \textbf{faser} og \textbf{frekvenser} senere (i Implementation f.eks.), spesielt i tilfelle for noen ikke har vært borti det før, eller tatt et Signalbehandlings-kurs }
 
@@ -84,7 +84,7 @@ A signal can also be called a waveform.
 
 	\besk{ Teori og nyere cutting-edge/state-of-the-art metoder for fase-/frekvens-synkronisering i oscillatorer og liknende. Se Kristian Nymoens referanser \cite{nymoen_synch} og artikler funnet i denne veinen } \nl
 
-	% <<< META INFO STOP.
+	% --- META INFO STOP. ---
 
 
 Oscillators have been used to implement and model a plethora of systems, also biological ones, ranging from designing the locomotion-patterns of swimming robot-amphibia through central pattern generators \cite{ijspeert_cpg}, ..., and as we have already established, modelling synchronously flashing or firing fireflies.
@@ -110,13 +110,13 @@ Oscillators have been used to implement and model a plethora of systems, also bi
 	
 	\subsection{Phase-adjustment}
 	
-	% >> META INFO START:
+	% --- META INFO START: ---
 	
 		\gjor{ Muligens inkluder introen i Section \ref{sec:phase_methods} her også (eller bare her?) }
 		
 		\besk{\tcol[gray]{(Hvis relevante og ønskede)} Tidligere metoder til Fase-synkronisering i oscillatorer (puls- og/eller fase-koplede)}
 	
-	% << META INFO STOP.
+	% --- META INFO STOP. ---
 	
 		\subsubsection{Mirollo-Strogatz's ``standard'' phase adjustment} % or phase synchronization, or phase updates
 		\label{mirollo_strogatz_phase_adjust}
@@ -135,7 +135,7 @@ Oscillators have been used to implement and model a plethora of systems, also bi
 	
 	\subsection{Frequency-adjustment}
 	
-	% >> META INFO START:
+	% --- META INFO START: ---
 	
 		\gjor{ Muligens inkluder introen i Section \ref{sec:frequency_methods} her også (eller bare her?) }
 		
@@ -143,22 +143,22 @@ Oscillators have been used to implement and model a plethora of systems, also bi
 		
 		\besk{ \tcol[gray]{(If it exists)} A ``simpler'' frequency synchronization approach, to solve the phase and frequency ($\phi$ \& $\omega$) problem with, without any self awareness components }
 	
-	% << META INFO STOP.
+	% --- META INFO STOP. ---
 	
-% <<< \section END.
+% --- \section END. ---
 	
 	
 
 \section{Musical robots in music technology systems}
 
 
-	% >>> META INFO START:
+	% --- META INFO START: ---
 
 	\gjor{ Hent inn Essay-materiale om music technology systems her, spesielt om Solojam og kanskje Nymoen et al.s Firefly-system kjapt også (for å få en første idé før du går mer i detalj på dette systemet i \textbf{Baseline}) }
 
-	% <<< META INFO STOP.
+	% --- META INFO STOP. ---
 
 
 M. J. Krzyzaniak and RITMO's musical robots, the Dr. Squiggles, have been used in various music technology systems previously (fotnote) \cite{dr_squiggles}. Corresponding 3D-models of these robots were designed by Pierre Potel \cite{pierre_potel} and are reused, with permission, for the simulation system designed during this thesis project.
 
-% <<< \section END.
+% --- \section END. ---
