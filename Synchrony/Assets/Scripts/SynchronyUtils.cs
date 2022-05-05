@@ -176,6 +176,14 @@ public static class SynchronyUtils {
         Debug.Log("END.");
     }
 
+    public static void DebugLogMyStringArray(string[] arrayo) {
+        Debug.Log("START:");
+        for (int i = 0; i < arrayo.Length; i++) {                         // selvom 'for-in' loops i C# virker til å være ordered.
+            Debug.Log("Array-entry " + i + " sin verdi: " + arrayo[i]);
+        }
+        Debug.Log("END.");
+    }
+
 
 
 

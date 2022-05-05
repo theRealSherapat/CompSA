@@ -3,6 +3,8 @@ using UnityEngine;
 using System.Linq;
 using static SynchronyUtils;
 using System.Collections;
+using System.IO;
+using System.Globalization;
 
 public class TestBedScript : MonoBehaviour {
 
@@ -20,7 +22,7 @@ public class TestBedScript : MonoBehaviour {
     // 'MonoBehaviour':
 
     void Start() {
-        randGen = new System.Random(4);
+        //randGen = new System.Random(4);
 
         // '"Array -> List"-conversion':
         //agentIDer = new int[10];

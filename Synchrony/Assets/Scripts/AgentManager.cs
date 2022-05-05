@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Linq;
 using System.IO;
 using static SynchronyUtils;
+using static SquiggleScript;
 using System.Collections;
 
 public class AgentManager : MonoBehaviour {
@@ -12,6 +13,8 @@ public class AgentManager : MonoBehaviour {
     // 'Recorded collective-/environment-hyperparameters':
     [Tooltip("The number of agents to be spawned and synchronized.")]
     public int collectiveSize = 6;
+    [Tooltip("Whether we are trying to recreate a Nymoen experiment as closely as his one, or using our own system's variables.")]
+    public bool recreatingNymoenResults;
     [Tooltip("The duration (%) of the refractory period in terms of a percentage of the agents's oscillator-periods.")]
     public float t_ref_perc_of_period = 0.05f;       // ISH LENGDEN I TID PÅ digitalQuickTone er 0.4s. Nymoen BRUKTE 50ms I SIN IMPLEMENTASJON. JEG PRØVDE OGSÅ 0.6f. possiblePool = {0.09f, 0.4f, 0.6f}.
     [Tooltip("Minimum and maximum initialization-frequencies (Hz).")]
@@ -36,8 +39,6 @@ public class AgentManager : MonoBehaviour {
     public int randomSeed;
 
     // 'Non-recorded general meta-/environment-hyperparemeters':
-    [Tooltip("Whether we are trying to recreate a Nymoen experiment as closely as his one, or using our own system's variables.")]
-    public bool recreatingNymoenResults;
     public enum simulationModesEnum // Min customme enumeration
     {
         Experiment,
@@ -73,6 +74,7 @@ public class AgentManager : MonoBehaviour {
     // 'Private variables necessary to make the cogs go around':
 
     // General Meta:
+    private string wantedHyperparamsPath = Directory.GetCurrentDirectory() + "\\" + "wantedHyperparametersForSimulationRun.csv";
     private static int atSimRun = 0;
     private System.Random randGen;
 
@@ -81,6 +83,11 @@ public class AgentManager : MonoBehaviour {
     private float agentWidth = Mathf.Sqrt(Mathf.Pow(4.0f, 2) + Mathf.Pow(4.0f, 2)); // diameter from tentacle to tentacle (furthest from each other)
     private List<Vector2> spawnedPositions = new List<Vector2>();
     private List<SquiggleScript> spawnedSquiggleScripts = new List<SquiggleScript>();
+    private float wantedAlpha;
+    private phaseSyncEnum wantedPhaseAdjustmentMethod;
+    private float wantedBeta;
+    private frequencySyncEnum wantedFrequencyAdjustmentMethod;
+    private int wantedM;
 
     // CSV-Serialization:
     private int dataSavingFrequencyY;
@@ -128,6 +135,9 @@ public class AgentManager : MonoBehaviour {
     // 'MonoBehaviour':
 
     void Awake() {
+        // Loading the user or Python-script given hyperparameters wanted for the simulation run being set up.
+        LoadCSVCovariatesIntoSimulation();
+
         InitializeRandomGenerator();
 
         // Spawning all agents randomly (but pretty naively as of now)
@@ -473,7 +483,15 @@ public class AgentManager : MonoBehaviour {
 
             SquiggleScript extractedSquiggleScript = newAgent.GetComponent<SquiggleScript>();
 
+            // Assigning robot-variables:
             extractedSquiggleScript.SetAgentID(i + 1); // Setting AgentIDs so that agents have IDs {1, 2, 3, ..., N}, where N is the number of agents in the scene.
+
+            extractedSquiggleScript.alpha = wantedAlpha;
+            extractedSquiggleScript.phaseAdjustment = wantedPhaseAdjustmentMethod;
+            extractedSquiggleScript.beta = wantedBeta;
+            extractedSquiggleScript.frequencyAdjustment = wantedFrequencyAdjustmentMethod;
+            extractedSquiggleScript.m = wantedM;
+
             spawnedSquiggleScripts.Add(extractedSquiggleScript);
 
             // IF-TIME Debug-TODO: Figure out local vs. global Dr.Squiggle-rotations:
@@ -551,6 +569,68 @@ public class AgentManager : MonoBehaviour {
         GetCameraIntoDecentFOVPosition();
 
         ScaleGroundAccordingToSpawnRadius();
+    }
+
+    private void LoadCSVCovariatesIntoSimulation() {
+        // 'Reading in a character separated file (.CSV)':
+        List<float> covariatesToUse = new List<float>();
+
+        using (var reader = new StreamReader(wantedHyperparamsPath)) {
+
+            // Skipping the first boring (text) line containing the HCI-understandable hyperparameter values (to be read by hoomans).
+            reader.ReadLine();
+
+            // Extracting the interesting covariates to a C# list.
+            var line = reader.ReadLine();
+            var values = line.Split(';');
+
+            foreach (string covariate in values) {
+                float convertedCovariate = System.Convert.ToSingle(covariate);
+                covariatesToUse.Add(convertedCovariate);
+            }
+        }
+
+        AssignSimulatorHyperparameters(covariatesToUse);
+    }
+
+    private void AssignSimulatorHyperparameters(List<float> covariatesToAssign) {
+        // Here the wanted simulator covariates / hyperparameters are assigned to the Unity synchronization simulator's internal variables.
+        // NB! Remember that the order of hyperparameters (in the .CSV file compared to here) has to be manually ensured that is correct.                   POENTIAL SOURCE OF ERROR
+
+        // Assigning collective / environment hyperparameters:
+
+        collectiveSize = (int)covariatesToAssign[0];
+
+        recreatingNymoenResults = System.Convert.ToBoolean(covariatesToAssign[1]); // '0' means no, so then we're using a dynamical oscillatorperiod-based t_ref and not a constant 50ms t_ref. 
+        t_ref_perc_of_period = covariatesToAssign[2]; // '[0.0,1.0]' Percentage of how much of its period an oscillator should be inactive after firing a ``fire'' signal.
+        
+        minMaxInitialFreqs = new Vector2(covariatesToAssign[3], covariatesToAssign[4]); // Lower and upper boundary for oscillator frequency initializations.
+
+        k = (int)covariatesToAssign[5]; // How many times the agents have to ``beat evenly'' (has to be defined and explained clearer) before (amongst some few other requirements having to be fulfilled) deeming the musical robot collective 'harmonically synchronized.'
+        t_f = covariatesToAssign[6]; // The duration of the short time windows the robot collective are allowed to fire within at a time.
+        TQDefiner = (TQDefinerEnum)(int)covariatesToAssign[7]; // '0' means Median, '1' means Average. Whether we use averages or medians in the calculation of new t_q values.
+
+        useDeterministicSeed = System.Convert.ToBoolean(covariatesToAssign[8]); // '0' means randomize simulation run (in terms of random seeds), '1' means use given seed deterministically.
+        randomSeed = (int)covariatesToAssign[9]; // Seed given if we want to use it deterministically to try and recreate a specific simulation run.
+
+        simulationMode = (simulationModesEnum)(int)covariatesToAssign[10]; // '0' means 'Experiment' and '1' 'Analysis.'
+        dataSavingFrequency = covariatesToAssign[11]; // Sampling rate of plotting data given in Hz.
+
+        runDurationLimit = covariatesToAssign[12]; // Maximum allowed simulation time (sim s) for the musical robot collective to have achieved harmonic synchrony before it is deemed as a failure.
+
+        allowRobotsToStruggleForPeriods = (int)covariatesToAssign[13]; // For how long robots who never reach phase climax should be left hanging without being frequency-doubled.
+
+        // runHeterogenousRobots = System.Convert.ToBoolean(covariatesToAssign[13KOMMA5]); // '0' means 'no', '1' means 'yes'. Whether we want to run an experiment with heterogenous robots or not.
+
+
+        // Assigning individual / robot hyperparameters (CAN AT THE MOMENT ONLY BE HOMOGENOUS):
+
+        wantedAlpha = covariatesToAssign[14]; // Homogenous phase coupling constant.
+        wantedPhaseAdjustmentMethod = (phaseSyncEnum)(int)covariatesToAssign[15]; // Homogenous phase adjustment method wanting to be used.
+
+        wantedBeta = covariatesToAssign[16]; // Homogenous frequency coupling constant.
+        wantedFrequencyAdjustmentMethod = (frequencySyncEnum)(int)covariatesToAssign[17]; // Homogenous frequency adjustment method wanting to be used.
+        wantedM = (int)covariatesToAssign[18]; // Homogenous error memory length (length of the error buffer list that captures how much out of synch the robot were during the last m fire events).
     }
 
     private void ScaleGroundAccordingToSpawnRadius() {

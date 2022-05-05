@@ -168,6 +168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collectiveSize: 25
+  recreatingNymoenResults: 0
   t_ref_perc_of_period: 0.5
   minMaxInitialFreqs: {x: 0.5, y: 4}
   k: 8
@@ -175,11 +176,10 @@ MonoBehaviour:
   TQDefiner: 0
   useDeterministicSeed: 0
   randomSeed: 0
-  recreatingNymoenResults: 0
   simulationMode: 0
   dataSavingFrequency: 50
   runDurationLimit: 300
-  useSound: 0
+  useSound: 1
   volumePercentage: 0.5
   useVisuals: 1
   debugSuccessOn: 0
