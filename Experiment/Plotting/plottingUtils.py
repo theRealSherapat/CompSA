@@ -27,4 +27,4 @@ def parseDataFrom(csv_filename):
             
             numOfRows += 1
     
-    return arrayOfDatapoints
+    return arrayOfDatapoints[1:,:] # slicing like this because of the np.empty() usage.

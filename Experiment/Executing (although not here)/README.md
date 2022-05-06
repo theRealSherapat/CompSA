@@ -1,0 +1,1 @@
+HUSK! Du må klippe ut eller kopiere og lime inn disse eksperiment-kjørings scriptene til 'Synchrony'-mappa for at det skal kjøre riktig!

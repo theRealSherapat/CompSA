@@ -159,10 +159,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4db8b444f864bf479ad5b4eaa527a7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  alpha: 0.001
-  phaseAdjustment: 0
-  beta: 0
-  frequencyAdjustment: 0
+  alpha: 0.5
+  phaseAdjustment: 1
+  beta: 0.4
+  frequencyAdjustment: 1
   m: 5
   audioClips:
   - {fileID: 8300000, guid: 236067ffbbf34ea44916e1c83660bbcc, type: 3}

@@ -74,7 +74,7 @@ def byttUtPunktumerMedKommaer(listoMedNumeriskeVerdior):
 # Running Unity Synchrony simulator runs:
 
 def runNumberOfSimulationRuns(no_of_runs):    
-    pool = mp.Pool(mp.cpu_count()) # evt. cpu_count()-1 hvis du vil la en av prosessorene være ledig
+    pool = mp.Pool(mp.cpu_count()-1) # evt. cpu_count()-1 hvis du vil la en av prosessorene være ledig
     
     pool.map(run_synchrony_simulator_executable, [i for i in range(no_of_runs)])
     

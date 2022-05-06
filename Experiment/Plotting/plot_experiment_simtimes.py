@@ -22,14 +22,14 @@ def main(binaryArrays):
 
 
 if __name__ == "__main__":
-    # Args: 1) (string) binary1.npy filepath, 2) (string) binary2.npy filepath
-    
-    binaryPathStart = sys.argv[1]
+    """ Arg: the number of boxplots we want. """
+
+    no_of_datasamples = int(sys.argv[1])
     
     binaryArrays = []
     
-    for alphaValue in range(1,10):
-        binaryArrays.append(np.load(binaryPathStart + "0p" + str(alphaValue) + "_simTimes.npy"))
+    for binaryDatasampleIndex in range(no_of_datasamples):
+        binaryArrays.append(np.load("ConvertedBinaries/dataSampleBinary_simTimes_" + str(binaryDatasampleIndex) + ".npy"))
 
 
     main(binaryArrays)
