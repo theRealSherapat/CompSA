@@ -55,6 +55,7 @@ This is the section where experiments attempting to solve the first and simpler 
 	\subsection{Comparing phase adjustment methods}
 	Now, an experiment follows where we investigate the validity of the claimed [] benefits of performing bi directional phase adjustments—both inhibitory and excitatory—compared to simply adjusting phases in an excitatory way (i.e. only ``pushing'' other ocillators's phase further or higher when firing, never ``holding'' or ``dragging'' it back).
 	
+	\tcol[blue]{FYLL INN}
 	% GAMMEL EPA1-CAPTION: Performance-plot: harmonic synchronization-times from initial simulator-experiment when synchronizing phases $\phi_i$ for all agents $i$, where all phases are initially uniformly randomized between 0 and 1, and eventually synchronize and align. We here measure how long it takes 6 agents to synchronize their phases to each other, given the two different phase-adjustment methods. 30 individual runs per phase-adjustment method were performed in Unity for a collective-size of 6 agents, and $\alpha=0.2$ e.g.
 	
 % --- \section END. ---
@@ -83,7 +84,7 @@ This is the section for the experiments attempting to solve the second and harde
 		\end{figure}
 		
 		
-		\paragraph{Ordering by phase couplings but more stable hyperparameters}
+		\paragraph{Ordering by phase couplings but with more stable hyperparameters}
 		
 		When seeing how poorly the robot collectives managed to achieve harmonic synchrony in experiment [], we change the hyperparameters slightly in the hopes of achieving harmonic synchrony more frequently, or in other words more stable synchronization simulation runs. The reason is mostly that it would be beneficial to actually see whether we observe similar patterns as in Nymoen's results—something which becomes impossible when robot collectives nearly never achieve harmonic synchrony.
 		
@@ -91,7 +92,7 @@ This is the section for the experiments attempting to solve the second and harde
 		
 		By initial trial and error, it also became apparent that phase \textit{and} frequency synchronization was not always stable—i.e. the robot collective not managing to achieve harmonic synchrony within the maximum time limit—for collective sizes of 6 or more. It did however become apparent that phase \textit{and} frequency synchronization \textit{was} stable for smaller musical robot collective sizes, like 2 or 3.
 		
-		Hence, a similar experiment to as in [] is set up in the Unity synchrony simulator, and is run similarly as before. So still, the phase ($\phi$) \textit{and} frequency ($\omega$) synchronization problem is to be experimented for with Nymoen's both phase and frequency adjustment methods—only this time with $\beta=0.6$ and $collsize=3$ instead. See results in Figure \ref{fig:exp2_1}.
+		Hence, a similar experiment to as in [] is set up in the Unity synchrony simulator, and is run similarly as before. So still, the phase ($\phi$) \textit{and} frequency ($\omega$) synchronization problem is to be experimented for, given different phase coupling constants $\alpha$, with Nymoen's both phase and frequency adjustment methods—only this time with $\beta=0.6$ and $collsize=3$ instead. See results in Figure \ref{fig:exp2_1}.
 		
 		\begin{figure}[ht!]
 			\centering
@@ -115,6 +116,23 @@ This is the section for the experiments attempting to solve the second and harde
 			% \caption{Synchronization times (s) for 6 robots with both initially random and unsynchronized phases, and frequencies, for varying frequency coupling constants $\beta$. 30 simulation runs per $\beta$. $t_{ref}=50ms$, $m=5$, $t_f=80ms$, and $k=8$. Maximum time limit was 5 simulation minutes.}
 			% \label{fig:exp3}
 		% \end{figure}
+		
+		\paragraph{Ordering by frequency couplings but with more stable hyperparameters}
+		
+		When again seeing how poorly the robot collectives managed to achieve harmonic synchrony in experiment [], we change the hyperparameters slightly in the hopes of achieving harmonic synchrony more frequently, or in other words more stable synchronization simulation runs. The reason is the same as for the previous experiment where collective size was reduced; mostly in order to see whether we observe similar patterns as in Nymoen's results.
+				
+		As we saw in the other stabilizing experiment [], smaller musical robot collective sizes like 3 seemed to definitely make robot collectives achieve harmonic synchronization more frequently and also quicker. Hence we also will use collective size 3 here.
+		
+		So still, the phase ($\phi$) \textit{and} frequency ($\omega$) synchronization problem is to be experimented for, given different frequency coupling constants $\beta$, with Nymoen's both phase and frequency adjustment methods—only this time with $collsize=3$ instead. See results in Figure \ref{fig:exp4_1}.
+		
+		\tcol[blue]{FYLL INN}
+		% \begin{figure}[ht!]
+			% \centering
+			% \includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/experiment4_1_perfScores.pdf}
+			% \caption{Harmonic synchronization times (sim s) for 3 robots with both initially unsynchronized phases and frequencies for varying phase coupling constants $\beta$. 30 simulation runs per $\beta$. $\alpha=$, $t_{ref}=50ms$, $m=5$, $t_f=80ms$, and $k=8$. Maximum time limit was 5 simulation minutes.}
+			% \label{fig:exp4_1}
+		% \end{figure}
+		
 		
 		
 	\subsection{Hyperparameter tuning}

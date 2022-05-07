@@ -3,7 +3,7 @@ from experiment_running_utils import *
 def main():
     """ Sets up and executes plans for all the wanted experiment data samples we want to collect. """
     
-    """ Experiment setup and execution plan: """
+    """ Experiment setup and execution plan (can contain several experiments and run sequentially, but then you have to split up the dataset manually after it): """
     
 	
 	# Collecting data sample:
@@ -14,6 +14,6 @@ def main():
 
 
 if __name__ == "__main__":
-    """ Fully automatic experiment script (although homogenous and saving to one synchronyDataset.csv file). """
+    """ Fully automatic experiments script (although homogenous and saving to one synchronyDataset.csv file). """
     
     main()

@@ -3,7 +3,7 @@ from experiment_running_utils import *
 def main():
     """ Sets up and executes plans for all the wanted experiment data samples we want to collect. """
     
-    """ Experiment 3 setup and execution plan: """
+    """ Experiment 4: Recreating Nymoen's last results setup and execution plan: """
     
     betas = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
     for beta_val in betas:
