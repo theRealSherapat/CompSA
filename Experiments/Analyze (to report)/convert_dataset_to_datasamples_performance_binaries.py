@@ -7,7 +7,7 @@ def main(CSV_filepath, plotFailuresPls):
     matrixOfCSVValues, csvHeader = parseDataFrom(CSV_filepath)
     
     sampleStartIndexes, csvHeaderPrefixIndex = getSampleStartIndexes(matrixOfCSVValues)    
-    csvHeaderPrefix = csvHeader[csvHeaderPrefixIndex]
+    csvHeaderPrefix = csvHeader[csvHeaderPrefixIndex] # Currently not using.
     
     dataSamples = getSplitUpSamples(matrixOfCSVValues, sampleStartIndexes) # a Python list    
     
