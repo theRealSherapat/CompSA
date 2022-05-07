@@ -18,15 +18,15 @@ def main(CSV_filepath, plotFailuresPls):
 
 def saveBinariesForEachSample(dataSamples, binaryPrefix, plotFailuresPls):
     for sampleInd, dataSample in enumerate(dataSamples):
-        simTimePerfScores = dataSample[:,0]
+        terminationTimePerfScores = dataSample[:,0]
         simSuccessesPerfScores = dataSample[:,1]
         
         if plotFailuresPls == 0:
-            simTimePerfScores = simTimePerfScores[simSuccessesPerfScores == 1]
+            terminationTimePerfScores = terminationTimePerfScores[simSuccessesPerfScores == 1]
         
         fullBinaryFilename = "./ConvertedBinaries/dataSampleBinary_"
         
-        np.save(fullBinaryFilename + "simTimes_" + str(sampleInd), simTimePerfScores)
+        np.save(fullBinaryFilename + "terminationTimes_" + str(sampleInd), terminationTimePerfScores)
         np.save(fullBinaryFilename + "successes_" + str(sampleInd), simSuccessesPerfScores)
 
 
@@ -94,13 +94,19 @@ def parseDataFrom(csv_filename): # GOLDEN STANDARD
     return arrayOfDatapoints[1:,:], csvHeader # slicer fra og med den 1nte indeksen siden første rad er initialized to 0 by using np.empty()
 
 if __name__ == "__main__":
-    # Args: 1) dataset.csv filepath, 2) (int) whether we want to plot failures or not (0: no, 1: yes)
+    # Args: 1) dataset.csv filepath, optional 2) (int) whether we want to plot failures or not (0: no, 1: yes)
     
     # Takes as input and extracts (both success and failure) synchronization times from a .CSV-file representing a dataset from several runs of the Harmonic Synchrony Simulation with the Dr. Squiggles Musical Multi-Robot System.
    
     # The reason for taking in the plotFailuresPls argument here is since it's most practical (even though it's not the most professional).
     
     filepath = sys.argv[1]
-    plotFailuresPls = int(sys.argv[2])
+    
+    # Optional keeping of failed synchronization runs:
+    try:
+        integerInputDuima = int(sys.argv[-1])
+        plotFailuresPls = integerInputDuima
+    except ValueError:
+        plotFailuresPls = 0
     
     main(filepath, plotFailuresPls)

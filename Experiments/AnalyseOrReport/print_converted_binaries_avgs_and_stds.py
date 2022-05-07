@@ -23,7 +23,7 @@ if __name__ == "__main__":
     binaryArrayPairs = []
     
     for binaryDatasampleIndex in range(no_of_datasamples):
-        binaryTerminationTimes = np.load("ConvertedBinaries/dataSampleBinary_simTimes_" + str(binaryDatasampleIndex) + ".npy")
+        binaryTerminationTimes = np.load("ConvertedBinaries/dataSampleBinary_terminationTimes_" + str(binaryDatasampleIndex) + ".npy")
         binarySuccesses = np.load("ConvertedBinaries/dataSampleBinary_successes_" + str(binaryDatasampleIndex) + ".npy")
         binaryArrayPairs.append([binaryTerminationTimes, binarySuccesses]) # kan sikkert zippe
 
