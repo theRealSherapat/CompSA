@@ -108,34 +108,16 @@ Oscillators have been used to implement and model a plethora of systems, also bi
 	\end{equation}
 	
 	
-	\subsection{Phase-adjustment}
-	
-	% --- META INFO START: ---
-	
-		\gjor{ Muligens inkluder introen i Section \ref{sec:phase_methods} her også (eller bare her?) }
+		% --- META INFO START: ---
 		
 		\besk{\tcol[gray]{(Hvis relevante og ønskede)} Tidligere metoder til Fase-synkronisering i oscillatorer (puls- og/eller fase-koplede)}
-	
-	% --- META INFO STOP. ---
-	
-		\subsubsection{Mirollo-Strogatz's ``standard'' phase adjustment} % or phase synchronization, or phase updates
-		\label{mirollo_strogatz_phase_adjust}
 		
-		One approach having been used to achieve this in the past is Mirollo-Strogatz's ``Standard'' phase-adjustment in oscillators \cite{mirollo_strogatz_PCO_synch}.
-		
-		Each musical agent gets a new phase, $\phi(t^+) = P(\phi(t))$, accoring to the \textbf{phase update function \eqref{strog_phase}} upon perceiving a ``fire''-event from one of the other musical nodes:
-		
-		\begin{equation}
-		\label{strog_phase}
-			\phi(t^+) = P(\phi(t)) = (1 + \alpha)\phi(t)	,
-		\end{equation}
-		
-		where $\alpha$ is the pulse coupling constant, denoting the strength between nodes \cite{nymoen_synch}, $t^+$ denotes the time-step immediately after a ``fire''-event is heard, and $\phi(t)$ is the old frequency of the agent at time $t$. So, if e.g. $\alpha = 0.1$, then a musical agent's new and updated phase, immediately after hearing a ``fire''-signal from another agent, will be equal to $\phi(t^+) = P(\phi(t)) = (1 + 0.1)\phi(t) = 1.1\phi(t)$. 110\% of its old phase $\phi(t)$, that is. Hence, and in this way, the agent would be ``pushed'' to fire sooner than it would otherwise (as nodes fire once they have reached phase-climax $\phi(t)=1$).
+		% --- META INFO STOP. ---
 	
 	
 	\subsection{Frequency-adjustment}
 	
-	% --- META INFO START: ---
+		% --- META INFO START: ---
 	
 		\gjor{ Muligens inkluder introen i Section \ref{sec:frequency_methods} her også (eller bare her?) }
 		
@@ -143,7 +125,7 @@ Oscillators have been used to implement and model a plethora of systems, also bi
 		
 		\besk{ \tcol[gray]{(If it exists)} A ``simpler'' frequency synchronization approach, to solve the phase and frequency ($\phi$ \& $\omega$) problem with, without any self awareness components }
 	
-	% --- META INFO STOP. ---
+		% --- META INFO STOP. ---
 	
 % --- \section END. ---
 	
