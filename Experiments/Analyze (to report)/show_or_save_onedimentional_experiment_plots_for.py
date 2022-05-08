@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.pyplot import figure
 from matplotlib import rcParams
+from experiment_analysis_utils import *
 
 # Setting up the visual looks of the experiment plotting figure:
 labelSize = 16
@@ -13,7 +14,7 @@ rcParams['ytick.labelsize'] = labelSize
 
 def main(showPls, savePls, xlabelCovariate, xlabelValues, terminationTimesArrays, successScoresArrays):
     """ First either shows or saves a graphical plot of the termination (or sync) times (sim s), then shows or saves a graphical plot of the error rates corresponding to the same data samples as plotted termination (or sync) times for. """
-
+    
     # Generating and (if wanted) showing and (if wanted) saving synch times plot.
     generateTerminationtimesPlot(showPls, savePls, xlabelCovariate, xlabelValues, terminationTimesArrays)
     
@@ -62,34 +63,6 @@ def generateSuccessScoresPlot(showPls, savePls, xlabelCovariate, xlabelValues, s
         plt.show()
 
 
-def loadRelevantQuantities():
-    no_of_datasamples = countFilesInFolderPath("ConvertedBinaries/")
-    
-    # Loading the termination times (or simulation times if 'plotFails = 0' when you converted binaries):
-    terminationTimesArrays = []
-    
-    for binaryDatasampleIndex in range(no_of_datasamples):
-        terminationTimesArrays.append(np.load("ConvertedBinaries/dataSampleBinary_terminationTimes_" + str(binaryDatasampleIndex) + ".npy"))
-        
-        
-    # Loading the termination times (or simulation times if 'plotFails = 0' when you converted binaries):
-    successScoresArrays = []
-    
-    for binaryDatasampleIndex in range(no_of_datasamples):
-        successScoresArrays.append(np.load("ConvertedBinaries/dataSampleBinary_successes_" + str(binaryDatasampleIndex) + ".npy"))
-
-    return terminationTimesArrays, successScoresArrays
-
-def countFilesInFolderPath(path):
-    filesInPath = 0
-    
-    for files in os.walk(path):
-        filesInPath = len(files[2])
-
-
-    return int(filesInPath/2)
-
-
 def retrieveCommandLineArguments():
     showPls = int(sys.argv[1])
     savePls = int(sys.argv[2])
@@ -109,7 +82,7 @@ if __name__ == "__main__":
     
     showPls, savePls, xlabelCovariate, xlabelValues = retrieveCommandLineArguments()
     
-    terminationTimesArrays, successScoresArrays = loadRelevantQuantities()
+    terminationTimesArrays, successScoresArrays = loadBinaries()
     
 
     main(showPls, savePls, xlabelCovariate, xlabelValues, terminationTimesArrays, successScoresArrays)

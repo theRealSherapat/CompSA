@@ -9,6 +9,9 @@ labelSize = 16
 rcParams['xtick.labelsize'] = labelSize
 rcParams['ytick.labelsize'] = labelSize
 
+# plt.rcParams["figure.figsize"] = [7.50, 3.50]
+# plt.rcParams["figure.autolayout"] = True
+
 samplingRate = 100 # Hz                                                        POTENTIAL SOURCE OF ERROR
 
 def main(phase_filename, simRun, show_fig_pls, save_fig_pls):        
@@ -27,8 +30,8 @@ def plotPhases(t, phaseDataMatrix, simRun, show_fig_pls, save_fig_pls):
         labelString = "musical robot " + str(col_index+1)
         plt.plot(t, phaseDataMatrix[:,col_index], label=labelString)
     
-    plt.ylabel("oscillator phase", fontsize=16)
-    plt.xlabel("simulation-time (s)", fontsize=16)
+    plt.ylabel("oscillator phase", fontsize=labelSize)
+    plt.xlabel("simulation-time (s)", fontsize=labelSize)
     
     plt.legend(loc="best")                                              # BØR FINNE NOEN FINERE MÅTE Å PRESENTERE DETTE PÅ.
 
