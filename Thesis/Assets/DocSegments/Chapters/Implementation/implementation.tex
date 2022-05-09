@@ -87,7 +87,9 @@ Now, the synchrony simulator system components will be expounded and explained i
 		  $t_{ref}^{dyn}$ & Dynamic refractory period. Same as $t_{ref}$, only that now the refractory period is given as the percentage of robot $r_i$'s oscillator period (e.g. 10\% of $1/4Hz=0.25s$, i.e. $0.1*0.25s=25ms$, if the oscillator frequency $\omega_i=4Hz$). \\ \hline
 		  $t_f$ & Legal firing time during which robots $r_i$ are allowed to fire when being detected harmonic synchrony for. \\ \hline
 		  $k$ & \tcol{even beat counter}. \\ \hline
-		  $t_{max}$ & Maximum time limit given to musical robot collectives during which the collective might achieve the target state of harmonic synchrony during, unless they are terminated and deemed ``synchronization fails.''
+		  $t_{max}$ & Maximum time limit given to musical robot collectives during which the collective might achieve the target state of harmonic synchrony during, unless they are terminated and deemed ``synchronization fails.'' \\ \hline
+		  $\omega_{min}^{init}$ & Minimum initial oscillator frequency a robot's frequency can be assigned at the start of simulations. \\ \hline
+		  $\omega_{max}^{init}$ & Maximum initial oscillator frequency a robot's frequency can be assigned at the start of simulations.
 		\end{tabular}
 		\caption{The environmental and collective hyperparameters present and used for the synchronization simulator in Unity.}
 		\label{tab:synchrony_simulator_hyperparameters}

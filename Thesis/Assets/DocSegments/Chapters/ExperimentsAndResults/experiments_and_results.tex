@@ -24,13 +24,25 @@ This is the section where experiments attempting to synchronize for the first an
 	
 	In order to see that our developed synchronization simulator in Unity yields more or less the same results as Nymoen's results, similar experiments as reported in their paper are performed here. These tell us whether differences in performance, in terms of synchronization times (sim s), is simply due to implementation differences, or actually because of the utilized synchronization methods and hyperparameters in question. 
 	
-	First off, Mirollo \& Strogatz's phase adjustment method (as presented in \ref{mirollo_strogatz_phase_adjust}) is experimented with for the initial phase ($\phi$) synchronization problem, for varying phase coupling constants $\alpha$. Results can be seen in Figure \ref{fig:exp1}.
+	First off, Mirollo \& Strogatz's phase adjustment method (as presented in \ref{mirollo_strogatz_phase_adjust}) is experimented with for the initial phase ($\phi$) synchronization problem, for varying phase coupling constants $\alpha$. Hyperparameters are set in the simulator as shown in Table \ref{tab:baseline_reproducing_phase_sync_for_alpha}. Results can be seen in Figure \ref{fig:baseline_reproducing_phase_sync_for_alpha}.
+	
+	\begin{center}
+	\begin{tabular}{ |c|c|c|c|c|c|c| } 
+	\hline
+	$|R|$ & $\beta$ & $t_{ref}$ & $t_f$ & $k$ & $t_{max}$ \\
+	\hline
+	6 & 0 & 50ms & 80ms & 8 & 5min \\
+	\hline
+	\end{tabular}
+	\captionof{table}{Experiment hyperparameter setup}
+	\label{tab:baseline_reproducing_phase_sync_for_alpha}
+	\end{center}
 	
 	\begin{figure}[ht!]
 		\centering
-		\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/experiment1_rerun_perfScores.pdf}
-		\caption{Harmonic synchronization times (s) for 6 robots with initially random and unsynchronized phases but equal and fixed frequencies (1Hz), for varying phase coupling constants $\alpha$. 30 simulation runs per $\alpha$. $\beta=0$, $t_{ref}=50ms$, $t_f=80ms$, and $k=8$. Maximum time limit was 5 simulation minutes.}
-		\label{fig:exp1}
+		\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/baseline_reproducing_phase_sync_for_alpha.pdf}
+		\caption{Harmonic synchronization times (s) for 6 robots with initially random and unsynchronized phases but equal and fixed frequencies (1Hz), for varying phase coupling constants $\alpha$. 30 simulation runs per $\alpha$ are reported.}
+		\label{fig:baseline_reproducing_phase_sync_for_alpha}
 	\end{figure}
 	
 	
@@ -38,13 +50,21 @@ This is the section where experiments attempting to synchronize for the first an
 	
 	Here we tune the hyperparameters $\alpha$ and $t_{ref}^{dyn}$ for several robot collective sizes, according to performance scores of how long it takes robot collectives on average to achieve harmonic synchrony. Exactly these two specific hyperparameters are experimented with mostly since they empirically seem to be the most important ones to set correctly before starting the simulator; that is, in order for the robots to actually manage achieving harmonic synchrony. \tcol{Additionaly, e.g. K. Konishi and H. Kokame \cite{konishi_kokame} suggest that by reducing the time oscillators in wireless sensor networks are active (i.e. increasing inactive time), power usage can also be reduced—something which makes oscillator systems last longer as well as being better for the environment in the end. Hence, a as large $t_{ref}$ or $t_{ref}^{dyn}$ as possible, seems to have some real benefits in real systems.}
 	
-	The specific values of hyperparameters to test synchronization times for were chosen based on an initial and identical but failed experiment (not reported) where the tested values for $t_{ref}^{dyn}$ were showing some interesting effects for various robot collective sizes; and furthermore, after seeing, in the results found in this thesis for $\alpha$ already, which values of $\alpha$ could be interesting to investigate further.
+	The specific values of hyperparameters to test synchronization times for were chosen based on an initial and identical but failed experiment (not reported) where the tested values for $t_{ref}^{dyn}$ were showing some interesting effects for various robot collective sizes. Simple and limited insight was also collected from trial and error in the complete beginning when trying to facilitate stable and successful simulation runs. And furthermore, after seeing results found in this thesis for $\alpha$ already, we also got some more ideas for which values of $\alpha$ could be interesting to investigate further.
 	
-	The specific choices of hyperparameter values to test synchronization times for, when wanting to tune the phase coupling constant $\alpha$ and the dynamic refractory period variable $t_{ref}^{dyn}$, were chosen based on empirical hunches (gotten during observation of the synchronization simulator in Unity when playing with the hyperparameters) for what might might be acceptable, according to experience, in order to facilitate stable and successful synchronization simulation runs—for varying robot collective sizes. 
+	Other constant hyperparameters not being tuned or experimented for in this experiment are shown in Table \ref{tab:exp_phase_sync_hyperparam_tuning}. The hyperparameter tuning results, where the effects of tuning hyperparameters $\alpha$ and $t_{ref}^{dyn}$ for various musical robot collective sizes, are shown in Figure \ref{fig:phase_sync_hyperparam_tuning_experiment}. Again, since we are synchronizing for the phase ($\phi$) synchronization problem, now only phases are initially unsynchronized, and frequencies are fixed and constant (1Hz) throughout the simulation runs.
 	
-	An hypothesis and aforementioned hunch is e.g. that larger robot collectives do not require as large of a phase coupling constant $\alpha$ in order to synchronize to each other compared to that which smaller robot collectives require; as we remember $\alpha$ tells each robot how much to adjust its oscillator phase when hearing a ''fire`` signal, and when more neighbours are present to transmit ``fire'' signals to a robot—a larger quantity of small adjustments can in theory be equivalent to a few large adjustments. This is something we want to investigate more quantitatively and thoroughly by the following experiment.
-	
-	The hyperparameter tuning results, where the effects of tuning hyperparameters $\alpha$ and $t_{ref}^{dyn}$ for various musical robot collective sizes, are shown in Figure \ref{fig:phase_sync_hyperparam_tuning_experiment}. Again, since we are synchronizing for the phase ($\phi$) synchronization problem, now only phases are initially unsynchronized, and frequencies are fixed and constant (1Hz) throughout the simulation runs.
+	\begin{center}
+	\begin{tabular}{ |c|c|c|c|c| } 
+	\hline
+	$\beta$ & $t_f$ & $k$ & $t_{max}$ \\
+	\hline
+	0 & 80ms & 8 & 5min \\
+	\hline
+	\end{tabular}
+	\captionof{table}{Experiment hyperparameter setup}
+	\label{tab:exp_phase_sync_hyperparam_tuning}
+	\end{center}
 	
 	\begin{figure}[ht!]
 	  \begin{subfigure}[b]{0.5\textwidth}
@@ -73,9 +93,15 @@ This is the section where experiments attempting to synchronize for the first an
 		\caption{robot collective size $|R|$ = 50.}
 		\label{fig:sub:t_ref_dyn_x_alpha_collsize50}
 	  \end{subfigure}
-	  \caption{Average harmonic synchronization times are plotted in errorbar plots, where the standard deviation is the error. Generally low standard deviations make errors barely visible. Also note that for the lowest $\alpha$ value of 0.001, robot collectives with size $|R|=3$ and 10 were not able to achieve harmonic synchrony, whereas larger collective sizes like 25 and 50 managed to achieve harmonic synchrony despite the low $\alpha$ value. 30 simulation runs per $\alpha$ and $t_{ref}^{dyn}$ pair. $t_f=80ms$, and $k=8$. Maximum time limit was 5 simulation minutes.}
+	  \caption{Average harmonic synchronization times are plotted in errorbar plots, where the standard deviation is the error. 30 simulation runs per $\alpha$ and $t_{ref}^{dyn}$ pair are reported, unless simulation runs ended up as ``synchronization fails''.}
 	  \label{fig:phase_sync_hyperparam_tuning_experiment}
 	\end{figure}
+	
+	As we can see, there are generally low standard deviations which make errors in the plots barely visible. We also can notice that the largest differences are seen for lower $\alpha$ values, as average harmonic synchronization times are more and more overlapping and similar for larger $\alpha$ values.
+	
+	A general pattern we can see is that larger robot collective sizes (larger $|R|$ values) handle lower phase coupling constants $\alpha$ better; in that the music collectives both achieve harmonic synchrony in lower average times than the smaller robot collectives, as well as achieving lower error rates. To this latter point, note that for the lowest $\alpha$ value of 0.001, robot collectives with size $|R|=3$ and 10 were not able to achieve harmonic synchrony at all during any of the simulation runs (i.e. having 100\% error rate), whereas larger collective sizes like $|R|=25$ and $|R|=50$ managed to achieve harmonic synchrony despite the low $\alpha$ value. The reason for this can very well lie in the fact that, as we remember, the phase coupling constant $\alpha$ represents how much each robot will adjust its oscillator phase when hearing a ''fire`` signal from a neighbouring robot. If there are more neighbours firing ``adjustment signals'' to a certain robot (i.e. we have a higher collective size $|R|$), it is also logical that the robot in question will update its phase more often. And so we can then see why e.g. all average harmonic synchronization times for $\alpha=0.01$ seem to improve (i.e. gets reduced) for every increase in collective size $|R|$; the phase coupling constant $\alpha=0.01$ might be weak, but with further and more frequent weak adjustments accumulated over the same time, the weak $\alpha$ is compensated for.
+	
+	Hence, it seems like larger robot collectives do not require as large of a phase coupling constant $\alpha$ in order to synchronize to each other compared to that which smaller robot collectives require.
 	
 	
 	\subsection{Comparing phase adjustment methods}
@@ -100,13 +126,25 @@ This is the section for the experiments attempting to synchronize for the second
 		
 		Given that K. Nymoen et al. do not mention their $\beta$ value in their frequency synchronization experiment where they order for different phase coupling values $\alpha$, an \textit{empirically decent} $\beta$ value of 0.4 is chosen for this experiment. What \textit{empirically decent} refers to in this case are K. Nymoen et al.'s findings in the results of their last experiment \cite{nymoen_synch} where synchronization times for various $\beta$ values were evaluated; deeming $\beta=0.4$ to be a good value, with no further improvement in synchronization performance when $\beta$ is increased further.
 		
-		Here, K. Nymoen et al.'s self aware frequency adjustment method, implemented in our novel synchrony simulator in Unity, is experimented with for varying phase coupling constants $\alpha$. This time not only oscillator phases are initially unsynchronized; oscillator frequencies are also unsynchronized to begin with. Hence, we here try to synchronize our musical robots in the phase ($\phi$) \textit{and} frequency ($\omega$) synchronization problem, using Nymoen's phase adjustment method to synchronize phases, as well as Nymoen's frequency adjustment method to synchronize frequencies. See the results in Figure \ref{fig:exp2}.
+		Here, K. Nymoen et al.'s self aware frequency adjustment method, implemented in our novel synchrony simulator in Unity, is experimented with for varying phase coupling constants $\alpha$. This time not only oscillator phases are initially unsynchronized; oscillator frequencies are also unsynchronized to begin with. Hence, we here try to synchronize our musical robots in the phase ($\phi$) \textit{and} frequency ($\omega$) synchronization problem, using Nymoen's phase adjustment method to synchronize phases, as well as Nymoen's frequency adjustment method to synchronize frequencies. See set up hyperparameters in Table \ref{tab:baseline_reproducing_phase_and_freq_sync_for_alpha}. See the results in Figure \ref{fig:baseline_reproducing_phase_and_freq_sync_for_alpha}.
+		
+		\begin{center}
+		\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c| } 
+		\hline
+		$|R|$ & $\beta$ & $\omega_{min}^{init}$ & $\omega_{max}^{init}$ & $m$ & $t_{ref}$ & $t_f$ & $k$ & $t_{max}$ \\
+		\hline
+		6 & 0.4 & 0.5Hz & 4Hz & 5 & 50ms & 80ms & 8 & 5min \\
+		\hline
+		\end{tabular}
+		\captionof{table}{Experiment hyperparameter setup}
+		\label{tab:baseline_reproducing_phase_and_freq_sync_for_alpha}
+		\end{center}
 		
 		\begin{figure}[ht!]
 			\centering
-			\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/experiment2_rerun_perfScores.pdf}
-			\caption{Harmonic synchronization times (sim s) for 6 robots with both initially unsynchronized phases \textit{and} frequencies for varying phase coupling constants $\alpha$. 30 simulation runs per $\alpha$. $\beta=0.4$, $t_{ref}=50ms$, $m=5$, $t_f=80ms$, and $k=8$. Maximum time limit was 5 simulation minutes.}
-			\label{fig:exp2}
+			\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/baseline_reproducing_phase_and_freq_sync_for_alpha.pdf}
+			\caption{Harmonic synchronization times (sim s) for 6 robots with both initially unsynchronized phases \textit{and} frequencies, for varying phase coupling constants $\alpha$, reaching harmonic synchrony—but also often failing to. 30 simulation runs per $\alpha$ are reported.}
+			\label{fig:baseline_reproducing_phase_and_freq_sync_for_alpha}
 		\end{figure}
 		
 		
@@ -118,13 +156,25 @@ This is the section for the experiments attempting to synchronize for the second
 		
 		By initial trial and error, it also became apparent that phase \textit{and} frequency synchronization was not always stable—i.e. the robot collective not managing to achieve harmonic synchrony within the maximum time limit—for collective sizes of 6 or more. It did however become apparent that phase \textit{and} frequency synchronization \textit{was} stable for smaller musical robot collective sizes, like 2 or 3.
 		
-		Hence, a similar experiment to as in [] is set up in the Unity synchrony simulator, and is run similarly as before. So still, the phase ($\phi$) \textit{and} frequency ($\omega$) synchronization problem is to be experimented for, given different phase coupling constants $\alpha$, with Nymoen's both phase and frequency adjustment methods—only this time with $\beta=0.6$ and $collsize=3$ instead. See results in Figure \ref{fig:exp2_1}.
+		Hence, a similar experiment to as in [] is set up in the Unity synchrony simulator, and is run similarly as before. So still, the phase ($\phi$) \textit{and} frequency ($\omega$) synchronization problem is to be experimented for, given different phase coupling constants $\alpha$, with Nymoen's both phase and frequency adjustment methods—only this time with $\beta=0.6$ and $collsize=3$ instead. See set up hyperparameters in Table \ref{tab:stable_baseline_reproducing_phase_and_freq_sync_for_alpha}. See results in Figure \ref{fig:stable_baseline_reproducing_phase_and_freq_sync_for_alpha}.
+		
+		\begin{center}
+		\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c| } 
+		\hline
+		$|R|$ & $\beta$ & $\omega_{min}^{init}$ & $\omega_{max}^{init}$ & $m$ & $t_{ref}$ & $t_f$ & $k$ & $t_{max}$ \\
+		\hline
+		3 & 0.6 & 0.5Hz & 4Hz & 5 & 50ms & 80ms & 8 & 5min \\
+		\hline
+		\end{tabular}
+		\captionof{table}{Experiment hyperparameter setup}
+		\label{tab:stable_baseline_reproducing_phase_and_freq_sync_for_alpha}
+		\end{center}
 		
 		\begin{figure}[ht!]
 			\centering
-			\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/experiment2_1_perfScores.pdf}
-			\caption{Harmonic synchronization times (sim s) for 3 robots with both initially unsynchronized phases \textit{and} frequencies for varying phase coupling constants $\alpha$. 30 simulation runs per $\alpha$. $\beta=0.6$, $t_{ref}=50ms$, $m=5$, $t_f=80ms$, and $k=8$. Maximum time limit was 5 simulation minutes.}
-			\label{fig:exp2_1}
+			\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/stable_baseline_reproducing_phase_and_freq_sync_for_alpha.pdf}
+			\caption{Harmonic synchronization times (sim s) for 3 robots with both initially unsynchronized phases \textit{and} frequencies for varying phase coupling constants $\alpha$. 30 simulation runs per $\alpha$ are reported.}
+			\label{fig:stable_baseline_reproducing_phase_and_freq_sync_for_alpha}
 		\end{figure}
 		
 	
@@ -134,37 +184,31 @@ This is the section for the experiments attempting to synchronize for the second
 		
 		\tcol{ Again, K. Nymoen et al. does not specify exactly the phase coupling constant they use in this latter experiment when testing their firefly-inspired synchronization system for various $\beta$ values. Hence, the now fixed phase coupling constant $\alpha$ is here selected by reusing the $\alpha$ value found in the similar experiment presented in Figure \ref{fig:exp3} to yield the lowest error rate in the musical robot collective when synchronizing to each other. This then gives us a fixed $\alpha = 0.2$. If we also survey the harmonic synchronization times and error rates in the other experiments presented in the thesis, we can also see that a phase coupling constant $\alpha=2$ should be among the best values we could use. }
 		
+		See the set up hyperparameters for the experiment in Table \ref{tab:baseline_reproducing_phase_and_freq_sync_for_beta}, and the corresponding results in Figure \ref{fig:baseline_reproducing_phase_and_freq_sync_for_beta}.
 		
+		\begin{center}
+		\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c| } 
+		\hline
+		$|R|$ & $\alpha$ & $\omega_{min}^{init}$ & $\omega_{max}^{init}$ & $m$ & $t_{ref}$ & $t_f$ & $k$ & $t_{max}$ \\
+		\hline
+		6 & 0.2 & 0.5Hz & 4Hz & 5 & 50ms & 80ms & 8 & 5min \\
+		\hline
+		\end{tabular}
+		\captionof{table}{Experiment hyperparameter setup}
+		\label{tab:baseline_reproducing_phase_and_freq_sync_for_beta}
+		\end{center}
 		
-		\tcol[blue]{FYLL INN}
-		% \begin{figure}[ht!]
-			% \centering
-			% \includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/experiment3_perfScores.pdf}
-			% \caption{Synchronization times (s) for 6 robots with both initially random and unsynchronized phases, and frequencies, for varying frequency coupling constants $\beta$. 30 simulation runs per $\beta$. $t_{ref}=50ms$, $m=5$, $t_f=80ms$, and $k=8$. Maximum time limit was 5 simulation minutes.}
-			% \label{fig:exp3}
-		% \end{figure}
+		\begin{figure}[ht!]
+			\centering
+			\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/baseline_reproducing_phase_and_freq_sync_for_beta.pdf}
+			\caption{Synchronization times (s) for 6 robots with both initially random and unsynchronized phases, and frequencies, for varying frequency coupling constants $\beta$. 30 simulation runs per $\beta$ are reported.}
+			\label{fig:baseline_reproducing_phase_and_freq_sync_for_beta}
+		\end{figure}
 		
-		\paragraph{Ordering by frequency couplings but with more stable hyperparameters}
+		Even though we do not see exactly the same harmonic synchronization times as we see in Nymoen's results, and worse at that, we do in fact see a similar pattern in that also here, synchronization times and error scores seem to improve the larger frequency coupling constant $\beta$ we have.
 		
-		When again seeing how poorly the robot collectives managed to achieve harmonic synchrony in experiment [], we change the hyperparameters slightly in the hopes of achieving harmonic synchrony more frequently, or in other words more stable synchronization simulation runs. The reason is the same as for the previous experiment where collective size was reduced; mostly in order to see whether we observe similar patterns as in Nymoen's results.
-				
-		As we saw in the other stabilizing experiment [], smaller musical robot collective sizes like 3 seemed to definitely make robot collectives achieve harmonic synchronization more frequently and also quicker. Hence we also will use collective size 3 here.
+		Also, from the results in Figure \ref{fig:phase_and_freq_sync_baseline_reproducing_experiment}, it becomes apparent that $\beta=0.7$ might be the best choice to continue using in our Unity synchrony simulator—at least when it comes to collective sizes of $|R|=6$.
 		
-		So still, the phase ($\phi$) \textit{and} frequency ($\omega$) synchronization problem is to be experimented for, given different frequency coupling constants $\beta$, with Nymoen's both phase and frequency adjustment methods—only this time with $collsize=3$ instead. See results in Figure \ref{fig:exp4_1}.
-		
-		\tcol[blue]{FYLL INN}
-		% \begin{figure}[ht!]
-			% \centering
-			% \includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/experiment4_1_perfScores.pdf}
-			% \caption{Harmonic synchronization times (sim s) for 3 robots with both initially unsynchronized phases and frequencies for varying phase coupling constants $\beta$. 30 simulation runs per $\beta$. $\alpha=$, $t_{ref}=50ms$, $m=5$, $t_f=80ms$, and $k=8$. Maximum time limit was 5 simulation minutes.}
-			% \label{fig:exp4_1}
-		% \end{figure}
-		
-		
-	\subsection{Hyperparameter tuning}
-	
-	Here we tune the hyperparameters $\beta$ and $m$ for several robot collective sizes according to performance scores. The reason for tuning exactly these two hyperparameters, the frequency coupling constant $\beta$ and the error score list length (or memory length) $m$, is again since they seem the most significant for the synchronization performance.
-	
 	
 	\subsection{Increasing degree of self awareness}
 	
