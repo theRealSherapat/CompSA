@@ -179,7 +179,7 @@ MonoBehaviour:
   simulationMode: 1
   dataSavingFrequency: 100
   runDurationLimit: 300
-  useSound: 1
+  useSound: 0
   volumePercentage: 0.5
   useVisuals: 1
   debugSuccessOn: 0

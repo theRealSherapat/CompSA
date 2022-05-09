@@ -2,9 +2,11 @@ import os
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
+import seaborn as sns
 from matplotlib.pyplot import figure
 from matplotlib import rcParams
 from experiment_analysis_utils import *
+
 
 # Setting up the visual looks of the experiment plotting figure:
 labelSize = 16
@@ -29,15 +31,17 @@ def main(showPls, savePls, xlabelCovariate, xlabelValues, terminationTimesArrays
 def generateTerminationtimesPlot(showPls, savePls, xlabelCovariate, xlabelValues, terminationTimesArrays):
     # Plotting synchronization performance scores in a boxplot
     
-    plt.boxplot(terminationTimesArrays, labels=xlabelValues) # Kan ha med whis=(0,100) for å få whiskerne til å dekke hele data-samplet (til og med outliersa).
-    plt.ylabel("harmonic synchronization time (sim s)", fontsize=16)
-    plt.xlabel(xlabelCovariate, fontsize=16)
     
-    if savePls:
-        plt.savefig("SavedPlots/experiment_simtimes.svg", dpi=300, bbox_inches="tight")
+    # sns.violinplot(data=terminationTimesArrays) # x=xlabelCovariate
+    # # plt.boxplot(terminationTimesArrays, labels=xlabelValues) # Kan ha med whis=(0,100) for å få whiskerne til å dekke hele data-samplet (til og med outliersa).
+    # plt.ylabel("harmonic synchronization time (sim s)", fontsize=16)
+    # plt.xlabel(xlabelCovariate, fontsize=16)
     
-    if showPls:
-        plt.show()
+    # if savePls:
+        # plt.savefig("SavedPlots/experiment_simtimes.svg", dpi=300, bbox_inches="tight")
+    
+    # if showPls:
+        # plt.show()
 
 
 def generateSuccessScoresPlot(showPls, savePls, xlabelCovariate, xlabelValues, successScoresArrays):

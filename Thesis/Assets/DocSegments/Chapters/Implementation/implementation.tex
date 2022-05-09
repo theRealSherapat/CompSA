@@ -1,4 +1,4 @@
-\chapter{Implementation} % Method-equivalent.
+\chapter{Implementation and experimental setup} % Method-equivalent.
 \label{chap:implementation}
 
 
@@ -61,19 +61,55 @@ At first in \ref{fig:first_idea:second_fig:unsynched}, we see the agents firing,
 
 Now, the synchrony simulator system components will be expounded and explained in detail.
 
+	\subsection{The simulator environment and its hyperparameters}
+	
+	\begin{table}[ht]
+		\centering
+		\begin{tabular}{p{0.15\linewidth} | p{0.8\linewidth}}
+		  \textit{\textbf{Notation}}  & \textit{\textbf{Definition}} \\ \hline
+		  $r_i$ & Individual musical robot $i$. \\ \hline
+		  $R$ & Musical robot collective consisting of all robots $r_i$. \\ \hline
+		  $\phi_i$ & Phase of $r_i$'s oscillator component. \\ \hline
+		  $\omega_i$ & Frequency of $r_i$'s oscillator component. \\ \hline
+		  \textit{sim s} & Simulation seconds. The unit of measurement, w.r.t. to time, used in the thesis and simulation. Simulation time does not always correspond to real / physical time, depending on how fast the hardware is able to run the simulations.
+		\end{tabular}
+		\caption{Notation and terminology used throughout the thesis for system components.}
+		\label{tab:synchrony_simulator_terminology}
+	\end{table}
+	
+	
+	\begin{table}[ht]
+		\centering
+		\begin{tabular}{p{0.25\linewidth} | p{0.7\linewidth}}
+		  \textit{\textbf{Hyperparameter}}  & \textit{\textbf{Meaning}} \\ \hline
+		  $|R|$ & Musical robot collective size, where R (as defined above) is the set of all musical robots $r_i$ , i = 1, 2, ... , $|R|$. \\ \hline
+		  $t_{ref} $ & The time (sim s) robots are unresponsive to adjusting themselves (as a consequence of hearing other robots firing) directly after firing themselves. \\ \hline
+		  $t_{ref}^{dyn}$ & Dynamic refractory period. Same as $t_{ref}$, only that now the refractory period is given as the percentage of robot $r_i$'s oscillator period (e.g. 10\% of $1/4Hz=0.25s$, i.e. $0.1*0.25s=25ms$, if the oscillator frequency $\omega_i=4Hz$). \\ \hline
+		  $t_f$ & Legal firing time during which robots $r_i$ are allowed to fire when being detected harmonic synchrony for. \\ \hline
+		  $k$ & \tcol{even beat counter}. \\ \hline
+		  $t_{max}$ & Maximum time limit given to musical robot collectives during which the collective might achieve the target state of harmonic synchrony during, unless they are terminated and deemed ``synchronization fails.''
+		\end{tabular}
+		\caption{The environmental and collective hyperparameters present and used for the synchronization simulator in Unity.}
+		\label{tab:synchrony_simulator_hyperparameters}
+	\end{table}
+	
 
 	\subsection{The individual agent: a musical robot}
 	\label{subsec:agent}
 
-		% --- META INFO START: ---
-
-		\besk{ Om den enkelte roboten / agenten min med alle egenskaper den har osv. }
-
-		% --- META INFO STOP. ---
-
 	As introduced and presented earlier, our musical robot collective will then consist of models of M. J. Krzyzaniak and RITMO's \textit{Dr. Squiggles}, 3D-models of which can be seen in Figure \ref{fig:first_idea:second_fig}.
 
 	Every musical robot or node have certain components, attributes, and characteristics that make it what it is. Such include an oscillator-component, consisting of the agent's oscillator-phase $\phi$ and oscillator-frequency $\omega$. Notions like ``agent'', ``robot'', ``firefly'', and ``oscillator'' will be used interchangeably throughout the thesis. The agents have an input-mechanism for hearing/detecting transmitted ``fire''-event signals from other agents, as well as an output-mechanism for transmitting or playing such ``fire''-/adjust-signals or tones, as is illustrated with the microphone and megaphone respectively in Figure \ref{fig:first_idea:first_fig}.
+	
+	\begin{table}[ht]
+		\centering
+		\begin{tabular}{p{0.25\linewidth} | p{0.7\linewidth}}
+		  \textit{\textbf{Hyperparameter}}  & \textit{\textbf{Meaning}} \\ \hline
+		  $\alpha$ & Phase coupling constant. The larger the $\alpha$, the more a robot adjusts its phase when hearing ``adjustment signals'' from neighbouring robots.
+		\end{tabular}
+		\caption{The hyperparameters possible to alter for the individual musical robots in the synchronization simulator in Unity.}
+		\label{tab:synchrony_robot_hyperparameters}
+	\end{table}
 	
 	In order to be able to analyse the musical scenario within which they are situated (self-assessment), as well as for adapting their musical output accordingly (self-adaptation), the agents are to some extent endowed with artificial intelligence and self-awareness capabilities. The robots are self-aware of their own phase and frequency, but are unaware of other agents's true phases and frequencies. They also possess the self-assessment capability of evaluating how much in- or out-of-synch they are, as seen in the greater context of the entire robot collective. When the agents hear the transmitted ``fire''-/adjust-signals, the agents are intelligent enough to adjust themselves in the direction of the system goal/target state.
 
@@ -248,7 +284,7 @@ Now, the synchrony simulator system components will be expounded and explained i
 	
 	where $n$ is the latest observed ``fire-event'', and $m$ is the number of the last observed ``fire''-events we would like to take into account when calculating the self-assessed synch-score. \nl
 	
-	Regarding the ``frequency-update-contributions'' (the $H$-values described in \ref{H_n}) in my Unity-simulator, all the calculated H-values are accumulated and stored in an initially empty C\#-list (of floats), referred to as $H(n)$, at once they are calculated. The $H(n)$-list is then consecutively ``cleared out'' or ``flushed'' when its H-values have been used for the current cycle/period's frequency adjustment (i.e. at the phase climax, when $\phi(t)=1$), and is then ready to accumulate new H-values during the next cycle/period.
+	Regarding the ``frequency-update-contributions'' (the $H$-values described in \ref{H_n}) in my Unity-simulator, all the calculated H-values are accumulated and stored in an initially empty C\#-list (of floats), referred to as $H(n)$, at once they are calculated. The $H(n)$-list is then consecutively ``cleared out'' or ``flushed'' when its H-values have been used for the current period's frequency adjustment (i.e. at the phase climax, when $\phi(t)=1$), and is then ready to accumulate new H-values during the next period.
 	
 	By using K. Nymoen et al.'s frequency adjustment method, synchronization of initially random frequencies in our newly developed Unity simulator is achieved, like can be seen recorded in Figure \ref{fig:frequency_synch}.
 	
