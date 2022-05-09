@@ -91,7 +91,7 @@ This is the section where experiments attempting to synchronize for the first an
 \section{Phase and frequency synchronization}
 This is the section for the experiments attempting to synchronize for the second and harder problem of synchronizing both phases $\phi_i$, as well as frequencies $\omega_i$, for all agents $i$. These are then experiments where all musical robots originally have unequal and ever-changing phases  and frequencies, adjusting both phases and frequencies in order to entrain to synchronize their phases and frequencies until reaching harmonic synchrony.
 
-	\subsection{Reproducing baseline phase and frequency synchronization}
+	\subsection{Reproducing baseline results}
 	Again, we want to here see whether we get more or less the same results in the Unity simulator as K. Nymoen et al. get in their firefly oscillator system.
 	
 	Hence, we here present attempts made in the novel Unity synchronization simulator at recreating K. Nymoen et al.'s first results with their novel frequency synchronization method, which is utilizing, amongst other aspects, self awareness \cite{nymoen_synch}.
@@ -130,9 +130,10 @@ This is the section for the experiments attempting to synchronize for the second
 	
 		\paragraph{Ordering by frequency couplings}
 		
-		Now, we perform the same phase \& frequency synchronization experiment as in Figure \ref{fig:exp2}, except that this time we will fix the phase coupling constant $\alpha$ and instead test how the individual musical robots's various frequency coupling constants $\beta$ affect the performance of the musical robot collective. These results are shown in Figure \ref{fig:exp3}
+		\tcol{ Now, we perform the same phase \& frequency synchronization experiment as in Figure \ref{fig:exp2}, except that this time we will fix the phase coupling constant $\alpha$ and instead test how the individual musical robots's various frequency coupling constants $\beta$ affect the performance of the musical robot collective. These results are shown in Figure \ref{fig:exp3} }
 		
-		Again, K. Nymoen et al. does not specify exactly the phase coupling constant they use in this latter experiment when testing their firefly-inspired synchronization system for various $\beta$ values. Hence, the now fixed phase coupling constant $\alpha$ is here selected by reusing the $\alpha$ value found in the similar experiment presented in Figure \ref{fig:exp3} to yield the lowest error rate in the musical robot collective when synchronizing to each other. This then gives us a fixed $\alpha = 0.2$.
+		\tcol{ Again, K. Nymoen et al. does not specify exactly the phase coupling constant they use in this latter experiment when testing their firefly-inspired synchronization system for various $\beta$ values. Hence, the now fixed phase coupling constant $\alpha$ is here selected by reusing the $\alpha$ value found in the similar experiment presented in Figure \ref{fig:exp3} to yield the lowest error rate in the musical robot collective when synchronizing to each other. This then gives us a fixed $\alpha = 0.2$. If we also survey the harmonic synchronization times and error rates in the other experiments presented in the thesis, we can also see that a phase coupling constant $\alpha=2$ should be among the best values we could use. }
+		
 		
 		
 		\tcol[blue]{FYLL INN}
