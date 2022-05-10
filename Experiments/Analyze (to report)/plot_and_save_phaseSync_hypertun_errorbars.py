@@ -16,6 +16,7 @@ markers = ['X', 'o', 's', 'p', 'P', 'D', '|', '*']
 linestyles = ["-", "--", "-.", ":"]
 
 alphas = [0.001, 0.01, 0.1, 0.2, 0.4, 0.8]
+xVals = [0.001, 0.075, 0.15, 0.3, 0.5, 0.8] # REMEMBER TO FIX THEM IN INKSCAPE AFTER IT. Just to place the xticks with good enough space inbetween.
 
 ymaxlimit = 265
 
@@ -41,7 +42,7 @@ def main(termTimeArrays, successScoreArrays):
 def plotDatasampleAveragesAndStds(datasampleAveragesInLists, datasampleStdsInLists, dontPlotForTheseAlphaIndexes):
     for eBInd in range(len(datasampleAveragesInLists)):
         # Firstly just making sure we have the right xpositions corresponding to which datasamples we had non-empty ones for:
-        pleasePlotForTheseAlphas = alphas.copy()
+        pleasePlotForTheseAlphas = xVals.copy()
         for ele in sorted(dontPlotForTheseAlphaIndexes[eBInd], reverse = True):
             del pleasePlotForTheseAlphas[ele]
             
@@ -52,10 +53,10 @@ def plotDatasampleAveragesAndStds(datasampleAveragesInLists, datasampleStdsInLis
     plt.legend(["$t_{ref}^{dyn} = 0.03$", "$t_{ref}^{dyn} = 0.05$", "$t_{ref}^{dyn} = 0.1$", "$t_{ref}^{dyn} = 0.5$"])
     
     plt.ylim([0, ymaxlimit])
-    plt.xlim([-0.02, alphas[-1]+0.02])
+    plt.xlim([-0.02, xVals[-1]+0.02])
     
     
-    plt.xticks(alphas, rotation=45, fontsize=labelSize)
+    plt.xticks(xVals, rotation=45, fontsize=labelSize)
     
     plt.xlabel("α", fontsize=labelSize)
     plt.ylabel("harmonic synchronization time (sim s)", fontsize=labelSize)
