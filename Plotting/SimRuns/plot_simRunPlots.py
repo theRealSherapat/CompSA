@@ -25,21 +25,23 @@ symbols = ['X', 'o', 's', 'p', 'P', 'D', '|', '*'] # symmetric markers
 fig = None
 
 def main(simRun, show_fig_pls, save_fig_pls):
-    # Plotting the phase plot.
+    # FULLFØR: Plotting the phase plot.
     pass
     
-    # Plotting the frequency plot.
+    # FULLFØR: Plotting the frequency plot.
     pass
 
-    # Plotting the harmonic synchronization detection subplot.
+    # FULLFØR: Plotting the harmonic synchronization detection subplot.
     plotHarmonicSynchronyDetectionSubplot(zoomed_in_times, zoomed_in_t_f_is_now_samples, zoomed_in_datapointArray, simRun, show_fig_pls, save_fig_pls)
 
-    # Plotting the synchrony evolution subplot.
+    # FULLFØR: Plotting the synchrony evolution subplot.
     pass
     
     
     # FINALLY PLOTTING IT ALL:
     finishAndShowPlot(simRun, show_fig_pls, save_fig_pls)
+
+
 
 """ HARMONIC SYNCHRONY DETECTION PLOT RELATED """
 

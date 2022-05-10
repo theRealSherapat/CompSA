@@ -18,6 +18,7 @@ The main performance scores presented in this chapter will consist of synchroniz
 
 
 \section{Phase synchronization}
+\label{sec:phase_sync}
 This is the section where experiments attempting to synchronize for the first and simpler problem, namely synchronizing only the phases $\phi_i$ of all agents $i$, are presented and analyzed resuls for. These are then experiments where all musical robots have an equal and fixed frequency, only adjusting phases, in order to entrain to synchronize their phases to each other until reaching the target state of harmonic synchrony.
 	
 	\subsection{Reproducing baseline results}
@@ -113,7 +114,7 @@ This is the section where experiments attempting to synchronize for the first an
 	
 	Since we have not yet performed any experiments for pure phase synchronization in the $\phi$ problem using Nymoen's slightly modified and bi directional phase adjustment function, the same $\alpha$ value of 0.8 will also be used for the phase synchronization runs here.
 	
-	See the hyperparameter setup below in Table \ref{tab:directional_phase_adjustment_comparison}, and the results for the two phase adjustment methods given various robot collective sizes $|R|$ in \ref{}.
+	See the hyperparameter setup below in Table \ref{tab:directional_phase_adjustment_comparison}, and the results for the two phase adjustment methods given various robot collective sizes $|R|$ in \ref{fig:directional_phase_adjustment_comparison}. We here measure how long it takes various sizes of robot collectives to synchronize their phases to each other, given the two different phase adjustment methods.
 	
 	\begin{center}
 	\begin{tabular}{ |c|c|c|c|c|c|c| } 
@@ -127,8 +128,31 @@ This is the section where experiments attempting to synchronize for the first an
 	\label{tab:directional_phase_adjustment_comparison}
 	\end{center}
 	
-	\tcol[blue]{FYLL INN}
-	% GAMMEL EPA1-CAPTION: Performance-plot: harmonic synchronization-times from initial simulator-experiment when synchronizing phases $\phi_i$ for all agents $i$, where all phases are initially uniformly randomized between 0 and 1, and eventually synchronize and align. We here measure how long it takes 6 agents to synchronize their phases to each other, given the two different phase-adjustment methods. 30 individual runs per phase-adjustment method were performed in Unity for a collective-size of 6 agents, and $\alpha=0.2$ e.g.
+	\begin{figure}[ht!]
+	\begin{subfigure}[b]{0.5\textwidth}
+		\centering\captionsetup{width=.9\linewidth}%
+		\includegraphics[width=\textwidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/directional_phase_adjustment_comparison_hsynchtimes.pdf}
+		\caption{Performance scores.}
+		\label{fig:sub:directional_phase_adjustment_comparison_hsynchtimes}
+	  \end{subfigure}
+	  %
+	  \begin{subfigure}[b]{0.5\textwidth}
+		\centering\captionsetup{width=.9\linewidth}%
+		\includegraphics[width=\textwidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/directional_phase_adjustment_comparison_errorRates.pdf}
+		\caption{Error rates.}
+		\label{fig:sub:directional_phase_adjustment_comparison_errorrates}
+	  \end{subfigure}
+	  \caption{Performance scores \ref{fig:sub:directional_phase_adjustment_comparison_hsynchtimes} given in average harmonic synchronization times (sim s) with standard deviation. Corresponding error rates in \ref{fig:sub:directional_phase_adjustment_comparison_errorrates} based on 30 individual runs per collective size $|R|$ for each of the two phase adjustment methods.}
+	  \label{fig:directional_phase_adjustment_comparison}
+	\end{figure}
+	
+	We quickly see from the results in Figure \ref{fig:directional_phase_adjustment_comparison} there seems to be a considerable difference in harmonic synchronization times between using Mirollo-Strogatz's and Nymoen's phase adjustment methods to synchronize phase in the phase ($\phi$) synchronization problem. In Subfigure \ref{fig:sub:directional_phase_adjustment_comparison_hsynchtimes}, we see that for smaller musical robot collectives $|R|$, differences in synchronization time are not especially different on average. However, as collective size $|R|$ increases, we see the harmonic synchronization times for Nymoen's bi directional phase synchronization becomes considerably lower than that of Mirollo-Strogatz's mono-directional on average, variance—or at least the square root of it—accounted for.
+	
+	On the other hand, when we look at the error rates in Subfigure \ref{fig:sub:directional_phase_adjustment_comparison_errorrates}, we also see that Nymoen's phase adjustment method's error rates are considerably higher than those of Mirollo-Strogatz's error rates (being nearly negligible). Interestingly, this is only the case until collective size $|R|=500$ thouhg, after the point of which this point no longer holds and the error rates are both equal to 0.
+	
+	Yet again, we also in these results see a trend where smaller hyperparameter values lead to more unstable or less performing synchronizations, as we for both the harmonic synchronization times in Subfigure \ref{fig:sub:directional_phase_adjustment_comparison_hsynchtimes} and error rates in \ref{fig:sub:directional_phase_adjustment_comparison_errorrates} see trends where the larger the hyperparameter $|R|$, the more stable or quicker synchronization runs we achieved in the Unity synchronization simulator.
+	
+	As we see, the synchronization simulator in Unity is able to synchronize with a lot of agents, still without having broken the simulation yet. Comparatively, Nymoen et al. \cite{nymoen_synch} only experimented with 6 oscillator nodes in their firefly system.
 	
 % --- \section END. ---
 
@@ -170,7 +194,7 @@ This is the section for the experiments attempting to synchronize for the second
 		
 		\paragraph{Ordering by phase couplings but with more stable hyperparameters}
 		
-		When seeing how poorly the robot collectives managed to achieve harmonic synchrony in experiment [], we change the hyperparameters slightly in the hopes of achieving harmonic synchrony more frequently, or in other words more stable synchronization simulation runs. The reason is mostly that it would be beneficial to actually see whether we observe similar patterns as in Nymoen's results—something which becomes impossible when robot collectives nearly never achieve harmonic synchrony.
+		After seeing how poorly the musical robot collectives managed to achieve harmonic synchrony during the previous experiment, we change the hyperparameters slightly in the hopes of achieving harmonic synchrony more frequently, or in other words more stable synchronization simulation runs. The reason is mostly that it would be beneficial to actually see whether we observe similar patterns as in Nymoen's results—something which becomes impossible when robot collectives nearly never achieve harmonic synchrony.
 		
 		The frequency coupling constant of $\beta=0.6$ could potentially be another supposed good $\beta$ value, at least solely judging by Nomoen's results, and hence we select this value for this hopefully stable phase and frequency synchronization experiment.
 		
@@ -200,9 +224,11 @@ This is the section for the experiments attempting to synchronize for the second
 	
 		\paragraph{Ordering by frequency couplings}
 		
-		\tcol{ Now, we perform the same phase \& frequency synchronization experiment as in Figure \ref{fig:exp2}, except that this time we will fix the phase coupling constant $\alpha$ and instead test how the individual musical robots's various frequency coupling constants $\beta$ affect the performance of the musical robot collective. These results are shown in Figure \ref{fig:exp3} }
+		Lastly, for the final Baseline reproducing experiment, it was wanted to see whether results within the phase and frequency ($\phi\&\omega$) synchronization problem, when one varied the frequency coupling constant $\beta$, also was more or less in the same ballpark or not, for the same reasons as mentioned in the first Baseline reproducing experiment in Section \ref{sec:phase_sync}.
 		
-		\tcol{ Again, K. Nymoen et al. does not specify exactly the phase coupling constant they use in this latter experiment when testing their firefly-inspired synchronization system for various $\beta$ values. Hence, the now fixed phase coupling constant $\alpha$ is here selected by reusing the $\alpha$ value found in the similar experiment presented in Figure \ref{fig:exp3} to yield the lowest error rate in the musical robot collective when synchronizing to each other. This then gives us a fixed $\alpha = 0.2$. If we also survey the harmonic synchronization times and error rates in the other experiments presented in the thesis, we can also see that a phase coupling constant $\alpha=2$ should be among the best values we could use. }
+		Since we now do not synchronize in Unity for varying phase coupling constants $\alpha$, we now fix $\alpha$ and rather test how the individual musical robots's various frequency coupling constants $\beta$ affect the performance of the musical robot collective.
+		
+		Again, Nymoen does not specify exactly the phase coupling constant $\alpha$ they use in their latter experiment when testing their firefly-inspired synchronization system for various $\beta$ values. Hence, the now fixed phase coupling constant $\alpha$ is here selected by reusing a reasonably good $\alpha$ value, based on the similar $\phi\&\omega$ synchronization experiments presented in Figure \ref{fig:baseline_reproducing_phase_and_freq_sync_for_alpha} and \ref{fig:stable_baseline_reproducing_phase_and_freq_sync_for_alpha}. In these two experiments in particular, $\alpha=2$ yielded both harmonic synchronization times among the best synchronization times, given the error scores; and furthermore, one of the lowest error rates. This then gives us a fixed $\alpha = 0.2$.
 		
 		See the set up hyperparameters for the experiment in Table \ref{tab:baseline_reproducing_phase_and_freq_sync_for_beta}, and the corresponding results in Figure \ref{fig:baseline_reproducing_phase_and_freq_sync_for_beta}.
 		

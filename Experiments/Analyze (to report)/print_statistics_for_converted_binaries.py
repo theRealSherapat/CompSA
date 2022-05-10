@@ -7,6 +7,10 @@ def main(binaryArrayPairs):
         terminationTimes = binaryPair[0]
         successScores = binaryPair[1]
         
+        errorPercentage = getDataSampleErrorRate(successScores)
+        
+        
+        
         # synchronizationTimes = terminationTimes[successScores==1] # old slicing
 
         if terminationTimes.size == 0:
@@ -17,7 +21,15 @@ def main(binaryArrayPairs):
             print("\nFor datasample #" + str(binayPairIndex) + " with " + str(len(terminationTimes)) + " datapoints:")
             print("Average termination time (sim s) = " + str(round(np.average(terminationTimes), 1)))
             print("Standard deviation (sim s) = " + str(round(np.std(terminationTimes), 1)))
+            print("Error rate = " + str(round(errorPercentage,1)))
 
+
+def getDataSampleErrorRate(successScores):
+    successfulRuns = np.sum(successScores)
+    totalRuns = len(successScores)
+    errorPercentage = (1 - successfulRuns / totalRuns) * 100
+    
+    return errorPercentage
 
 def countFilesInFolderPath(path):
     filesInPath = 0
