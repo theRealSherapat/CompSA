@@ -48,7 +48,7 @@ This is the section where experiments attempting to synchronize for the first an
 	
 	\subsection{Hyperparameter tuning}
 	
-	Here we tune the hyperparameters $\alpha$ and $t_{ref}^{dyn}$ for several robot collective sizes, according to performance scores of how long it takes robot collectives on average to achieve harmonic synchrony. Exactly these two specific hyperparameters are experimented with mostly since they empirically seem to be the most important ones to set correctly before starting the simulator; that is, in order for the robots to actually manage achieving harmonic synchrony. \tcol{Additionaly, e.g. K. Konishi and H. Kokame \cite{konishi_kokame} suggest that by reducing the time oscillators in wireless sensor networks are active (i.e. increasing inactive time), power usage can also be reduced—something which makes oscillator systems last longer as well as being better for the environment in the end. Hence, a as large $t_{ref}$ or $t_{ref}^{dyn}$ as possible, seems to have some real benefits in real systems.}
+	Here we tune the hyperparameters $\alpha$ and $t_{ref}^{dyn}$ for several robot collective sizes, according to performance scores of how long it takes robot collectives on average to achieve harmonic synchrony. Exactly these two specific hyperparameters are experimented with mostly since they empirically seem to be the most important ones to set correctly before starting the simulator; that is, in order for the robots to actually manage achieving harmonic synchrony. Additionaly, the point of K. Konishi and H. Kokame (cf. \ref{sim_env_and_hyperparams}) was also remembered.
 	
 	The specific values of hyperparameters to test synchronization times for were chosen based on an initial and identical but failed experiment (not reported) where the tested values for $t_{ref}^{dyn}$ were showing some interesting effects for various robot collective sizes. Simple and limited insight was also collected from trial and error in the complete beginning when trying to facilitate stable and successful simulation runs. And furthermore, after seeing results found in this thesis for $\alpha$ already, we also got some more ideas for which values of $\alpha$ could be interesting to investigate further.
 	
@@ -105,7 +105,27 @@ This is the section where experiments attempting to synchronize for the first an
 	
 	
 	\subsection{Comparing phase adjustment methods}
-	Now, an experiment follows where we investigate the validity of the claimed [] benefits of performing bi directional phase adjustments—both inhibitory and excitatory—compared to simply adjusting phases in an excitatory way (i.e. only ``pushing'' other ocillators's phase further or higher when firing, never ``holding'' or ``dragging'' it back).
+	So far in this chapter and section, we have only run experiments for pure phase synchronization, the $\phi$ problem, with Mirollo-Strogatz's method of phase adjustment, like described in \ref{mirollo_strogatz_phase_adjust}. With this method of phase synchronization, robots are simply adjusting phases in an excitatory way; they only ``push'' other ocillators's phases further or higher when firing themselves, never ``holding'' or ``dragging'' them back.
+	
+	Now, in order to investigate the validity of the claimed [] benefits of performing bi directional phase adjustments—both excitatory and inhibitory—like that of Nymoen's phase adjustment (see \ref{subsec:nymoen_phase_adjust}), an experiment comparing these two aforementioned phase adjustment methods thus follows.
+	
+	Empirically speaking based on previous results in phase synchronization experiments, in particular the ones shown in Figure \ref{fig:baseline_reproducing_phase_sync_for_alpha} and \ref{fig:phase_sync_hyperparam_tuning_experiment}, arguably the best values so far for $\alpha$ (i.e. $\alpha=0.8$) and $t_{ref}^{dyn}$ (i.e. $t_{ref}^{dyn}=0.1$) will be reused here for Mirollo-Strogatz's phase synchronization runs.
+	
+	Since we have not yet performed any experiments for pure phase synchronization in the $\phi$ problem using Nymoen's slightly modified and bi directional phase adjustment function, the same $\alpha$ value of 0.8 will also be used for the phase synchronization runs here.
+	
+	See the hyperparameter setup below in Table \ref{tab:directional_phase_adjustment_comparison}, and the results for the two phase adjustment methods given various robot collective sizes $|R|$ in \ref{}.
+	
+	\begin{center}
+	\begin{tabular}{ |c|c|c|c|c|c|c| } 
+	\hline
+	$\alpha$ & $\beta$ & $t_{ref}^{dyn}$ & $t_f$ & $k$ & $t_{max}$ \\
+	\hline
+	0.8 & 0 & 10\% & 80ms & 8 & 5min \\
+	\hline
+	\end{tabular}
+	\captionof{table}{Experiment hyperparameter setup}
+	\label{tab:directional_phase_adjustment_comparison}
+	\end{center}
 	
 	\tcol[blue]{FYLL INN}
 	% GAMMEL EPA1-CAPTION: Performance-plot: harmonic synchronization-times from initial simulator-experiment when synchronizing phases $\phi_i$ for all agents $i$, where all phases are initially uniformly randomized between 0 and 1, and eventually synchronize and align. We here measure how long it takes 6 agents to synchronize their phases to each other, given the two different phase-adjustment methods. 30 individual runs per phase-adjustment method were performed in Unity for a collective-size of 6 agents, and $\alpha=0.2$ e.g.

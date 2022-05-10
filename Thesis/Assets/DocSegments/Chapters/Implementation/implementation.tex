@@ -62,6 +62,7 @@ At first in \ref{fig:first_idea:second_fig:unsynched}, we see the agents firing,
 Now, the synchrony simulator system components will be expounded and explained in detail.
 
 	\subsection{The simulator environment and its hyperparameters}
+	\label{sim_env_and_hyperparams}
 	
 	\begin{table}[ht]
 		\centering
@@ -94,6 +95,10 @@ Now, the synchrony simulator system components will be expounded and explained i
 		\caption{The environmental and collective hyperparameters present and used for the synchronization simulator in Unity.}
 		\label{tab:synchrony_simulator_hyperparameters}
 	\end{table}
+	
+	\textbf{Hyperparameters further explained} \nl
+	
+	\textbf{$t_{ref}^{dyn}$}: Roboticists like e.g. K. Konishi and H. Kokame \cite{konishi_kokame} suggest that by reducing the time oscillators in wireless sensor networks are active (i.e. increasing inactive time), power usage can also be reduced—something which makes oscillator systems last longer as well as being better for the environment in the end. Hence, a as large $t_{ref}$ or $t_{ref}^{dyn}$ as possible, seems to have some real benefits in real systems.
 	
 
 	\subsection{The individual agent: a musical robot}
@@ -136,13 +141,7 @@ Now, the synchrony simulator system components will be expounded and explained i
 
 		\subsubsection{Under the hood in the simulator}
 		
-			% --- META INFO START: ---
-			
-			\gjor{ Fyll inn her med megafon-/mikrofon-pollingen hvis du implementerer det }
-			
-			% --- META INFO STOP. ---
-		
-		Pretty basic and kinda like poking another robot immediately after a phase-climax.
+		\tcol{Pretty basic and kinda like poking another robot immediately after a phase-climax.}
 		
 
 		\subsubsection{Audible to human simulator-observer}

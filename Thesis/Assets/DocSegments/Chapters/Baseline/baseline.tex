@@ -53,7 +53,9 @@ The aforementioned update functions, as well as how additional self awareness ca
 	\subsection{K. Nymoen's bi-directional phase adjustment} % or 'shifts', as used before.
 	\label{subsec:nymoen_phase_adjust}
 
-	This approach to phase-adjustment works very similarly to the phase-adjustment performed in the ``standard'' \textbf{\textit{Mirollo-Strogatz}} approach presented earlier; the only difference being that now, nodes update their phases with the slightly more complex \textbf{phase update function \eqref{nymoen_phase}} when hearing a ``fire''-event from one of the other musical nodes — allowing for both larger, but also smaller, updated phases compared to the old phases:
+	Apart from altering a similar phase adjustment function to the likes of Mirollo-Strogatz's phase adjustment function so that theirs would cooperate well with the system's frequency adjustment in achieving their target goal of \textit{harmonic synchrony} (further explained towards the end of this chapter), K. Nymoen et al. \cite{nymoen_synch} here introduces an example of a bi directional phase adjustment method. The difference between a bi directional method of phase synchronization and a one directional one is that using bi directional phase adjustment, robots are simply adjusting each other's phases in an excitatory way; they only ``push'' other ocillators's phases further or higher (positive updates) when firing themselves, never ``holding'' or ``dragging'' them back (negative updates).
+
+	Hence, this newer approach to phase adjustment works very similarly to the phase adjustment performed in the ``standard'' \textbf{\textit{Mirollo-Strogatz}} approach presented earlier; the only difference being that now, robots update their phases with the slightly more complex \textbf{phase update function \eqref{nymoen_phase}} when hearing a ``fire''-event from one of the other musical nodes — allowing for both larger, but also smaller, updated phases compared to the old phases:
 
 	\begin{equation}
 	\label{nymoen_phase}
