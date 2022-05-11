@@ -8,7 +8,7 @@ labelSize = 16
 rcParams['xtick.labelsize'] = labelSize
 rcParams['ytick.labelsize'] = labelSize
 
-samplingRate = 100 # Hz                                                                             POTENTIAL SOURCE OF ERROR
+samplingRate = 20 # Hz                                                                             POTENTIAL SOURCE OF ERROR
 
 def main(csv_filename, simRun, show_fig_pls, save_fig_pls):
     times, datapointArray = parseDataFrom(csv_filename)

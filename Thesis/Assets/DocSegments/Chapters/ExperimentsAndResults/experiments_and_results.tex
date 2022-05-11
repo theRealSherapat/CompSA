@@ -4,9 +4,7 @@
 
 	% --- META INFO START: ---
 
-	\besk{Et kapittel der du har satt opp (med hyper-parametere og miljø-variabler f.eks. i en oversiktlig tabell) eksperimenter, kjørt simulation-runs med disse verdiene, og viser hva resultatene ble. Resultater kan være \textbf{performance plot}s (ift. harmonic synch.-times for diverse hyper-parametere og miljøvariabler (samt om robotene er homogene eller heterogene og isåfall hvordan), der plottet må lages spesifikt for hvert eksperiment, og kan f.eks. være boxplot eller tabeller med performance-/hsynchtime-/simulation-time(s)-verdier), \textbf{harmonic synchrony detection plot}s (altså hvordan harmonic synch. ble detectet i et simulation-run), \textbf{phase-\&frequency-plot}s (altså hvilke fase- og frekvens-verdier robotene hadde iløpet av simulation-run'et, via \textit{plot\_PhaseFrequencyPlot\_for\_SimRun.py}), eller \textbf{synchrony-evolution plot}s (der 'towards\_k\_counter'en iløpet av simulation-run'et plottes, via \textit{plot\_SynchronyEvolutionPlot\_for\_SimRun.py})}
-
-	\besk{Helst gode eksperimenter som motiveres og forklares, settes opp, og utføres m/resultater man diskuterer og analyserer. Det er bra å evaluere fra flere synspunkt \tcol[gray]{med flere research methods og hvis tid}}
+	\besk{Gode eksperimenter som motiveres og forklares, settes opp, og utføres m/resultater man diskuterer og analyserer. Det er bra å evaluere fra flere synspunkt \tcol[gray]{med flere research methods og hvis tid}}
 
 	% --- META INFO STOP. ---
 
@@ -15,11 +13,19 @@ This chapter presents the experiments set up and performed in the novel synchron
 
 The main performance scores presented in this chapter will consist of synchronization times given in simulation time (s) (i.e. how long it takes robot collectives to reach the state of harmonic synchrony if they ever do), accompanied by the respective and corresponding error rates during the belonging simulation runs (i.e. the percentage of robot collectives out of e.g. 30 runs failing to reach harmonic synchrony before the maximum time limit of e.g. 5 simulation minutes). If a musical robot collective then never reaches the target state of harmonic synchrony within the maximum time limit, this simulation run will be regarded as a ``synchronization fail'', and we will then not regard its termination time (in simulation time seconds) as \textit{harmonic synchronization time}—but simply that, that simulation run's termination time.
 
+As previously mentioned, relating to the different robot colors, all robots are unless otherwise stated homogenous; all individual robots have for experiments the same hyperparameters unless otherwise is explicitly stated.
+
 
 
 \section{Phase synchronization}
 \label{sec:phase_sync}
 This is the section where experiments attempting to synchronize for the first and simpler problem, namely synchronizing only the phases $\phi_i$ of all agents $i$, are presented and analyzed resuls for. These are then experiments where all musical robots have an equal and fixed frequency, only adjusting phases, in order to entrain to synchronize their phases to each other until reaching the target state of harmonic synchrony.
+
+	\subsection{Initial validation}
+	
+	To see that synchronization is actually happening like intended, some relevant quantities and simulation values are recorded for a phase synchronization simulation run in Unity and displayed in \ref{}.
+	
+	\tcol[blue]{FYLL INN.}
 	
 	\subsection{Reproducing baseline results}
 	
@@ -160,6 +166,13 @@ This is the section where experiments attempting to synchronize for the first an
 
 \section{Phase and frequency synchronization}
 This is the section for the experiments attempting to synchronize for the second and harder problem of synchronizing both phases $\phi_i$, as well as frequencies $\omega_i$, for all agents $i$. These are then experiments where all musical robots originally have unequal and ever-changing phases  and frequencies, adjusting both phases and frequencies in order to entrain to synchronize their phases and frequencies until reaching harmonic synchrony.
+
+	\subsection{Initial validation}
+	
+	To see that synchronization is actually happening like intended, some relevant quantities and simulation values are recorded for a phase synchronization simulation run in Unity and displayed in \ref{}.
+	
+	\tcol[blue]{FYLL INN.}
+	
 
 	\subsection{Reproducing baseline results}
 	Again, we want to here see whether we get more or less the same results in the Unity simulator as K. Nymoen et al. get in their firefly oscillator system.

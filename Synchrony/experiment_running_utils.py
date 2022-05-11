@@ -5,6 +5,7 @@ import multiprocessing as mp
 
 sampSize = 30
 reservedProcessors = 2
+silent = False
 
 # Default values unless optional hyperparameters are given per simulation run:
 defaultHyperparamsDictionary = {'COLLSIZE'                              : 3,
@@ -82,4 +83,7 @@ def runNumberOfSimulationRuns(no_of_runs):
     pool.close()
 
 def run_synchrony_simulator_executable(iteration_index):
-    os.system("SynchronySimulatorRun.exe -batchmode -nographics")
+    if silent == True:
+        os.system("SynchronySimulatorRun.exe -batchmode -nographics")
+    else:
+        os.system("SynchronySimulatorRun.exe")

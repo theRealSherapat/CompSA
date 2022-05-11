@@ -12,7 +12,7 @@ rcParams['ytick.labelsize'] = labelSize
 # plt.rcParams["figure.figsize"] = [7.50, 3.50]
 # plt.rcParams["figure.autolayout"] = True
 
-samplingRate = 100 # Hz                                                        POTENTIAL SOURCE OF ERROR
+samplingRate = 20 # Hz                                                        POTENTIAL SOURCE OF ERROR
 
 def main(phase_filename, simRun, show_fig_pls, save_fig_pls):        
     plt.close("all") # First clearing all other opened figures.
@@ -33,7 +33,6 @@ def plotPhases(t, phaseDataMatrix, simRun, show_fig_pls, save_fig_pls):
     plt.ylabel("oscillator phase", fontsize=labelSize)
     plt.xlabel("simulation-time (s)", fontsize=labelSize)
     
-    plt.legend(loc="best")                                              # BØR FINNE NOEN FINERE MÅTE Å PRESENTERE DETTE PÅ.
 
     
     # plt.tight_layout()                                      # BLIR DETTA FINT DA?
