@@ -4,16 +4,22 @@ import csv
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
 
+
+""" GLOBAL STUFF: """
+
 labelSize = 12
 rcParams['xtick.labelsize'] = labelSize
 rcParams['ytick.labelsize'] = labelSize
+wantedLineWidth = 3
 
 defaultFigureWidth = 8 # inches
 defaultFigureHeight = 6
 
 useCurrentSamplingRate = False
-useDummyFilename = False
-samplingRate = 100                                                              # POTENTIAL SOURCE OF ERROR
+useDummySourceFolder = True
+proper_save_folder = "./SavedPlots/"
+
+samplingRate = 100
 collsize = 0
 terminationTime = 300
 t_f = 0.08
@@ -27,57 +33,93 @@ symbols = ['X', 'o', 's', 'p', 'P', 'D', '|', '*'] # symmetric markers
 
 fig = None
 
+""""""
+
+
 def main(simRun, show_fig_pls, save_fig_pls):
-    # FULLFØR: Plotting the phase plot.
-    # times, phasesDatapointArray = parseDataFrom(phase_filename)
+    # Plotting the phase plot.
+    plotPhases(zoomed_in_times, zoomed_in_phasesMatrix)
     
     
+    # Plotting the frequency plot.
+    plotFrequencies(zoomed_in_times, zoomed_in_freqsMatrix)
+
+
+    # Plotting the harmonic synchronization detection subplot.
+    plotHarmonicSynchronyDetectionSubplot(zoomed_in_times, zoomed_in_t_f_is_now_samples, zoomed_in_harmDetPlotMatrix)
+
+
+    # Plotting the synchrony evolution subplot.
+    plotSynchronyEvolutionSubplot(zoomed_in_times, zoomed_in_syncEvolArray)
     
     
-    
-    
-    # FULLFØR: Plotting the frequency plot.
-    pass
-
-
-
-
-
-
-    # FULLFØR: Plotting the harmonic synchronization detection subplot.
-    plotHarmonicSynchronyDetectionSubplot(zoomed_in_times, zoomed_in_t_f_is_now_samples, zoomed_in_datapointArray, simRun, show_fig_pls, save_fig_pls)
-
-
-
-
-
-
-    # FULLFØR: Plotting the synchrony evolution subplot.
-    pass
-    
-    
-    # FINALLY PLOTTING IT ALL:
+    # Finally plotting it all:
     finishAndShowPlot(simRun, show_fig_pls, save_fig_pls, zoomed_in_times)
+
+
+
+""" PHASE PLOT RELATED """
+
+def plotPhases(t, phaseDataMatrix):
+    """ Plots a Phases-plot """
+
+    # Printing out Phase-data for each musical robot:
+    for col_index in range(phaseDataMatrix.shape[1]):
+        labelString = "musical robot " + str(col_index+1)
+        axs[0].plot(t, phaseDataMatrix[:,col_index], label=labelString)
+    
+    axs[0].set_ylabel("φ(t)", fontweight='bold', fontsize=labelSize)
+
+""""""
+
+
+
+""" FREQUENCY PLOT RELATED: """
+
+def plotFrequencies(t, frequencyDataMatrix):
+    # Printing out Frequency-data
+    for col_index in range(frequencyDataMatrix.shape[1]):
+        labelString = "musical robot " + str(col_index+1)
+        axs[1].plot(t, frequencyDataMatrix[:,col_index], label=labelString)
+    axs[1].set_ylabel("ω (Hz)", fontweight='bold', fontsize=labelSize)
+    
+    # Scatter-plotting the legal multiples frequencies are allowed to lie on (defined by the lowest fundamental frequency)
+    scatterPlotLegalMultiples(t, frequencyDataMatrix)
+
+def scatterPlotLegalMultiples(timeArray, freqsDataMatrix):
+    lowestFrequenciesAcrossRun = freqsDataMatrix.min(axis=1)
+    
+    numberOfValidFrequenciesWanted = 3
+    validFrequenciesList = []
+    
+    for validFrequencyLayerIndex in range(1,numberOfValidFrequenciesWanted):
+        validFrequenciesArray = lowestFrequenciesAcrossRun * np.power(2, validFrequencyLayerIndex)
+        validFrequenciesList.append(validFrequenciesArray)
+        
+
+    for y in validFrequenciesList:
+        axs[1].plot(timeArray, y, color='lightgray', linestyle='dashed', linewidth=0.8)
+    
+""""""
 
 
 
 """ HARMONIC SYNCHRONY DETECTION PLOT RELATED """
 
-def plotHarmonicSynchronyDetectionSubplot(zoomed_in_times, zoomed_in_t_f_is_now_samples, zoomed_in_datapointArray, simRun, show_fig_pls, save_fig_pls):
+def plotHarmonicSynchronyDetectionSubplot(zoomed_in_times, zoomed_in_t_f_is_now_samples, zoomed_in_harmDetPlotMatrix):
     # Getting shading intervals (blind for now).
     shading_intervals_index_list = get_shading_intervals_blind_indexes_list(zoomed_in_t_f_is_now_samples)
     
     # Shading the shading intervals at the right times.
     shade_time_intervals(shading_intervals_index_list, zoomed_in_times[0], zoomed_in_times[-1])
     
-    plotAllAgentData(zoomed_in_times, zoomed_in_datapointArray)
+    plotAllAgentData(zoomed_in_times, zoomed_in_harmDetPlotMatrix)
     
     axs[2].set_xlim(zoomed_in_times[0], zoomed_in_times[-1])
     axs[2].set_ylabel("f(t)", fontweight='bold', fontsize=labelSize)
     # axs[2].set_yticks(yticks)
     # axs[2].set_yticks(["$f_1(t)$", "$f_2(t)$", "$f_3(t)$", "$f_4(t)$", "$f_5(t)$", "$f_6(t)$"])
-    axs[2].invert_yaxis()
-
+    axs[2].invert_yaxis() # FJÆRN MEG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 def shade_time_intervals(inds, startShadingAtTime, stopShadingAtTime):
     # indexes -> non-blind simulation times (sim s).
@@ -214,50 +256,39 @@ def parseHarmSyncDetDataFrom(csv_filename): # CARVED FROM GOLDEN STANDARD
     t_f_is_now_samples = arrayOfDatapoints[1:,0]
     
     
-    return t, t_f_is_now_samples, arrayOfDatapoints[1:,1:] # slicer fra og med den 1nte indeksen siden første rad er initialized to 0 by using np.empty(), og siden første kolonne er t_f_is_now.
+    return t[1:], t_f_is_now_samples, arrayOfDatapoints[1:,1:] # slicer fra og med den 1nte indeksen siden første rad er initialized to 0 by using np.empty(), og siden første kolonne er t_f_is_now.
 
 
-# def get_y_ticks(no_of_agents):
-    # if no_of_agents > tenStepYLabelLimit: # Going over to just marking/ytick-labeling every tenth agent-#
-        # arr = np.arange(0, no_of_agents, 10)
-        # arr[0] = 1
-        # if arr[-1] != no_of_agents:
-            # arr = np.append(arr, no_of_agents)
-    # elif no_of_agents > fiveStepYLabelLimit:
-        # arr = np.arange(0, no_of_agents, 5)
-        # arr[0] = 1
-        # if arr[-1] != no_of_agents:
-            # arr = np.append(arr, no_of_agents)
-    # else:
-        # arr = range(1, no_of_agents+1)
+def getZoomedInHarmDetPlotTimeValues(t_interesting_start, t_interesting_end, times, t_f_is_now_samples, datapointArray):
+    if not (t_interesting_start == -1.0 or t_interesting_start < 0.0):
+        t_interesting_start_index = int(round(t_interesting_start*samplingRate))
+    else:
+        t_interesting_start_index = 0
+        
+    if not (t_interesting_end == -1.0 or t_interesting_end > times[-1]):
+        t_interesting_end_index = int(round(t_interesting_end*samplingRate))
+    else:
+        return times[t_interesting_start_index:], t_f_is_now_samples[t_interesting_start_index:], datapointArray[t_interesting_start_index:,:]
     
-    # return arr
+    return times[t_interesting_start_index:t_interesting_end_index], t_f_is_now_samples[t_interesting_start_index:t_interesting_end_index], datapointArray[t_interesting_start_index:t_interesting_end_index,:]
+
+""""""
 
 
-""" PHASE PLOT RELATED """
 
-def plotPhases(t, phaseDataMatrix, simRun, show_fig_pls, save_fig_pls):
-    """ Plots a Phases-plot """
+""" HARMONIC SYNCHRONY EVOLUTION PLOT RELATED: """
 
-    # Printing out Phase-data
-    for col_index in range(phaseDataMatrix.shape[1]):
-        labelString = "musical robot " + str(col_index+1)
-        plt.plot(t, phaseDataMatrix[:,col_index], label=labelString)
-    
-    plt.ylabel("oscillator phase", fontsize=labelSize)
-    plt.xlabel("simulation-time (s)", fontsize=labelSize)
-    
+def plotSynchronyEvolutionSubplot(t, towards_k_counter):
+    axs[3].plot(t, towards_k_counter, linewidth=wantedLineWidth)
+    axs[3].set_ylabel("# even beats", fontsize=labelSize)
 
-    
-    # plt.tight_layout()                                      # BLIR DETTA FINT DA?
-    noOfAgents = phaseDataMatrix.shape[1]
-    if save_fig_pls == 1:
-        plt.savefig("../../Synchrony/SavedData/Plots/" + str(noOfAgents) + "RobotsTerminatedAfter" + str(round(len(t)/samplingRate)) + "s_PhasePlot.pdf", dpi=300, format="pdf", bbox_inches="tight")
-    if show_fig_pls == 1:
-        plt.show()
+""""""
 
 
-def parseStandardDataFrom(csv_filename):
+
+""" COMMONLY RELATED """
+
+def parsePlainCSVDataFrom(csv_filename):
     """ Reads all rows (apart from the header) into a numpy data-matrix, and returns that 'arrayOfDatapoints' and its corresponding vertical time-axis 't' """
 
     arrayOfDatapoints = np.empty((1, 1)) # initializing our numpy data-matrix with a dummy size (real size will be sat later on)
@@ -281,13 +312,22 @@ def parseStandardDataFrom(csv_filename):
             numOfRows += 1
             
     
-    t = np.linspace(0, numOfRows*(1/samplingRate), numOfRows-1) # In reality we start sampling after a split-second long startup-phase in Unity?
+    t = np.linspace(0, numOfRows*(1/samplingRate), numOfRows+1) # In reality we start sampling after a split-second long startup-phase in Unity?
     
-    return t, arrayOfDatapoints[1:,:] # kanskje slice fra andre rad av?
+    return t[1:], arrayOfDatapoints[1:,:] # kanskje slice fra andre rad av?
 
-
-
-""" COMMONLY RELATED """
+def getPlainZoomedInXTimeValues(t_interesting_start, t_interesting_end, times, datapointArray):
+    if not (t_interesting_start == -1.0 or t_interesting_start < 0.0):
+        t_interesting_start_index = int(round(t_interesting_start*samplingRate))
+    else:
+        t_interesting_start_index = 0
+        
+    if not (t_interesting_end == -1.0 or t_interesting_end > times[-1]):
+        t_interesting_end_index = int(round(t_interesting_end*samplingRate))
+    else:
+        return times[t_interesting_start_index:], datapointArray[t_interesting_start_index:,:]
+    
+    return times[t_interesting_start_index:t_interesting_end_index], datapointArray[t_interesting_start_index:t_interesting_end_index,:]
 
 def getCurrentSamplingRateFromHyperparameterCSV():
     extractedSampleRate = 0
@@ -299,35 +339,14 @@ def getCurrentSamplingRateFromHyperparameterCSV():
     
     return extractedSampleRate
 
-
-
-def getCommandLineArguments():
-    simRun = sys.argv[1]
-    show_fig_pls = int(sys.argv[2])
-    save_fig_pls = int(sys.argv[3])
-    t_interesting_start = float(sys.argv[4])
-    t_interesting_end = float(sys.argv[5])
-    
-    return simRun, show_fig_pls, save_fig_pls, t_interesting_start, t_interesting_end
-
-
-def getZoomedInXTimeValues(t_interesting_start, t_interesting_end, times, t_f_is_now_samples, datapointArray):
-    if t_interesting_start != -1.0:
-        t_interesting_start_index = int(round(t_interesting_start*samplingRate))
-    else:
-        t_interesting_start_index = 0
-        
-    if t_interesting_end != -1.0:
-        t_interesting_end_index = int(round(t_interesting_end*samplingRate))
-    else:
-        t_interesting_end_index = -1
-    
-    return times[t_interesting_start_index:t_interesting_end_index], t_f_is_now_samples[t_interesting_start_index:t_interesting_end_index], datapointArray[t_interesting_start_index:t_interesting_end_index,:]
-
-
 def getTime(time_sample_index, sampling_rate):
     return time_sample_index / sampling_rate
 
+def getStartAndEndTimesGivenTimestampAndRadius(timestamp, radius):
+    startTime = timestamp - radius/2
+    endTime = timestamp + radius/2
+    
+    return startTime, endTime
 
 def finishAndShowPlot(simRun, show_fig_pls, save_fig_pls, tArray):
     """ Finishing the job and plotting out the resulting 4x1 SimRun subplot. """
@@ -335,11 +354,21 @@ def finishAndShowPlot(simRun, show_fig_pls, save_fig_pls, tArray):
     # plt.xlim([tArray[0], tArray[-1]])
     
     if save_fig_pls == 1:
-        temp_save_folder = "./"
-        proper_save_folder = "../../Synchrony/SavedData/Plots/"
-        plt.savefig(proper_save_folder + str(collsize) + "RobotsTerminatedAfter" + str(round(terminationTime)) + "s_HarmSyncDetPlot.pdf", bbox_inches="tight")
+        plt.savefig(proper_save_folder + str(collsize) + "RobotsTerminatedAfter" + str(round(terminationTime)) + "s_SimRunPlot.pdf", bbox_inches="tight")
     if show_fig_pls == 1:
         plt.show()
+
+def getCommandLineArguments():
+    simRun = sys.argv[1]
+    show_fig_pls = int(sys.argv[2])
+    save_fig_pls = int(sys.argv[3])
+    timestamp = float(sys.argv[4])
+    radius = float(sys.argv[5])
+    t_interesting_start, t_interesting_end = getStartAndEndTimesGivenTimestampAndRadius(timestamp, radius)
+        
+    return simRun, show_fig_pls, save_fig_pls, t_interesting_start, t_interesting_end
+
+""""""
 
 
 if __name__ == "__main__":
@@ -354,45 +383,76 @@ if __name__ == "__main__":
             simRun (int)        : the simulation-run from the latest Unity-run
             show_fig_pls (int)  : whether or not we want to show the resulting figure/plot.
             save_fig_pls (int) : whether or not we want to save the resulting figure/plot.
-            t_interesting_start (float) : when the interesting period starts, which we watn to plot for.
-            t_interesting_end (float) : when the interesting period ends, which we watn to plot until.
     """
     
-    """ Harmonic synchrony detection plot related (although might be reused for other subplots too): """
-    
+    # Getting command line arguments:
     simRun, show_fig_pls, save_fig_pls, t_interesting_start, t_interesting_end = getCommandLineArguments()
     
-    filepath = ""
-    if useDummyFilename:
-        filepath = "node_firing_data_atSimRun" + simRun + ".csv"
+    # Datafolder:
+    filepath_source_folder = ""
+    if useDummySourceFolder:
+        filepath_source_folder = "./DummyData/"
     else:
-        filepath = "../../Synchrony/SavedData/PerformanceMeasurePlotMaterial/node_firing_data_atSimRun" + simRun + ".csv"
+        filepath_source_folder = "../../Synchrony/SavedData/"
     
-    # If you want to automatically retrieve and assign the current data saving sampling rate.
+    # If you want to automatically retrieve and assign the current data saving sampling rate:
     if useCurrentSamplingRate:
         samplingRate = getCurrentSamplingRateFromHyperparameterCSV()
     
-    # Loading the data to plot for the Harmonic Synchrony Detection plot. REMEMBER: Can reuse the time quantities for the other subplots too.
-    times, t_f_is_now_samples, datapointArray = parseHarmSyncDetDataFrom(filepath)
+    
+    """ Harmonic synchrony detection plot related: """
+    
+    # Loading the data to plot for the Harmonic Synchrony Detection plot.
+    times, t_f_is_now_samples, datapointArray = parseHarmSyncDetDataFrom(filepath_source_folder + "PerformanceMeasurePlotMaterial/node_firing_data_atSimRun" + simRun + ".csv")
     collsize = datapointArray.shape[1]
     terminationTime = datapointArray.shape[0]/samplingRate
     
-    zoomed_in_times, zoomed_in_t_f_is_now_samples, zoomed_in_datapointArray = getZoomedInXTimeValues(t_interesting_start, t_interesting_end, times, t_f_is_now_samples, datapointArray)
+    zoomed_in_times, zoomed_in_t_f_is_now_samples, zoomed_in_harmDetPlotMatrix = getZoomedInHarmDetPlotTimeValues(t_interesting_start, t_interesting_end, times, t_f_is_now_samples, datapointArray)
     
-    # Initializing plt Figure and subplots:
+    """"""
+    
+    """ Common stuff: """
+    
     h_star = (1/3) * collsize
     harm_sync_det_plot_ratio = h_star/(defaultFigureHeight/4)
-    fig = plt.figure()
-    gs = fig.add_gridspec(4, width_ratios=[1], height_ratios=[1, 1, harm_sync_det_plot_ratio, 1], hspace=0.15)
-    axs = gs.subplots(sharex=True)
     
-    axs[3].set_xlabel("simulation time (s)", fontsize=labelSize)
+    # Initializing plt Figure and subplots:
+    fig = plt.figure()
+    gs = fig.add_gridspec(4, width_ratios=[1], height_ratios=[1, 1, harm_sync_det_plot_ratio, 1], hspace=0.35)
+    axs = gs.subplots(sharex=True)
+    axs[3].set_xlabel("t (sim s)", fontsize=labelSize) # simulation time (s)
     
     # fig, axs = plt.subplots(4,1, figsize=(defaultFigureWidth,defaultFigureWidth*3/4+h_star)) # (width, height) sizes in inches
     
+    """"""
     
-    """ Phase plot related (although might be reused for other subplots too): """
     
+    """ Phase plot related (data setup and loading): """
+    
+    # Retrieving all the data from the phase .CSV into np. arrays.
+    times, phasesDatapointArray = parsePlainCSVDataFrom(filepath_source_folder + "Phases/phases_over_time_atSimRun" + simRun + ".csv")
+    
+    # Slicing out only the zoomed in part of the data.
+    _, zoomed_in_phasesMatrix = getPlainZoomedInXTimeValues(t_interesting_start, t_interesting_end, times, phasesDatapointArray)
+    
+    """"""
+    
+    
+    """ Frequency plot related (data setup and loading): """
+    _, frequenciesDatapointArray = parsePlainCSVDataFrom(filepath_source_folder + "Frequencies/freqs_over_time_atSimRun" + simRun + ".csv")
+    
+    _, zoomed_in_freqsMatrix = getPlainZoomedInXTimeValues(t_interesting_start, t_interesting_end, times, frequenciesDatapointArray)
+    
+    """"""
+    
+    
+    """ Synchrony evolution related (data preparation and loading): """
+    _, syncEvolutionDatapointArray = parsePlainCSVDataFrom(filepath_source_folder + "SynchronyEvolutions/synch_evolution_data_atSimRun" + simRun + ".csv")
+    syncEvolutionDatapointArray = syncEvolutionDatapointArray[1:]
+    
+    _, zoomed_in_syncEvolArray = getPlainZoomedInXTimeValues(t_interesting_start, t_interesting_end, times, syncEvolutionDatapointArray)
+    
+    """"""
     
     
     main(simRun, show_fig_pls, save_fig_pls)

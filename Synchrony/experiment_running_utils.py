@@ -3,9 +3,10 @@ import sys
 import csv
 import multiprocessing as mp
 
-sampSize = 30
 reservedProcessors = 2
-silent = False
+silent = True
+
+sampSize = 30
 
 # Default values unless optional hyperparameters are given per simulation run:
 defaultHyperparamsDictionary = {'COLLSIZE'                              : 3,
