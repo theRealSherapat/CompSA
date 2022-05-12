@@ -33,8 +33,6 @@ def plotFrequencies(t, frequencyDataMatrix, simRun, show_fig_pls, save_fig_pls):
     scatterPlotLegalMultiples(t, frequencyDataMatrix)
     
     
-    plt.legend(loc="best")                                              # BØR FINNE NOEN FINERE MÅTE Å PRESENTERE DETTE PÅ.
-
     # Plotting out the whole plot:
     # plt.tight_layout()                                      # BLIR DETTA FINT DA?
     noOfAgents = frequencyDataMatrix.shape[1]

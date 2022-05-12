@@ -29,7 +29,12 @@ fig = None
 
 def main(simRun, show_fig_pls, save_fig_pls):
     # FULLFØR: Plotting the phase plot.
-    pass
+    # times, phasesDatapointArray = parseDataFrom(phase_filename)
+    
+    
+    
+    
+    
     
     # FULLFØR: Plotting the frequency plot.
     pass
@@ -171,37 +176,7 @@ def plotBooleanStripWithSymbolAtHeight(boolStrip, agentIndex, tArray):
             axs[2].plot(tArray[stripIndex], int(agentIndex+1), marker=symbols[agentIndex%len(symbols)], markersize=2.2, color=colors[agentIndex%len(colors)])
             axs[2].set_xlim()
 
-# def get_y_ticks(no_of_agents):
-    # if no_of_agents > tenStepYLabelLimit: # Going over to just marking/ytick-labeling every tenth agent-#
-        # arr = np.arange(0, no_of_agents, 10)
-        # arr[0] = 1
-        # if arr[-1] != no_of_agents:
-            # arr = np.append(arr, no_of_agents)
-    # elif no_of_agents > fiveStepYLabelLimit:
-        # arr = np.arange(0, no_of_agents, 5)
-        # arr[0] = 1
-        # if arr[-1] != no_of_agents:
-            # arr = np.append(arr, no_of_agents)
-    # else:
-        # arr = range(1, no_of_agents+1)
-    
-    # return arr
-
-
-
-""" COMMONLY RELATED """
-
-def getCurrentSamplingRateFromHyperparameterCSV():
-    extractedSampleRate = 0
-    
-    with open('./../../Synchrony/wantedHyperparametersForSimulationRun.csv', newline='') as csvfile:
-        readr = csv.reader(csvfile, delimiter=';')
-        next(readr, None) # to skip the header
-        extractedSampleRate = int(next(readr)[11].replace(",","."))
-    
-    return extractedSampleRate
-
-def parseDataFrom(csv_filename): # CARVED FROM GOLDEN STANDARD
+def parseHarmSyncDetDataFrom(csv_filename): # CARVED FROM GOLDEN STANDARD
     """ Reads all rows (apart from the header) into a numpy data-matrix, and returns that 'arrayOfDatapoints' """
 
     arrayOfDatapoints = np.empty((1, 1)) # initializing our numpy data-matrix with a dummy size (real size will be sat later on)
@@ -240,6 +215,91 @@ def parseDataFrom(csv_filename): # CARVED FROM GOLDEN STANDARD
     
     
     return t, t_f_is_now_samples, arrayOfDatapoints[1:,1:] # slicer fra og med den 1nte indeksen siden første rad er initialized to 0 by using np.empty(), og siden første kolonne er t_f_is_now.
+
+
+# def get_y_ticks(no_of_agents):
+    # if no_of_agents > tenStepYLabelLimit: # Going over to just marking/ytick-labeling every tenth agent-#
+        # arr = np.arange(0, no_of_agents, 10)
+        # arr[0] = 1
+        # if arr[-1] != no_of_agents:
+            # arr = np.append(arr, no_of_agents)
+    # elif no_of_agents > fiveStepYLabelLimit:
+        # arr = np.arange(0, no_of_agents, 5)
+        # arr[0] = 1
+        # if arr[-1] != no_of_agents:
+            # arr = np.append(arr, no_of_agents)
+    # else:
+        # arr = range(1, no_of_agents+1)
+    
+    # return arr
+
+
+""" PHASE PLOT RELATED """
+
+def plotPhases(t, phaseDataMatrix, simRun, show_fig_pls, save_fig_pls):
+    """ Plots a Phases-plot """
+
+    # Printing out Phase-data
+    for col_index in range(phaseDataMatrix.shape[1]):
+        labelString = "musical robot " + str(col_index+1)
+        plt.plot(t, phaseDataMatrix[:,col_index], label=labelString)
+    
+    plt.ylabel("oscillator phase", fontsize=labelSize)
+    plt.xlabel("simulation-time (s)", fontsize=labelSize)
+    
+
+    
+    # plt.tight_layout()                                      # BLIR DETTA FINT DA?
+    noOfAgents = phaseDataMatrix.shape[1]
+    if save_fig_pls == 1:
+        plt.savefig("../../Synchrony/SavedData/Plots/" + str(noOfAgents) + "RobotsTerminatedAfter" + str(round(len(t)/samplingRate)) + "s_PhasePlot.pdf", dpi=300, format="pdf", bbox_inches="tight")
+    if show_fig_pls == 1:
+        plt.show()
+
+
+def parseStandardDataFrom(csv_filename):
+    """ Reads all rows (apart from the header) into a numpy data-matrix, and returns that 'arrayOfDatapoints' and its corresponding vertical time-axis 't' """
+
+    arrayOfDatapoints = np.empty((1, 1)) # initializing our numpy data-matrix with a dummy size (real size will be sat later on)
+    
+    numOfRows = 0
+    with open(csv_filename) as dataFile:
+        csvReader = csv.reader(dataFile, delimiter=';')
+        next(csvReader, None) # to skip the headers
+        for row in csvReader:
+            if numOfRows == 0:
+                arrayOfDatapoints = np.empty((1, len(row))) # initializing our numpy data-matrix when we know the number of columns to include in it
+                
+            col_array = np.array([])
+            for col_index in range(len(row)):
+                col_element = float(row[col_index].replace(',','.'))
+                col_array = np.append(col_array, col_element)
+            
+            col_array = np.reshape(col_array, (1, len(row)))
+            arrayOfDatapoints = np.vstack((arrayOfDatapoints, col_array))
+            
+            numOfRows += 1
+            
+    
+    t = np.linspace(0, numOfRows*(1/samplingRate), numOfRows-1) # In reality we start sampling after a split-second long startup-phase in Unity?
+    
+    return t, arrayOfDatapoints[1:,:] # kanskje slice fra andre rad av?
+
+
+
+""" COMMONLY RELATED """
+
+def getCurrentSamplingRateFromHyperparameterCSV():
+    extractedSampleRate = 0
+    
+    with open('./../../Synchrony/wantedHyperparametersForSimulationRun.csv', newline='') as csvfile:
+        readr = csv.reader(csvfile, delimiter=';')
+        next(readr, None) # to skip the header
+        extractedSampleRate = int(next(readr)[11].replace(",","."))
+    
+    return extractedSampleRate
+
+
 
 def getCommandLineArguments():
     simRun = sys.argv[1]
@@ -298,6 +358,8 @@ if __name__ == "__main__":
             t_interesting_end (float) : when the interesting period ends, which we watn to plot until.
     """
     
+    """ Harmonic synchrony detection plot related (although might be reused for other subplots too): """
+    
     simRun, show_fig_pls, save_fig_pls, t_interesting_start, t_interesting_end = getCommandLineArguments()
     
     filepath = ""
@@ -311,7 +373,7 @@ if __name__ == "__main__":
         samplingRate = getCurrentSamplingRateFromHyperparameterCSV()
     
     # Loading the data to plot for the Harmonic Synchrony Detection plot. REMEMBER: Can reuse the time quantities for the other subplots too.
-    times, t_f_is_now_samples, datapointArray = parseDataFrom(filepath)
+    times, t_f_is_now_samples, datapointArray = parseHarmSyncDetDataFrom(filepath)
     collsize = datapointArray.shape[1]
     terminationTime = datapointArray.shape[0]/samplingRate
     
@@ -327,6 +389,10 @@ if __name__ == "__main__":
     axs[3].set_xlabel("simulation time (s)", fontsize=labelSize)
     
     # fig, axs = plt.subplots(4,1, figsize=(defaultFigureWidth,defaultFigureWidth*3/4+h_star)) # (width, height) sizes in inches
+    
+    
+    """ Phase plot related (although might be reused for other subplots too): """
+    
     
     
     main(simRun, show_fig_pls, save_fig_pls)
