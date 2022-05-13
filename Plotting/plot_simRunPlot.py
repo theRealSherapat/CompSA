@@ -15,8 +15,8 @@ wantedLineWidth = 3
 defaultFigureWidth = 8 # inches
 defaultFigureHeight = 6
 
-useCurrentSamplingRate = False
-useDummySourceFolder = True
+useCurrentSamplingRate = True
+useDummySourceFolder = False
 proper_save_folder = "./SavedPlots/"
 
 samplingRate = 100
