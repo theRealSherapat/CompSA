@@ -83,6 +83,7 @@ public class AgentManager : MonoBehaviour {
     private float agentWidth = Mathf.Sqrt(Mathf.Pow(4.0f, 2) + Mathf.Pow(4.0f, 2)); // diameter from tentacle to tentacle (furthest from each other)
     private List<Vector2> spawnedPositions = new List<Vector2>();
     private List<SquiggleScript> spawnedSquiggleScripts = new List<SquiggleScript>();
+    private List<List<float>> distancesMatrix = new List<List<float>>();
     private float wantedAlpha;
     private phaseSyncEnum wantedPhaseAdjustmentMethod;
     private float wantedBeta;
@@ -135,6 +136,7 @@ public class AgentManager : MonoBehaviour {
     // 'MonoBehaviour':
 
     void Awake() {
+        // (AV EN ELLER ANNEN GRUNN ER JEG AVHENGIG AV Å BRUKE DENNE NÅ):
         // Loading the user or Python-script given hyperparameters wanted for the simulation run being set up.
         LoadCSVCovariatesIntoSimulation();
 
@@ -143,8 +145,12 @@ public class AgentManager : MonoBehaviour {
         // Spawning all agents randomly (but pretty naively as of now)
         SpawnAgents();
 
+        // Assigning the distancesMatrix that the Squiggles will use for filling up each others's firesignal subscriber lists.
+        distancesMatrix = GetRobotDistances();
+        
         InitializeVariables();
     }
+
 
     void FixedUpdate() { // having to do with physics, time-critical functionality (depends on fixedTime e.g.)
         // Ending simulation-run if we deem it either a synchronization -success or -failure.
@@ -472,12 +478,17 @@ public class AgentManager : MonoBehaviour {
         spawnRadius = (collectiveSize/6.0f)*agentWidth + slingringsmonn; // Simply an empirical model of the necessary space the agents need to spawn. Or just a guess I guess.
 
         for (int i = 0; i < collectiveSize; i++) {
-            // Finding a position in a circle free to spawn (taking into account not wanting to collide with each other)
+            // Finding a position in a circle free to spawn (taking into account not wanting to collide with each other) (x, z)
             Vector2 randomCirclePoint = FindFreeSpawnPosition();
             spawnedPositions.Add(randomCirclePoint);
 
+            int randomSquigglePrefabIndex = randGen.Next(0, squigglePrefabs.Length);
+
+            // BARE FOR TESTING:
+            Debug.Log(squigglePrefabs[randomSquigglePrefabIndex].name + " with AgentID " + (i + 1) + " will spawn at position: " + randomCirclePoint);
+
             // Spawning an agent from squigglePrefabs on the free position
-            GameObject newAgent = Instantiate(squigglePrefabs[randGen.Next(0, squigglePrefabs.Length)],
+            GameObject newAgent = Instantiate(squigglePrefabs[randomSquigglePrefabIndex],
                                                                 new Vector3(randomCirclePoint.x, -0.96f, randomCirclePoint.y),
                                                                 Quaternion.identity);
 
@@ -535,12 +546,29 @@ public class AgentManager : MonoBehaviour {
         return withinUnitCircle;
     }
 
+    private List<List<float>> GetRobotDistances() {
+        List<List<float>> distanceMat = new List<List<float>>();
+
+        foreach (Vector2 spawnedPositionFrom in spawnedPositions) {
+            List<float> newDistanceRow = new List<float>();
+
+            foreach (Vector2 spawnedPostionTo in spawnedPositions) {
+                newDistanceRow.Add(Vector2.Distance(spawnedPositionFrom, spawnedPostionTo));
+            }
+
+            distanceMat.Add(newDistanceRow);
+        }
+
+
+        return distanceMat;
+    }
+
 
 
 
     // 'HELPING':
 
-        // Get-functions:
+    // Get-functions:
     public System.Random GetRandomNumberGenerator() {
         return randGen;
     }
