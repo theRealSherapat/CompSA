@@ -15,8 +15,8 @@ wantedLineWidth = 3
 defaultFigureWidth = 8 # inches
 defaultFigureHeight = 6
 
-useCurrentSamplingRate = True
-useDummySourceFolder = False
+useCurrentSamplingRate = False
+useDummySourceFolder = True
 proper_save_folder = "./SavedPlots/"
 
 samplingRate = 100
@@ -332,7 +332,7 @@ def getPlainZoomedInXTimeValues(t_interesting_start, t_interesting_end, times, d
 def getCurrentSamplingRateFromHyperparameterCSV():
     extractedSampleRate = 0
     
-    with open('./../../Synchrony/wantedHyperparametersForSimulationRun.csv', newline='') as csvfile:
+    with open('./../Synchrony/wantedHyperparametersForSimulationRun.csv', newline='') as csvfile:
         readr = csv.reader(csvfile, delimiter=';')
         next(readr, None) # to skip the header
         extractedSampleRate = int(next(readr)[11].replace(",","."))

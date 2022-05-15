@@ -82,6 +82,9 @@ public class SquiggleScript : MonoBehaviour {
         // 'simulation setup':
         AssignHelpingVariables();
 
+        // Fill up wanted neighbouring subscriber-lists with yourself ('this').
+
+
         // Setting up for a human listener being able to see the ``fire''-events from the Dr. Squiggles.
         AssignVisualVariables();
 
