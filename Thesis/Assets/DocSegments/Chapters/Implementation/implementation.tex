@@ -261,12 +261,52 @@ Now, the synchrony simulator system components will be expounded and explained i
 	
 	Some implemented approaches for achieving this are presented now. Notice the increasing degree of \textit{Computational Self-Awareness} endowed in the methods.
 	
+	The details of how the Dr. Squiggles in Unity adjust and eventually synchronize (harmonically) their oscillator frequencies, is shown in Algorithm \ref{AddNthFireEventsHToList} and \ref{RFAAdjustFrequency}. Algorithm \ref{AddNthFireEventsHToList} outlines how the ``frequency adjustment contributions'' $H$ get calculated as soon as the Dr. Squiggles hear a neighbour Dr. Squiggle sending a ``fire'' signal; whereas Algorithm \ref{RFAAdjustFrequency} shows how these previously calculated $H(n)$ values are used to obtain the new and updated oscillator frequency $\omega_i(t^+)$ with which individual oscillators assign their frequencies to after each phase climax (i.e. when $\phi=1$).
+	
+	\begin{algorithm}
+	\caption{Calculating frequency update contributions $H$ in Unity}\label{AddNthFireEventsHToList}
+	\begin{algorithmic}[1]
+	\Procedure{}{$\phi(t)$}
+		\If {not in refractory period}
+			\State $\epsilon \gets$ sin$(\pi \phi(t))^2$ \Comment{\tcol[gray]{Step 1}} % $n$th fire event's error score at time $t$
+		\Else
+			\State $\epsilon \gets 0$
+		\EndIf
+		\State $\epsilon$ is added to $errorBuffer$
+		\State $s \gets$ median$\{\epsilon(n), \epsilon(n-1), ..., \epsilon(n-m)\}$ \Comment{\tcol[gray]{Step 2}}
+		\State $\rho \gets -$sin$(2\pi\phi(t))$ \Comment{\tcol[gray]{Step 3}}
+		\State $H \gets \rho \cdot s $ \Comment{\tcol[gray]{Step 4}}
+		\State $H$ is added to list $H(n)$
+	\EndProcedure
+	\end{algorithmic}
+	\end{algorithm}
+	
+	\begin{algorithm}
+	\caption{K. Nymoen et al.'s frequency updates in Dr. Squiggles robots}\label{RFAAdjustFrequency}
+	\begin{algorithmic}[1]
+	\Procedure{}{$H(n), \beta$}
+		\State $cycleHSum \gets 0$ \Comment{\tcol[gray]{Step 5 started}}
+		\State $y \gets$ length$(H(n))$
+		\ForAll {$ H \in H(n) $}
+			\State $cycleHSum \gets cycleHSum + H$
+		\EndFor
+		\State $F(n) \gets 0$
+		\If {$y$ not $0$}
+			\State $F(n) \gets \beta \cdot cycleHSum / y$ \Comment{\tcol[gray]{Step 5 finished}}
+		\EndIf
+		\State Emptying $H(n)$ \Comment{\tcol[gray]{for new contributions next oscillator cycle}}
+		\State $\omega_i(t^+) \gets \omega_i(t) \cdot 2^{F(n)}$
+	\EndProcedure
+	\end{algorithmic}
+	\end{algorithm}
+	
+	
 	
 	% FREQ.-SYNCH APPROACH 2: MID LEVEL Self-Awareness
 	% K. Nymoen's Frequency-Synchronization with some Self-Awareness
 	\subsection{Verifying K. Nymoen's frequency-adjustment}
 	
-	In the newly proposed Unity simulator environment, the previously introduced self-assessed synch-score $s(n)$ (in \ref{s_n}) is implemented as a list containing \textit{m} error-scores $\epsilon$. Such a list is easily implemented in C\# by declaring a List$<$float$>$ called \textit{errorBuffer} e.g. (i.e. \textit{errorBuffer} is a list containing floating point values):
+	In the newly proposed Unity simulator environment, the previously introduced self-assessed sync score $s(n)$ (in \ref{s_n}) is implemented as the median of a list containing \textit{m} error-scores $\epsilon$. Such an error score list of length $m$ is easily implemented by a list called \textit{errorBuffer}:
 	
 	\begin{equation}
 	\label{error_buffer}
