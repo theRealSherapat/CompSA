@@ -33,7 +33,6 @@ Remember:
 * Citations and references throughout the master's report:
 	+ Add the right citations/references where there are empty \cite{}-clauses.
 	+ Ensure the right uses of \ref{}, so that 'Subsection \ref{}' doesn't e.g. refer to a Section or Paragraph.
-	+ Change to using the [NOR04]-style (first author(s), Normann e.g.) instead of [3]-style (cf. https://www.overleaf.com/learn/latex/Bibliography_management_in_LaTeX).
 	+ Høre med Kyrre om det er fryktelig nøye åssen referansene er skrevet opp, eller om Zoteros eksporterte .bib-filer er gode nok.
 	+ Sjekke hva du har blitt fortalt om kilder (fra f.eks. de to master-ukene), og kildekompasset.no, og formater kildene dine ettersom.
 * Plots and colors:
@@ -51,3 +50,11 @@ Remember:
 * Page layouts:
 	+ Se til at alle figurene og tabellene er plassert der det gir mening for deg, ikke der det gir mening for LaTeX.
 	+ Sørge for at List of Figures ser grei ut og ikke noob (husk å sende med forkortede []-parametre i figure-captions).
+	
+	
+	
+	
+## ONLY IF TIME Polishing- & Finishing-TODOs
+* Citations and references throughout the master's report:
+	+ If really wanted and if time, changing to using the [NOR04]-style (first author(s), Normann e.g.) instead of [3]-style (cf. https://www.overleaf.com/learn/latex/Bibliography_management_in_LaTeX).
+	+ When referring to footnotes in the text, add some spacing after it so that the reference looks good and not too crowded.	
