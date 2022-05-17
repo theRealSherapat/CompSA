@@ -9,7 +9,13 @@
 	% --- META INFO STOP. ---
 
 
-Kristian Nymoen et al. \cite{nymoen_synch} showed how one can, by endowing oscillators with self awareness capabilities amongst other measures, achieve synchronization (\textit{harmonic} at that, cf. \ref{subsec:harmonic_synchrony}) of pulse coupled oscillators's initially unsynchronized phases and frequencies. The platform Nymoen et al. achieved this on is shown in Figure \ref{fig:nymoen_fireflies_on_ios_devices}, as each firefly on their iOS devices initially start flashing unsynchronized and randomly, but then eventually manage to start firing synchronously\footnote{See video at \url{https://vimeo.com/67205605} (accessed 2022.05.17)}.
+Kristian Nymoen et al. showed in their paper titled \textit{Decentralized Harmonic Synchronization in Mobile Music Systems} \cite{nymoen_synch} how one can achieve synchronization (\textit{harmonic} at that, cf. \ref{sec:harmonic_synchrony}) of pulse coupled oscillators's initially unsynchronized phases and frequencies. This is done by endowing oscillators with self awareness capabilities amongst other measures. The platform Nymoen et al. achieved this on is shown in Figure \ref{fig:nymoen_fireflies_on_ios_devices}, as each firefly on their iOS devices initially start flashing unsynchronized and randomly, but then eventually manage to start firing synchronously\footnote{See video at \url{https://vimeo.com/67205605} (accessed 2022.05.17)}.
+
+Key words: \textbf{Active \& interactive music, decentralized, synchronization, pulse-coupled oscillators, self-awareness, emergence \& stigmergy}
+\newline
+
+In this Active Music System, as shown in Figure \ref{fig:nymoen_fireflies_on_ios_devices}, decentralized harmonic synchronization (implying integer-ratio oscillator-firings) of a dynamic and arbitrary number of musical nodes (pulse-coupled oscillators) -- involving indirect coordination through stigmergy, as well as self-awareness through knowledge regarding itself internally and in publicly in the context of other nodes -- is achieved.
+\newline
 
 \begin{figure}[ht!]
 	\centering
@@ -18,7 +24,23 @@ Kristian Nymoen et al. \cite{nymoen_synch} showed how one can, by endowing oscil
 	\label{fig:nymoen_fireflies_on_ios_devices}
 \end{figure}
 
-As Nymoen designed update functions for synchronizing both phases and frequencies, not only were their firefly-inspired oscillators endowed with self awareness capabilities; they were also designed to adjust their phases and frequencies with (close to) 0 change half-way through the oscillator cycle. These (close to) 0 changes half-way through oscillators's cycles enable individual musical agents to play with different measures (e.g. half or 1/4th as fast) compared to other individuals—being characteristic for musical interaction with several musical individuals—as well as enabling the possibility of achieving the target state of harmonic synchrony (cf. \ref{subsec:harmonic_synchrony}). Their contribution also differs from previous approaches in that Nymoen et al.'s fireflies only need to transmit ``fire'' signals every other phase climax, not every single phase climax; in other words, synchronization is achieved despite less communication.
+\textbf{Communication:}
+\begin{itemize}
+    \item solely through audio
+    \item indirectly in the environment $\implies$ facilitating stigmergic coordination
+\end{itemize}
+
+\textbf{Synchronization:}
+\begin{itemize}
+    \item \textbf{Synchronizing} the \textbf{phase} (the cycles, interval-/period-starts). Utilizing bidirectional phase shifts (dependant on being in first or second half of phase cycle, i.e. $\phi < 0.5$ or $\phi > 0.5$), either subtracting from the phase, or adding to it (based on the phase update function, $P(\phi)$).
+    \item \textbf{Synchronizing} the \textbf{frequency} (the speed the oscillator cycles through its cycle/period) through:
+    \begin{itemize}
+        \item The implemented \textbf{self-awareness} in the \textbf{self-assessment of its own synchrony} (calculated by the discrete error function and a running median filter over this, $s(n)$, multiplied by a discrete amplitude- and sign- frequency-modification-function $\rho(n)$ -- yielding $\rho(n)s(n) = H(n)$).
+        \item Werner-Allen's \textit{reachback firefly algorithm (RFA)}, involving collecting received fire events and updating frequency only every second round, as opposed to always updating frequency at once a fire event is received.
+    \end{itemize}
+\end{itemize}
+
+As Nymoen designed update functions for synchronizing both phases and frequencies, not only were their firefly-inspired oscillators endowed with self awareness capabilities; they were also designed to adjust their phases and frequencies with (close to) 0 change half-way through the oscillator cycle. These (close to) 0 changes half-way through oscillators's cycles enable individual musical agents to play with different measures (e.g. half or 1/4th as fast) compared to other individuals—being characteristic for musical interaction with several musical individuals—as well as enabling the possibility of achieving the target state of harmonic synchrony (cf. \ref{sec:harmonic_synchrony}). Their contribution also differs from previous approaches in that Nymoen et al.'s fireflies only need to transmit ``fire'' signals every other phase climax, not every single phase climax; in other words, synchronization is achieved despite less communication.
 
 First, the relatively new system target state of \textit{harmonic synchrony} will be expounded and explained in \ref{sec:harmonic_synchrony}. Then, the aforementioned update functions for both phase ($\phi$) and frequency ($\omega$), explaining the incorporated level of self awareness as well as how a decentralized collective of pulse copuled oscillators can achieve harmonic synchrony, are thus presented in \ref{sec:nymoen_phase_updates} and \ref{sec:nymoen_freq_updates}.
 
@@ -94,7 +116,7 @@ This state of \textit{harmonic synchrony} is then the system goal state K. Nymoe
 
 
 	\subsection{Detecting harmonic synchrony}
-	\label{subsec:harmonic_synchrony}
+	\label{baseline:subsec:detecting_harmonic_sync}
 	In order to test and evaluate synchronization performance in their firefly-inspired oscillator-system, K. Nymoen et al. \cite{nymoen_synch} develop a measurement used to detect when the system has reached a state of synchrony. Using the firings of the fireflies, some well-defined conditions have to be met in order for the fireflies to be deemed \textit{harmonically synchronized}: \nl
 	
 	\textbf{Harmonic synchronizaton conditions:}
@@ -181,7 +203,7 @@ This state of \textit{harmonic synchrony} is then the system goal state K. Nymoe
 	\textbf{K. Nymoen's frequency adjustment} \nl
 	This approach to frequency adjustment in pulse coupled oscillators, in order to achieve synchronized frequencies, stands in contrast to previous approaches of synchronization where oscillators frequencies are either equal and fixed, oscillators have to send out a pulse every oscillator cycle, or they do not include any explicit self awareness capabilities. This is not the case for Nymoen's frequency adjustment.
 
-	In order to achieve \textit{harmonically synchronized} and ``legal'' oscillator frequencies (cf. \ref{subsec:harmonic_synchrony}) in the oscillator collective, not only the phases ($\phi$) have to be adjusted and eventually synchronized; frequencies ($\omega$) also have to be synchronized through frequency adjustment.
+	In order to achieve \textit{harmonically synchronized} and ``legal'' oscillator frequencies (cf. \ref{sec:harmonic_synchrony}) in the oscillator collective, not only the phases ($\phi$) have to be adjusted and eventually synchronized; frequencies ($\omega$) also have to be synchronized through frequency adjustment.
 	
 	\begin{figure}[ht!]
 		\centering
