@@ -169,7 +169,6 @@ public class AgentManager : MonoBehaviour {
 
 
 
-
     // 'PERFORMANCE-MEASURE' (detecting harmonic synchrony):
 
     private void CheckHSynchConditions() {
@@ -484,8 +483,8 @@ public class AgentManager : MonoBehaviour {
 
             int randomSquigglePrefabIndex = randGen.Next(0, squigglePrefabs.Length);
 
-            // BARE FOR TESTING:
-            Debug.Log(squigglePrefabs[randomSquigglePrefabIndex].name + " with AgentID " + (i + 1) + " will spawn at position: " + randomCirclePoint);
+                // BARE FOR TESTING:
+            //Debug.Log(squigglePrefabs[randomSquigglePrefabIndex].name + " with AgentID " + (i + 1) + " will spawn at position: " + (randomCirclePoint + new Vector2(1.44f, -1.03f)));
 
             // Spawning an agent from squigglePrefabs on the free position
             GameObject newAgent = Instantiate(squigglePrefabs[randomSquigglePrefabIndex],
@@ -546,14 +545,14 @@ public class AgentManager : MonoBehaviour {
         return withinUnitCircle;
     }
 
-    private List<List<float>> GetRobotDistances() {
+    public List<List<float>> GetRobotDistances() {
         List<List<float>> distanceMat = new List<List<float>>();
 
         foreach (Vector2 spawnedPositionFrom in spawnedPositions) {
             List<float> newDistanceRow = new List<float>();
 
             foreach (Vector2 spawnedPostionTo in spawnedPositions) {
-                newDistanceRow.Add(Vector2.Distance(spawnedPositionFrom, spawnedPostionTo));
+                newDistanceRow.Add(Vector2.Distance((spawnedPositionFrom + new Vector2(1.44f, -1.03f)), (spawnedPostionTo + new Vector2(1.44f, -1.03f))));
             }
 
             distanceMat.Add(newDistanceRow);
@@ -568,7 +567,11 @@ public class AgentManager : MonoBehaviour {
 
     // 'HELPING':
 
-    // Get-functions:
+        // Get-functions:
+
+    public List<SquiggleScript> GetSpawnedSquiggleScripts() {
+        return spawnedSquiggleScripts;
+    }
     public System.Random GetRandomNumberGenerator() {
         return randGen;
     }
@@ -580,7 +583,20 @@ public class AgentManager : MonoBehaviour {
     public int GetDataSavingParameter() {
         return dataSavingFrequencyY;
     }
+    private float GetParameterizedT(int collectiveSize) {
+        float collectiveSizeFloat = System.Convert.ToSingle(collectiveSize);
+        return (collectiveSizeFloat-3.0f)/27.0f;
+    }
 
+    private Vector3 GetParameterizedR(float t) {
+        float x = 11.02f + 22.28f * t;
+        float y = 9.32f + 5.91f * t;
+        float z = 16.45f + 21.15f * t;
+
+        return new Vector3(x, y, z);
+    }
+
+        // Set-functions:
     public void InitializeRandomGenerator() {
         // Generating a random random-seed if we don't want to use the Inspector random seed.
         if (!useDeterministicSeed) randomSeed = Random.Range(1, 100000);
@@ -670,19 +686,6 @@ public class AgentManager : MonoBehaviour {
         float t = GetParameterizedT(collectiveSize);
 
         GameObject.Find("Main Camera").transform.position = GetParameterizedR(t);
-    }
-
-    private float GetParameterizedT(int collectiveSize) {
-        float collectiveSizeFloat = System.Convert.ToSingle(collectiveSize);
-        return (collectiveSizeFloat-3.0f)/27.0f;
-    }
-
-    private Vector3 GetParameterizedR(float t) {
-        float x = 11.02f + 22.28f * t;
-        float y = 9.32f + 5.91f * t;
-        float z = 16.45f + 21.15f * t;
-
-        return new Vector3(x, y, z);
     }
 
     private void InitializeAgentsFiredMatrix() {
