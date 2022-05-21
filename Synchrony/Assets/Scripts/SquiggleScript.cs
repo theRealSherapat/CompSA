@@ -42,7 +42,6 @@ public class SquiggleScript : MonoBehaviour {
 
     // 'Private variables necessary to make the cogs go around':
 
-        // MÅ TESTES:
     // For self awareness scopes:
     private List<SquiggleScript> myFireSignalSubscribers = new List<SquiggleScript>();
 
@@ -399,7 +398,7 @@ public class SquiggleScript : MonoBehaviour {
     private void UpdateTheRefractoryPeriod() {
         float oscillator_period = 1.0f / frequency;
         if (myCreator.recreatingNymoenResults)  t_ref = 0.05f;
-        else                                    t_ref = myCreator.t_ref_perc_of_period * oscillator_period;
+        else                                    t_ref = myCreator.t_ref_dyn * oscillator_period;
     }
 
     private void ResetPhaseClimaxValues() {

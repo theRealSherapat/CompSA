@@ -16,7 +16,7 @@ public class AgentManager : MonoBehaviour {
     [Tooltip("Whether we are trying to recreate a Nymoen experiment as closely as his one, or using our own system's variables.")]
     public bool recreatingNymoenResults;
     [Tooltip("The duration (%) of the refractory period in terms of a percentage of the agents's oscillator-periods.")]
-    public float t_ref_perc_of_period = 0.05f;       // ISH LENGDEN I TID PÅ digitalQuickTone er 0.4s. Nymoen BRUKTE 50ms I SIN IMPLEMENTASJON. JEG PRØVDE OGSÅ 0.6f. possiblePool = {0.09f, 0.4f, 0.6f}.
+    public float t_ref_dyn = 0.05f;       // ISH LENGDEN I TID PÅ digitalQuickTone er 0.4s. Nymoen BRUKTE 50ms I SIN IMPLEMENTASJON. JEG PRØVDE OGSÅ 0.6f. possiblePool = {0.09f, 0.4f, 0.6f}.
     [Tooltip("Minimum and maximum initialization-frequencies (Hz).")]
     public Vector2 minMaxInitialFreqs = new Vector2(0.5f, 4f);
 
@@ -646,7 +646,7 @@ public class AgentManager : MonoBehaviour {
         collectiveSize = (int)covariatesToAssign[0];
 
         recreatingNymoenResults = System.Convert.ToBoolean(covariatesToAssign[1]); // '0' means no, so then we're using a dynamical oscillatorperiod-based t_ref and not a constant 50ms t_ref. 
-        t_ref_perc_of_period = covariatesToAssign[2]; // '[0.0,1.0]' Percentage of how much of its period an oscillator should be inactive after firing a ``fire'' signal.
+        t_ref_dyn = covariatesToAssign[2]; // '[0.0,1.0]' Percentage of how much of its period an oscillator should be inactive after firing a ``fire'' signal.
         
         minMaxInitialFreqs = new Vector2(covariatesToAssign[3], covariatesToAssign[4]); // Lower and upper boundary for oscillator frequency initializations.
 
@@ -728,7 +728,7 @@ public class AgentManager : MonoBehaviour {
         performanceAndCovariatesHeader.Add("SUCCESS");    // Binary covariate (no=0 or yes=1)
         performanceAndCovariatesHeader.Add("COLLSIZE");
         if (recreatingNymoenResults) performanceAndCovariatesHeader.Add("TREF");
-        else performanceAndCovariatesHeader.Add("TREFPERC");
+        else performanceAndCovariatesHeader.Add("TREFDYN");
         performanceAndCovariatesHeader.Add("MINFREQ");
         performanceAndCovariatesHeader.Add("MAXFREQ");
         performanceAndCovariatesHeader.Add("K");
@@ -773,8 +773,8 @@ public class AgentManager : MonoBehaviour {
             float TREF = System.Convert.ToSingle(spawnedSquiggleScripts[0].GetTRef());
             performanceAndCovariateValues.Add(TREF);
         } else {
-            float TREFPERC = System.Convert.ToSingle(t_ref_perc_of_period);
-            performanceAndCovariateValues.Add(TREFPERC);
+            float TREFDYN = System.Convert.ToSingle(t_ref_dyn);
+            performanceAndCovariateValues.Add(TREFDYN);
         }
         
 

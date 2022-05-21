@@ -11,7 +11,7 @@ sampSize = 30
 # Default values unless optional hyperparameters are given per simulation run:
 defaultHyperparamsDictionary = {'COLLSIZE'                              : 3,
                                 'NYMOENREC'                             : 0,
-                                'TREFPERC'                              : 0.05,
+                                'TREFDYN'                               : 0.05,
                                 'MINFREQ'                               : 0.5,  # Hz
                                 'MAXFREQ'                               : 4,    # Hz
                                 'K'                                     : 8,
