@@ -83,6 +83,7 @@ public class AgentManager : MonoBehaviour {
     private float agentWidth = Mathf.Sqrt(Mathf.Pow(4.0f, 2) + Mathf.Pow(4.0f, 2)); // diameter from tentacle to tentacle (furthest from each other)
     private List<Vector2> spawnedPositions = new List<Vector2>();
     private List<SquiggleScript> spawnedSquiggleScripts = new List<SquiggleScript>();
+    private List<List<float>> distancesMatrix = new List<List<float>>();
     private float wantedAlpha;
     private phaseSyncEnum wantedPhaseAdjustmentMethod;
     private float wantedBeta;
@@ -135,6 +136,7 @@ public class AgentManager : MonoBehaviour {
     // 'MonoBehaviour':
 
     void Awake() {
+        // (AV EN ELLER ANNEN GRUNN ER JEG AVHENGIG AV Å BRUKE DENNE NÅ):
         // Loading the user or Python-script given hyperparameters wanted for the simulation run being set up.
         LoadCSVCovariatesIntoSimulation();
 
@@ -143,8 +145,12 @@ public class AgentManager : MonoBehaviour {
         // Spawning all agents randomly (but pretty naively as of now)
         SpawnAgents();
 
+        // Assigning the distancesMatrix that the Squiggles will use for filling up each others's firesignal subscriber lists.
+        distancesMatrix = GetRobotDistances();
+        
         InitializeVariables();
     }
+
 
     void FixedUpdate() { // having to do with physics, time-critical functionality (depends on fixedTime e.g.)
         // Ending simulation-run if we deem it either a synchronization -success or -failure.
@@ -160,7 +166,6 @@ public class AgentManager : MonoBehaviour {
         // Logging simulation-run-values for plotting and data-serialization purposes.
         SavePlottingDataIfOnRightFrame();
     }
-
 
 
 
@@ -472,12 +477,17 @@ public class AgentManager : MonoBehaviour {
         spawnRadius = (collectiveSize/6.0f)*agentWidth + slingringsmonn; // Simply an empirical model of the necessary space the agents need to spawn. Or just a guess I guess.
 
         for (int i = 0; i < collectiveSize; i++) {
-            // Finding a position in a circle free to spawn (taking into account not wanting to collide with each other)
+            // Finding a position in a circle free to spawn (taking into account not wanting to collide with each other) (x, z)
             Vector2 randomCirclePoint = FindFreeSpawnPosition();
             spawnedPositions.Add(randomCirclePoint);
 
+            int randomSquigglePrefabIndex = randGen.Next(0, squigglePrefabs.Length);
+
+                // BARE FOR TESTING:
+            //Debug.Log(squigglePrefabs[randomSquigglePrefabIndex].name + " with AgentID " + (i + 1) + " will spawn at position: " + (randomCirclePoint + new Vector2(1.44f, -1.03f)));
+
             // Spawning an agent from squigglePrefabs on the free position
-            GameObject newAgent = Instantiate(squigglePrefabs[randGen.Next(0, squigglePrefabs.Length)],
+            GameObject newAgent = Instantiate(squigglePrefabs[randomSquigglePrefabIndex],
                                                                 new Vector3(randomCirclePoint.x, -0.96f, randomCirclePoint.y),
                                                                 Quaternion.identity);
 
@@ -535,12 +545,33 @@ public class AgentManager : MonoBehaviour {
         return withinUnitCircle;
     }
 
+    public List<List<float>> GetRobotDistances() {
+        List<List<float>> distanceMat = new List<List<float>>();
+
+        foreach (Vector2 spawnedPositionFrom in spawnedPositions) {
+            List<float> newDistanceRow = new List<float>();
+
+            foreach (Vector2 spawnedPostionTo in spawnedPositions) {
+                newDistanceRow.Add(Vector2.Distance((spawnedPositionFrom + new Vector2(1.44f, -1.03f)), (spawnedPostionTo + new Vector2(1.44f, -1.03f))));
+            }
+
+            distanceMat.Add(newDistanceRow);
+        }
+
+
+        return distanceMat;
+    }
+
 
 
 
     // 'HELPING':
 
         // Get-functions:
+
+    public List<SquiggleScript> GetSpawnedSquiggleScripts() {
+        return spawnedSquiggleScripts;
+    }
     public System.Random GetRandomNumberGenerator() {
         return randGen;
     }
@@ -552,7 +583,20 @@ public class AgentManager : MonoBehaviour {
     public int GetDataSavingParameter() {
         return dataSavingFrequencyY;
     }
+    private float GetParameterizedT(int collectiveSize) {
+        float collectiveSizeFloat = System.Convert.ToSingle(collectiveSize);
+        return (collectiveSizeFloat-3.0f)/27.0f;
+    }
 
+    private Vector3 GetParameterizedR(float t) {
+        float x = 11.02f + 22.28f * t;
+        float y = 9.32f + 5.91f * t;
+        float z = 16.45f + 21.15f * t;
+
+        return new Vector3(x, y, z);
+    }
+
+        // Set-functions:
     public void InitializeRandomGenerator() {
         // Generating a random random-seed if we don't want to use the Inspector random seed.
         if (!useDeterministicSeed) randomSeed = Random.Range(1, 100000);
@@ -642,19 +686,6 @@ public class AgentManager : MonoBehaviour {
         float t = GetParameterizedT(collectiveSize);
 
         GameObject.Find("Main Camera").transform.position = GetParameterizedR(t);
-    }
-
-    private float GetParameterizedT(int collectiveSize) {
-        float collectiveSizeFloat = System.Convert.ToSingle(collectiveSize);
-        return (collectiveSizeFloat-3.0f)/27.0f;
-    }
-
-    private Vector3 GetParameterizedR(float t) {
-        float x = 11.02f + 22.28f * t;
-        float y = 9.32f + 5.91f * t;
-        float z = 16.45f + 21.15f * t;
-
-        return new Vector3(x, y, z);
     }
 
     private void InitializeAgentsFiredMatrix() {

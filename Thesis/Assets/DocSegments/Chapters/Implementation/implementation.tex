@@ -104,7 +104,9 @@ Now, the synchrony simulator system components will be expounded and explained i
 	\subsection{The individual agent: a musical robot}
 	\label{subsec:agent}
 
-	As introduced and presented earlier, our musical robot collective will then consist of models of M. J. Krzyzaniak and RITMO's \textit{Dr. Squiggles}, 3D-models of which can be seen in Figure \ref{fig:first_idea:second_fig}.
+	As introduced and presented earlier in \ref{dr_squiggles}, our musical robot collective will then consist of models of M. J. Krzyzaniak and RITMO's \textit{Dr. Squiggles}.
+	
+	The aforementioned (cf. \ref{solojam_island}) 3D-models of these Dr. Squiggles robots for simulation are reused, with permission, for the simulation system designed in this thesis project. They can be seen in Figure \ref{fig:first_idea:second_fig}.
 
 	Every musical robot or node have certain components, attributes, and characteristics that make it what it is. Such include an oscillator-component, consisting of the agent's oscillator-phase $\phi$ and oscillator-frequency $\omega$. Notions like ``agent'', ``robot'', ``firefly'', and ``oscillator'' will be used interchangeably throughout the thesis. The agents have an input-mechanism for hearing/detecting transmitted ``fire''-event signals from other agents, as well as an output-mechanism for transmitting or playing such ``fire''-/adjust-signals or tones, as is illustrated with the microphone and megaphone respectively in Figure \ref{fig:first_idea:first_fig}.
 	
@@ -125,12 +127,6 @@ Now, the synchrony simulator system components will be expounded and explained i
 	
 	\subsection{Robot communication: the ``fire''-signal}
 	\label{subsec:fire_signal}
-	
-		% --- META INFO START: ---
-		
-		\besk{ Om kommunikasjonen til robotene mine: \textit{audio / ``fire'' signalet} }
-		
-		% --- META INFO STOP. ---
 
 	These aforementioned audio-signals, also referred to as ``fire''-signals, ``flash''-signals, or adjust-signals, are transmitted whenever an agent's oscillator \textit{peaks} or \textit{climaxes} (i.e. after its cycle or period is finished, having phase $\phi(t)=1$) — or actually after every second \textit{peak}, as a way (discovered by K. Nymoen et al. \cite{nymoen_synch}) to attain the system target goal of \textit{harmonic synchrony}, to be elaborated upon in Section \ref{sec:harmonic_synchrony}.
 
@@ -150,7 +146,7 @@ Now, the synchrony simulator system components will be expounded and explained i
 			\paragraph{Fire signal design}
 			The fire-signal audible to the human observer watching and listening to the musical robots synchronizing to each other should be distinct and short enough so that one can clearly distinguish between which robots are firing and when. At the same time, the firing-sounds should to the human observer not be too sharp and loud to listen to so that it is uncomfortable observing the musical robot collective. Keeping these aspects in mind, some relatively soft and pleasant firing-sounds from an instrument usually associated with harmonious music—the harp—were produced and developed for the synchronization-simulator.
 			
-			Some manually and empirically perceived harmonious (in terms of sounding good when played together) musical tones were digitally reproduced and recorded in the form of harp-plucks. This was achieved using the music-making system and digital synthesizer LMMS, and a digital string-instrument in the form of a LMMS-plugin from DSK Music (fotnote m/ link https://www.dskmusic.com/dsk-world-stringz-updated/). The musical tones reproduced with the digital harp-instrument were some of the tones perceived in the intro of Pogo's song ``Strangerous.'' (fotnote) One possible avenue to explore in order to find harmonious chords or tones—when played together—in a more automatic approach, live and online during simulation, is discussed in Further work in Chapter \ref{chap:conclusions}.
+			Some manually and empirically perceived harmonious (in terms of sounding good when played together) musical tones were digitally reproduced and recorded in the form of harp-plucks. This was achieved using the music-making system and digital synthesizer LMMS, and a digital string-instrument in the form of a LMMS-plugin from DSK Music\footnote{\url{https://www.dskmusic.com/dsk-world-stringz-updated/} (accessed 2022.05.17)}. The musical tones, perceived to be harmonious when being heard simultaneously and reproduced with the digital harp instrument, were some of the very first tones perceived in the intro of Pogo's song ``Strangerous\footnote{\url{https://www.youtube.com/watch?v=cRzcsXDBn8g} (accessed 2022.05.17)}.'' One possible avenue to explore in order to find harmonious chords or tones—when played together—in a more automatic approach, live and online during simulation, is discussed in Further work in Chapter \ref{chap:conclusions}.
 			
 			However, the harp-sounds produced with DSK's LMMS-plugin are primarily long and constant harp-plucks, as shown in Figure \ref{fig:harp_sound}. Using such harp-plucks as a fire-sound directly can make it hard to distinguish to the human ear when multiple robots are playing these frequently and simultaneously. The harp-sounds thus need to be slightly edited—which they in our implementation were in the audio-editing program Audacity—so that the long and constant harp-pluck became more of a ``quick'' and distinguishable ``sound-bullet'' — essentially what we want in a solid ``fire''-signal sound. The ``before'' and ``after'' of such an audio-editing process is depicted in Figure \ref{fig:fire_signal_designing}. Edits performed on waveform \ref{fig:harp_sound} to obtain waveform \ref{fig:harp_fire_sound} consists of effects like ``Fade Out'' (to dampen the sound in the tail of the waveform \inkl{and get a shorter ``sustain''}, and hence obtaining a ``quicker'' sound), in the complete beginning ``Amplify'' (in order to get a as high ``attack''/max-amplitude as wanted to make the fire-sound audible enough before it quickly decays) — and obviously cutting the waveform accordingly (from where it had amplitude $\approx 0$ to the end of the waveform).
 			
@@ -233,24 +229,6 @@ Now, the synchrony simulator system components will be expounded and explained i
 	
 	
 	
-
-	% PHASE.-ADJ APPROACH 3: HIGH LEVEL Self-Awareness
-	% Hopefully an improved method with some additional Self-Awareness components
-	\subsection{Thorvaldsen's self-aware phase-adjustment}
-	
-	\gjor{Beskriv min nye proposede algoritme (to-be-implemented) for å oppnå harmonisk synkronitet i $\phi$-problemet med phase-adjustment, som inneholder flere tilleggs- Self-Awareness-komponenter, sammenliknet med K. Nymoens bi-directional phase-adjustment metode. 
-	
-	Eksempler på slike tilleggs- Self-Awareness-komponenter er såkalt Belief-awareness (som fanger usikkerhet og tillits-nivåer) og/eller Expectation-awareness (som kombinerer Belief-awareness og Time-awareness) \cite{sacs17_ch3}. Andre forslag er å implementere Self-Awareness i forhold til:
-	\begin{itemize}
-		\item avstand: f.eks. $H^*(n)= H(n) \cdot \frac{1}{distance}$ for ``fire''-event $n$, så lenge ikke $distance = 0$.
-		\item hvem som er hvem (i.e. agent\_id).
-		% \item de andres frekvenser. Høre etter og registrere andre individers ``fire''-signaler kontinuerlig og estimere disse individenes frekvenser utifra det (f.eks. $\hat{\omega}_j = time_{j, fired\_now} - time_{j, fired\_last\_time}$, eller et gjennomsnitt av slike oppsamlede verdier).
-	\end{itemize}
-	}
-	
-	
-	
-
 % SEKSJON 3, Presenting new methods I implemented myself for frequency-synchronization:
 \section{Synchronizing oscillator-frequencies}
 \label{sec:frequency_methods}
@@ -261,12 +239,51 @@ Now, the synchrony simulator system components will be expounded and explained i
 	
 	Some implemented approaches for achieving this are presented now. Notice the increasing degree of \textit{Computational Self-Awareness} endowed in the methods.
 	
+	The details of how the Dr. Squiggles in Unity adjust and eventually synchronize (harmonically) their oscillator frequencies, is shown in Algorithm \ref{AddNthFireEventsHToList} and \ref{RFAAdjustFrequency}. Algorithm \ref{AddNthFireEventsHToList} outlines how the ``frequency adjustment contributions'' $H$ get calculated as soon as the Dr. Squiggles hear a neighbour Dr. Squiggle sending a ``fire'' signal; whereas Algorithm \ref{RFAAdjustFrequency} shows how these previously calculated $H(n)$ values are used to obtain the new and updated oscillator frequency $\omega_i(t^+)$ with which individual oscillators assign their frequencies to after each phase climax (i.e. when $\phi=1$).
 	
-	% FREQ.-SYNCH APPROACH 2: MID LEVEL Self-Awareness
+	\begin{algorithm}
+	\caption{Calculating frequency update contributions $H$ in Unity}\label{AddNthFireEventsHToList}
+	\begin{algorithmic}[1]
+	\Procedure{}{$\phi(t)$}
+		\If {not in refractory period}
+			\State $\epsilon \gets$ sin$(\pi \phi(t))^2$ \Comment{\tcol[gray]{Step 1}} % $n$th fire event's error score at time $t$
+		\Else
+			\State $\epsilon \gets 0$
+		\EndIf
+		\State $\epsilon$ is added to $errorBuffer$
+		\State $s \gets$ median$\{\epsilon(n), \epsilon(n-1), ..., \epsilon(n-m)\}$ \Comment{\tcol[gray]{Step 2}}
+		\State $\rho \gets -$sin$(2\pi\phi(t))$ \Comment{\tcol[gray]{Step 3}}
+		\State $H \gets \rho \cdot s $ \Comment{\tcol[gray]{Step 4}}
+		\State $H$ is added to list $H(n)$
+	\EndProcedure
+	\end{algorithmic}
+	\end{algorithm}
+	
+	\begin{algorithm}
+	\caption{K. Nymoen et al.'s frequency updates in Dr. Squiggles robots}\label{RFAAdjustFrequency}
+	\begin{algorithmic}[1]
+	\Procedure{}{$H(n), \beta$}
+		\State $cycleHSum \gets 0$ \Comment{\tcol[gray]{Step 5 started}}
+		\State $y \gets$ length$(H(n))$
+		\ForAll {$ H \in H(n) $}
+			\State $cycleHSum \gets cycleHSum + H$
+		\EndFor
+		\State $F(n) \gets 0$
+		\If {$y$ not $0$}
+			\State $F(n) \gets \beta \cdot cycleHSum / y$ \Comment{\tcol[gray]{Step 5 finished}}
+		\EndIf
+		\State Emptying $H(n)$ \Comment{\tcol[gray]{for new contributions next oscillator cycle}}
+		\State $\omega_i(t^+) \gets \omega_i(t) \cdot 2^{F(n)}$
+	\EndProcedure
+	\end{algorithmic}
+	\end{algorithm}
+	
+	
+	
 	% K. Nymoen's Frequency-Synchronization with some Self-Awareness
 	\subsection{Verifying K. Nymoen's frequency-adjustment}
 	
-	In the newly proposed Unity simulator environment, the previously introduced self-assessed synch-score $s(n)$ (in \ref{s_n}) is implemented as a list containing \textit{m} error-scores $\epsilon$. Such a list is easily implemented in C\# by declaring a List$<$float$>$ called \textit{errorBuffer} e.g. (i.e. \textit{errorBuffer} is a list containing floating point values):
+	In the newly proposed Unity simulator environment, the previously introduced self-assessed sync score $s(n)$ (in \ref{s_n}) is implemented as the median of a list containing \textit{m} error-scores $\epsilon$. Such an error score list of length $m$ is easily implemented by a list called \textit{errorBuffer}:
 	
 	\begin{equation}
 	\label{error_buffer}
@@ -297,18 +314,6 @@ Now, the synchrony simulator system components will be expounded and explained i
 	\end{figure}
 	
 	
-	% FREQ.-SYNCH APPROACH 3: HIGH LEVEL Self-Awareness
-	% Hopefully an improved method with some additional Self-Awareness components
-	\subsection{Thorvaldsen's high SA-leveled frequency-adjustment}
-	
-	\gjor{Beskriv min nye proposede algoritme (to-be-implemented) for å oppnå harmonisk synkronitet i $\phi$- \& $\omega$-problemet med frequency-adjustment, som inneholder flere tilleggs- Self-Awareness-komponenter, sammenliknet med K. Nymoens frequency-adjustment metode. Eksempler på slike tilleggs- Self-Awareness-komponenter er såkalt Belief-awareness (som fanger usikkerhet og tillits-nivåer) og/eller Expectation-awareness (som kombinerer Belief-awareness og Time-awareness) \cite{sacs17_ch3}. Andre forslag er å implementere Self-Awareness i forhold til, og vekte frekvensoppdaterings-bidragene H(n) i henhold til:
-	\begin{itemize}
-		\item avstand: f.eks. $H^*(n)= H(n) \cdot \frac{1}{distance}$ for ``fire''-event $n$, så lenge ikke $distance = 0$.
-		\item hvem som er hvem (i.e. agent\_id).
-		\item større median-liste ift. den self-assessed'e synch-score'n $s(n)$ og $errorBuffer$'et. Dette kan være nyttig ved større collective-sizes, da et lite/kort median-filter/-$errorBuffer$-liste vil kunne miste eller gå glipp av error-scores, $\epsilon(n)$, fra ``fire''-events fra langt tilbake (tidlig) i ``oppsamlings-perioden.''
-		\item de andres frekvenser. Høre etter og registrere andre individers ``fire''-signaler kontinuerlig og estimere disse individenes frekvenser utifra det (f.eks. $\hat{\omega}_j = time_{j, fired\_now} - time_{j, fired\_last\_time}$, eller et gjennomsnitt av slike oppsamlede verdier).
-	\end{itemize}
-	}
 
 	% SEKSJON 4: Presenting the measurement (yardstick?) used to evaluate the implemented methods:
 \section{Detecting harmonic synchrony}

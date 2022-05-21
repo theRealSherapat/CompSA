@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 using static SynchronyUtils;
 
 public class SquiggleScript : MonoBehaviour {
@@ -8,6 +9,10 @@ public class SquiggleScript : MonoBehaviour {
     // 'VARIABLES':
 
     // Recorded individual-/agent-hyperparameters:
+
+    // SA scopes:
+    public int k; // K nearest neighbours in robot's self awareness scope
+    public float d; // Radius of self awareness scope
 
     // Phase-adjustment:
     [Tooltip("Pulse coupling constant, denoting coupling strength between nodes, deciding how much robots adjust phases after detecting a pulse from a neighbour. The larger the constant, the larger (in absolute value) the phase-update?")]
@@ -37,6 +42,10 @@ public class SquiggleScript : MonoBehaviour {
 
     // 'Private variables necessary to make the cogs go around':
 
+        // MÅ TESTES:
+    // For self awareness scopes:
+    private List<SquiggleScript> myFireSignalSubscribers = new List<SquiggleScript>();
+
     // Core for (oscillator-) synchronization:
     private System.Random randGen;
     private float phase;                        // The agents's progression through its oscillator-period. A number between 0 (at the beginning of its cycle) and 1 (at the end of its cycle).
@@ -50,7 +59,6 @@ public class SquiggleScript : MonoBehaviour {
     // Special rules (to stabilize/optimize/implement correctly synchronization):
     private bool inRefractoryPeriod = false;    // if this flag is true, neither phase- nor frequency-adjustment happens.
     private bool firedLastClimax;               // A flag which is high after having fired at the previous phase-climax (so that the agent won't fire on the next one, but the one after).
-    // DEBUG FURTHER: Variables used to detect when the agent struggles phase-climaxing — so that we can help it and boost its frequency (double it e.g.).
     private float timeNotClimaxed;
     float longestLegalPeriod;
     //private float unstableFrequencyPeriod = 1f / 0.5f;
@@ -83,7 +91,8 @@ public class SquiggleScript : MonoBehaviour {
         AssignHelpingVariables();
 
         // Fill up wanted neighbouring subscriber-lists with yourself ('this').
-
+        List<SquiggleScript> neighboursToListenTo = FindNeighboursToListenTo();
+        SubscribeToNeighboursWithinSAScope(neighboursToListenTo);
 
         // Setting up for a human listener being able to see the ``fire''-events from the Dr. Squiggles.
         AssignVisualVariables();
@@ -106,6 +115,155 @@ public class SquiggleScript : MonoBehaviour {
         CoolDownAgentColorIfItJustFired();
     }
 
+
+    private void SubscribeToNeighboursWithinSAScope(List<SquiggleScript> neighboursToListenTo) {
+        foreach (SquiggleScript neighbourRobot in neighboursToListenTo) {
+            neighbourRobot.SubscribeToAgentFiresignalSubscriberList(this);
+        }
+    }
+
+    private List<SquiggleScript> FindNeighboursToListenTo() {
+        List<SquiggleScript> neighboursToListenTo = new List<SquiggleScript>();
+
+        if (SAScopeIsKNearest()) {
+            // Finding my k nearest neighbours:
+            neighboursToListenTo = FindKNearestNeighbours();
+        }
+        else if (SAScopeIsRadial()) {
+            neighboursToListenTo = FindNeighboursWithinRadiusD();
+        }
+        else {
+            Debug.Log("Invalid 'k' or 'd' arguments given (xor logic isn't followed).");
+            return null;
+        }
+
+        return neighboursToListenTo;
+    }
+
+    private List<SquiggleScript> FindNeighboursWithinRadiusD() {
+        List<int> robotIDsWithinSAScope = FindNeighbourWithinRadiusDIDs();
+
+        List<SquiggleScript> robotsWithinSAScope = ConvertSquiggIDsToActualGameObjects(robotIDsWithinSAScope);
+
+
+        return robotsWithinSAScope;
+    }
+
+    private List<int> FindNeighbourWithinRadiusDIDs() {
+        // Just retrieving already existing info used for the calculations (from the AgentManager):
+        List<List<float>> distMatrix = myCreator.GetRobotDistances();
+        List<float> fromAgentIDRowList = distMatrix[agentID - 1];
+
+        // Filling up a dictionary with key-value (agentID-distance) pairs to be sorted and returned the agentIDs for (in the sorted order) later:
+        Dictionary<int, float> agentIDDistanceDict = new Dictionary<int, float>();
+        int enumAgentIDCounter = 1;
+        foreach (float distFromAgentToAgent in fromAgentIDRowList) {
+            agentIDDistanceDict.Add(enumAgentIDCounter++, distFromAgentToAgent);
+        }
+
+        // Converting dictionary of key-value pairs into a list of the same key-value pairs.
+        List<KeyValuePair<int, float>> agentIDDistanceKeyValuePairsList = agentIDDistanceDict.ToList();
+
+        // Sorting the list of key-value pairs based on the value (i.e. the distances).
+        agentIDDistanceKeyValuePairsList.Sort((x, y) => x.Value.CompareTo(y.Value));
+
+        // Skipping the first element since the smallest distance always is itself (JUST TO REMOVE THE 0).
+        agentIDDistanceKeyValuePairsList = agentIDDistanceKeyValuePairsList.Skip(1).ToList();
+
+        List<int> agentIDsWithinRadiusD = ExtractKeysWithValuesLessThanRadiusD(agentIDDistanceKeyValuePairsList);
+
+
+        return agentIDsWithinRadiusD;
+    }
+
+    private List<int> ExtractKeysWithValuesLessThanRadiusD(List<KeyValuePair<int, float>> agentIDDistanceKeyValuePairsList) {
+        List<int> agentIDsWithDistanceLessThanD = new List<int>();
+
+        foreach (KeyValuePair<int, float> keyValuePair in agentIDDistanceKeyValuePairsList) {
+            if (keyValuePair.Value <= d) {
+                agentIDsWithDistanceLessThanD.Add(keyValuePair.Key);
+            }
+        }
+
+
+        return agentIDsWithDistanceLessThanD;
+    }
+
+
+
+    private List<SquiggleScript> FindKNearestNeighbours() {
+        // Ser igjennom rad 'agentID' (aka. den (agentID-1)'te List'en) og returnerer 
+
+        List<int> robotIDsWithinSAScope = FindKNearestNeighbourIDs();
+
+        List<SquiggleScript> robotsWithinSAScope = ConvertSquiggIDsToActualGameObjects(robotIDsWithinSAScope);
+
+
+        return robotsWithinSAScope;
+    }
+
+    private List<SquiggleScript> ConvertSquiggIDsToActualGameObjects(List<int> robotIDsWithinSAScope) {
+        List<SquiggleScript> allSpawnedSquiggles = myCreator.GetSpawnedSquiggleScripts();
+
+        List<SquiggleScript> squiggListo = new List<SquiggleScript>();
+
+        foreach (int robotID in robotIDsWithinSAScope) {
+            squiggListo.Add(allSpawnedSquiggles[robotID-1]);
+        }
+
+
+        return squiggListo;
+    }
+
+    private List<int> FindKNearestNeighbourIDs() {
+        // Just retrieving already existing info used for the calculations (from the AgentManager):
+        List<List<float>> distMatrix = myCreator.GetRobotDistances();
+        List<float> fromAgentIDRowList = distMatrix[agentID-1];
+
+        // Filling up a dictionary with key-value (agentID-distance) pairs to be sorted and returned the agentIDs for (in the sorted order) later:
+        Dictionary<int, float> agentIDDistanceDict = new Dictionary<int, float>();
+        int enumAgentIDCounter = 1;
+        foreach (float distFromAgentToAgent in fromAgentIDRowList) {
+            agentIDDistanceDict.Add(enumAgentIDCounter++, distFromAgentToAgent);
+        }
+
+        // Converting dictionary of key-value pairs into a list of the same key-value pairs.
+        List<KeyValuePair<int, float>> agentIDDistanceKeyValuePairsList = agentIDDistanceDict.ToList();
+
+        // Sorting the list of key-value pairs based on the value (i.e. the distances).
+        agentIDDistanceKeyValuePairsList.Sort((x, y) => x.Value.CompareTo(y.Value));
+
+        // Skipping the first element since the smallest distance always is itself.
+        agentIDDistanceKeyValuePairsList = agentIDDistanceKeyValuePairsList.Skip(1).ToList();
+
+        // Extracting only the keys from the sorted list of key-value pairs.
+        List<int> agentIDsList = ExtractKeysFromKeyValuePairList(agentIDDistanceKeyValuePairsList);
+
+        // Only extracting the k first agentIDs (corresponding to the ones with the smallest distance from the robot with agentID='fromAgentID').
+        List<int> kNearestNeighbourAgentIDs = agentIDsList.Take(k).ToList();
+
+
+        return kNearestNeighbourAgentIDs;
+    }
+
+    private List<int> ExtractKeysFromKeyValuePairList(List<KeyValuePair<int, float>> keyValuePairsList) {
+        List<int> integerKeysList = new List<int>();
+
+        foreach (KeyValuePair<int, float> keyValuePair in keyValuePairsList) {
+            integerKeysList.Add(keyValuePair.Key);
+        }
+
+        return integerKeysList;
+    }
+
+
+    private bool SAScopeIsKNearest() {
+        return (k != 0 && d == 0.0f);
+    }
+
+    private bool SAScopeIsRadial() {
+        return (k == 0 && d != 0.0f);
+    }
 
 
 
@@ -191,9 +349,9 @@ public class SquiggleScript : MonoBehaviour {
     }
 
     private void NotifyTheAgents() {
-        // Calls out to all neighbouring agents and notifies them of its fire-event.
+        // Calls out to neighbouring agents whose SA scopes cover me and notifies them of its fire-event.
 
-        foreach (SquiggleScript oscillator in otherSquiggles) { // "giving away a signal" all other nodes can hear
+        foreach (SquiggleScript oscillator in myFireSignalSubscribers) { // "giving away a signal" all other robots which subscribes to me (i.e. I am within their SA scope) can hear
             oscillator.OnHeardFireEvent();
         }
     }
@@ -422,6 +580,10 @@ public class SquiggleScript : MonoBehaviour {
         agentID = idNumber;
     }
 
+    public void SubscribeToAgentFiresignalSubscriberList(SquiggleScript robotWhoseSAScopeCoversMe) {
+        myFireSignalSubscribers.Add(robotWhoseSAScopeCoversMe);
+    }
+
     public void SavePlottingDataIfOnRightFrame() {
         if ((Mathf.RoundToInt(Time.fixedTime / Time.fixedDeltaTime) % myCreator.GetDataSavingParameter()) == 0) { // Executing if the frame matches up with the wanted data-saving-frequency
             // For the phase plot.
@@ -458,5 +620,12 @@ public class SquiggleScript : MonoBehaviour {
 
         float newFrequency = frequency * Mathf.Pow(2, F_n);
         frequency = newFrequency;
+    }
+
+    public void ShowYourSubscriberList() {
+        Debug.Log("Hello, this is robot " + this.name + " with agentID " + agentID + ". " + myFireSignalSubscribers.Count + " neighbour robots are subscribed to my fire signals.");
+        //foreach (SquiggleScript sub in myFireSignalSubscribers) {
+        //    Debug.Log("Hello, this is robot " + this.name + " with agentID " + agentID + ". Robot " + sub.name + " with agentID " + sub.GetAgentID() + " is listening to my fire signals.");
+        //}
     }
 }
