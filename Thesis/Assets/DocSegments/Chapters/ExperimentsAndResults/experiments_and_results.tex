@@ -28,7 +28,7 @@ As previously mentioned, relating to the different robot colors like turquoise, 
 
 \section{Phase synchronization}
 \label{sec:phase_sync}
-This is the section where experiments attempting to synchronize for the first and simpler problem, namely synchronizing only the phases $\phi_i$ of all agents $i$, are presented and analyzed resuls for. These are then experiments where all musical robots have an equal and fixed frequency, only adjusting phases, in order to entrain to synchronize their phases to each other until reaching the target state of harmonic synchrony. Or in other words, all experiments in this phase synchronization section have the two hyperparameters shown in Table \ref{tab:phase_sync}.
+This is the section where experiments attempting to synchronize for the first and simpler problem, namely synchronizing only the phases $\phi_i$ of all agents $i$, are presented and analyzed resuls for. These are then experiments where all musical robots have an equal and fixed frequency, only adjusting phases, in order to entrain to synchronize their phases to each other until reaching the target state of harmonic synchrony. Or in other words, all experiments in this phase synchronization section have the two hyperparameters shown in Table \ref{tab:phase_sync} in addition to the individual experiment hyperparameters listed.
 
 \begin{center}
 \begin{tabular}{ |c|c|c| } 
@@ -50,7 +50,7 @@ Mirollo \& Strogatz & None  \\
 	
 	\subsection{Reproducing baseline results}
 	
-		\paragraph{Experiment setup:}
+		\paragraph{Experiment setup:\nl}
 		
 		In order to see that our developed synchronization simulator in Unity yields more or less the same results as Nymoen's results, similar experiments as reported in their paper are performed here. These tell us whether differences in performance, in terms of synchronization times (sim s), is simply due to implementation differences, or actually because of the utilized synchronization methods and hyperparameters in question. 
 		
@@ -68,6 +68,8 @@ Mirollo \& Strogatz & None  \\
 		\label{tab:baseline_reproducing_phase_sync_for_alpha}
 		\end{center}
 		
+		\paragraph{Experiment results:\nl}
+		
 		\begin{figure}[ht!]
 			\centering
 			\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/baseline_reproducing_phase_sync_for_alpha.pdf}
@@ -75,13 +77,11 @@ Mirollo \& Strogatz & None  \\
 			\label{fig:baseline_reproducing_phase_sync_for_alpha}
 		\end{figure}
 		
-		\paragraph{Experiment results:}
-		
-		\paragraph{Experiment analysis:}
+		\paragraph{Experiment analysis:\nl}
 	
 	\subsection{Hyperparameter tuning}
 	
-		\paragraph{Experiment setup:}
+		\paragraph{Experiment setup:\nl}
 		
 		Here we tune the hyperparameters $\alpha$ and $t_{ref}^{dyn}$ for several robot collective sizes, according to performance scores of how long it takes robot collectives on average to achieve harmonic synchrony. Exactly these two specific hyperparameters are experimented with mostly since they empirically seem to be the most important ones to set correctly before starting the simulator; that is, in order for the robots to actually manage achieving harmonic synchrony. Additionaly, the point of K. Konishi and H. Kokame (cf. \ref{sim_env_and_hyperparams}) was also remembered.
 		
@@ -100,6 +100,8 @@ Mirollo \& Strogatz & None  \\
 		\captionof{table}{Experiment hyperparameter setup.}
 		\label{tab:exp_phase_sync_hyperparam_tuning}
 		\end{center}
+		
+		\paragraph{Experiment results:\nl}
 		
 		\begin{figure}[ht!]
 		  \begin{subfigure}[b]{0.5\textwidth}
@@ -132,13 +134,11 @@ Mirollo \& Strogatz & None  \\
 		  \label{fig:phase_sync_hyperparam_tuning_experiment}
 		\end{figure}
 		
-		\paragraph{Experiment results:}
-		
 		As we can see in Figure \ref{fig:phase_sync_hyperparam_tuning_experiment}, there are generally low standard deviations which make errors in the plots barely visible. We also can notice that the largest differences are seen for lower $\alpha$ values, as average harmonic synchronization times are more and more overlapping and similar for larger $\alpha$ values.
 		
 		A general pattern we can see is that larger robot collective sizes (larger $|R|$ values) handle lower phase coupling constants $\alpha$ better; in that the music collectives both achieve harmonic synchrony in lower average times than the smaller robot collectives, as well as achieving lower error rates. To this latter point, note that for the lowest $\alpha$ value of 0.001, robot collectives with size $|R|=3$ and 10 were not able to achieve harmonic synchrony at all during any of the simulation runs (i.e. having 100\% error rate), whereas larger collective sizes like $|R|=25$ and $|R|=50$ managed to achieve harmonic synchrony despite the low $\alpha$ value. 
 		
-		\paragraph{Experiment analysis:}
+		\paragraph{Experiment analysis:\nl}
 		
 		The explanation for this latter observation regarding the seemingly increasing robustness with increasing collective sizes $|R|$ can very well lie in the fact that, as we remember, the phase coupling constant $\alpha$ represents how much each robot will adjust its phase when hearing a ''fire`` signal from a neighbouring robot. If there are more neighbours firing ``adjustment signals'' to a certain robot (i.e. we have a higher collective size $|R|$), it is also logical that the robot in question will update its phase more often. And so we can then see why e.g. all average harmonic synchronization times for $\alpha=0.01$ seem to improve (i.e. gets reduced) for every increase in collective size $|R|$; the phase coupling constant $\alpha=0.01$ might be weak, but with further and more frequent weak adjustments accumulated over the same time, the weak $\alpha$ is compensated for.
 		
@@ -147,7 +147,7 @@ Mirollo \& Strogatz & None  \\
 	
 	\subsection{Comparing phase adjustment methods}
 	
-		\paragraph{Experiment setup:}
+		\paragraph{Experiment setup:\nl}
 		
 		So far in this chapter and section, we have only run experiments for pure phase synchronization, the $\phi$ problem, with Mirollo-Strogatz's method of phase adjustment, like described in \ref{mirollo_strogatz_phase_adjust}. With this method of phase synchronization, robots are simply adjusting phases in an excitatory way; they only ``push'' other ocillators's phases further or higher when firing themselves, never ``holding'' or ``dragging'' them back.
 		
@@ -171,6 +171,8 @@ Mirollo \& Strogatz & None  \\
 		\label{tab:directional_phase_adjustment_comparison}
 		\end{center}
 		
+		\paragraph{Experiment results:\nl}
+		
 		\begin{figure}[ht!]
 		\begin{subfigure}[b]{0.5\textwidth}
 			\centering\captionsetup{width=.9\linewidth}%
@@ -189,15 +191,13 @@ Mirollo \& Strogatz & None  \\
 		  \label{fig:directional_phase_adjustment_comparison}
 		\end{figure}
 		
-		\paragraph{Experiment results:}
-		
 		We quickly see from the results in Figure \ref{fig:directional_phase_adjustment_comparison} there seems to be a considerable difference in harmonic synchronization times between using Mirollo-Strogatz's and Nymoen's phase adjustment methods to synchronize phase in the phase ($\phi$) synchronization problem. In Subfigure \ref{fig:sub:directional_phase_adjustment_comparison_hsynchtimes}, we see that for smaller musical robot collectives $|R|$, differences in synchronization time on average are not especially large. However, as collective size $|R|$ increases, we see the harmonic synchronization times for Nymoen's bi directional phase synchronization becomes considerably lower than that of Mirollo-Strogatz's mono-directional on average, variance—or at least the square root of it—accounted for.
 		
 		On the other hand, when we look at the error rates in Subfigure \ref{fig:sub:directional_phase_adjustment_comparison_errorrates}, we also see that Nymoen's phase adjustment method's error rates are considerably higher than those of Mirollo-Strogatz's error rates (being nearly negligible). Interestingly, this is only the case until collective size $|R|=500$ though, after the point of which both phase adjustment methods's error rates are both equal to 0, and hence this objection towards Nymoen's phase adjustment method no longer holds. Hence, there seems to—at least up until $|R|=500$—exist a sort of tradeoff or high risk high reward scenario here, where one can in the phase ($\phi$) synchronization problem achieve harmonic synchrony faster by using Nymoen's phase adjustment method while at the same time risking a higher chance of the synchronziation failing; whereas Mirollo-Strogatz's method of phase adjustment on average seems to be the safer, albeit slower, option.
 		
 		Yet again, we also in these results notice a trend where smaller hyperparameter values lead to more unstable or worse performing synchronizations. Generally, although not strictly nor without exceptions, for both the harmonic synchronization times in Subfigure \ref{fig:sub:directional_phase_adjustment_comparison_hsynchtimes} and the error rates in \ref{fig:sub:directional_phase_adjustment_comparison_errorrates}, the larger the hyperparameter $|R|$, the more stable or quick synchronization runs we performed in the Unity synchronization simulator. 
 		
-		\paragraph{Experiment analysis:}
+		\paragraph{Experiment analysis:\nl}
 		
 		In this specific case, what this latter observation of seemingly increasing robustness given increasing collective sizes $|R|$ points to is perhaps that the system's robustness and stability is increasing as collective size increases—being a strength classically advocated for in the multi agent systems and swarm systems literature []; as well as being found in e.g. robustness degrees in networks where you in the one case have a single point of failure versus many redundant paths and edges between your nodes [].
 		
@@ -223,7 +223,7 @@ Mirollo \& Strogatz & None  \\
 		
 			\paragraph{$k_s$ nearest neighbour scope\nl}
 			
-				\paragraph{Experiment setup:}
+				\paragraph{Experiment setup:\nl}
 				
 				Firstly, the first \textit{self awareness scope} scenario (as in \ref{SA_scopes_implemented}) is experimented with and tuned for. The number of neighbouring Dr. Squiggle robots each individual Dr. Squiggle robot will listen for fire signals to ($k_s$) will be scaled and increased from $k_s=1$ up until $k_s=|R|-1$ which is the maximum number of neighbours each Dr. Squiggle robot can listen to for fire signals.
 
@@ -242,6 +242,8 @@ Mirollo \& Strogatz & None  \\
 				\captionof{table}{Experiment hyperparameter setup.}
 				\label{tab:phase_sync_k_s_SA_scope_tuning}
 				\end{center}
+				
+				\paragraph{Experiment results:\nl}
 
 				\tcol[blue]{FYLL INN}
 				% \begin{figure}[ht!]
@@ -262,9 +264,7 @@ Mirollo \& Strogatz & None  \\
 				  % \label{fig:phase_sync_k_s_SA_scope_tuning}
 				% \end{figure}
 
-				\paragraph{Experiment results:}
-
-				\paragraph{Experiment analysis:}
+				\paragraph{Experiment analysis:\nl}
 				 
 				 
 			\paragraph{$d_s$ radial scope\nl}
@@ -272,7 +272,7 @@ Mirollo \& Strogatz & None  \\
 	
 		\subsubsection{Simulation breaking}
 		
-			\paragraph{Experiment setup:}
+			\paragraph{Experiment setup:\nl}
 			
 			In order to test the limits of the developed synchronization simulator, we will here investigate the effects of scaling and exploding the musical robot collective size $|R|$—also given some various self awareness scopes found worthwhile to further investigate in the previous experiments in \ref{exp:phasesync:increasing_SA_deg}.
 	
@@ -281,7 +281,8 @@ Mirollo \& Strogatz & None  \\
 
 
 \section{Phase and frequency synchronization}
-This is the section for the experiments attempting to synchronize for the second and harder problem of synchronizing both phases $\phi_i$, as well as frequencies $\omega_i$, for all agents $i$. These are then experiments where all musical robots originally have unequal and ever-changing phases  and frequencies, adjusting both phases and frequencies in order to entrain to synchronize their phases and frequencies until reaching harmonic synchrony. Or in other words, all experiments in this phase and frequency synchronization section have the two hyperparameters shown in Table \ref{tab:phase_and_freq_sync}.
+\label{sec:phase_and_freq_sync_experiments}
+This is the section for the experiments attempting to synchronize for the second and harder problem of synchronizing both phases $\phi_i$, as well as frequencies $\omega_i$, for all agents $i$. These are then experiments where all musical robots originally have unequal and ever-changing phases  and frequencies, adjusting both phases and frequencies in order to entrain to synchronize their phases and frequencies until reaching harmonic synchrony. Or in other words, all experiments in this phase and frequency synchronization section have the two hyperparameters shown in Table \ref{tab:phase_and_freq_sync} in addition to the individual experiment hyperparameters listed.
 
 \begin{center}
 \begin{tabular}{ |c|c|c| } 
@@ -312,7 +313,7 @@ Nymoen & Nymoen  \\
 		\subsubsection{Ordering by phase couplings}
 		\label{exp:phase_and_freq_baseline_reproducing_initial_phase_ordering}
 		
-			\paragraph{Experiment setup:}
+			\paragraph{Experiment setup:\nl}
 			
 			Given that K. Nymoen et al. do not mention their $\beta$ value in their frequency synchronization experiment where they order for different phase coupling values $\alpha$, an \textit{empirically decent} $\beta$ value of 0.4 is chosen for this experiment. What \textit{empirically decent} refers to in this case are K. Nymoen et al.'s findings in the results of their last experiment \cite{nymoen_synch} where synchronization times for various $\beta$ values were evaluated; deeming $\beta=0.4$ to be a good value, with no further improvement in synchronization performance when $\beta$ is increased further.
 			
@@ -330,6 +331,8 @@ Nymoen & Nymoen  \\
 			\label{tab:baseline_reproducing_phase_and_freq_sync_for_alpha}
 			\end{center}
 			
+			\paragraph{Experiment results:\nl}
+			
 			\begin{figure}[ht!]
 				\centering
 				\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/baseline_reproducing_phase_and_freq_sync_for_alpha.pdf}
@@ -337,14 +340,12 @@ Nymoen & Nymoen  \\
 				\label{fig:baseline_reproducing_phase_and_freq_sync_for_alpha}
 			\end{figure}
 			
-			\paragraph{Experiment results:}
-			
-			\paragraph{Experiment analysis:}
+			\paragraph{Experiment analysis:\nl}
 		
 		
 		\subsubsection{Ordering by phase couplings but with more stable hyperparameters}
 		
-			\paragraph{Experiment setup:}
+			\paragraph{Experiment setup:\nl}
 			
 			After seeing how poorly the musical robot collectives managed to achieve harmonic synchrony during previous experiment \ref{exp:phase_and_freq_baseline_reproducing_initial_phase_ordering}, we change the hyperparameters slightly in the hopes of achieving harmonic synchrony more frequently, or in other words more stable synchronization simulation runs. The reason is mostly that it would be beneficial to actually see whether we observe similar patterns as in Nymoen's results—something which becomes impossible when robot collectives nearly never achieve harmonic synchrony.
 			
@@ -366,21 +367,21 @@ Nymoen & Nymoen  \\
 			\label{tab:stable_baseline_reproducing_phase_and_freq_sync_for_alpha}
 			\end{center}
 			
+			\paragraph{Experiment results:\nl}
+			
 			\begin{figure}[ht!]
 				\centering
 				\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/stable_baseline_reproducing_phase_and_freq_sync_for_alpha.pdf}
 				\caption{Harmonic synchronization times (sim s) for 3 robots with both initially unsynchronized phases \textit{and} frequencies for varying phase coupling constants $\alpha$. 30 simulation runs per $\alpha$ are reported.}
 				\label{fig:stable_baseline_reproducing_phase_and_freq_sync_for_alpha}
 			\end{figure}
-		
-			\paragraph{Experiment results:}
 			
-			\paragraph{Experiment analysis:}
+			\paragraph{Experiment analysis:\nl}
 			
 	
 		\subsubsection{Ordering by frequency couplings}
 		
-		\paragraph{Experiment setup:}
+		\paragraph{Experiment setup:\nl}
 		
 		Lastly, for the final Baseline reproducing experiment, it was wanted to see whether results within the phase and frequency ($\phi\&\omega$) synchronization problem, when one varied the frequency coupling constant $\beta$, also was more or less in the same ballpark or not, for the same reasons as mentioned in the first Baseline reproducing experiment in Section \ref{sec:phase_sync}.
 		
@@ -402,6 +403,8 @@ Nymoen & Nymoen  \\
 		\label{tab:baseline_reproducing_phase_and_freq_sync_for_beta}
 		\end{center}
 		
+		\paragraph{Experiment results:\nl}
+		
 		\begin{figure}[ht!]
 			\centering
 			\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/baseline_reproducing_phase_and_freq_sync_for_beta.pdf}
@@ -409,11 +412,9 @@ Nymoen & Nymoen  \\
 			\label{fig:baseline_reproducing_phase_and_freq_sync_for_beta}
 		\end{figure}
 		
-		\paragraph{Experiment results:}
-		
 		Even though we do not see exactly the same harmonic synchronization times as we see in Nymoen's results, and worse at that, we do in fact see a similar pattern in that also here, synchronization times and error scores seem to improve the larger frequency coupling constant $\beta$ we have.
 		
-		\paragraph{Experiment analysis:}
+		\paragraph{Experiment analysis:\nl}
 		
 		Also, from the results in Figure \ref{fig:baseline_reproducing_phase_and_freq_sync_for_beta}, it becomes apparent that $\beta=0.7$ might be the best choice to continue using in our Unity synchrony simulator—at least when it comes to collective sizes $|R|=6$.
 		
@@ -430,7 +431,50 @@ Nymoen & Nymoen  \\
 		
 			\paragraph{$k_s$ nearest neighbour scope\nl}
 			
-				The first \textit{self awareness scope} scenario is experimented with and tuned. The number of neighbouring Dr. Squiggle robots each individual Dr. Squiggle robot will listen for fire signals to ($k_s$) will be scaled and increased from $k_s=1$ up until $k_s=|R|-1$ which is the maximum number of neighbours each Dr. Squiggle robot can listen to for fire signals.
+				\paragraph{Experiment setup:\nl}
+			
+				The first \textit{self awareness scope} scenario (as in \ref{SA_scopes_implemented}) is now again experimented with and tuned—only now for the phase and frequency ($\phi \& \omega$) synchronization problem. The number of neighbouring Dr. Squiggle robots each individual Dr. Squiggle robot will listen for fire signals to ($k_s$) will be scaled, for each $|R|$, and increased from $k_s=1$ up until $k_s=|R|-1$ which is the maximum number of neighbours each Dr. Squiggle robot can listen to for fire signals.
+				
+				In other words, the individual Dr. Squiggle robots's self awareness scope is increased incrementally in terms of \textit{$k_s$ nearest neighbour SA scope} and evaluated for performance in harmonic synchronization.
+
+				Hyperparameters are set in the simulator as shown in Table \ref{tab:phase_and_freq_sync_k_s_SA_scope_tuning}. These are empirically found to be the best hyperparameters in previous experiment results in Section \ref{sec:phase_and_freq_sync_experiments} where we are attempting synchronization in the $\phi \& \omega$ problem.
+				
+				Results can be seen in Figure \ref{fig:phase_and_freq_sync_k_s_SA_scope_tuning}.
+
+				\begin{center}
+				\begin{tabular}{ |c|c|c|c|c|c|c| } 
+				\hline
+				$\alpha$ & $\beta$ & $t_{ref}^{dyn}$ & $t_f$ & $k$ & $t_{max}$ \\
+				\hline
+				0.2 & 0.7 & 10\% & 80ms & 8 & 5min \\
+				\hline
+				\end{tabular}
+				\captionof{table}{Experiment hyperparameter setup.}
+				\label{tab:phase_and_freq_sync_k_s_SA_scope_tuning}
+				\end{center}
+
+				\paragraph{Experiment results:\nl}
+				
+				\tcol[blue]{FYLL INN}
+				% \begin{figure}[ht!]
+				% \begin{subfigure}[b]{0.5\textwidth}
+					% \centering\captionsetup{width=.9\linewidth}%
+					% \includegraphics[width=\textwidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/}
+					% \caption{Performance scores.}
+					% \label{fig:sub:phase_and_freq_sync_k_s_SA_scope_tuning}
+				  % \end{subfigure}
+				  % %
+				  % \begin{subfigure}[b]{0.5\textwidth}
+					% \centering\captionsetup{width=.9\linewidth}%
+					% \includegraphics[width=\textwidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/}
+					% \caption{Error rates.}
+					% \label{fig:sub:phase_and_freq_sync_k_s_SA_scope_tuning}
+				  % \end{subfigure}
+				  % \caption{Performance scores \ref{fig:sub:phase_and_freq_sync_k_s_SA_scope_tuning} given in average harmonic synchronization times (sim s) with standard deviation. Corresponding error rates in \ref{fig:sub:phase_and_freq_sync_k_s_SA_scope_tuning} based on 30 individual runs per collective size $|R|$ for each of the two phase adjustment methods.}
+				  % \label{fig:phase_and_freq_sync_k_s_SA_scope_tuning}
+				% \end{figure}
+
+				\paragraph{Experiment analysis:\nl}
 			
 			
 			\paragraph{$d_s$ radial scope}
@@ -438,7 +482,7 @@ Nymoen & Nymoen  \\
 	
 		\subsubsection{Simulation breaking}
 		
-			\paragraph{Experiment setup:}
+			\paragraph{Experiment setup:\nl}
 			
 			In order to test the limits of the developed synchronization simulator, we will here investigate the effects in harmonic synchronization performance when scaling and exploding the musical robot collective size $|R|$—also given some various self awareness scopes found worthwhile to further investigate in the previous experiments in \ref{exp:phase_and_freq_sync:increasing_SA_deg}.
 	

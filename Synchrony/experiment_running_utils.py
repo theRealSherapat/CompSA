@@ -4,7 +4,7 @@ import csv
 import numpy as np
 import multiprocessing as mp
 
-reservedProcessors = 2
+reservedProcessors = 1
 silent = True
 
 sampSize = 30
