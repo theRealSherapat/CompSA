@@ -8,7 +8,7 @@ def main():
     for collsizeIndex, collSize_val in enumerate(collSizes):
         collsizeXtickPercentages = []
         for k_s_value in coll_k_sValues[collsizeIndex]:
-            k_s_percentage = round(k_s_value/collSize_val,2)
+            k_s_percentage = round(k_s_value/(collSize_val-1),2)
             collsizeXtickPercentages.append(k_s_percentage) # for å ha xticks til senere plotting av average harmonic synchronization times og evt. error scores gitt en viss k_s/|R| percentage.
             
             assignNonDefaultHyperparameters(k_ss=k_s_value, collsize=collSize_val, adj_phis=1, adj_omegas=1, alphas=0.2, betas=0.7)

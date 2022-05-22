@@ -3,19 +3,12 @@ from experiment_running_utils import *
 def main():
     collSizes = [3, 15, 50, 200]
     coll_k_sValues = getAllKSValues(collSizes)
-    coll_k_sXtickPercentages = []
 
     for collsizeIndex, collSize_val in enumerate(collSizes):
-        collsizeXtickPercentages = []
         for k_s_value in coll_k_sValues[collsizeIndex]:
-            k_s_percentage = round(k_s_value/collSize_val,2)
-            collsizeXtickPercentages.append(k_s_percentage) # for å ha xticks til senere plotting av average harmonic synchronization times og evt. error scores gitt en viss k_s/|R| percentage.
-            
             assignNonDefaultHyperparameters(k_ss=k_s_value, collsize=collSize_val, alphas=0.8, betas=0)
             runNumberOfSimulationRuns(sampSize)
         
-        coll_k_sXtickPercentages.append(collsizeXtickPercentages)
-    
         
 def getAllKSValues(collsizes):
     coll_k_sValues = []

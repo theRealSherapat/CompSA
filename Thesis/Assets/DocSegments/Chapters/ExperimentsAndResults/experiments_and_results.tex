@@ -260,10 +260,12 @@ Mirollo \& Strogatz & None  \\
 					% \caption{Error rates.}
 					% \label{fig:sub:phase_sync_k_s_SA_scope_tuning}
 				  % \end{subfigure}
-				  % \caption{Performance scores \ref{fig:sub:phase_sync_k_s_SA_scope_tuning} given in average harmonic synchronization times (sim s) with standard deviation. Corresponding error rates in \ref{fig:sub:phase_sync_k_s_SA_scope_tuning} based on 30 individual runs per collective size $|R|$ for each of the two phase adjustment methods.}
+				  % \caption{Performance scores \ref{fig:sub:phase_sync_k_s_SA_scope_tuning} given in average harmonic synchronization times (sim s) with standard deviation, given each nearest neighbour percentage $k_s/(|R|-1)$ for each $|R|$ and $k_s$ value pair. Corresponding error rates in \ref{fig:sub:phase_sync_k_s_SA_scope_tuning} based on 30 individual runs per collective size $|R|$ for each of the two phase adjustment methods.}
 				  % \label{fig:phase_sync_k_s_SA_scope_tuning}
 				% \end{figure}
 
+				As we can see on the x axis in \ref{fig:sub:phase_sync_k_s_SA_scope_tuning}, we here plot harmonic synchronization scores per neighbour percentage $k_s/(|R|-1)$ which tells us the ratio of closest neighbours each robot listens to for fire signals out of all neighbours |R|-1 — or in other words the size of its self awareness scope, not given in absolute neighbours $k_s$.
+		
 				\paragraph{Experiment analysis:\nl}
 				 
 				 
