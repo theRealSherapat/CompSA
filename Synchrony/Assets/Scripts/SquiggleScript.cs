@@ -10,10 +10,6 @@ public class SquiggleScript : MonoBehaviour {
 
     // Recorded individual-/agent-hyperparameters:
 
-    // SA scopes:
-    public int k; // K nearest neighbours in robot's self awareness scope
-    public float d; // Radius of self awareness scope
-
     // Phase-adjustment:
     [Tooltip("Pulse coupling constant, denoting coupling strength between nodes, deciding how much robots adjust phases after detecting a pulse from a neighbour. The larger the constant, the larger (in absolute value) the phase-update?")]
     public float alpha = 0.1f;
@@ -22,7 +18,7 @@ public class SquiggleScript : MonoBehaviour {
         Nymoen
     };
     [Tooltip("Which phase-adjustment / -update / -synchronization function or method we want our robots to synchronize their phases according to.")]
-    public phaseSyncEnum phaseAdjustment = phaseSyncEnum.MirolloStrogatz;
+    public phaseSyncEnum adj_phase = phaseSyncEnum.MirolloStrogatz;
 
     // Frequency-adjustment:
     [Tooltip("Frequency coupling constant, deciding how much robots adjust frequencies after detecting pulse onsets from neighbours. The larger the constant, the larger (in absolute value) the frequency-update?")]
@@ -32,9 +28,13 @@ public class SquiggleScript : MonoBehaviour {
         Nymoen
     };
     [Tooltip("Which frequency-adjustment / -update / -synchronization function or method we want our robots to synchronize their frequencies according to. If 'None' is selected, the robots in question will have 1Hz fixed frequency.")]
-    public frequencySyncEnum frequencyAdjustment = frequencySyncEnum.None;
+    public frequencySyncEnum adj_omega = frequencySyncEnum.None;
     [Tooltip("Degree of error-memory, i.e. the length of a list of the last m error-scores. The larger the length m, the more error-scores we calculate the self-assessed synch-score s(n) based upon.")]
     public int m = 5;
+
+    // SA scopes:
+    public int k_s; // K nearest neighbours in robot's self awareness scope
+    public float d_s; // Radius of self awareness scope
 
     // Audio:
     public AudioClip[] audioClips;
@@ -125,14 +125,14 @@ public class SquiggleScript : MonoBehaviour {
         List<SquiggleScript> neighboursToListenTo = new List<SquiggleScript>();
 
         if (SAScopeIsKNearest()) {
-            // Finding my k nearest neighbours:
+            // Finding my k_s nearest neighbours:
             neighboursToListenTo = FindKNearestNeighbours();
         }
         else if (SAScopeIsRadial()) {
             neighboursToListenTo = FindNeighboursWithinRadiusD();
         }
         else {
-            Debug.Log("Invalid 'k' or 'd' arguments given (xor logic isn't followed).");
+            Debug.Log("Invalid 'k_s' or 'd_s' arguments given (xor logic isn't followed).");
             return null;
         }
 
@@ -179,7 +179,7 @@ public class SquiggleScript : MonoBehaviour {
         List<int> agentIDsWithDistanceLessThanD = new List<int>();
 
         foreach (KeyValuePair<int, float> keyValuePair in agentIDDistanceKeyValuePairsList) {
-            if (keyValuePair.Value <= d) {
+            if (keyValuePair.Value <= d_s) {
                 agentIDsWithDistanceLessThanD.Add(keyValuePair.Key);
             }
         }
@@ -238,8 +238,8 @@ public class SquiggleScript : MonoBehaviour {
         // Extracting only the keys from the sorted list of key-value pairs.
         List<int> agentIDsList = ExtractKeysFromKeyValuePairList(agentIDDistanceKeyValuePairsList);
 
-        // Only extracting the k first agentIDs (corresponding to the ones with the smallest distance from the robot with agentID='fromAgentID').
-        List<int> kNearestNeighbourAgentIDs = agentIDsList.Take(k).ToList();
+        // Only extracting the k_s first agentIDs (corresponding to the ones with the smallest distance from the robot with agentID='fromAgentID').
+        List<int> kNearestNeighbourAgentIDs = agentIDsList.Take(k_s).ToList();
 
 
         return kNearestNeighbourAgentIDs;
@@ -257,12 +257,13 @@ public class SquiggleScript : MonoBehaviour {
 
 
     private bool SAScopeIsKNearest() {
-        return (k != 0 && d == 0.0f);
+        return (k_s != 0 && d_s == 0.0f);
     }
 
     private bool SAScopeIsRadial() {
-        return (k == 0 && d != 0.0f);
+        return (k_s == 0 && d_s != 0.0f);
     }
+
 
 
 
@@ -357,7 +358,7 @@ public class SquiggleScript : MonoBehaviour {
 
 
     private void UpdateFrequencyIfAdjustingFrequency() {
-        if ((int)frequencyAdjustment == 1) {
+        if ((int)adj_omega == 1) {
             RFAAdjustFrequency(); // Adjusting frequency at each phase-climax, according to K. Nymoen's Freq.-Adj.-method and the Reachback Firefly Algorithm for frequency-update-contributions (not phase-update contributions).
 
             UpdateTheRefractoryPeriod(); // Given an updated oscillator-frequency (hence also oscillator-period), we update t_ref to be the right percentage of the new oscillator-period.
@@ -416,9 +417,9 @@ public class SquiggleScript : MonoBehaviour {
     }
 
     private void AdjustPhase() {
-        if ((int)phaseAdjustment == 0) { // using Mirollo-Strogatz's "standard" phase update function
+        if ((int)adj_phase == 0) { // using Mirollo-Strogatz's "standard" phase update function
             phase = Mathf.Clamp(phase * (1 + alpha), 0f, 1f);
-        } else if ((int)phaseAdjustment == 1) { // using Kristian et al.'s Bi-Directional phase sync function
+        } else if ((int)adj_phase == 1) { // using Kristian et al.'s Bi-Directional phase sync function
             float wave = Mathf.Sin(2 * Mathf.PI * phase);
             phase = Mathf.Clamp(phase - alpha * wave * Mathf.Abs(wave), 0f, 1f);
         }
@@ -533,9 +534,9 @@ public class SquiggleScript : MonoBehaviour {
     }
 
     private void InitializeAgentFrequency() {
-        if ((int)frequencyAdjustment == 0) { // frequencyAdjustment = None
+        if ((int)adj_omega == 0) { // adj_omega = None
             frequency = 1f; // Setting agent's frequency to default frequency of 1Hz.
-        } else if ((int)frequencyAdjustment == 1) { // frequencyAdjustment = Nymoen
+        } else if ((int)adj_omega == 1) { // adj_omega = Nymoen
             frequency = (float)randGen.NextDouble() * (myCreator.minMaxInitialFreqs.y - myCreator.minMaxInitialFreqs.x) + myCreator.minMaxInitialFreqs.x; // Initializing frequency (Hz) in range [0.5Hz, 8Hz] was found useful by Nymoen et al.
         }
 

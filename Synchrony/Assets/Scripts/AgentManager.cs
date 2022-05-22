@@ -84,11 +84,13 @@ public class AgentManager : MonoBehaviour {
     private List<Vector2> spawnedPositions = new List<Vector2>();
     private List<SquiggleScript> spawnedSquiggleScripts = new List<SquiggleScript>();
     private List<List<float>> distancesMatrix = new List<List<float>>();
-    private float wantedAlpha;
-    private phaseSyncEnum wantedPhaseAdjustmentMethod;
-    private float wantedBeta;
-    private frequencySyncEnum wantedFrequencyAdjustmentMethod;
-    private int wantedM;
+    private List<float> wantedAlphas = new List<float>();
+    private List<phaseSyncEnum> wantedAdjPhis = new List<phaseSyncEnum>();
+    private List<float> wantedBetas = new List<float>();
+    private List<frequencySyncEnum> wantedAdjOmegas = new List<frequencySyncEnum>();
+    private List<int> wantedMs = new List<int>();
+    private List<int> wantedKss = new List<int>();
+    private List<float> wantedDss = new List<float>();
 
     // CSV-Serialization:
     private int dataSavingFrequencyY;
@@ -494,13 +496,16 @@ public class AgentManager : MonoBehaviour {
             SquiggleScript extractedSquiggleScript = newAgent.GetComponent<SquiggleScript>();
 
             // Assigning robot-variables:
-            extractedSquiggleScript.SetAgentID(i + 1); // Setting AgentIDs so that agents have IDs {1, 2, 3, ..., N}, where N is the number of agents in the scene.
+            int newAgentID = i + 1;
+            extractedSquiggleScript.SetAgentID(newAgentID); // Setting AgentIDs so that agents have IDs {1, 2, 3, ..., N}, where N is the number of agents in the scene.
 
-            extractedSquiggleScript.alpha = wantedAlpha;
-            extractedSquiggleScript.phaseAdjustment = wantedPhaseAdjustmentMethod;
-            extractedSquiggleScript.beta = wantedBeta;
-            extractedSquiggleScript.frequencyAdjustment = wantedFrequencyAdjustmentMethod;
-            extractedSquiggleScript.m = wantedM;
+            extractedSquiggleScript.alpha = wantedAlphas[newAgentID-1];
+            extractedSquiggleScript.adj_phase = wantedAdjPhis[newAgentID - 1];
+            extractedSquiggleScript.beta = wantedBetas[newAgentID - 1];
+            extractedSquiggleScript.adj_omega = wantedAdjOmegas[newAgentID-1];
+            extractedSquiggleScript.m = wantedMs[newAgentID-1];
+            extractedSquiggleScript.k_s = wantedKss[newAgentID - 1];
+            extractedSquiggleScript.d_s = wantedDss[newAgentID - 1];
 
             spawnedSquiggleScripts.Add(extractedSquiggleScript);
 
@@ -664,17 +669,49 @@ public class AgentManager : MonoBehaviour {
 
         allowRobotsToStruggleForPeriods = (int)covariatesToAssign[13]; // For how long robots who never reach phase climax should be left hanging without being frequency-doubled.
 
-        // runHeterogenousRobots = System.Convert.ToBoolean(covariatesToAssign[13KOMMA5]); // '0' means 'no', '1' means 'yes'. Whether we want to run an experiment with heterogenous robots or not.
 
+        // Assigning individual / robot hyperparameters:
 
-        // Assigning individual / robot hyperparameters (CAN AT THE MOMENT ONLY BE HOMOGENOUS):
+        int nextCovariateIndex = 14; // Just from reading manually above.
+        for (int i = 0; i < collectiveSize; i++) { // Collecting Alpha-values, a.k.a. homogenous phase coupling constants, for all robots with agentID.
+            wantedAlphas.Add(covariatesToAssign[nextCovariateIndex + i]);
+        }
+        nextCovariateIndex += collectiveSize;
 
-        wantedAlpha = covariatesToAssign[14]; // Homogenous phase coupling constant.
-        wantedPhaseAdjustmentMethod = (phaseSyncEnum)(int)covariatesToAssign[15]; // Homogenous phase adjustment method wanting to be used.
+        // Collecting Phase adjustment methods (Adj_Phi) levels / values for all robots with agentID:
+        for (int i = 0; i < collectiveSize; i++) {
+            wantedAdjPhis.Add((phaseSyncEnum)(int)covariatesToAssign[nextCovariateIndex + i]);
+        }
+        nextCovariateIndex += collectiveSize;
 
-        wantedBeta = covariatesToAssign[16]; // Homogenous frequency coupling constant.
-        wantedFrequencyAdjustmentMethod = (frequencySyncEnum)(int)covariatesToAssign[17]; // Homogenous frequency adjustment method wanting to be used.
-        wantedM = (int)covariatesToAssign[18]; // Homogenous error memory length (length of the error buffer list that captures how much out of synch the robot were during the last m fire events).
+        // Collecting Beta values, a.k.a. homogenous frequency coupling constants, for all robots with agentID:
+        for (int i = 0; i < collectiveSize; i++) {
+            wantedBetas.Add(covariatesToAssign[nextCovariateIndex + i]);
+        }
+        nextCovariateIndex += collectiveSize;
+
+        // Collecting Frequency adjustment methods (Adj_Omega) levels / values for all robots with agentID:
+        for (int i = 0; i < collectiveSize; i++) {
+            wantedAdjOmegas.Add((frequencySyncEnum)(int)covariatesToAssign[nextCovariateIndex + i]);
+        }
+        nextCovariateIndex += collectiveSize;
+
+        // Collecting Homogenous error memory length (length of the error buffer list that captures how much out of synch the robot were during the last m fire events), for all robots with agentID:
+        for (int i = 0; i < collectiveSize; i++) {
+            wantedMs.Add((int)covariatesToAssign[nextCovariateIndex + i]);
+        }
+        nextCovariateIndex += collectiveSize;
+
+        // Collecting k_s nearest neighbours SA scope parameter:
+        for (int i = 0; i < collectiveSize; i++) {
+            wantedKss.Add((int)covariatesToAssign[nextCovariateIndex + i]);
+        }
+        nextCovariateIndex += collectiveSize;
+
+        // Collecting d_s radial SA scope parameter:
+        for (int i = 0; i < collectiveSize; i++) {
+            wantedDss.Add(covariatesToAssign[nextCovariateIndex + i]);
+        }
     }
 
     private void ScaleGroundAccordingToSpawnRadius() {
@@ -734,12 +771,61 @@ public class AgentManager : MonoBehaviour {
         performanceAndCovariatesHeader.Add("K");
         performanceAndCovariatesHeader.Add("T_F");
         performanceAndCovariatesHeader.Add("TQDEFINER");
-        performanceAndCovariatesHeader.Add("ALPHA");
-        performanceAndCovariatesHeader.Add("PHASEADJ");
-        performanceAndCovariatesHeader.Add("BETA");
-        performanceAndCovariatesHeader.Add("FREQADJ");
-        performanceAndCovariatesHeader.Add("M");
         performanceAndCovariatesHeader.Add("RANDOMSEED");
+
+        List<string> headerStartStubs = new List<string>();
+        headerStartStubs.Add("ALPHA_");
+        headerStartStubs.Add("ADJ_PHI_");
+        headerStartStubs.Add("BETA_");
+        headerStartStubs.Add("ADJ_OMEGA_");
+        headerStartStubs.Add("M_");
+        headerStartStubs.Add("K_S_");
+        headerStartStubs.Add("D_S_");
+
+        foreach (string headerStartStub in headerStartStubs) {
+            for (int i = 1; i <= collectiveSize; i++) {
+                performanceAndCovariatesHeader.Add(headerStartStub + i);
+            }
+        }
+        //string startStub = ;
+        
+
+        //startStub = ;
+        //for (int i = 1; i <= collectiveSize; i++) {
+        //    performanceAndCovariatesHeader.Add(startStub + i);
+        //}
+
+        //startStub = ;
+        //for (int i = 1; i <= collectiveSize; i++) {
+        //    performanceAndCovariatesHeader.Add(startStub + i);
+        //}
+
+        //startStub = ;
+        //for (int i = 1; i <= collectiveSize; i++) {
+        //    performanceAndCovariatesHeader.Add(startStub + i);
+        //}
+
+        //startStub = ;
+        //for (int i = 1; i <= collectiveSize; i++) {
+        //    performanceAndCovariatesHeader.Add(startStub + i);
+        //}
+
+        //startStub = ;
+        //for (int i = 1; i <= collectiveSize; i++) {
+        //    performanceAndCovariatesHeader.Add(startStub + i);
+        //}
+
+        //startStub = ;
+        //for (int i = 1; i <= collectiveSize; i++) {
+        //    performanceAndCovariatesHeader.Add(startStub + i);
+        //}
+
+        //performanceAndCovariatesHeader.Add("ALPHA");
+        //performanceAndCovariatesHeader.Add("PHASEADJ");
+        //performanceAndCovariatesHeader.Add("BETA");
+        //performanceAndCovariatesHeader.Add("FREQADJ");
+        //performanceAndCovariatesHeader.Add("M");
+
         CreateCSVWithStringHeader(datasetPath, performanceAndCovariatesHeader);
     }
 
@@ -793,32 +879,43 @@ public class AgentManager : MonoBehaviour {
         float TQDEFINER = System.Convert.ToSingle((int)TQDefiner);
         performanceAndCovariateValues.Add(TQDEFINER);
 
-
-        // Adding Individual/Agent Hyper-parameters/Covariates (NB! Due to current design of datapoint-saving, these have to be equal for all agents) that I know before simulating:
-
-        float ALPHA = System.Convert.ToSingle(spawnedSquiggleScripts[0].alpha); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
-        performanceAndCovariateValues.Add(ALPHA);
-
-        float PHASEADJ = System.Convert.ToSingle((int)spawnedSquiggleScripts[0].phaseAdjustment); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
-        performanceAndCovariateValues.Add(PHASEADJ);
-
-        float BETA = System.Convert.ToSingle(spawnedSquiggleScripts[0].beta); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
-        performanceAndCovariateValues.Add(BETA);
-         
-        float FREQADJ = System.Convert.ToSingle((int)spawnedSquiggleScripts[0].frequencyAdjustment); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
-        performanceAndCovariateValues.Add(FREQADJ);
-
-        float M = System.Convert.ToSingle(spawnedSquiggleScripts[0].m); // BUILDING ON THE ASSUMPTION THAT ALL AGENTS HAVE THE SAME VALUE (due to [0])
-        performanceAndCovariateValues.Add(M);
-
-        // Remember: this is not a "real" covariate.
         float RANDOMSEED = System.Convert.ToSingle(randomSeed);
         performanceAndCovariateValues.Add(RANDOMSEED);
 
 
-        // POSSIBLE TODOs:
-        // - Make a prettier Inspector for grouping relevant variables with each other (cf. Unity bookmark in Brave).
-        // - Make a separate 'simulation-run dataset' with rows for each agent and columns for each Individual/Agent Hyper-parameters (so that the NB! on the reMarkable hyper-parameter note is taken care of) — if it is needed or wanted or useful.
+        // Adding Individual/Agent/Robot Hyper-parameters/Covariates that I know before simulating: wantedAlphas wantedAdjPhis wantedBetas wantedAdjOmegas wantedMs wantedKss wantedDss
+
+        foreach (float alphaValue in wantedAlphas) {
+            performanceAndCovariateValues.Add(alphaValue);
+        }
+
+        foreach (phaseSyncEnum adj_phi in wantedAdjPhis) {
+            float ADJ_PHI_value = System.Convert.ToSingle((int)adj_phi);
+            performanceAndCovariateValues.Add(ADJ_PHI_value);
+        }
+
+        foreach (float betaValue in wantedBetas) {
+            performanceAndCovariateValues.Add(betaValue);
+        }
+
+        foreach (frequencySyncEnum adj_omega in wantedAdjOmegas) {
+            float ADJ_OMEGA_value = System.Convert.ToSingle((int)adj_omega);
+            performanceAndCovariateValues.Add(ADJ_OMEGA_value);
+        }
+
+        foreach (int mValue in wantedMs) {
+            float M_value = System.Convert.ToSingle(mValue);
+            performanceAndCovariateValues.Add(M_value);
+        }
+
+        foreach (int kSValue in wantedKss) {
+            float K_S_value = System.Convert.ToSingle(kSValue);
+            performanceAndCovariateValues.Add(K_S_value);
+        }
+
+        foreach (float dSValue in wantedDss) {
+            performanceAndCovariateValues.Add(dSValue);
+        }
 
 
         // Saving one datapoint, a.k.a. writing one .CSV-row (Measurements, Covariates) to the .CSV-file at the datasetPath:
