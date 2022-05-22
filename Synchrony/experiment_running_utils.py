@@ -1,6 +1,7 @@
 import os
 import sys
 import csv
+import numpy as np
 import multiprocessing as mp
 
 reservedProcessors = 2
@@ -11,7 +12,7 @@ sampSize = 30
 # Default values unless optional hyperparameters are given per simulation run:
 defaultHyperparamsDictionary = {'COLLSIZE'                              : 3,
                                 'NYMOENREC'                             : 0,
-                                'TREFDYN'                               : 0.05,
+                                'TREFDYN'                               : 0.1,
                                 'MINFREQ'                               : 0.5,  # Hz
                                 'MAXFREQ'                               : 4,    # Hz
                                 'K'                                     : 8,

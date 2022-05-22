@@ -136,8 +136,17 @@ Now, the synchrony simulator system components will be expounded and explained i
 	
 
 		\subsubsection{Under the hood in the simulator}
+		\label{SA_scopes_implemented}
 		
-		\tcol{Pretty basic and kinda like poking another robot immediately after a phase-climax.}
+		Three distinct \textit{self awareness scope} scenarios are implemented for each individual musical robot in Unity:
+		
+		\begin{enumerate}
+			\item \textbf{$k_s$ nearest neighbours self awareness scope}: Each individual robot hears the $k_s$ nearest neighbouring robot's ``fire'' signals (cf. \ref{subsec:fire_signal}). In this scenario, at least for small $k_s$ values, robots can have more limited and local knowledge.
+			\item \textbf{Radial $d_s$ self awareness scope}: Each individual robot hears neigbouring robots's ``fire'' signals within a radius $d_s$ around it. In this scenario, robots's self awareness scope is more focussed on the spatial locations of other robots, and can also simulate the robot only hearing robots close in space to itself.
+			\item \textbf{Global self awareness scope}: Each individual robot hears all other neigbouring robots's ``fire'' signals. In this scenario, robots have maximum and global knowledge when it comes to awareness of other neighbouring robots.
+		\end{enumerate}
+		
+		In this way, the degree to which robots are self aware of or communicating with other robots is increasing. The effects of increasing or decreasing this degree of self awareness are shown in Chapter \ref{chap:experiments_and_results}, and especially in \ref{exp:phasesync:increasing_SA_deg} and \ref{exp:phase_and_freq_sync:increasing_SA_deg}.
 		
 
 		\subsubsection{Audible to human simulator-observer}

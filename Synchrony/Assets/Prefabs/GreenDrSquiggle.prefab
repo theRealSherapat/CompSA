@@ -339,13 +339,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4db8b444f864bf479ad5b4eaa527a7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  k: 0
-  d: 8
   alpha: 0.1
-  phaseAdjustment: 0
+  adj_phase: 0
   beta: 0.4
-  frequencyAdjustment: 0
+  adj_omega: 0
   m: 5
+  k_s: 0
+  d_s: 0
   audioClips:
   - {fileID: 8300000, guid: 236067ffbbf34ea44916e1c83660bbcc, type: 3}
   - {fileID: 8300000, guid: c8061b904dfe9314186c227c22eba07d, type: 3}
