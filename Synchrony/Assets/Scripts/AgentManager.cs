@@ -74,7 +74,7 @@ public class AgentManager : MonoBehaviour {
     // 'Private variables necessary to make the cogs go around':
 
     // General Meta:
-    private string wantedHyperparamsPath = Directory.GetCurrentDirectory() + "\\" + "wantedHyperparametersForSimulationRun.csv";
+    private string wantedHyperparamsPath = Directory.GetCurrentDirectory() + "\\" + "wantedHyperparametersForSimulationRun.csv"; // sin / con Editor
     private static int atSimRun = 0;
     private System.Random randGen;
 
@@ -917,7 +917,7 @@ public class AgentManager : MonoBehaviour {
             performanceAndCovariateValues.Add(dSValue);
         }
 
-
+        // COMMENT OUT IF YOU WANT TO SAVE DATAPOINTS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         // Saving one datapoint, a.k.a. writing one .CSV-row (Measurements, Covariates) to the .CSV-file at the datasetPath:
         FloatUpdateCSV(datasetPath, performanceAndCovariateValues);
 
