@@ -179,8 +179,8 @@ MonoBehaviour:
   simulationMode: 0
   dataSavingFrequency: 50
   runDurationLimit: 300
-  useSound: 0
-  volumePercentage: 0.5
+  useSound: 1
+  volumePercentage: 1
   useVisuals: 1
   debugSuccessOn: 0
   debugTqTfOn: 0

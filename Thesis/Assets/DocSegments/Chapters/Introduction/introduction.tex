@@ -1,36 +1,54 @@
 \chapter{Introduction}
 \label{chap:introduction}
-	
-\begin{figure}[ht!]
-  \begin{subfigure}[b]{0.5\textwidth}
+
+Taking inspiration from the fascinating natural phenomena of self synchronizing fireflies, as e.g. seen in Figure \ref{fig:synched_fireflies_phenomenon}, a synchronization simulator imitating and modelling this process for—instead of fireflies—a collective of musical robots, as e.g. seen in Figure \ref{fig:illustrative_developed_system}, has been designed and tested.
+
+The effects, particularly in terms of the ability to and performance of synchronization, is measured and evaluated when experimentally altering the properties of the musical robot collective as a whole (as e.g. collective size), or individual musical robots's hyperparameters (e.g. the number of neighbouring robots each robot listens to for self synchronization).
+
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/Background/Figures/Photos/synchronized_fireflies_phenomenon.jpg}
+	\caption[Picture of fireflies flashing synchronously in a US National Park]{Synchronous fireflies at Congaree National Park, United States. Photo\protect\footnotemark: @columbiasc \& @\_flashnick.} % ELLER F.EKS. {Copyright ©Blabla Corporation, David Thorvaldsen}
+	\label{fig:synched_fireflies_phenomenon}
+\end{figure}
+
+\footnotetext{\url{https://avltoday.6amcity.com/synchronous-fireflies-congaree-national-park/} (accessed 2022.05.17)}
+
+\np
+
+\begin{figure}[!ht]
+  \begin{subfigure}[b]{0.495\textwidth}
 	\centering\captionsetup{width=.9\linewidth}%
-	\includegraphics[width=\textwidth]{Assets/DocSegments/Chapters/Introduction/Figures/illustrative_system_result_figure_t1.png}
-	\caption{Start of simulation. \tcol[white]{Her har jeg bare litt hvit tekst for å fylle inn.}}
+	\includegraphics[width=\textwidth]{Assets/DocSegments/Chapters/Introduction/Figures/illustrative_system_result_figure_s0p8.png}
+	\caption{0.8 seconds after simulation start.}
 	\label{fig:sub:illustrative_developed_system_t1}
   \end{subfigure}
   %
-  \begin{subfigure}[b]{0.5\textwidth}
+  \begin{subfigure}[b]{0.495\textwidth}
 	\centering\captionsetup{width=.9\linewidth}%
-	\includegraphics[width=\textwidth]{Assets/DocSegments/Chapters/Introduction/Figures/illustrative_system_result_figure_t2.png}
-	\caption{Simulation at a later point in time than in \ref{fig:sub:illustrative_developed_system_t1}.}
+	\includegraphics[width=\textwidth]{Assets/DocSegments/Chapters/Introduction/Figures/illustrative_system_result_figure_s2p3.png}
+	\caption{2.3 seconds after simulation start.}
 	\label{fig:sub:illustrative_developed_system_t2}
   \end{subfigure}
-  \begin{subfigure}[b]{0.5\textwidth}
+  \begin{subfigure}[b]{0.495\textwidth}
 	\centering\captionsetup{width=.9\linewidth}%
-	\includegraphics[width=\textwidth]{Assets/DocSegments/Chapters/Introduction/Figures/illustrative_system_result_figure_t3.png}
-	\caption{Simulation at a later point in time than in \ref{fig:sub:illustrative_developed_system_t2}. \tcol[white]{Her har jeg bare litt hvit tekst for å fylle inn.}}
+	\includegraphics[width=\textwidth]{Assets/DocSegments/Chapters/Introduction/Figures/illustrative_system_result_figure_s6p2.png}
+	\caption{6.2 seconds after simulation start.}
 	\label{fig:sub:illustrative_developed_system_t3}
   \end{subfigure}
   %
-  \begin{subfigure}[b]{0.5\textwidth}
+  \begin{subfigure}[b]{0.495\textwidth}
 	\centering\captionsetup{width=.9\linewidth}%
-	\includegraphics[width=\textwidth]{Assets/DocSegments/Chapters/Introduction/Figures/illustrative_system_result_figure_t4.png}
-	\caption{Simulation at a later point in time than in \ref{fig:sub:illustrative_developed_system_t3}, around a minute later than in \ref{fig:sub:illustrative_developed_system_t1}.}
+	\includegraphics[width=\textwidth]{Assets/DocSegments/Chapters/Introduction/Figures/illustrative_system_result_figure_s10p1.png}
+	\caption{10.1 seconds after simulation start.}
 	\label{fig:sub:illustrative_developed_system_t4}
   \end{subfigure}
-  \caption{A typical simulation run of a musical multi robot collective (here of size 15) entraining to achieve harmonic synchronization in the developed system. As we can see in \ref{fig:sub:illustrative_developed_system_t1}, the robots start flashing yellow and blinking with their eyes asynchronously, but end up synchronized in \ref{fig:sub:illustrative_developed_system_t4}.}
+  \caption{A typical simulation run of a musical multi robot collective (here of size 15) entraining to achieve harmonic synchronization in the developed system. As we can see\protect\footnotemark, the robots start flashing yellow and blinking with their eyes asynchronously at first in \ref{fig:sub:illustrative_developed_system_t1}, but end up synchronized in \ref{fig:sub:illustrative_developed_system_t4}. Due to our special synchronization type being \textit{harmonic synchronization} (cf. \ref{sec:harmonic_synchrony}), as well as an implementation choice of robots only ``flashing'' or ``firing'' every other phase climax (i.e. $\phi=1$), musical robot collectives do not in fact have to all fire simultaneously in order to be harmonically synchronized, but all robots firing simultaneously is also a validly harmonically synchronized robot collective.}
   \label{fig:illustrative_developed_system}
 \end{figure}
+
+\footnotetext{See video at \url{https://drive.google.com/file/d/1i_GqeDZidn7s15Fq44bkhAm_hJGBoOfx/view?usp=sharing} (accessed 2022.05.26)} % \tcol{
+
 
 
 
@@ -38,24 +56,22 @@
 
 % Introducing challenges concerning knowledge and communication in (autonomous) computing systems given extreme and challenging environments:
 
-Engineering a computing system for a certain environment often requires some knowledge of said environment; both on the end of the system-creator, as well as for the computing system in turn. This is at least the case in autonomous computing, where computing systems are supposed to be able to observe, learn, adapt, and act on their own, independently from their creator.
+Engineering a computing system for a certain environment often requires some knowledge of said environment; both on the end of the system-creator, as well as for the computing system in turn. This knowledge will then have to be used in the environment the computing system is situated in, in all the situations and possible states the system can be in during its lifetime. However, foreseeing and predicting, at design-time, all possible future states and scenarios a computing system will be in during its lifetime is often hard, and sometimes impossible (in the case of coincidental faults e.g.). Increasingly extreme, complex, dynamic, and ever-changing environments, simply enlargens this challenge.
 
-Foreseeing and predicting all possible (future) states and scenarios a computing system will face during its lifetime, in often extreme and complex, dynamic and ever-changing environments, at design-time is often hard, and sometimes impossible (in the case of coincidental faults e.g.). This calls for online and continuous learning at run time. If one wants to achieve coordination and continuous adaptation of a system or of system components (for example in a collective), some sort of intelligence might be necessary to endow it with.
-
-Furthermore, extreme challenges and physical barriers within communication between decentralized and mobile robots and its human operator, like too large latencies, bottlenecks presented by using the same limited bandwidths, short possible ranges, or the inability to use global satellite systems e.g. in underwater vehicles \cite{petillot_underwater_robots}, leads to the necessity of enabling systems to autonomously and online control themselves and perform missions without communication from remote operators like humans. Hence, technological development and research has e.g. within underwater robotics gone from enabling remotely operated vehicles (ROVs) in the 1980s (for e.g. oil and gas exploitation at depths unreachable to human divers), over to more self adaptive and autonomous underwater vehicles (AUVs) closer to in the 21st century —the demand of which is expected to grow 37\% in the 2018-2022 period \cite{petillot_underwater_robots}. As a result, the underwater robots can in this instance thus, due to the increased degree of autonomy and consequently implicit reduction in communication need, travel on its own on even longer and extensive missions without the need for a live connection to any human operator—e.g. on seabed mapping missions, underwater machinery or structure maintenance, as well as seabed cleaning.
+Extreme challenges and physical barriers within communication between decentralized and mobile robots and its human operator, like too large latencies, bottlenecks presented by using the same limited bandwidths, short possible ranges, or the inability to use global satellite systems e.g. in underwater vehicles \cite{petillot_underwater_robots}, leads to the necessity of enabling systems to autonomously and online control themselves and perform missions without communication from remote operators like humans. This calls for online and continuous learning at run time, where computing systems are themselves able to observe, learn, adapt, and act on their own, independently from their creator; \textit{autonomic computing} that is. Hence, technological development and research has e.g. within underwater robotics gone from enabling remotely operated vehicles (ROVs) in the 1980s (for e.g. oil and gas exploitation at depths unreachable to human divers), over to more self adaptive and autonomous underwater vehicles (AUVs) closer to in the 21st century —the demand of which is expected to grow 37\% in the 2018-2022 period \cite{petillot_underwater_robots}. As a result, the underwater robots can in this instance thus, due to the increased degree of autonomy and consequently implicit reduction in communication need, travel on its own on even longer and extensive missions without the need for a live connection to any human operator—e.g. on seabed mapping missions, underwater machinery or structure maintenance, as well as seabed cleaning.
 
 % Transitioning from autonomous agents to synchronizing oscillators:
 
 However, and especially within collectives of multiple robots \cite{cocoro, swarm_bot}, communication between individuals—even though they might be autonomous individual robots—is still a challenge one has to deal with when designing them. Coordination, for humans and robots alike, often tend to demand a lot of communication. To add on top of this, when networks or collectives of sub-systems like wireless sensors are communicating with each other, they often have their own internal clock which often do not align. Hence, we see that both the magnitude of communication needed, as well as the inherent challenges with communication, call for effective approaches to communication with coordination as the goal.
 
-As K. Konishi \& H. Kokame points out, one technical problem in e.g. wireless sensor networks is that each sensor node rely on accurate internal and synchronized clocks, especially from the perspective of sensor fusion and coordinating communication among nodes \cite{konishi_kokame}. Thus, time synchronization becomes recognized as one of the crucial problems in distributed and wireless systems \cite{tungvinte_sync_protocols}. Various attempts at synchronizing messages and communication, in order to e.g. align messages exchanged at unsynchronized intervals, has been made \cite{tungvinte_sync_protocols}; however, such attempts and protocols often require the computation of message exchange and processing, which wastes the limited computation capability of nodes and causes communication delays \cite{konishi_kokame}. To this, Konishi \& Kokame also point out how for synchronized pulse coupled oscillators (PCOs), such computation is not required. If internal clocks in communicating nodes are instead altered and synchronized to other nodes's clocks—instead of letting all clocks stay unsynchronized and constantly trying to compensate for this— it is rather apparent that getting rid of this need for compensation will considerably reduce computation needs while synchronized communication is still achieved.
+As K. Konishi \& H. Kokame \cite{konishi_kokame} points out, one technical problem in e.g. wireless sensor networks is that each sensor node rely on accurate internal and synchronized clocks, especially from the perspective of sensor fusion and coordinating communication among nodes. Thus, time synchronization becomes recognized as one of the crucial problems in distributed and wireless systems \cite{tungvinte_sync_protocols}. Various attempts at synchronizing messages and communication, in order to e.g. align messages exchanged at unsynchronized intervals, have been made \cite{tungvinte_sync_protocols}; however, such attempts and protocols often require the computation of message exchange and processing, which wastes the limited computation capability of nodes and causes communication delays. To this, Konishi \& Kokame \cite{konishi_kokame} also point out how for synchronized pulse coupled oscillators (PCOs), such computation is not required. If internal clocks in communicating nodes are instead altered and synchronized to other nodes's clocks—instead of letting all clocks stay unsynchronized and constantly trying to compensate for this— it is rather apparent that getting rid of this need for compensation will considerably reduce computation needs while synchronized communication is still achieved.
 
 Thus, by achieving time synchronization \cite{tungvinte_sync_protocols} through synchronizing pulse coupled oscillators, both the computational load, in addition to the need for communication, is considerably reduced; hence freeing up and saving valuable resources like e.g. processing power and energy (battery) in networks of individuals and possibly autonomous nodes, agents, or robots.
 
 
 % SA + decentralized and autonomous (musical) robots / agents + Oscillator sync = <3 :
 
-Self-awareness concepts from psychology are inspiring new approaches for engineering computing systems which operate in complex dynamic environments \cite{sacs16_ch2}. As we can see in various Music Technology Systems, this endowing can also give rise to interesting cooperative and coordinating behaviour.
+On another hand, self-awareness concepts from psychology have given inspiring new approaches for engineering computing systems which operate in complex dynamic environments \cite{sacs16_ch2}. As we can see in various Music Technology Systems, this endowing can also give rise to interesting cooperative and coordinating behaviour.
 
 With self awareness, online and continuous learning is achieved to a higher degree in contrast with other approaches (like ODA and MAPE-K), due to the limitations and downsides of these older approaches, as well as the advantages and upsides to considering computational self-awareness in computing systems. If one wants to achieve continuous adaptation of a system or of system-components (e.g. in a collective) — some sort of intelligence might be necessary to endow it with. Endowing computing systems with Self-Awareness can be beneficial in several respects, including but not limited to a greater capacity to adapt, to build potential for future adaptation in unknown environments, and to explain their behaviour to humans and other systems \cite{sacs17_ch3}.
 
@@ -77,15 +93,15 @@ With that, the following research questions is thus introduced, with the hope of
 
 \textbf{Research Question 1}:
 
-Will increased levels or degrees of computational self awareness in individual musical robots lead to the larger musical collective being able to achieve its musical collective task—being (\textit{harmonic}) synchronization—faster than with lower levels or degrees of computational self-awareness? \nl
+To what extent will increased levels or degrees of computational self awareness in individual musical robots lead to the larger musical collective being able to achieve its musical collective task—being (\textit{harmonic}) synchronization—faster compared to with lower levels or degrees of computational self-awareness? \nl
 
 \textbf{Research question 2}:
 
-Can harmonic synchronization performance in a musical robot collective be maintained despite lower degrees or levels of computational self awareness? \nl
+To what extent can harmonic synchronization performance in a musical robot collectives be maintained despite lower degrees or levels of computational self awareness? \nl
 
 \textbf{Research Question 3}:
 
-Will increased levels of self-awareness lead to more robustness and flexibility in terms of handling environmental noise and other uncertainties — specifically in the continued ability of musical robots to synchronize to each other efficiently despite these difficulties/challenges? \nl
+To what degree will increased levels of self-awareness lead to more robustness and flexibility in terms of handling environmental noise and other uncertainties; specifically in the continued ability of musical robots to synchronize to each other efficiently despite these difficult challenges? \nl
 
 % --- \section END. ---
 
@@ -107,10 +123,8 @@ Finally, results found in Chapter \ref{chap:experiments_and_results} will be dis
 
 \section{Contributions}
 
-The main contributions this thesis work has led to is firstly that a novel synchronization simulator has been created and developed in Unity, where various and customly made synchronization methods can be implemented in a robot collective (either homogenously but also heterogenously in each robot); as well as that users of the simulator can both see and hear the robots's interactions and entrainment towards synchrony (including whether they manage to finally achieve synchrony, and in that case how long it takes them to get there). This novel framework opens, for everyone interested in it, for the possibility of experimenting with creative and novel synchronization-methods, in order to qualitatively and quantitatively assess their efficiency at achieving synchrony. A reason for this is due to the seamless scalability and dynamism, both in terms of robot-collective size, heterogenous or homogenous agents, as well as how a new update-function (for both phase updating and frequency updating) can so easily be added in and coded with a couple of lines.
+The main contribution this thesis work has led to is the design, implementation, and testing of a novel synchronization simulator for musical robots modelled as oscillators, which is further explained in \ref{sec:developed_system}. In said synchronization simulator, synchronization methods (for both oscillator phases $\phi$ and frequencies $\omega$), collective properties of the musical robots, as well as individual properties and hyperparameters in musical robots (hence enabling heterogenous robots), can all be experimentally altered. The resulting synchronization process, including all the musical robots's interactions and entrainment towards harmonic synchrony, can then be visually seen and heard in real-time, as well as thoroughly analyzed using simple plotting scripts after simulation runs have ended. Hence, a rich exploration space—more than able to be further expanded and built upon—and testbed for achieving (\textit{harmonic}) synchronization is opened up to all that are interested in exploring it and have a GitHub account. Furthermore, the synchronization results and performance of said explorations are easily visualized and heard. This then democratically enables for the open access to experimentation with creative and novel synchronization methods in oscillators, in order to seamlessly qualitatively and quantitatively assess their efficacy and efficiency at achieving harmonic synchrony.
 
-The developed synchronization simulator in Unity, which is open to the world and those interested in it, serves as a testbed for seeing how changes in robots synchronizing affects synchronization performance; if e.g. someone thinks they have an idea for making the robots more clever, they can easily download the Unity simulator, implement their approach, and see analytical and graphical (as well as audible) results.
-
-Differently than to earlier approaches to synchronizing pulsed coupled oscillators, and harmonically at that \cite{nymoen_synch}, the synchronization system developed in this thesis in Unity does not limit oscillator frequencies to stay within a certain range, and oscillator frequencies can both be adjusted to be larger than the max initial frequency, as well as smaller than the minimum initial frequency. In e.g. Nymoen et al.'s firefly inspired oscillator system, frequencies $\omega$ are limited to staying within the range of $[0.5Hz, 8Hz]$.
+Secondly, and differently to earlier approaches synchronizing pulsed coupled oscillators (harmonically at that \cite{nymoen_synch}), the synchronization system developed in this thesis in Unity does not limit oscillator frequencies to stay within a certain range, and oscillator frequencies can both be adjusted to be larger than the max initial frequency, as well as smaller than the minimum initial frequency. In e.g. Nymoen et al.'s firefly inspired oscillator system, frequencies $\omega$ are limited to staying within the range of $[$0.5Hz, 8Hz$]$.
 
 % --- \section END. ---

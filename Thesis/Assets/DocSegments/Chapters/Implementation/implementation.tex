@@ -29,6 +29,7 @@ First, the system and the system components will be presented and introduced. Th
 
 	% --- META INFO STOP. ---
 
+Unity\footnote{Unity Version 2021.2.0f1 is used in the developed simulator.} is originally a game development platform, but can also be used to create complex simulations containing physical rigid bodies using the \tcol{<bla.bla Rigidbody>-}physics engine.
 
 Envision that we have a decentralized (i.e. no central control) multi-agent collective scenario consisting of musical robots modelled as oscillators. These are solely communicating through brief ``fire''-like audio-signals—greatly inspired by K. Nymoen et al.'s synchronizing ``fireflies'' \cite{nymoen_synch}. They are not initially synchronized in their firing of audio-signals; but as time goes, they are entraining to synchronize to each other by adjusting their phases and frequencies when/after hearing each other's audio-/fire-signals. If they then, after some time of listening to each other and adjusting themselves accordingly, succeed in becoming synchronized — we then will eventually see ``fire''-events/-signals line up at an even underlying pulse or rhythm. Examples and demonstrations of this process are depicted in Figure \ref{fig:first_idea:first_fig} and Figure \ref{fig:first_idea:second_fig}.
 
@@ -84,6 +85,8 @@ Now, the synchrony simulator system components will be expounded and explained i
 		\begin{tabular}{p{0.25\linewidth} | p{0.7\linewidth}}
 		  \textit{\textbf{Hyperparameter}}  & \textit{\textbf{Meaning}} \\ \hline
 		  $|R|$ & Musical robot collective size, where R (as defined above) is the set of all musical robots $r_i$ , i = 1, 2, ... , $|R|$. \\ \hline
+		  $Adj_{\phi}$ & The adjustment method, or update function if you will, used for synchronizing phases $\phi$. \\ \hline
+		  $Adj_{\omega}$ & The adjustment method, or update function if you will, used for synchronizing frequencies $\omega$. \\ \hline
 		  $t_{ref} $ & The time (sim s) robots are unresponsive to adjusting themselves (as a consequence of hearing other robots firing) directly after firing themselves. \\ \hline
 		  $t_{ref}^{dyn}$ & Dynamic refractory period. Same as $t_{ref}$, only that now the refractory period is given as the percentage of robot $r_i$'s oscillator period (e.g. 10\% of $1/4Hz=0.25s$, i.e. $0.1*0.25s=25ms$, if the oscillator frequency $\omega_i=4Hz$). \\ \hline
 		  $t_f$ & Legal firing time during which robots $r_i$ are allowed to fire when being detected harmonic synchrony for. \\ \hline
@@ -127,6 +130,8 @@ Now, the synchrony simulator system components will be expounded and explained i
 	
 	\subsection{Robot communication: the ``fire''-signal}
 	\label{subsec:fire_signal}
+	
+	Signals, in various forms, are omnipresent in our world, whether we notice it or not. They are used for guidance: e.g. traffic-lights send visual light-signals to drivers to ensure traffic-flow and collision-avoidance; sirens and alarms fire away with the loudest of audio-signals (sounds) so that its listeners will get out of harms way; our nerves send pain-signals through our nervous-system if we touch something burning hot to ensure we do not damage our hand severely. If you have ever tried to make a scary sound to scare away an animal—like a cat or crow—they might in fact flee from you if they think your audible signal was scary enough for them. In this specific case, for our musical robots in the musical synchronization simulator, signals will signify calls for adjustment (of oscillator phases $\phi$ and frequencies $\omega$ to be specific).
 
 	These aforementioned audio-signals, also referred to as ``fire''-signals, ``flash''-signals, or adjust-signals, are transmitted whenever an agent's oscillator \textit{peaks} or \textit{climaxes} (i.e. after its cycle or period is finished, having phase $\phi(t)=1$) — or actually after every second \textit{peak}, as a way (discovered by K. Nymoen et al. \cite{nymoen_synch}) to attain the system target goal of \textit{harmonic synchrony}, to be elaborated upon in Section \ref{sec:harmonic_synchrony}.
 

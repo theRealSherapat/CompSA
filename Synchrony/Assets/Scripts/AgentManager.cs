@@ -74,7 +74,8 @@ public class AgentManager : MonoBehaviour {
     // 'Private variables necessary to make the cogs go around':
 
     // General Meta:
-    private string wantedHyperparamsPath = Directory.GetCurrentDirectory() + "\\" + "wantedHyperparametersForSimulationRun.csv"; // sin / con Editor
+                    // REMEMBER TO KEEP MANUALLY TRACK OF:
+    private string wantedHyperparamsPath = Directory.GetCurrentDirectory() + "\\" + "wantedHyperparametersForSimulationRunEditor.csv"; // sin / con Editor
     private static int atSimRun = 0;
     private System.Random randGen;
 

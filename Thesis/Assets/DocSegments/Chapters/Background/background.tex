@@ -269,48 +269,7 @@ The intriguing, diverse, and complex phenomena of nature have for long served as
 
 Often times, scientists have drawn inspiration from various scientific fields -- particularly different fields from ones own -- into their own field, for various reasons. Indeed, the translated concepts (from the one domain to the other) will most likely be accompanied with brand new ways to think about ones own domain, as well as other domains again interacting with it (hence having a real opportunity to start a "domino"-like chain-reaction of new ways to think about things emerging). These new ways to think about things (often in ones own domain) -- apart from being interesting and intriguing -- might be useful, both for ones own field but also for other fields again (especially if thinking long term). For example in the Multi-Agent Systems (MAS) field, it has been a common practice to study complex biological systems in nature, in order to translate these mechanisms into the technology- and engineering-domain. Such bio-inspired algorithms have been some of the most widely used optimization algorithms throughout history, with e.g. the original paper by M. Dorigo et al. for the ant colony optimization algorithm \cite{dorigo_ant_2006}, as of May 2022, having 14 743 citations on Google Scholar.
 
-From taking inspiration when designing a robot traversing one of the most challenging terrains to traverse through, granular surfaces like sand that is, from e.g. zebra-tailed lizards able to run up to 5 meters per second (normally in desert sand) \cite{sandbots}, to ... Such phenomena have been subject to considerable study and modelling—and have in fact created entire scientific fields in which principles from various science- \& engineering-dicipline are applied to the physical systems and machines having functions that mimic biological processes, as well as biological processes serving as great sources of inspiration for the engineered systems; \textit{Biomimetics}\footnote{\textit{Nature}, \url{https://www.nature.com/subjects/biomimetics} (accessed 2022.05.17)} and \textit{Bionics}, that is. One branch of these types of natural phenomena observed and studied is the biological pulse-coupled oscillators \cite{russerMinimalAssumptionsReferanser}. An example of such biological pulse-coupled oscillators found in nature is the synchronously flashing fireflies, as e.g. can be seen in a dark forest in Figure \ref{fig:synched_fireflies_phenomenon}.
-
-\begin{figure}[!ht]
-	\centering
-	\includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/Background/Figures/Photos/synchronized_fireflies_phenomenon.jpg}
-	\caption[Picture of fireflies flashing synchronously in a US National Park]{Synchronous fireflies at Congaree National Park, United States. Photo\protect\footnotemark: @columbiasc \& @\_flashnick.} % ELLER F.EKS. {Copyright ©Blabla Corporation, David Thorvaldsen}
-	\label{fig:synched_fireflies_phenomenon}
-\end{figure}
-
-\footnotetext{\url{https://avltoday.6amcity.com/synchronous-fireflies-congaree-national-park/} (accessed 2022.05.17)}
-
-This phenomenon has inspired scientists like Mirollo \& Strogatz \cite{mirollo_strogatz_PCO_synch} and in later time Kristian Nymoen et al. \cite{nymoen_synch}, to model and replicate this natural phenomenon in human-engineered systems. Given the periodic and repeating nature of the flashing/firing of the fireflies, modelling a firefly has been done by looking at each firefly as a periodic signal or oscillator. This work \cite{mirollo_strogatz_PCO_synch, nymoen_synch} then ties into the broader work on synchronizing oscillators which has been subject to study for some time now []. What separates Mirollo-Strogatz and K. Nymoen's approaches from these other and previous oscillator-synchronizing methods, is mainly that here the oscillators are \textit{pulse-coupled} (which the fireflies also can be said to be), as opposed to the more ``standard'' and constraining \textit{phase-coupled} oscillators. Additionally, K. Nymoen's approach accounts for synchronizing initially heterogenous frequencies as well.
-
-% --- \section END. ---
-
-
-
-\section{Signals and their responses}
-
-
-	% --- META INFO START: ---
-
-	\gjor{Forklare hva et signal eller et (lyd-)signal/waveform egentlig er (ift. harmonics/harmonic wave/overtones (og deres typiske integer-relationship frekvenser), og hvis tid timbre med varierende frekvenser (jf. Jay Eller hva han Andriy Burkov eller hva han het anbefalte), amplitude/gain, envelope/attack-decay)}
-
-	% --- META INFO STOP. ---
-
-
-Signals, in various forms, are omnipresent in our world, whether we notice it or not. They are used for guidance: e.g. traffic-lights send visual light-signals to drivers to ensure traffic-flow and collision-avoidance; sirens and alarms fire away with the loudest of audio-signals (sounds) so that its listeners will get out of harms way; our nerves send pain-signals through our nervous-system if we touch something burning hot to ensure we do not damage our hand severely. If you have ever tried to make a scary sound to scare away an animal—like a cat or crow—they might in fact flee from you if they think your audible signal was scary enough for them.
-
-A signal can also be called a waveform.
-
-	\subsection{Amplitude}
-	\begin{figure}[h!]
-		\centering
-		\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/Background/Figures/Illustrations/waveform.pdf}
-		\caption[An audible waveform explained.]{An audible stereo- (hence the two channels, one for each ear) waveform, being a digitally created harp-sound (as further described in \ref{subsec:fire_signal}). The more positive or negative the amplitude is, the louder the audio-signal is.}
-		\label{fig:waveform}
-	\end{figure}
-
-
-	\subsection{Frequency}
-		\subsubsection{Spectra / Spectrograms}
+From taking inspiration when designing a robot traversing one of the most challenging terrains to traverse through, granular surfaces like sand that is, from e.g. zebra-tailed lizards able to run up to 5 meters per second (normally in desert sand) \cite{sandbots}, to ... Such phenomena have been subject to considerable study and modelling—and have in fact created entire scientific fields in which principles from various science- \& engineering-dicipline are applied to the physical systems and machines having functions that mimic biological processes, as well as biological processes serving as great sources of inspiration for the engineered systems; \textit{Biomimetics}\footnote{\textit{Nature}, \url{https://www.nature.com/subjects/biomimetics} (accessed 2022.05.17)} and \textit{Bionics}, that is. One branch of these types of natural phenomena observed and studied is the biological pulse-coupled oscillators \cite{russerMinimalAssumptionsReferanser}. An example of such biological pulse-coupled oscillators found in nature is the synchronously flashing fireflies, as e.g. can be seen in a dark forest in Figure \ref{fig:synched_fireflies_phenomenon} in Chapter \ref{chap:introduction}. This phenomenon has inspired scientists like Mirollo \& Strogatz \cite{mirollo_strogatz_PCO_synch} and in later time Kristian Nymoen et al. \cite{nymoen_synch}, to model and replicate this natural phenomenon in human-engineered systems. Given the periodic and repeating nature of the flashing/firing of the fireflies, modelling a firefly has been done by looking at each firefly as a periodic signal or oscillator. This work \cite{mirollo_strogatz_PCO_synch, nymoen_synch} then ties into the broader work on synchronizing oscillators which has been subject to study for some time now []. What separates Mirollo-Strogatz and K. Nymoen's approaches from these other and previous oscillator-synchronizing methods, is mainly that here the oscillators are \textit{pulse-coupled} (which the fireflies also can be said to be), as opposed to the more ``standard'' and constraining \textit{phase-coupled} oscillators. Additionally, K. Nymoen's approach accounts for synchronizing initially heterogenous frequencies as well.
 
 % --- \section END. ---
 
