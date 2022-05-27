@@ -1,14 +1,6 @@
 \chapter{Experiments and results}
 \label{chap:experiments_and_results}
 
-
-	% --- META INFO START: ---
-
-	\besk{Gode eksperimenter som motiveres og forklares, settes opp, og utføres m/resultater man diskuterer og analyserer. Det er bra å evaluere fra flere synspunkt \tcol[gray]{med flere research methods og hvis tid}}
-
-	% --- META INFO STOP. ---
-
-
 This chapter presents the experiments set up and performed in the novel synchronization simulator in Unity, as presented in Chapter \ref{chap:implementation}, for certain configurations of musical robot collectives. Effects of the individual musical robots's hyperparameters on the collective achievement and performance of achieving harmonic synchrony are presented. Some examples are hyperparameters which determines how much each musical robot will adjust itself after hearing a transmitted fire signal from a neighbouring robot; $\alpha$ for phase adjustment and $\beta$ for frequency adjustment.
 
 The main performance scores presented in this chapter will consist of synchronization times given in simulation time (s) (i.e. how long it takes robot collectives to reach the state of harmonic synchrony if they ever do), accompanied by the respective and corresponding error rates during the belonging simulation runs (i.e. the percentage of robot collectives out of e.g. 30 runs failing to reach harmonic synchrony before the maximum time limit of e.g. 5 simulation minutes). If a musical robot collective then never reaches the target state of harmonic synchrony within the maximum time limit, this simulation run will be regarded as a ``synchronization fail'', and we will then not regard its termination time (in simulation time seconds) as \textit{harmonic synchronization time}—but simply that, that simulation run's termination time.
@@ -17,14 +9,49 @@ As previously mentioned, relating to the different robot colors like turquoise, 
 
 
 
-\section{Data visualization}
+\section{Data visualization for simulation runs}
 
 	% --- META INFO START: ---
 
-	\besk{Der jeg forklarer SimRun-plotsa mine som analyserer synkroniseringsruns, som jeg kun skal bruke samlet med screenshots av synkroniseringsruns før vs. etter én gang for 1) Phase sync og 2) Phase and frequency sync, og ellers bare evt. (sub-)plots av dersom det er hensiktsmessig og ikke overflødig og rotete}
+	\besk{Der jeg forklarer SimRun-plotsa mine som jeg kun skal bruke samlet med screenshots av synkroniseringsruns før vs. etter én gang for 1) Phase sync og 2) Phase and frequency sync, og ellers bare evt. (sub-)plots av dersom det er hensiktsmessig og ikke overflødig og rotete}
 
 	% --- META INFO STOP. ---
 
+In order to see what is hidden under the hood of the simulation throughout the entire simulation run, certain central collective and individual robot values (e.g. each robots's oscillator phases $\phi$ and frequencies $\omega$) are saved to .CSV files. Followingly, these values are easily plotted for simulation time (s) with simple Python scripts after the synchronization simulation has terminated. These \textit{simulation run plots}, analyzing individual synchronization simulation runs, are now presented and explained.
+
+	\subsection{Phase plot}
+	\gjor{ FYLL INN }
+
+
+	\subsection{Frequency plot}
+	\begin{figure}
+		\centering
+		\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/Explanations/FrequencySynchronizationPlot.pdf}
+		\caption[Simulation run plot: frequency plot.]{Frequency synchronization for five robots in a Unity synchronization simulation run achieving harmonic synchrony after 30 seconds. Note how the legal harmonic frequencies (dashed gray lines) are defined by the lowest—fundamental—frequency $\omega_0$ in the robot collective fluctuating slightly below 1Hz, correctly leading to the legal frequencies right below 2 and 4 Hz.}
+		\label{fig:frequency_synch}
+	\end{figure}
+
+
+	\subsection{Harmonic synchrony detection plot}
+	\begin{figure}
+		\centering
+		\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/Explanations/HarmonicSynchronyDetectionPlot.pdf}
+		\caption[Simulation run plot: harmonic synchrony detection plot.]{\textbf{Harmonic synchrony detection plot}: recording a detection of harmonic synchrony. The steps and events of \textbf{I)} through \textbf{VII)} can also be seen commented in pseudocode []. \tcol[red]{Initial red area represents the ``start-up''-period where no (gray) $t_q$-value is defined yet. \textbf{I)} First robot firing, initiating a process of defining such a ``silent'' time-window $t_q$ within which no nodes are allowed to fire, and a whole ``legal-firing'' $t_f$-window (here shaded in white and only 80ms long, as in \cite{nymoen_synch}) ensues. \textbf{II)} At least one robot firing, and with their firing-time(s) giving us the \textit{early $t_q$-defining} time-value (see schema below), as well as triggering second whole $t_f$-window to ensue. \textbf{III)} At least one robot firing after the \textit{early $t_q$-defining} time-value was found, hence (with their firing-time(s)) giving us the \textit{late $t_q$-defining} time-value right before using these when finishing the on-started process of defining the ``silent'' time-window $t_q$; triggering a half (due to stabilization purposes by future centering of fire-events) $t_f$-window to ensue. \textbf{IV)} A robot is caught firing illegally during a ``silent'' $t_q$-window and hence resets the \textit{towards\_k\_counter}-variable, as well as (re-) starts a process like in \textbf{I)} for (re-) defining a new $t_q$-value. \textbf{V)} Firing after this point only happens during short ``legal-firing'' $t_f$-windows, so \textbf{Condition 1} (cf. \ref{subsec:harmonic_synchrony}) is held. \textbf{VI)} All robots have fired at least once during the evaluation-period, so \textbf{Condition 2} is held. \textbf{VII)} The robot collective has fired legally and evenly, without resetting $t_q$, $k$ (equal to 8 in this case) times in a row, so \textbf{Condition 3} is fulfilled — and harmonic synchrony is thus achieved and detected after 21.9 seconds of synchronization.}}
+		\label{fig:harmonic_synchrony_detection_plot}
+	\end{figure}
+
+
+	\subsection{Harmonic synchrony evolution plot}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.85\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/Explanations/SynchronyEvolutionPlot.pdf}
+		\caption[Simulation run plot: harmonic synchrony evolution plot.]{A \textbf{synchrony evolution plot}, displaying the temporal recording of the \textit{towards\_k\_counter} variable throughout a synchrony simulation-run in Unity. The counter is incremented as the robot collective fires evenly within `legal' $t_f$ windows, and is conversely reset to 0 if illegal firings during `silent' $t_q$ windows are heard.}
+		\label{fig:harmonic_synch_evolution}
+	\end{figure}
+
+	\tcol[red]{Note that in this specific simulation run above, the agents were on their way to achieve harmonic synchrony five times before the 10th second of the synchronization-simulation already, but since one or more of them fired `illegally' (i.e. inside a $t_q$-window), they were consequently `punished'—or rather deemed `not synchronized enough yet'—by getting their counter reset to 0. Eventually however,  through further phase- \& frequency-synchronization, the multi robot collective was in this case after 12.5 seconds able to achieve harmonic synchrony, when \textit{towards\_k\_counter} became equal to $k$, as well as all other requirements for achieving \textit{harmonic synchrony} was met. Note that this gives us a sense of how synchronized the robot collective is over time; the more even beats the robots have in a row, the more synchronized they are.}
+
+	
 
 \section{Phase synchronization}
 \label{sec:phase_sync}
@@ -38,7 +65,7 @@ $Adj_\phi$ & $Adj_\omega$ \\
 Mirollo \& Strogatz & None  \\
 \hline
 \end{tabular}
-\captionof{table}{Phase synchronization experiments hyperparameter setup.}
+\captionof{table}{Hyperparameter setup for phase ($\phi$) synchronization experiments.}
 \label{tab:phase_sync}
 \end{center}
 
@@ -47,6 +74,53 @@ Mirollo \& Strogatz & None  \\
 	To see that synchronization is actually happening like intended, some relevant quantities and simulation values are recorded for a phase synchronization simulation run in Unity and displayed in \ref{}.
 	
 	\tcol[blue]{FYLL INN.}
+		% MATS:
+	% \begin{figure}[ht!]
+	% \centering
+		% \begin{subfigure}[t]{.5\textwidth}
+			% \centering\captionsetup{width=.9\linewidth}%
+			% \includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Simulations/squiggles_unsynched_in_simulation.jpg}
+			% \caption{Screenshot from the very beginning of a Synchronization-simulation.}
+			% \label{fig:first_idea:second_fig:unsynched}
+		% \end{subfigure}%
+		% \begin{subfigure}[t]{.5\textwidth}
+			% \centering\captionsetup{width=.9\linewidth}%
+			% \includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Simulations/squiggles_synched_in_simulation.jpg}
+			% \caption{Screenshot from the same Synchronization-simulation as in \ref{fig:first_idea:second_fig:unsynched}, a few moments later.}
+			% \label{fig:first_idea:second_fig:synched}
+		% \end{subfigure}
+	% \caption[Synchronization-example/-screenshots from simulation in Unity]{From simulation: An example of the system target goal of harmonic synchrony being achieved in a musical robot collective, where oscillator-frequencies $\omega$ are constant and equal (1Hz), or in other words synchronized already, but oscillator-phases $\phi$ are unsynchronized and initially uniformly random numbers $\in [0,1]$. \nl
+	% At first in \ref{fig:first_idea:second_fig:unsynched}, we see the agents firing, i.e. blinking with their eyes and turning their body yellow, asynchronously at first. Only two robots, one with pink and one with red tentacles, fire synchronously so far. Seconds later in \ref{fig:first_idea:second_fig:synched}, after having listened to each others's adjustment-signals and adjusted themselves accordingly, all agents now fire simultaneously and synchronously.}
+	% \label{fig:first_idea:second_fig}
+	% \end{figure}
+	
+	
+		\subsubsection{Verifying Mirollo-Strogatz's phase-adjustment} % used '-adjustment' before
+		
+		Mirollo-Strogatz's approach for synchronizing phases in oscillators, as introduced in \ref{mirollo_strogatz_phase_adjust}, is implemented in the Unity simulator, and each agent is endowed with \textbf{phase update function \eqref{strog_phase}} with which they adjust themselves according to when perceiving a ``fire''-signal as described above.
+		
+		The verification that this works in the newly built synchronization-simulator was performed by dumping all agents's phase-values $\phi(t)$ during simulation-runs. A plot of these $\phi(t)$-values, evolving through simulation-time in seconds, is shown in Figure \ref{fig:strog_phase}.
+		
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/Validations/MirolloStrogatzPhaseAdjustmentSecondTry.pdf}
+			\caption[Illustration of Mirollo \& Strogatz's ``standard'' phase adjustment ($Adj_{\phi}$) method.]{``Standard'' phase adjustment with Mirollo-Strogatz's approach}
+			\label{fig:strog_phase}
+		\end{figure}
+		
+		
+		\subsubsection{Verifying Nymoen's bi-directional phase adjustment} % used 'Shifts' before
+		
+		Nymoen's approach for synchronizing phases in oscillators, as introduced in Section \ref{nymoen_phase_adjust}, is implemented in Unity, and each agent is endowed with \textbf{phase update function \eqref{nymoen_phase}} with which they adjust themselves according to when perceiving a ``fire''-event as described above.
+		
+		The verification that this works in the newly set-up simulator-environment was performed by analysing carefully all the agents's phase-values $\phi(t)$ throughout a simulation-run. Such an analysis/plot can be seen in Figure \ref{fig:nymoen_phase}.
+		
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/Validations/KNymoenPhaseAdjustmentSecondTry.pdf}
+			\caption[Illustration of Nymoen's bi-directional phase adjustment ($Adj_{\phi}$) method.]{Bi-directional phase-adjustment with Nymoen's approach}
+			\label{fig:nymoen_phase}
+		\end{figure}
 	
 	\subsection{Reproducing baseline results}
 	
@@ -64,7 +138,7 @@ Mirollo \& Strogatz & None  \\
 		6 & 0 & 50ms & 80ms & 8 & 5min \\
 		\hline
 		\end{tabular}
-		\captionof{table}{Experiment hyperparameter setup.}
+		\captionof{table}{Hyperparameter setup for $\phi$ synchronization baseline reproduction experiment.}
 		\label{tab:baseline_reproducing_phase_sync_for_alpha}
 		\end{center}
 		
@@ -73,7 +147,7 @@ Mirollo \& Strogatz & None  \\
 		\begin{figure}[ht!]
 			\centering
 			\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/baseline_reproducing_phase_sync_for_alpha.pdf}
-			\caption{Harmonic synchronization times (s) for 6 robots with initially random and unsynchronized phases but equal and fixed frequencies (1Hz), for varying phase coupling constants $\alpha$. 30 simulation runs per $\alpha$ are reported.}
+			\caption[Experiment results for $\phi$ synchronization baseline reproduction experiment.]{Harmonic synchronization times (s) for 6 robots with initially random and unsynchronized phases but equal and fixed frequencies (1Hz), for varying phase coupling constants $\alpha$. 30 simulation runs per $\alpha$ are reported.}
 			\label{fig:baseline_reproducing_phase_sync_for_alpha}
 		\end{figure}
 		
@@ -97,7 +171,7 @@ Mirollo \& Strogatz & None  \\
 		0 & 80ms & 8 & 5min \\
 		\hline
 		\end{tabular}
-		\captionof{table}{Experiment hyperparameter setup.}
+		\captionof{table}{Hyperparameter setup for $\phi$ synchronization hyperparameter tuning experiment.}
 		\label{tab:exp_phase_sync_hyperparam_tuning}
 		\end{center}
 		
@@ -130,7 +204,7 @@ Mirollo \& Strogatz & None  \\
 			\caption{$|R|$ = 50.}
 			\label{fig:sub:t_ref_dyn_x_alpha_collsize50}
 		  \end{subfigure}
-		  \caption{Average harmonic synchronization times are plotted in errorbar plots, where the standard deviation is the error. 30 simulation runs per $\alpha$ and $t_{ref}^{dyn}$ pair are reported, unless simulation runs ended up as ``synchronization fails.''}
+		  \caption[Experiment results for $\phi$ synchronization hyperparameter tuning experiment.]{Average harmonic synchronization times are plotted in errorbar plots, where the standard deviation is the error. 30 simulation runs per $\alpha$ and $t_{ref}^{dyn}$ pair are reported, unless simulation runs ended up as ``synchronization fails.''}
 		  \label{fig:phase_sync_hyperparam_tuning_experiment}
 		\end{figure}
 		
@@ -167,7 +241,7 @@ Mirollo \& Strogatz & None  \\
 		0.8 & 0 & 10\% & 80ms & 8 & 5min \\
 		\hline
 		\end{tabular}
-		\captionof{table}{Experiment hyperparameter setup.}
+		\captionof{table}{Hyperparameter setup for comparative phase adjustment ($Adj_{\phi}$) method $\phi$ synchronization experiment.}
 		\label{tab:directional_phase_adjustment_comparison}
 		\end{center}
 		
@@ -187,7 +261,7 @@ Mirollo \& Strogatz & None  \\
 			\caption{Error rates.}
 			\label{fig:sub:directional_phase_adjustment_comparison_errorrates}
 		  \end{subfigure}
-		  \caption{Performance scores \ref{fig:sub:directional_phase_adjustment_comparison_hsynchtimes} given in average harmonic synchronization times (sim s) with standard deviation. Corresponding error rates in \ref{fig:sub:directional_phase_adjustment_comparison_errorrates} based on 30 individual runs per collective size $|R|$ for each of the two phase adjustment methods.}
+		  \caption[Experiment results for comparative phase adjustment ($Adj_{\phi}$) method $\phi$ synchronization experiment.]{Performance scores \ref{fig:sub:directional_phase_adjustment_comparison_hsynchtimes} given in average harmonic synchronization times (sim s) with standard deviation. Corresponding error rates in \ref{fig:sub:directional_phase_adjustment_comparison_errorrates} based on 30 individual runs per collective size $|R|$ for each of the two phase adjustment methods.}
 		  \label{fig:directional_phase_adjustment_comparison}
 		\end{figure}
 		
@@ -202,7 +276,7 @@ Mirollo \& Strogatz & None  \\
 		In this specific case, what this latter observation of seemingly increasing robustness given increasing collective sizes $|R|$ points to is perhaps that the system's robustness and stability is increasing as collective size increases—being a strength classically advocated for in the multi agent systems and swarm systems literature []; as well as being found in e.g. robustness degrees in networks where you in the one case have a single point of failure versus many redundant paths and edges between your nodes [].
 		
 		As we see, the synchronization simulator in Unity is able to synchronize with a lot of agents, still without having broken the simulation yet. Comparatively, Nymoen et al. \cite{nymoen_synch} only experimented with 6 oscillator nodes in their firefly system.
-	
+
 
 	\subsection{Increasing degree of self awareness}
 	\label{exp:phasesync:increasing_SA_deg}
@@ -239,7 +313,7 @@ Mirollo \& Strogatz & None  \\
 				0.8 & 0 & 10\% & 80ms & 8 & 5min \\
 				\hline
 				\end{tabular}
-				\captionof{table}{Experiment hyperparameter setup.}
+				\captionof{table}{Hyperparameter setup for $k_s$ \textit{nearest neighbours} SA scope $\phi$ synchronization experiment.}
 				\label{tab:phase_sync_k_s_SA_scope_tuning}
 				\end{center}
 				
@@ -284,7 +358,7 @@ Mirollo \& Strogatz & None  \\
 
 \section{Phase and frequency synchronization}
 \label{sec:phase_and_freq_sync_experiments}
-This is the section for the experiments attempting to synchronize for the second and harder problem of synchronizing both phases $\phi_i$, as well as frequencies $\omega_i$, for all agents $i$. These are then experiments where all musical robots originally have unequal and ever-changing phases  and frequencies, adjusting both phases and frequencies in order to entrain to synchronize their phases and frequencies until reaching harmonic synchrony. Or in other words, all experiments in this phase and frequency synchronization section have the two hyperparameters shown in Table \ref{tab:phase_and_freq_sync} in addition to the individual experiment hyperparameters listed.
+This is the section for the experiments attempting to synchronize for the second and harder problem of synchronizing both phases $\phi_i$, as well as frequencies $\omega_i$, for all agents $i$. These are then experiments where all musical robots originally have unequal and ever-changing phases and frequencies, adjusting both phases and frequencies in order to entrain to synchronize their phases and frequencies until reaching harmonic synchrony. Or in other words, all experiments in this phase and frequency synchronization section have the two hyperparameters shown in Table \ref{tab:phase_and_freq_sync} in addition to the individual experiment hyperparameters listed; simply reflecting that in this problem we have to use both a phase adjustment ($Adj_{\phi}$) function as well as a frequency adjustment ($Adj_{\omega}$) function.
 
 \begin{center}
 \begin{tabular}{ |c|c|c| } 
@@ -294,10 +368,9 @@ $Adj_\phi$ & $Adj_\omega$ \\
 Nymoen & Nymoen  \\
 \hline
 \end{tabular}
-\captionof{table}{Phase and frequency synchronization experiments hyperparameter setup.}
+\captionof{table}{Hyperparameter setup for phase and frequency ($\phi$ \& $\omega$) synchronization experiments.}
 \label{tab:phase_and_freq_sync}
 \end{center}
-
 
 
 	\subsection{Initial validation}
@@ -308,18 +381,18 @@ Nymoen & Nymoen  \\
 	
 
 	\subsection{Reproducing baseline results}
-	Again, we want to here see whether we get more or less the same results in the Unity simulator as K. Nymoen et al. get in their firefly oscillator system.
+	Again, we want to here see whether we get more or less the same results in the Unity simulator as Nymoen get in their firefly oscillator system.
 	
-	Hence, we here present attempts made in the novel Unity synchronization simulator at recreating K. Nymoen et al.'s first results with their novel frequency synchronization method, which is utilizing, amongst other aspects, self awareness \cite{nymoen_synch}.
+	Hence, we here present attempts made in the novel Unity synchronization simulator at recreating Nymoen's first results with their novel frequency synchronization method, which is utilizing, amongst other aspects, self awareness \cite{nymoen_synch}.
 	
 		\subsubsection{Ordering by phase couplings}
 		\label{exp:phase_and_freq_baseline_reproducing_initial_phase_ordering}
 		
 			\paragraph{Experiment setup:\nl}
 			
-			Given that K. Nymoen et al. do not mention their $\beta$ value in their frequency synchronization experiment where they order for different phase coupling values $\alpha$, an \textit{empirically decent} $\beta$ value of 0.4 is chosen for this experiment. What \textit{empirically decent} refers to in this case are K. Nymoen et al.'s findings in the results of their last experiment \cite{nymoen_synch} where synchronization times for various $\beta$ values were evaluated; deeming $\beta=0.4$ to be a good value, with no further improvement in synchronization performance when $\beta$ is increased further.
+			Given that Nymoen do not mention their $\beta$ value in their frequency synchronization experiment where they order for different phase coupling values $\alpha$, an \textit{empirically decent} $\beta$ value of 0.4 is chosen for this experiment. What \textit{empirically decent} refers to in this case are Nymoen's findings in the results of their last experiment \cite{nymoen_synch} where synchronization times for various $\beta$ values were evaluated; deeming $\beta=0.4$ to be a good value, with no further improvement in synchronization performance when $\beta$ is increased further.
 			
-			Here, K. Nymoen et al.'s self aware frequency adjustment method, implemented in our novel synchrony simulator in Unity, is experimented with for varying phase coupling constants $\alpha$. This time not only oscillator phases are initially unsynchronized; oscillator frequencies are also unsynchronized to begin with. Hence, we here try to synchronize our musical robots in the phase ($\phi$) \textit{and} frequency ($\omega$) synchronization problem, using Nymoen's phase adjustment method to synchronize phases, as well as Nymoen's frequency adjustment method to synchronize frequencies. See set up hyperparameters in Table \ref{tab:baseline_reproducing_phase_and_freq_sync_for_alpha}. See the results in Figure \ref{fig:baseline_reproducing_phase_and_freq_sync_for_alpha}.
+			Here, Nymoen's self aware frequency adjustment method, implemented in our novel synchrony simulator in Unity, is experimented with for varying phase coupling constants $\alpha$. This time not only oscillator phases are initially unsynchronized; oscillator frequencies are also unsynchronized to begin with. Hence, we here try to synchronize our musical robots in the phase ($\phi$) \textit{and} frequency ($\omega$) synchronization problem, using Nymoen's phase adjustment method to synchronize phases, as well as Nymoen's frequency adjustment method to synchronize frequencies. See set up hyperparameters in Table \ref{tab:baseline_reproducing_phase_and_freq_sync_for_alpha}. See the results in Figure \ref{fig:baseline_reproducing_phase_and_freq_sync_for_alpha}.
 			
 			\begin{center}
 			\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c| } 
@@ -329,7 +402,7 @@ Nymoen & Nymoen  \\
 			6 & 0.4 & 0.5Hz & 4Hz & 5 & 50ms & 80ms & 8 & 5min \\
 			\hline
 			\end{tabular}
-			\captionof{table}{Experiment hyperparameter setup.}
+			\captionof{table}{Hyperparameter setup for first $\phi$ \& $\omega$ synchronization baseline reproduction experiment.}
 			\label{tab:baseline_reproducing_phase_and_freq_sync_for_alpha}
 			\end{center}
 			
@@ -338,7 +411,7 @@ Nymoen & Nymoen  \\
 			\begin{figure}[ht!]
 				\centering
 				\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/baseline_reproducing_phase_and_freq_sync_for_alpha.pdf}
-				\caption{Harmonic synchronization times (sim s) for 6 robots with both initially unsynchronized phases \textit{and} frequencies, for varying phase coupling constants $\alpha$, reaching harmonic synchrony—but also often failing to. 30 simulation runs per $\alpha$ are reported.}
+				\caption[Experiment results for first $\phi$ \& $\omega$ synchronization baseline reproduction experiment.]{Harmonic synchronization times (sim s) for 6 robots with both initially unsynchronized phases \textit{and} frequencies, for varying phase coupling constants $\alpha$, reaching harmonic synchrony—but also often failing to. 30 simulation runs per $\alpha$ are reported.}
 				\label{fig:baseline_reproducing_phase_and_freq_sync_for_alpha}
 			\end{figure}
 			
@@ -365,7 +438,7 @@ Nymoen & Nymoen  \\
 			3 & 0.6 & 0.5Hz & 4Hz & 5 & 50ms & 80ms & 8 & 5min \\
 			\hline
 			\end{tabular}
-			\captionof{table}{Experiment hyperparameter setup.}
+			\captionof{table}{Hyperparameter setup for $\phi$ \& $\omega$ synchronization baseline reproduction and stabilization experiment.}
 			\label{tab:stable_baseline_reproducing_phase_and_freq_sync_for_alpha}
 			\end{center}
 			
@@ -374,7 +447,7 @@ Nymoen & Nymoen  \\
 			\begin{figure}[ht!]
 				\centering
 				\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/stable_baseline_reproducing_phase_and_freq_sync_for_alpha.pdf}
-				\caption{Harmonic synchronization times (sim s) for 3 robots with both initially unsynchronized phases \textit{and} frequencies for varying phase coupling constants $\alpha$. 30 simulation runs per $\alpha$ are reported.}
+				\caption[Experiment results for $\phi$ \& $\omega$ synchronization baseline reproduction and stabilization experiment.]{Harmonic synchronization times (sim s) for 3 robots with both initially unsynchronized phases \textit{and} frequencies for varying phase coupling constants $\alpha$. 30 simulation runs per $\alpha$ are reported.}
 				\label{fig:stable_baseline_reproducing_phase_and_freq_sync_for_alpha}
 			\end{figure}
 			
@@ -401,7 +474,7 @@ Nymoen & Nymoen  \\
 		6 & 0.2 & 0.5Hz & 4Hz & 5 & 50ms & 80ms & 8 & 5min \\
 		\hline
 		\end{tabular}
-		\captionof{table}{Experiment hyperparameter setup.}
+		\captionof{table}{Hyperparameter setup for second $\phi$ \& $\omega$ synchronization baseline reproduction experiment.}
 		\label{tab:baseline_reproducing_phase_and_freq_sync_for_beta}
 		\end{center}
 		
@@ -410,7 +483,7 @@ Nymoen & Nymoen  \\
 		\begin{figure}[ht!]
 			\centering
 			\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/baseline_reproducing_phase_and_freq_sync_for_beta.pdf}
-			\caption{Synchronization times (s) for 6 robots with both initially random and unsynchronized phases, and frequencies, for varying frequency coupling constants $\beta$. 30 simulation runs per $\beta$ are reported.}
+			\caption[Experiment results for second $\phi$ \& $\omega$ synchronization baseline reproduction experiment.]{Synchronization times (s) for 6 robots with both initially random and unsynchronized phases, and frequencies, for varying frequency coupling constants $\beta$. 30 simulation runs per $\beta$ are reported.}
 			\label{fig:baseline_reproducing_phase_and_freq_sync_for_beta}
 		\end{figure}
 		
@@ -451,7 +524,7 @@ Nymoen & Nymoen  \\
 				0.2 & 0.7 & 10\% & 80ms & 8 & 5min \\
 				\hline
 				\end{tabular}
-				\captionof{table}{Experiment hyperparameter setup.}
+				\captionof{table}{Hyperparameter setup for $k_s$ \textit{nearest neighbours} SA scope $\phi$ \& $\omega$ synchronization experiment.}
 				\label{tab:phase_and_freq_sync_k_s_SA_scope_tuning}
 				\end{center}
 

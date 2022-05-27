@@ -4,63 +4,35 @@
 
 	% --- META INFO START: ---
 
-	\besk{ What I've done / developed }
+	\besk{ What \textbf{*I*}'ve done / developed }
 
-	\besk{ Her presenterer jeg re-implementasjonen / etterlikningen / implementasjonsspesifikke valg av K. Nymoens approach og teori i det nye systemet / simulatoren min i Unity — samt hvordan jeg har verifisert at mekanismene fungerer (e.g. fase-synkroniseringsplott) }
+	\besk{ Her presenterer jeg det ny-utviklede systemet mitt / simulatoren min i Unity, og re-implementasjonene av noen allerede-eksisterende synkroniseringsmetoder som er eksperimentert med i neste kapittel }
+	
+	\gjor{ Argumentér for og motivér implementasjonsspesifikke valg }
 	
 	% --- META INFO STOP. ---
 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Illustrations/schematic_initial_idea.pdf}
+	\caption[Schema of the developed musical multi robot collective.]{Schema: the musical robot collective entraining to synchronize to each other, or more specifically to achieve harmonic synchronization, through performing phase \& frequency adjustments. Robots that are not firing at the moment will adjust themselves after hearing a transmitted ``fire'' / adjustment signal from a neighbouring firing robot.}
+	\label{fig:first_idea:first_fig}
+\end{figure}
 
-This chapter gives an overview of the developed musical multi-robot system, methods implemented for it, as well as the performance measurement used to evaluate these methods with. The main goal of the implemented system is to allow for individual musical agents in a musical multi-agent collective to interact with each other, in order to achieve emergent and co-ordinating behaviour—in our case synchronization—with varying degrees of self-awareness, collective-sizes, and of difficulty and certainty in the environment and communication. More specifically, the goal with the design is to enable the robot collective to achieve so-called \textit{harmonic synchronization} within a relatively short time. Exactly what is meant by \textit{harmonic synchronization} will be expounded in Section \ref{sec:harmonic_synchrony}.
+Envision a decentralized (i.e. no central control) multi-agent collective scenario consisting of musical robots modelled as oscillators. These are solely communicating through brief ``fire''-like audio-signals—greatly inspired by K. Nymoen et al.'s synchronizing ``fireflies'' \cite{nymoen_synch}. They are not initially synchronized in their firing of audio-signals; but as time goes, they are entraining to synchronize to each other by adjusting their phases and frequencies when/after hearing each other's audio-/fire signals. If they then, after some time of listening to each other and adjusting themselves accordingly, succeed in becoming synchronized — we then will eventually see ``fire''-events/-signals line up at an even underlying pulse or rhythm. Examples and demonstrations of this process are depicted in Figure \ref{fig:first_idea:first_fig} as well as in Figure \ref{fig:illustrative_developed_system} in Chapter \ref{chap:introduction}.
+
+This chapter gives an overview of the developed musical multi-robot system, methods implemented for it, as well as the performance measurement used to evaluate these methods with. The main goal of the implemented system is to allow for individual musical agents in a musical multi-agent collective to interact with each other, in order to achieve emergent and co-ordinating behaviour—in our case synchronization—with varying degrees of self-awareness, collective-sizes, and of difficulty and certainty in the environment and communication. More specifically, the goal with the design is to enable the robot collective to achieve so-called \textit{harmonic synchronization} (cf. \ref{sec:harmonic_synchrony}) within a relatively short time. Exactly what is meant by \textit{harmonic synchronization} will be expounded in Section \ref{sec:harmonic_synchrony}.
 
 These goals firstly require of the agents the modelling of oscillators with their properties, like phase and frequency, as explained further in Subsection \ref{subsec:agent}. To allow for interaction and communication between the agents, mechanisms so that the agents can transmit "fire"-signals, as well as listen for other agents's "fire"-signals, is necessary as well, and is presented in Subsection \ref{subsec:fire_signal}.
 
-First, the system and the system components will be presented and introduced. Then, methods implemented for achieving the system target goal of \textit{harmonic synchrony} in various synchronization objectives—firstly solely for oscillator-phases, then secondly for both oscillator-phases and oscillator-frequencies—will be described and presented. How the system target state of harmonic synchrony is detected will then be described in Section \ref{sec:detecting_harmonic_synchrony}.
+Firstly, the newly developed synchrony simulator and its components will be presented and expounded in detail. Then, methods implemented for achieving the system target goal of \textit{harmonic synchrony} in various synchronization objectives—firstly solely for oscillator-phases, then secondly for both oscillator-phases and oscillator-frequencies—will be described and presented. How the system target state of harmonic synchrony is detected will then be described in Section \ref{sec:detecting_harmonic_synchrony}.
 
 
 
 \section{Simulator setup: the musical multi-robot collective}
 \label{sec:developed_system}
 
-
-	% --- META INFO START: ---
-
-	\besk{ Introduserer og presenterer det utviklede (simulator-)systemet og dets system-komponenter du har utviklet i Unity selv, veldig gjerne med et fint Unity-/Simulator-system-skjema }
-
-	% --- META INFO STOP. ---
-
 Unity\footnote{Unity Version 2021.2.0f1 is used in the developed simulator.} is originally a game development platform, but can also be used to create complex simulations containing physical rigid bodies using the \tcol{<bla.bla Rigidbody>-}physics engine.
-
-Envision that we have a decentralized (i.e. no central control) multi-agent collective scenario consisting of musical robots modelled as oscillators. These are solely communicating through brief ``fire''-like audio-signals—greatly inspired by K. Nymoen et al.'s synchronizing ``fireflies'' \cite{nymoen_synch}. They are not initially synchronized in their firing of audio-signals; but as time goes, they are entraining to synchronize to each other by adjusting their phases and frequencies when/after hearing each other's audio-/fire-signals. If they then, after some time of listening to each other and adjusting themselves accordingly, succeed in becoming synchronized — we then will eventually see ``fire''-events/-signals line up at an even underlying pulse or rhythm. Examples and demonstrations of this process are depicted in Figure \ref{fig:first_idea:first_fig} and Figure \ref{fig:first_idea:second_fig}.
-
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Illustrations/schematic_initial_idea.pdf}
-	\caption[Illustration/schematic of the developed multi musical robot collective/system]{Illustration/Schematic: The musical robot collective entraining to synchronize to each other, or more specifically to achieve harmonic synchronization, through performing phase- \& frequency-adjustments. Agents that are not firing at the moment will adjust themselves after hearing a transmitted ``fire''-/adjustment-signal from a neighbouring firing agent.}
-	\label{fig:first_idea:first_fig}
-\end{figure}
-
-% Second Intro-illustration figure to easily get a quick idea of what the system/design does/consists of (to be exchanged with a describing system scheme/diagram):
-\begin{figure}[ht!]
-\centering
-	\begin{subfigure}[t]{.5\textwidth}
-		\centering\captionsetup{width=.9\linewidth}%
-		\includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Simulations/squiggles_unsynched_in_simulation.jpg}
-		\caption{Screenshot from the very beginning of a Synchronization-simulation.}
-		\label{fig:first_idea:second_fig:unsynched}
-	\end{subfigure}%
-	\begin{subfigure}[t]{.5\textwidth}
-		\centering\captionsetup{width=.9\linewidth}%
-		\includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Simulations/squiggles_synched_in_simulation.jpg}
-		\caption{Screenshot from the same Synchronization-simulation as in \ref{fig:first_idea:second_fig:unsynched}, a few moments later.}
-		\label{fig:first_idea:second_fig:synched}
-	\end{subfigure}
-\caption[Synchronization-example/-screenshots from simulation in Unity]{From simulation: An example of the system target goal of harmonic synchrony being achieved in a musical robot collective, where oscillator-frequencies $\omega$ are constant and equal (1Hz), or in other words synchronized already, but oscillator-phases $\phi$ are unsynchronized and initially uniformly random numbers in the range of $[0,1]$. \nl
-At first in \ref{fig:first_idea:second_fig:unsynched}, we see the agents firing, i.e. blinking with their eyes and turning their body yellow, asynchronously at first. Only two robots, one with pink and one with red tentacles, fire synchronously so far. Seconds later in \ref{fig:first_idea:second_fig:synched}, after having listened to each others's adjustment-signals and adjusted themselves accordingly, all agents now fire simultaneously and synchronously.}
-\label{fig:first_idea:second_fig}
-\end{figure}
-
-Now, the synchrony simulator system components will be expounded and explained in detail.
 
 	\subsection{The simulator environment and its hyperparameters}
 	\label{sim_env_and_hyperparams}
@@ -158,25 +130,45 @@ Now, the synchrony simulator system components will be expounded and explained i
 		\label{human_audible_fire_signals}
 
 			\paragraph{Fire signal design}
-			The fire-signal audible to the human observer watching and listening to the musical robots synchronizing to each other should be distinct and short enough so that one can clearly distinguish between which robots are firing and when. At the same time, the firing-sounds should to the human observer not be too sharp and loud to listen to so that it is uncomfortable observing the musical robot collective. Keeping these aspects in mind, some relatively soft and pleasant firing-sounds from an instrument usually associated with harmonious music—the harp—were produced and developed for the synchronization-simulator.
+			The fire signal audible to the human observer watching and listening to the musical robots synchronizing to each other should be distinct and short enough so that one can clearly distinguish between which robots are firing and when. At the same time, the firing-sounds should to the human observer not be too sharp and loud to listen to so that it is uncomfortable observing the musical robot collective. Keeping these aspects in mind, some relatively soft and pleasant firing-sounds from an instrument usually associated with harmonious music—the harp—were produced and developed for the synchronization-simulator.
 			
-			Some manually and empirically perceived harmonious (in terms of sounding good when played together) musical tones were digitally reproduced and recorded in the form of harp-plucks. This was achieved using the music-making system and digital synthesizer LMMS, and a digital string-instrument in the form of a LMMS-plugin from DSK Music\footnote{\url{https://www.dskmusic.com/dsk-world-stringz-updated/} (accessed 2022.05.17)}. The musical tones, perceived to be harmonious when being heard simultaneously and reproduced with the digital harp instrument, were some of the very first tones perceived in the intro of Pogo's song ``Strangerous\footnote{\url{https://www.youtube.com/watch?v=cRzcsXDBn8g} (accessed 2022.05.17)}.'' One possible avenue to explore in order to find harmonious chords or tones—when played together—in a more automatic approach, live and online during simulation, is discussed in Further work in Chapter \ref{chap:conclusions}.
+			Some manually and empirically perceived harmonious (in terms of sounding good when played together) musical tones were digitally reproduced and recorded in the form of harp plucks. This was achieved using the music-making system and digital synthesizer LMMS, and a digital string-instrument in the form of a LMMS-plugin from DSK Music\footnote{\url{https://www.dskmusic.com/dsk-world-stringz-updated/} (accessed 2022.05.17)}. The musical tones, perceived to be harmonious when being heard simultaneously and reproduced with the digital harp instrument, were some of the very first tones perceived in the intro of Pogo's song ``Strangerous\footnote{\url{https://www.youtube.com/watch?v=cRzcsXDBn8g} (accessed 2022.05.17)}.'' One possible avenue to explore in order to find harmonious chords or tones—when played together—in a more automatic approach, live and online during simulation, is discussed in Further work in Chapter \ref{chap:conclusions}.
 			
-			However, the harp-sounds produced with DSK's LMMS-plugin are primarily long and constant harp-plucks, as shown in Figure \ref{fig:harp_sound}. Using such harp-plucks as a fire-sound directly can make it hard to distinguish to the human ear when multiple robots are playing these frequently and simultaneously. The harp-sounds thus need to be slightly edited—which they in our implementation were in the audio-editing program Audacity—so that the long and constant harp-pluck became more of a ``quick'' and distinguishable ``sound-bullet'' — essentially what we want in a solid ``fire''-signal sound. The ``before'' and ``after'' of such an audio-editing process is depicted in Figure \ref{fig:fire_signal_designing}. Edits performed on waveform \ref{fig:harp_sound} to obtain waveform \ref{fig:harp_fire_sound} consists of effects like ``Fade Out'' (to dampen the sound in the tail of the waveform \inkl{and get a shorter ``sustain''}, and hence obtaining a ``quicker'' sound), in the complete beginning ``Amplify'' (in order to get a as high ``attack''/max-amplitude as wanted to make the fire-sound audible enough before it quickly decays) — and obviously cutting the waveform accordingly (from where it had amplitude $\approx 0$ to the end of the waveform).
+			However, the harp-sounds produced with DSK's LMMS-plugin are primarily long and constant harp plucks, as shown in Figure \ref{fig:harp_sound}. Using such harp plucks as a fire-sound directly can make it hard to distinguish to the human ear when multiple robots are playing these frequently and simultaneously. The harp-sounds thus need to be slightly edited—which they in our implementation were in the audio-editing program Audacity—so that the long and constant harp pluck became more of a ``quick'' and distinguishable (when played often by several agents) ``sound-bullet'' — essentially what we want in a solid ``fire'' signal sound. The ``before'' and ``after'' of such an audio-editing process is depicted in Figure \ref{fig:fire_signal_designing}. Edits performed on waveform \ref{fig:harp_sound} to obtain waveform \ref{fig:harp_fire_sound} consists of effects like ``Fade Out'' (to dampen the sound in the tail of the waveform \inkl{and get a shorter ``sustain''}, and hence obtaining a ``quicker'' sound), in the complete beginning ``Amplify'' (in order to get a as high ``attack''/max-amplitude as wanted to make the fire-sound audible enough before it quickly decays) — and obviously cutting the waveform accordingly (from where it had amplitude $\approx 0$ to the end of the waveform).
 			
-			\begin{figure}
-			\begin{minipage}[c][11cm][t]{\textwidth}
-				\vspace*{\fill}
+			% \begin{figure}
+			% \begin{minipage}[c][11cm][t]{\textwidth}
+				% \vspace*{\fill}
+				% \centering
+				% \includegraphics[width=0.7\textwidth]{Assets/DocSegments/Chapters/Implementation/Figures/Illustrations/waveform_Strangerous_1_1.pdf}
+				% \subcaption{A harp-sound (stereo audio waveform).}
+				% \label{fig:harp_sound}\par\vfill
+				% \includegraphics[width=0.7\textwidth]{Assets/DocSegments/Chapters/Implementation/Figures/Illustrations/waveform_Strangerous_1_1_fire_signal.pdf}
+				% \subcaption{A fire-sound transformed/designed harp-sound.}
+				% \label{fig:harp_fire_sound}
+			% \end{minipage}
+			% \caption[Editing a long harp pluck to become a fire signal.]{Here we see the starting point and end result (before and after) of a fire-sound design process, where the longer harp-sound in \ref{fig:harp_sound} got edited and transformed into the more rapid—and amongst many other sounds like it played at the same time, more distinguishable—fire-sound in \ref{fig:harp_fire_sound}.}
+			% \label{fig:fire_signal_designing}
+			% \end{figure}
+
+			
+			\begin{figure}[ht!]
 				\centering
-				\includegraphics[width=\textwidth]{Assets/DocSegments/Chapters/Implementation/Figures/Illustrations/waveform_Strangerous_1_1.pdf}
-				\subcaption{A harp-sound (stereo audio waveform).}
-				\label{fig:harp_sound}\par\vfill
-				\includegraphics[width=\textwidth]{Assets/DocSegments/Chapters/Implementation/Figures/Illustrations/waveform_Strangerous_1_1_fire_signal.pdf}
-				\subcaption{A fire-sound transformed/designed harp-sound.}
-				\label{fig:harp_fire_sound}
-			\end{minipage}
-			\caption[Editing a long harp-pluck to become a fire-signal.]{Here we see the starting point and end result (before and after) of a fire-sound design process, where the longer harp-sound in \ref{fig:harp_sound} got edited and transformed into the more rapid—and amongst many other sounds like it played at the same time, more distinguishable—fire-sound in \ref{fig:harp_fire_sound}.}
-			\label{fig:fire_signal_designing}
+					\begin{subfigure}[t]{\textwidth}
+						\centering\captionsetup{width=.9\linewidth}%
+						\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Illustrations/waveform_Strangerous_1_1.pdf}
+						\caption{An unedited and pure harp sound (stereo audio waveform).}
+						\label{fig:sub:harp_sound}
+					\end{subfigure}
+					%
+					\begin{subfigure}[t]{\textwidth}
+						\centering\captionsetup{width=.9\linewidth}%
+						\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Illustrations/waveform_Strangerous_1_1_fire_signal.pdf}
+						\caption{The pure harp sound from \ref{fig:sub:harp_sound} transformed into a fire signal.}
+						\label{fig:sub:harp_fire_sound}
+					\end{subfigure}
+				\caption[Editing a longer and pure harp pluck to become a shorter fire signal.]{Here we see the starting point and end result of a fire sound design process, where the longer and pure harp sound in \ref{fig:sub:harp_sound} got edited and transformed into the more rapid fire sound in \ref{fig:sub:harp_fire_sound}.}
+				\label{fig:fire_signal_designing}
 			\end{figure}
 
 
@@ -198,106 +190,35 @@ Now, the synchrony simulator system components will be expounded and explained i
 
 
 
-% Presenting new Methods I implemented myself for Phase-Adjustment:
 \section{Synchronizing oscillator-phases}
 \label{sec:phase_methods}
 	If we first assume constant and equal oscillator-frequencies in our agents, we can take a look at how the agents adjust their|initially random|phases in order to synchronize to each other. We will from here on and out refer to this first problem as \textbf{the $\phi$-problem}, given that the phases ($\phi_i$) for all agents $i$ are what we need to adjust and synchronize — and that frequencies ($\omega_i$) technically already are synchronized.
 	
-	The goal state of the agents is now for all agents to fire/flash simultaneously, after having started firing/flashing at random initially. Note that this is a special case of the final and ultimate goal of \textit{harmonic synchrony}. This is due to how all agents in the collective firing/flashing simultaneously, is considered having achieved harmonic synchrony since its phases would be synchronized if fire-events are lined up in even pulses, as well as all frequencies in the agent collective being within the set of ``legal'' frequencies, $\omega_{0} \cdot 2^{\mathbb{N}_0}$, where $\omega_0$ is the fundamental (smallest) frequency in the agent collective, and $0 \in \mathbb{N}_0$ — leading to $\omega_0 \cdot 2^0 = \omega_0$ to be a legal frequency, which is what all agents in our case here have as frequences.
+	Now we will see what this entails for the phases $\phi_i$ for all the oscillators in the collective. \nl
+
+	\textbf{Legal phases definition:} \nl
+
+	\tcol[blue]{FYLL INN DEN NYE MATEMATISKE BESKRIVELSEN DU KOM FRAM TIL HER OM DAGEN} \nl
 	
-	In order for the musical agents to synchronize to each other, they will have to—due to their heterogenous and randomly initialized phases—adjust or update their own phases according to some well-designed update-/adjustment-functions, as presented below.
+	\tcol{Note that this is a special case of the final and ultimate goal of \textit{harmonic synchrony}. This is due to how all agents in the collective firing/flashing simultaneously, is considered having achieved harmonic synchrony since its phases would be synchronized if fire-events are lined up in even pulses, as well as all frequencies in the agent collective being within the set of ``legal'' frequencies, $\omega_{0} \cdot 2^{\mathbb{N}_0}$, where $\omega_0$ is the fundamental (smallest) frequency in the agent collective, and $0 \in \mathbb{N}_0$ — leading to $\omega_0 \cdot 2^0 = \omega_0$ to be a legal frequency, which is what all agents in our case here have as frequences.}
 	
-	When it comes to the temporality and timing of when these updating functions are used and applied; Musical agents's phases get updated/adjusted immediately as ``fire''-/``flash''-events from neighbouring robots are perceived.
+	\tcol{In order for the musical agents to synchronize to each other, they will have to—due to their heterogenous and randomly initialized phases—adjust or update their own phases according to some well-designed update-/adjustment-functions, as presented below.}
 	
-	
-	
-	% Mirollo-Strogatz's Phase-Adjustment
-	\subsection{Verifying Mirollo-Strogatz's phase-adjustment} % used '-adjustment' before
-	
-	Mirollo-Strogatz's approach for synchronizing phases in oscillators, as introduced in \ref{mirollo_strogatz_phase_adjust}, is implemented in the Unity simulator, and each agent is endowed with \textbf{phase update function \eqref{strog_phase}} with which they adjust themselves according to when perceiving a ``fire''-signal as described above.
-	
-	The verification that this works in the newly built synchronization-simulator was performed by dumping all agents's phase-values $\phi(t)$ during simulation-runs. A plot of these $\phi(t)$-values, evolving through simulation-time in seconds, is shown in Figure \ref{fig:strog_phase}.
-	
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Illustrations/MirolloStrogatzPhaseAdjustmentSecondTry.pdf}
-		\caption[Illustration of Mirollo-Strogatz's ``standard'' phase-adjustment]{``Standard'' phase-adjustment with Mirollo-Strogatz's approach}
-		\label{fig:strog_phase}
-	\end{figure}
-	
-	
-	
-	% K. Nymoen's bi-directional phase-adjustment
-	\subsection{Verifying K. Nymoen's bi-directional phase-adjustment} % used 'Shifts' before
-	
-	K. Nymoen et al.'s approach for synchronizing phases in oscillators, as introduced in Section \ref{nymoen_phase_adjust}, is implemented in Unity, and each agent is endowed with \textbf{phase update function \eqref{nymoen_phase}} with which they adjust themselves according to when perceiving a ``fire''-event as described above.
-	
-	The verification that this works in the newly set-up simulator-environment was performed by analysing carefully all the agents's phase-values $\phi(t)$ throughout a simulation-run. Such an analysis/plot can be seen in Figure \ref{fig:nymoen_phase}.
-	
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Illustrations/KNymoenPhaseAdjustmentSecondTry.pdf}
-		\caption[Illustration of K. Nymoen's bi-directional phase-adjustment]{Bi-directional phase-adjustment with K. Nymoen et al.'s approach}
-		\label{fig:nymoen_phase}
-	\end{figure}
+	\tcol{When it comes to the temporality and timing of when these updating functions are used and applied; Musical agents's phases get updated/adjusted immediately as ``fire''-/``flash''-events from neighbouring robots are perceived.}
 	
 	
 	
 % SEKSJON 3, Presenting new methods I implemented myself for frequency-synchronization:
 \section{Synchronizing oscillator-frequencies}
 \label{sec:frequency_methods}
-	% Om Update-functions for frekvens-oppdateringene
-	When we open up for the possibility for heterogenous frequencies in our musical agent collective, we open up to exciting musical aspects like the playing of diverse rhythmic patterns as e.g. mentioned in Section \ref{sec:harmonic_synchrony}, but we then also need to not only synchronize phases, but also frequencies, simultaneously. This second problem of adjusting synchronizing both all phases $\phi_i$ and frequencies $\omega_i$, the values of which can all be heterogenous and initially random, for all agents $i$ in the agent collective — we will from here on and out refer to as \textbf{the $\phi$-\&$\omega$-problem}. This slightly more complex problem calls for us to also find solutions on how to adjust and synchronize frequencies. We already have methods by which we can adjust and synchronize the agents's phases $\phi$ with, described in Section \ref{sec:phase_methods}, but we do so-far lack methods by which we can adjust and synchronize the agents's frequencies $\omega$ with.
+
+	\tcol{When we open up for the possibility for heterogenous frequencies in our musical agent collective, we open up to exciting musical aspects like the playing of diverse rhythmic patterns as e.g. mentioned in Section \ref{sec:harmonic_synchrony}, but we then also need to not only synchronize phases, but also frequencies, simultaneously. This second problem of adjusting synchronizing both all phases $\phi_i$ and frequencies $\omega_i$, the values of which can all be heterogenous and initially random, for all agents $i$ in the agent collective — we will from here on and out refer to as \textbf{the $\phi$-\&$\omega$-problem}. This slightly more complex problem calls for us to also find solutions on how to adjust and synchronize frequencies. We already have methods by which we can adjust and synchronize the agents's phases $\phi$ with, described in Section \ref{sec:phase_methods}, but we do so-far lack methods by which we can adjust and synchronize the agents's frequencies $\omega$ with.}
 	
-	We hence now introduce randomly initialized, non-constant, and heterogenous oscillator-frequencies in our musical agents. The agents are now required to synchronize their initially different and random frequencies, so that frequencies are ``legal'' and \textit{harmonically synchronized}. Such ``legal'' frequencies are described clearly in detail in Section \ref{sec:harmonic_synchrony}.
+	\tcol{We hence now introduce randomly initialized, non-constant, and heterogenous oscillator-frequencies in our musical agents. The agents are now required to synchronize their initially different and random frequencies, so that frequencies are ``legal'' and \textit{harmonically synchronized}. Such ``legal'' frequencies are described clearly in detail in Section \ref{sec:harmonic_synchrony}.}
 	
-	Some implemented approaches for achieving this are presented now. Notice the increasing degree of \textit{Computational Self-Awareness} endowed in the methods.
+	\tcol{Some implemented approaches for achieving this are presented now. Notice the increasing degree of \textit{Computational Self-Awareness} endowed in the methods.}
 	
-	The details of how the Dr. Squiggles in Unity adjust and eventually synchronize (harmonically) their oscillator frequencies, is shown in Algorithm \ref{AddNthFireEventsHToList} and \ref{RFAAdjustFrequency}. Algorithm \ref{AddNthFireEventsHToList} outlines how the ``frequency adjustment contributions'' $H$ get calculated as soon as the Dr. Squiggles hear a neighbour Dr. Squiggle sending a ``fire'' signal; whereas Algorithm \ref{RFAAdjustFrequency} shows how these previously calculated $H(n)$ values are used to obtain the new and updated oscillator frequency $\omega_i(t^+)$ with which individual oscillators assign their frequencies to after each phase climax (i.e. when $\phi=1$).
-	
-	\begin{algorithm}
-	\caption{Calculating frequency update contributions $H$ in Unity}\label{AddNthFireEventsHToList}
-	\begin{algorithmic}[1]
-	\Procedure{}{$\phi(t)$}
-		\If {not in refractory period}
-			\State $\epsilon \gets$ sin$(\pi \phi(t))^2$ \Comment{\tcol[gray]{Step 1}} % $n$th fire event's error score at time $t$
-		\Else
-			\State $\epsilon \gets 0$
-		\EndIf
-		\State $\epsilon$ is added to $errorBuffer$
-		\State $s \gets$ median$\{\epsilon(n), \epsilon(n-1), ..., \epsilon(n-m)\}$ \Comment{\tcol[gray]{Step 2}}
-		\State $\rho \gets -$sin$(2\pi\phi(t))$ \Comment{\tcol[gray]{Step 3}}
-		\State $H \gets \rho \cdot s $ \Comment{\tcol[gray]{Step 4}}
-		\State $H$ is added to list $H(n)$
-	\EndProcedure
-	\end{algorithmic}
-	\end{algorithm}
-	
-	\begin{algorithm}
-	\caption{K. Nymoen et al.'s frequency updates in Dr. Squiggles robots}\label{RFAAdjustFrequency}
-	\begin{algorithmic}[1]
-	\Procedure{}{$H(n), \beta$}
-		\State $cycleHSum \gets 0$ \Comment{\tcol[gray]{Step 5 started}}
-		\State $y \gets$ length$(H(n))$
-		\ForAll {$ H \in H(n) $}
-			\State $cycleHSum \gets cycleHSum + H$
-		\EndFor
-		\State $F(n) \gets 0$
-		\If {$y$ not $0$}
-			\State $F(n) \gets \beta \cdot cycleHSum / y$ \Comment{\tcol[gray]{Step 5 finished}}
-		\EndIf
-		\State Emptying $H(n)$ \Comment{\tcol[gray]{for new contributions next oscillator cycle}}
-		\State $\omega_i(t^+) \gets \omega_i(t) \cdot 2^{F(n)}$
-	\EndProcedure
-	\end{algorithmic}
-	\end{algorithm}
-	
-	
-	
-	% K. Nymoen's Frequency-Synchronization with some Self-Awareness
-	\subsection{Verifying K. Nymoen's frequency-adjustment}
-	
-	In the newly proposed Unity simulator environment, the previously introduced self-assessed sync score $s(n)$ (in \ref{s_n}) is implemented as the median of a list containing \textit{m} error-scores $\epsilon$. Such an error score list of length $m$ is easily implemented by a list called \textit{errorBuffer}:
+	In the newly proposed Unity simulator environment, the previously introduced self-assessed sync score $s(n)$ (in \ref{s_n}), encompassing the approach's main self awareness capabilities, is implemented as the median of a list containing \textit{m} error-scores $\epsilon$. Such an error score list of length $m$ is easily implemented by a list called \textit{errorBuffer}:
 	
 	\begin{equation}
 	\label{error_buffer}
@@ -318,14 +239,46 @@ Now, the synchrony simulator system components will be expounded and explained i
 	
 	Regarding the ``frequency-update-contributions'' (the $H$-values described in \ref{H_n}) in my Unity-simulator, all the calculated H-values are accumulated and stored in an initially empty C\#-list (of floats), referred to as $H(n)$, at once they are calculated. The $H(n)$-list is then consecutively ``cleared out'' or ``flushed'' when its H-values have been used for the current period's frequency adjustment (i.e. at the phase climax, when $\phi(t)=1$), and is then ready to accumulate new H-values during the next period.
 	
-	By using K. Nymoen et al.'s frequency adjustment method, synchronization of initially random frequencies in our newly developed Unity simulator is achieved, like can be seen recorded in Figure \ref{fig:frequency_synch}.
+	By using K. Nymoen et al.'s frequency adjustment method, synchronization of initially random frequencies in our newly developed Unity simulator is achieved.
 	
-	\begin{figure}
-		\centering
-		\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Plots/FrequencySynchronizationPlot.pdf}
-		\caption{Frequency synchronization for five robots in a Unity synchronization simulation run achieving harmonic synchrony after 30 seconds. Note how the legal harmonic frequencies (dashed gray lines) are defined by the lowest—fundamental—frequency $\omega_0$ in the robot collective fluctuating slightly below 1Hz, correctly leading to the legal frequencies right below 2 and 4 Hz.}
-		\label{fig:frequency_synch}
-	\end{figure}
+	The details of how the Dr. Squiggles in Unity adjust and eventually synchronize (harmonically) their oscillator frequencies, is shown in Algorithm \ref{AddNthFireEventsHToList} and \ref{RFAAdjustFrequency}. Algorithm \ref{AddNthFireEventsHToList} outlines how the ``frequency adjustment contributions'' $H$ get calculated as soon as the Dr. Squiggles hear a neighbour Dr. Squiggle sending a ``fire'' signal; whereas Algorithm \ref{RFAAdjustFrequency} shows how these previously calculated $H(n)$ values are used to obtain the new and updated oscillator frequency $\omega_i(t^+)$ with which individual oscillators assign their frequencies to after each phase climax (i.e. when $\phi=1$).
+	
+	\begin{algorithm}
+	\caption{Calculating frequency update contributions $H$ for a robot}\label{AddNthFireEventsHToList}
+	\begin{algorithmic}[1]
+	\Procedure{}{$\phi(t), m$}
+		\If {not in refractory period}
+			\State $\epsilon \gets$ sin$(\pi \phi(t))^2$ \Comment{\tcol[gray]{Step 1}} % $n$th fire event's error score at time $t$
+		\Else
+			\State $\epsilon \gets 0$
+		\EndIf
+		\State $\epsilon$ is added to $errorBuffer$
+		\State $s \gets$ median$\{\epsilon(n), \epsilon(n-1), ..., \epsilon(n-m)\}$ \Comment{\tcol[gray]{Step 2}}
+		\State $\rho \gets -$sin$(2\pi\phi(t))$ \Comment{\tcol[gray]{Step 3}}
+		\State $H \gets \rho \cdot s $ \Comment{\tcol[gray]{Step 4}}
+		\State $H$ is added to list $H(n)$
+	\EndProcedure
+	\end{algorithmic}
+	\end{algorithm}
+	
+	\begin{algorithm}
+	\caption{Updating robot frequency with calculated $H$ contributions}\label{RFAAdjustFrequency}
+	\begin{algorithmic}[1]
+	\Procedure{}{$H(n), \beta$}
+		\State $cycleHSum \gets 0$ \Comment{\tcol[gray]{Step 5 started}}
+		\State $y \gets$ length$(H(n))$
+		\ForAll {$ H \in H(n) $}
+			\State $cycleHSum \gets cycleHSum + H$
+		\EndFor
+		\State $F(n) \gets 0$
+		\If {$y$ not $0$}
+			\State $F(n) \gets \beta \cdot cycleHSum / y$ \Comment{\tcol[gray]{Step 5 finished}}
+		\EndIf
+		\State Emptying $H(n)$ \Comment{\tcol[gray]{for new contributions next oscillator cycle}}
+		\State $\omega_i(t^+) \gets \omega_i(t) \cdot 2^{F(n)}$
+	\EndProcedure
+	\end{algorithmic}
+	\end{algorithm}
 	
 	
 
@@ -333,14 +286,7 @@ Now, the synchrony simulator system components will be expounded and explained i
 \section{Detecting harmonic synchrony}
 \label{sec:detecting_harmonic_synchrony}
 
-	The performance measurement will be used in our synchrony-simulator to evaluate and test the multi-robot collective's ability to harmonically synchronize to each other. As mentioned in Subsection \ref{subsec:harmonic_synchrony}, K. Nymoen et al.'s requirements and illustrations \cite{nymoen_synch} for achieving \textit{harmonic synchrony} serve as a blueprint or guide for how to similarly implement our synchrony or performance measurement. This performance measurement should be able, during synchronization-simulation, to detect if harmonic synchronization has been achieved in our decentralized oscillator-network. The successful triggering of this detection will then in turn terminate the synchronization simulation-run and save to a dataset the time it took to synchronize (the performance score), in the case of a `synchronization-success' — an example of which can be seen in Figure \ref{fig:harmonic_synchrony_detection_plot}. In this figure, one can see at which times (sim s) the musical robots fired during a synchrony simulation run ending up in either harmonic synchrony, or as a ``synchronization fail.''
-
-	\begin{figure}
-		\centering
-		\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Plots/HarmonicSynchronyDetectionPlot.pdf}
-		\caption[A \textbf{harmonic synchrony detection plot}.]{\textbf{Harmonic synchrony detection plot}: recording a detection of harmonic synchrony \tcol{(hvordan harmonic synch. ble detectet i et simulation-run)}. The steps and events of \textbf{I)} through \textbf{VII)} can also be seen commented in pseudocode []. \tcol[red]{Initial red area represents the ``start-up''-period where no (gray) $t_q$-value is defined yet. \textbf{I)} First robot firing, initiating a process of defining such a ``silent'' time-window $t_q$ within which no nodes are allowed to fire, and a whole ``legal-firing'' $t_f$-window (here shaded in white and only 80ms long, as in \cite{nymoen_synch}) ensues. \textbf{II)} At least one robot firing, and with their firing-time(s) giving us the \textit{early $t_q$-defining} time-value (see schema below), as well as triggering second whole $t_f$-window to ensue. \textbf{III)} At least one robot firing after the \textit{early $t_q$-defining} time-value was found, hence (with their firing-time(s)) giving us the \textit{late $t_q$-defining} time-value right before using these when finishing the on-started process of defining the ``silent'' time-window $t_q$; triggering a half (due to stabilization purposes by future centering of fire-events) $t_f$-window to ensue. \textbf{IV)} A robot is caught firing illegally during a ``silent'' $t_q$-window and hence resets the \textit{towards\_k\_counter}-variable, as well as (re-) starts a process like in \textbf{I)} for (re-) defining a new $t_q$-value. \textbf{V)} Firing after this point only happens during short ``legal-firing'' $t_f$-windows, so \textbf{Condition 1} (cf. \ref{subsec:harmonic_synchrony}) is held. \textbf{VI)} All robots have fired at least once during the evaluation-period, so \textbf{Condition 2} is held. \textbf{VII)} The robot collective has fired legally and evenly, without resetting $t_q$, $k$ (equal to 8 in this case) times in a row, so \textbf{Condition 3} is fulfilled — and harmonic synchrony is thus achieved and detected after 21.9 seconds of synchronization.}}
-		\label{fig:harmonic_synchrony_detection_plot}
-	\end{figure}
+	The performance measurement will be used in our synchrony-simulator to evaluate and test the multi-robot collective's ability to harmonically synchronize to each other. As mentioned in Subsection \ref{subsec:harmonic_synchrony}, K. Nymoen et al.'s requirements and illustrations \cite{nymoen_synch} for achieving \textit{harmonic synchrony} serve as a blueprint or guide for how to similarly implement our synchrony or performance measurement. This performance measurement should be able, during synchronization-simulation, to detect if harmonic synchronization has been achieved in our decentralized oscillator-network. The successful triggering of this detection will then in turn terminate the synchronization simulation-run and save to a dataset the time it took to synchronize (the performance score), in the case of a `synchronization-success' — an example of which can be seen in Figure \ref{fig:harmonic_synchrony_detection_plot}. In this figure, one can see at which times (sim s) the musical robots fired during a synchrony simulation run ending up in either harmonic synchrony, or as a ``synchronization fail.'
 
 	The resulting and corresponding performance scores obtained using this performance measurement will then take values of the simulation time (s) it takes for the robot collective, from the start of the synchronization simulation, to achieve the system target state of \textit{harmonic synchrony}, as specified in Section \ref{sec:harmonic_synchrony}.
 
@@ -348,17 +294,8 @@ Now, the synchrony simulator system components will be expounded and explained i
 
 	My specific implementation of the synchrony measurement essentially consists of enforcing all the requirements or rules listed in \ref{subsec:harmonic_synchrony}, given some constant $t_f$- and $k$-values (e.g. $80ms$ and $8$ respectively \cite{nymoen_synch}). And again—to recall from \ref{subsec:harmonic_synchrony}—$t_f$ is the short time-window within which nodes are allowed to fire at each beat, and $k$ represents how many times nodes have to fire at even underlying pulses/beats in a row without changing the $t_q$-period—before becoming harmonically synchronized.
 
-	The requirement of firing evenly $k$ times in a row with identical $t_q$-periods can be—and in fact is in our implementation—enforced by incrementing an integer variable \textit{towards\_k\_counter} after a `legal' $t_f$-window has occured (i.e. one or more nodes fired inbetween the onset and ending of the $t_f$-window), and conversely by resetting \textit{towards\_k\_counter} to 0 when an illegally transmitted firing was heard during a `silent' (or so it was supposed to be at least) $t_q$-window, hence restarting the synchrony-detection process—as can be seen occuring several times in Figure \ref{fig:harmonic_synch_evolution}. \tcol[red]{Note that in this specific simulation run above, the agents were on their way to achieve harmonic synchrony five times before the 10th second of the synchronization-simulation already, but since one or more of them fired `illegally' (i.e. inside a $t_q$-window), they were consequently `punished'—or rather deemed `not synchronized enough yet'—by getting their counter reset to 0. Eventually however,  through further phase- \& frequency-synchronization, the multi robot collective was in this case after 12.5 seconds able to achieve harmonic synchrony, when \textit{towards\_k\_counter} became equal to $k$, as well as all other requirements for achieving \textit{harmonic synchrony} was met. Note that this gives us a sense of how synchronized the robot collective is over time; the more even beats the robots have in a row, the more synchronized they are.}
+	The requirement of firing evenly $k$ times in a row with identical $t_q$-periods can be—and in fact is in our implementation—enforced by incrementing an integer variable \textit{towards\_k\_counter} after a `legal' $t_f$-window has occured (i.e. one or more nodes fired inbetween the onset and ending of the $t_f$-window), and conversely by resetting \textit{towards\_k\_counter} to 0 when an illegally transmitted firing was heard during a `silent' (or so it was supposed to be at least) $t_q$-window, hence restarting the synchrony-detection process—as can be seen occuring several times in Figure \ref{fig:harmonic_synch_evolution}.
 
-	\begin{figure}[h]
-		\centering
-		\includegraphics[width=0.85\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Plots/SynchronyEvolutionPlot.pdf}
-		\caption[A \textbf{synchrony evolution plot}.]{A \textbf{synchrony evolution plot}, displaying the temporal recording of the \textit{towards\_k\_counter} variable throughout a synchrony simulation-run in Unity. The counter is incremented as the robot collective fires evenly within `legal' $t_f$ windows, and is conversely reset to 0 if illegal firings during `silent' $t_q$ windows are heard.}
-		\label{fig:harmonic_synch_evolution}
-	\end{figure}
-
-	
-	
 	Initially, the $t_q$-period/-window is not initialized, as it entirely depends on the frequencies to which the robot-collective converges to; however, when an illegal firing (i.e. a firing perceived during a $t_q$-window) occurs—$t_q$ is also then reset itself to a hopefully more correct value, given by the following formula, which is visually explained further in the schema in Figure \ref{fig:t_q_schema}:
 
 	\begin{equation}
@@ -377,15 +314,7 @@ Now, the synchrony simulator system components will be expounded and explained i
 	\begin{algorithm}
 	\caption{Harmonic synchrony detection part A \tcol[red]{(må evt. fylles inn)}}\label{harmonic_synch_detection_algo_A}
 	\end{algorithm}
-
-	\begin{algorithm}
-	\caption{Harmonic synchrony detection part B \tcol[red]{(må evt. fylles inn)}}\label{harmonic_synch_detection_algo_B}
-	\end{algorithm}
-
-	\begin{algorithm}
-	\caption{Harmonic synchrony detection part C \tcol[red]{(må evt. fylles inn)}}\label{harmonic_synch_detection_algo_C}
-	\end{algorithm}
-
+	
 	If a certain amount of time, e.g. 5 simulation minutes \cite{nymoen_synch}, has gone without the detection of harmonic synchrony occuring, the simulation-run is terminated as a ``fail''.
 
 

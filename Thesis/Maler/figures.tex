@@ -24,3 +24,35 @@
 	\caption{BOTH_FIGURES_CAPTION}
 	\label{BOTH_FIGURES_LABEL}
 \end{figure}
+
+% Including four subfigures:
+\begin{figure}[ht!]
+	\begin{subfigure}[b]{0.5\textwidth}
+		\centering\captionsetup{width=.9\linewidth}%
+		\includegraphics[width=\textwidth]{figureFolder/filename.pdf}
+		\caption{CAP1.}
+		\label{fig:sub:x1}
+	\end{subfigure}
+	%
+	\begin{subfigure}[b]{0.5\textwidth}
+		\centering\captionsetup{width=.9\linewidth}%
+		\includegraphics[width=\textwidth]{figureFolder/filename.pdf}
+		\caption{CAP2.}
+		\label{fig:sub:x2}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.5\textwidth}
+		\centering\captionsetup{width=.9\linewidth}%
+		\includegraphics[width=\textwidth]{figureFolder/filename.pdf}
+		\caption{CAP3.}
+		\label{fig:sub:x3}
+	\end{subfigure}
+	%
+	\begin{subfigure}[b]{0.5\textwidth}
+		\centering\captionsetup{width=.9\linewidth}%
+		\includegraphics[width=\textwidth]{figureFolder/filename.pdf}
+		\caption{CAP4.}
+		\label{fig:sub:x4}
+	\end{subfigure}
+	\caption{MAIN_CAP}
+	\label{fig:x}
+\end{figure}

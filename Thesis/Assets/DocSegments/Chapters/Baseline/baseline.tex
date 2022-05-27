@@ -75,7 +75,7 @@ Accomodating for these aspects then, K. Nymoen et al. took inspiration for coini
 		\caption{The frequency spectrogram of the audible waveform being a more-or-less monotone but non-pure G3-tone, hummed and recorded\protect\footnotemark  by me, as I tried to repeat the tone in \ref{fig:sub:G3_pure_waveform} with my voice.}
 		\label{fig:sub:G3_hummed_waveform}
 	\end{subfigure}
-	\caption[Frequency spectrograms illustrating the absence and presence of harmonics and overtones in audible waveforms]{Frequency spectrograms of two different-sounding waveforms of the same G3-tone at 195.99 Hz. Note the absence and presence of harmonics and overtones in waveform \ref{fig:sub:G3_pure_waveform} and \ref{fig:sub:G3_hummed_waveform} respectively, as well as the integer-relationships between the fundamental (lowest) frequency and the harmonics in \ref{fig:sub:G3_hummed_waveform}. Frequencies in a harmonically synchronized oscillator collective will for the first $\phi$-problem resemble the frequencies in \ref{fig:sub:G3_pure_waveform}, where all frequencies are equal and constant. Conversely, when frequencies can be heterogenous and unequal, as in the $\phi$- \& $\omega$-problem, the frequencies in a harmonically synchronized oscillator collective will rather resemble, although not completely correspond to, the frequencies in \ref{fig:sub:G3_hummed_waveform}, where higher frequencies with integer relationships to the fundamental and lowest frequency can be present at the same time.}
+	\caption[Frequency spectrograms illustrating the absence and presence of harmonics and overtones in audible waveforms.]{Frequency spectrograms of two different-sounding waveforms of the same G3-tone at 195.99 Hz. Note the absence and presence of harmonics and overtones in waveform \ref{fig:sub:G3_pure_waveform} and \ref{fig:sub:G3_hummed_waveform} respectively, as well as the integer-relationships between the fundamental (lowest) frequency and the harmonics in \ref{fig:sub:G3_hummed_waveform}. Frequencies in a harmonically synchronized oscillator collective will for the first $\phi$-problem resemble the frequencies in \ref{fig:sub:G3_pure_waveform}, where all frequencies are equal and constant. Conversely, when frequencies can be heterogenous and unequal, as in the $\phi$- \& $\omega$-problem, the frequencies in a harmonically synchronized oscillator collective will rather resemble, although not completely correspond to, the frequencies in \ref{fig:sub:G3_hummed_waveform}, where higher frequencies with integer relationships to the fundamental and lowest frequency can be present at the same time.}
 	\label{fig:frequency_spectrograms}
 \end{figure}
 
@@ -106,14 +106,7 @@ Hence, in terms of frequencies $\omega_i$ for all oscillators $i$ in the oscilla
 
 Note that the only difference between this definition of \textit{legal oscillator frequencies} and the spectrogram example depicted in Figure \ref{fig:frequency_spectrograms} lies in that for the legal frequencies as defined in \eqref{legal_freqs}, higher frequencies can only have doubling integer relationships with the lowest fundamendal frequency (e.g. twice or four times as high), whereas the frequencies of the harmonics seen in the humanly hummed G3 tone (\ref{fig:sub:G3_hummed_waveform}) additionally had all other positive integer relationships (e.g. three or five times as high) with the fundamental frequency.
 
-Now we will see what this entails for the phases $\phi_i$ for all the oscillators in the collective. \nl
-
-\textbf{Legal phases definition:} \nl
-
-\tcol[blue]{FYLL INN DEN NYE MATEMATISKE BESKRIVELSEN DU KOM FRAM TIL HER OM DAGEN} \nl
-
-This state of \textit{harmonic synchrony} is then the system goal state K. Nymoen et al. achieve using their phase and frequency update functions, as explained above in Section \ref{nymoen_phase_adjust} and \ref{nymoen_freq_adjust}; and is also the target or goal state we want to continue achieving and experimenting for in this thesis.
-
+This state of \textit{harmonic synchrony} is then the system goal state K. Nymoen et al. achieve using their phase and frequency update functions, as explained in Sections \ref{sec:nymoen_phase_updates} and \ref{sec:nymoen_freq_updates}; and is also the target or goal state we want to continue achieving and experimenting for in this thesis.
 
 	\subsection{Detecting harmonic synchrony}
 	\label{baseline:subsec:detecting_harmonic_sync}
@@ -150,26 +143,10 @@ This state of \textit{harmonic synchrony} is then the system goal state K. Nymoe
 	
 	\subsection{Synchronizing phases via phase adjustment}
 
-		\subsubsection{Mirollo-Strogatz's ``standard'' phase adjustment} % or phase synchronization, or phase updates
-		\label{mirollo_strogatz_phase_adjust}
-		
-		One approach having been used to achieve this in the past is Mirollo-Strogatz's ``Standard'' phase-adjustment in oscillators \cite{mirollo_strogatz_PCO_synch}.
-		
-		Each oscillator gets a new phase, $\phi(t^+) = P(\phi(t))$, accoring to the \textbf{phase update function \eqref{strog_phase}} upon perceiving a ``fire''-event from one of the other musical nodes:
-		
-		\begin{equation}
-		\label{strog_phase}
-			\phi(t^+) = P(\phi(t)) = (1 + \alpha)\phi(t) ,
-		\end{equation} \nl
-		where $\alpha$ is the pulse coupling constant, denoting the strength between nodes \cite{nymoen_synch}, $t^+$ denotes the time-step immediately after a ``fire''-event is heard, and $\phi(t)$ is the old frequency of the oscillator at time $t$. 
-		
-		So, if e.g. $\alpha = 0.1$, then a musical oscillator's new and updated phase, immediately after hearing a ``fire''-signal from another oscillator, will be equal to $\phi(t^+) = P(\phi(t)) = (1 + 0.1)\phi(t) = 1.1\phi(t)$. 110\% of its old phase $\phi(t)$, that is. Hence, and in this way, the oscillator would be ``pushed'' to fire sooner than it would otherwise (as nodes fire once they have reached phase-climax $\phi(t)=1$).
-
-
 		\subsubsection{K. Nymoen's bi-directional phase adjustment} % or 'shifts', as used before.
 		\label{subsec:nymoen_phase_adjust}
 
-		Apart from altering a similar phase adjustment function to the likes of Mirollo-Strogatz's phase adjustment function so that theirs would cooperate well with the system's frequency adjustment in achieving their target goal of \textit{harmonic synchrony} (further explained towards the end of this chapter), K. Nymoen et al. \cite{nymoen_synch} here introduces an example of a bi directional phase adjustment method. The difference between a bi directional method of phase synchronization and a one directional one is that using bi directional phase adjustment, oscillators are simply adjusting each other's phases in an excitatory way; they only ``push'' other ocillators's phases further or higher (positive updates) when firing themselves, never ``holding'' or ``dragging'' them back (negative updates).
+		Apart from altering a similar phase adjustment function to the likes of Mirollo-Strogatz's phase adjustment function \eqref{strog_phase} so that theirs would cooperate well with the system's frequency adjustment in achieving their target goal of harmonic synchrony, K. Nymoen et al. \cite{nymoen_synch} here introduces an example of a bi directional phase adjustment method. The difference between a bi directional method of phase synchronization and a one directional one is that using bi directional phase adjustment, oscillators are simply adjusting each other's phases in an excitatory way; they only ``push'' other ocillators's phases further or higher (positive updates) when firing themselves, never ``holding'' or ``dragging'' them back (negative updates).
 
 		Hence, this newer approach to phase adjustment works very similarly to the phase adjustment performed in the ``standard'' \textbf{\textit{Mirollo-Strogatz}} approach presented earlier; the only difference being that now, oscillators update their phases with the slightly more complex \textbf{phase update function \eqref{nymoen_phase}} when hearing a ``fire''-event from one of the other musical nodes — allowing for both larger, but also smaller, updated phases compared to the old phases:
 

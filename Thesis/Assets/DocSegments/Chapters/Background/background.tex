@@ -110,23 +110,82 @@ What exactly is self-awareness? Is it \textit{awareness} of a \textit{self}? If 
 \section{Self-Awareness in already-existing Computing Systems}
 
 	\subsection{SA-related Computing Systems}
-	Run-time adaptation in Computing and Engineering systems is not a new thing, and this has been of interest across a range of research communities for quite some time \cite{sacs16_ch4}. The reason for this becomes apparent when one considers the problem of tackle unforeseen (at least at design-time) operational changes that can occur during run-time (like e.g. faults).
+	
+		\subsubsection{Self adaptive systems}
+		Run-time adaptation in Computing and Engineering systems is not a new thing, and this has been of interest across a range of research communities for quite some time \cite{sacs16_ch4}. The reason for this becomes apparent when one considers the problem of tackle unforeseen (at least at design-time) operational changes that can occur during run-time (like e.g. faults).
 
-	An agent -- in the context of computing systems -- can be said to be a computing system situated in an environment (which it can perceive), having some goals, and possible actions it can perform (through actuators) to reach its goals. It can also be informed by some knowledge, and/or directly the signals it gets from its sensors.
+		An agent -- in the context of computing systems -- can be said to be a computing system situated in an environment (which it can perceive), having some goals, and possible actions it can perform (through actuators) to reach its goals. It can also be informed by some knowledge, and/or directly the signals it gets from its sensors.
 
-	Especially within the engineering of \textbf{Self-adaptive} Systems and Intelligent Agents, such agents are often designed with properties which can be called Self-Awareness and -Expression properties -- even though these specific terms are not used.
+		Especially within the engineering of \textbf{Self-adaptive} Systems and Intelligent Agents, such agents are often designed with properties which can be called Self-Awareness and -Expression properties -- even though these specific terms are not used.
 
-	Notable examples in accordance with the autonomic computing paradigm (\cite{sacs16_ch4}) comprise for example ODA (Observe-Decide-Act) loops, originally stemming from the OODA (Observe-Orient-Decide-Act) loop in the military domain. As the acronym suggests, systems implementing the ODA-loop continually Observe (their environment and potentially themselves through sensors), Decide (planned future actions based on current or future states), as well as Act (on one of those previously planned actions). A schematic of such an ODA-loop can be seen in Figure \ref{fig:oda_mapek}.
+		Notable examples in accordance with the autonomic computing paradigm (\cite{sacs16_ch4}) comprise for example ODA (Observe-Decide-Act) loops, originally stemming from the OODA (Observe-Orient-Decide-Act) loop in the military domain. As the acronym suggests, systems implementing the ODA-loop continually Observe (their environment and potentially themselves through sensors), Decide (planned future actions based on current or future states), as well as Act (on one of those previously planned actions). A schematic of such an ODA-loop can be seen in Figure \ref{fig:oda_mapek}.
 
-	\begin{figure}[ht]
-	\centering
-	\includegraphics[width=\columnwidth]{Assets/DocSegments/Chapters/Background/Figures/Schema/oda_mapek.PNG}
-	\caption{Figure of the Self-adaptive Systems ODA (left) and MAPE-K (right). We also see the externality of the attempts at implementing meta-self-awareness in these systems, in that they simply \textit{add on} an external Managed computing system (which is monitoring the rest of the system). This latter point will be revisited \opphoy{later}. Figure reused from Chandra et al. \cite{sacs16_ch4}.}
-	\label{fig:oda_mapek}
-	\end{figure}
+		\begin{figure}[ht]
+		\centering
+		\includegraphics[width=\columnwidth]{Assets/DocSegments/Chapters/Background/Figures/Schema/oda_mapek.pdf}
+		\caption[Previous and prevalent computational self adaptive agent frameworks.]{Figure of the Self-adaptive Systems ODA (left) and MAPE-K (right). We also see the externality of the attempts at implementing meta-self-awareness in these systems, in that they simply \textit{add on} an external Managed computing system (which is monitoring the rest of the system). Figure reused from Chandra et al. \cite{sacs16_ch4}.}
+		\label{fig:oda_mapek}
+		\end{figure}
 
-	Another notable Self-adaptive System we can see in Figure \ref{fig:oda_mapek}, is the MAPE-K architecture (an acronym for Monitor, Analyse, Plan, Execute, and Knowledge). The great and groundbreaking benefits of implementing e.g. ODA-loops and the MAPE-K architecture, performing online observation and knowledge-gathering (hence having endowed their systems with some sort of self-knowledge/self-awareness) allowing for online self-adaptation -- have been greatly reaped. However, these architectures have not explicitly considered the psychological origins of self-awareness, and lack some benefits compared to the introduced frameworks and architecture in section \textbf{4}.
+		Another notable Self-adaptive System we can see in Figure \ref{fig:oda_mapek}, is the MAPE-K architecture (an acronym for Monitor, Analyse, Plan, Execute, and Knowledge). The great and groundbreaking benefits of implementing e.g. ODA-loops and the MAPE-K architecture, performing online observation and knowledge-gathering (hence having endowed their systems with some sort of self-knowledge/self-awareness) allowing for online self-adaptation -- have been greatly reaped. However, these architectures have not explicitly considered the psychological origins of self-awareness, and lack some benefits compared to the introduced frameworks and architecture in section \textbf{4}.
+	
+	
+		\subsubsection{Music technology systems and musical robots}
+		\label{music_tech_robots}
 
+		As particularly relevant to the thesis project, endowing Music Technology Systems with Self-Awareness is of great interest. There have been several such approaches, particularly within Interactive and Active Music Systems. One example includes:
+
+			\paragraph{SoloJam: Achieving de-centralized participation (by co-ordinating and co-operating agents) in a coherent and interactive music system \nl}
+
+			Historically, the creation and production together with the listening and perception of music has been (and still is) relatively "one-way'ed"; in that the musicians/artists produce the music, and the fans/listeners consumes the music. A growing interest in interactive music (like Guitar Hero etc.) has been seen the last decades. The authors of the music system SoloJam \cite{solojam} want participants with little or no musical experience and training to be able to play independently and decentralized (from say an expert) music as a whole, by each playing solos made from their own devices. Here each of their solos will be slight variations of the previous participant's solo. See illustration in Figure \ref{fig:solojam}.
+
+			\begin{figure}[!htp]
+			\centering
+				\includegraphics[width=\columnwidth]{Assets/DocSegments/Chapters/Background/Figures/Schema/SoloJam.pdf}
+				\caption{Illustrations: two individual SoloJam example scenarios illustrated differently.}
+				\label{fig:solojam}
+			\end{figure}
+
+			The solution to how this decentralized, coherent and interactive music system consist of elements inspired by the Economical Sciences. Namely:
+
+			\begin{enumerate}
+				\item Auctions (specifically the Vickrey auction)
+				\item Utility (profitability/deservedness measure)
+			\end{enumerate}
+
+			The function for utility is given by the expression:
+
+			\begin{equation}
+			u_i = \frac{c}{(1+a D_l)(1+b T_l)}
+			\end{equation}
+			\newline
+
+			It is essential with a properly designed utility function for the system to behave coherently e.g. This utility-function is inversely proportional with \textit{a)} differences between bidder and auctioneer's/leader's rhythm patterns $D_l$, and \textit{b)} the time/\#bars the leader has played its rhythm pattern $T_l$ - as well as constrained by and applied to a couple of other clauses (to ensure some wanted/avoid some unwanted effects).
+
+			"Shaking"-/"moving"-patterns (as registered/sensed by the devices' inertial units) are translated into rhythm patterns - which then are calculated a \textbf{utility score} (by the function as mentioned above and outlined in more detail in the paper) for, used as bid in an auction.
+
+			The winner of the auction will (when considering knowledge of the leader-rhythm-pattern, as we do when a = 1.0 instead of 0.0) be those rhythm patterns which are the closest rhythm-patterns (i.e. not completely equal) to the leader's rhythm-pattern (in terms of the Hammings-distance) - assuming e.g. that the participant didn't just play before another participant, nor that it had played its rhythm-pattern for a very long time. In the paper, we then notice how the authors study how \textbf{varying degrees of self-awareness} (a=1.0 versus a=0.0) affect the overall system dynamics -- then in the form of musical coherence, as well as decentralized circulation.
+
+			
+			\paragraph{Musical robots: the Dr. Squiggles \nl}
+			\label{dr_squiggles}
+			
+			The Dr. Squiggles robots, which are M. J. Krzyzaniak and RITMO's musical robots, as e.g. can be seen in Figure \ref{fig:background_dr_squiggles_synchronizing} as they synchronize to each other, have been used in several music technology systems and projects\footnote{\url{https://www.uio.no/ritmo/english/news-and-events/news/2021/drsquiggles.html} (accessed 2022.05.17)} previously.
+			
+			\begin{figure}[!htp]
+			\centering
+				\includegraphics[width=\columnwidth]{Assets/DocSegments/Chapters/Background/Figures/Photos/dr_squiggles_synchronizing.png}
+				\caption[Three Dr. Squiggles robots synchronizing to each other.]{Three Dr. Squiggles robots synchronizing to each other. Photo: from M. J. Krzyzaniak's video \textit{Squiggles Equilibrium}\protect\footnotemark}
+				\label{fig:background_dr_squiggles_synchronizing}
+			\end{figure}
+			\footnotetext{\url{https://www.youtube.com/watch?v=yN711HXPfuY} (accessed 2022.05.27)}
+			
+			
+			\paragraph{SoloJam Island \nl}
+			\label{solojam_island}
+			
+			Combining the two musical systems presented above, Pierre Potel implemented islands of Dr. Squiggles robots in a SoloJam scenario, and hence naming the novel musical robot system \textit{SoloJam-Island}\footnote{\url{https://github.com/67K-You/SoloJam-Island} (accessed 2022.05.17)}. Corresponding 3D-models of the Dr. Squiggle robots, for said simulation, were designed by Pierre Potel.
+			
 
 	\subsection{Explicit SA in Computing Systems}
 	The extensive interest of studying self-awareness in natural fields like psychology, sociology, and philosophy might not come as a surprise, as self-awareness primarily is found and exhibited in humans and animals. However, there has recently been an uptake in interest for explicitly studying self-awareness in computing systems.
@@ -140,22 +199,22 @@ What exactly is self-awareness? Is it \textit{awareness} of a \textit{self}? If 
 
 		\subsubsection{Specific Examples}
 
-			\paragraph{Cognitive Radios}
+			\paragraph{Cognitive Radios \nl}
 
 			A -- perhaps simpler or minimal -- specific instance of a computing system where Self-awareness have been interpreted and applied, is the so-called \textit{cognitive radio}. The devices in this system control their own capabilities and monitor other devices' capabilities through communication with these other devices. This "\textit{enables them to improve the efficiency of communication by negotiating changes in parameter settings}" \cite{sacs17_ch3}
 
-			\paragraph{CoCoRo - The Self-aware Underwater Swarm}
+			\paragraph{CoCoRo: the self aware underwater AUV swarm \nl}
 
 			More complex self-aware computing systems have also been explored. As demonstrated by Mitchell \cite{mitchell}, also T. Schmickl et al. considers self awareness in a collective system -- an underwater swarm robotic system \cite{cocoro} in this case (see Figure \ref{fig:cocoro}). This robot collective shall in this scenario search the sea-bottom for specific objects of interest (like toxic waste, but also sunken objects e.g.). Here, the collective/swarm is supposed to e.g. be self-aware of its own state (of whether it still is searching, or if it has found a target at the bottom of the sea) -- in order to either stay together searching, or communicate to a second (surface level) swarm that an object of interest is found. Like in Mitchell's case, these autonomous underwater vehicles (AUVs) does have emergent self-awareness properties that the individuals themselves do not possess. Therefore, as the authors say in \cite{cocoro}, "\textit{Finding such targets will only be efficient if the AUVs work together}."
 
 			\begin{figure}[!ht]
 			\centering
 			\includegraphics[width=0.8\columnwidth]{Assets/DocSegments/Chapters/Background/Figures/Schema/cocoro.PNG}
-			\caption{CoCoRo—the self aware underwater robotic swarm consisting of AUVs alternating between completing missions at the seabed and returning to the surface level basestation. Figure reused from T. Schmickl et al.'s paper \cite{cocoro}.}
+			\caption[CoCoRo: the self aware underwater robotic AUV swarm.]{CoCoRo: the self aware underwater robotic swarm consisting of AUVs alternating between completing missions at the seabed and returning to the surface level basestation. Figure reused from T. Schmickl et al.'s paper \cite{cocoro}.}
 			\label{fig:cocoro}
 			\end{figure}
 
-			\paragraph{Self-Aware and Self-Expressive Camera Networks}
+			\paragraph{Self-Aware and Self-Expressive Camera Networks \nl}
 
 			Lukas Esterle et al. \cite{esterle_camera} has demonstrated how the fundamental concepts and building blocks of Computational Self-Awareness and Self-Expression can handle resource-critical- as well as communication- and utility-tradeoffs, maintaining network topologies, performing distributed object detection, performing tracking handover, as well as achieving more Pareto-efficient outcomes. They also believe these capabilities are not exclusive to camera networks -- but are in fact confident these technologies (of computational SA and SE) can enable "\textit{other types of systems and networks to meet a multitude of requirements with respect to functionality, flexibility, performance, resource usage, costs, reliability, and safety}" \cite{esterle_camera}.
 			
@@ -190,7 +249,7 @@ Translating concepts from the Psychological field into the Computational field g
 	\begin{figure}[!htp]
 	\centering
 	\includegraphics[width=\columnwidth]{Assets/DocSegments/Chapters/Background/Figures/Schema/collective_SA.pdf}
-	\caption{Collective self awareness, as entities can be seen as consisting of many sub-entities.}
+	\caption[Collective self awareness schema.]{Collective self awareness schema, as entities can be seen as consisting of many sub-entities.}
 	\label{fig:collective_SA}
 	\end{figure}
 
@@ -310,77 +369,32 @@ Oscillators have been used to implement and model a plethora of systems, also bi
 	\end{equation}
 	
 	
+	\subsection{Phase synchronization}
+	
+		\subsubsection{Mirollo-Strogatz's ``standard'' phase adjustment} % or phase synchronization, or phase updates
+		\label{mirollo_strogatz_phase_adjust}
+		
+		One approach having been used to achieve this in the past is Mirollo-Strogatz's ``Standard'' phase-adjustment in oscillators \cite{mirollo_strogatz_PCO_synch}.
+		
+		Each oscillator gets a new phase, $\phi(t^+) = P(\phi(t))$, accoring to the \textbf{phase update function \eqref{strog_phase}} upon perceiving a ``fire''-event from one of the other musical nodes:
+		
+		\begin{equation}
+		\label{strog_phase}
+			\phi(t^+) = P(\phi(t)) = (1 + \alpha)\phi(t) ,
+		\end{equation} \nl
+		where $\alpha$ is the pulse coupling constant, denoting the strength between nodes \cite{nymoen_synch}, $t^+$ denotes the time-step immediately after a ``fire''-event is heard, and $\phi(t)$ is the old frequency of the oscillator at time $t$. 
+		
+		So, if e.g. $\alpha = 0.1$, then a musical oscillator's new and updated phase, immediately after hearing a ``fire''-signal from another oscillator, will be equal to $\phi(t^+) = P(\phi(t)) = (1 + 0.1)\phi(t) = 1.1\phi(t)$. 110\% of its old phase $\phi(t)$, that is. Hence, and in this way, the oscillator would be ``pushed'' to fire sooner than it would otherwise (as nodes fire once they have reached phase-climax $\phi(t)=1$).
+	
+	
+	\subsection{Frequency synchronization}
+	
 		% --- META INFO START: ---
-		
-		\besk{\tcol[gray]{(Hvis relevante og ønskede)} Tidligere metoder til Fase-synkronisering i oscillatorer (puls- og/eller fase-koplede)}
-		
-		% --- META INFO STOP. ---
 	
-	
-	\subsection{Frequency-adjustment}
-	
-		% --- META INFO START: ---
-	
-		\gjor{ Muligens inkluder introen i Section \ref{sec:frequency_methods} her også (eller bare her?) }
-		
 		\besk{ \tcol[gray]{(If relevant and wanted)} Previous approaches to Frequency-synchronization in oscillators (pulse- and/or phase-coupled) [nymoen-referanser e.g.] where the oscillators's frequencies are either equal and fixed, or where frequencies are bound to initialize and stay within a fixed interval/range. }
 		
 		\besk{ \tcol[gray]{(If it exists)} A ``simpler'' frequency synchronization approach, to solve the phase and frequency ($\phi$ \& $\omega$) problem with, without any self awareness components }
 	
 		% --- META INFO STOP. ---
 	
-% --- \section END. ---
-	
-	
-
-\section{Computational Self-Awareness in music technology systems and robots}
-\label{sec:music_tech_robots}
-
-As particularly relevant to the thesis project, endowing Music Technology Systems with Self-Awareness is of great interest. There have been several such approaches, particularly within Interactive and Active Music Systems. One example includes:
-
-	\subsection{SoloJam: Achieving de-centralized participation (by co-ordinating and co-operating agents) in a coherent and interactive music system}
-
-	Historically, the creation and production together with the listening and perception of music has been (and still is) relatively "one-way'ed"; in that the musicians/artists produce the music, and the fans/listeners consumes the music. A growing interest in interactive music (like Guitar Hero etc.) has been seen the last decades. The authors of the music system SoloJam \cite{solojam} want participants with little or no musical experience and training to be able to play independently and decentralized (from say an expert) music as a whole, by each playing solos made from their own devices. Here each of their solos will be slight variations of the previous participant's solo. See illustration in Figure \ref{fig:solojam}.
-
-	\begin{figure}[!htp]
-	\centering
-		\includegraphics[width=\columnwidth]{Assets/DocSegments/Chapters/Background/Figures/Schema/SoloJam.pdf}
-		\caption{Illustrations: two individual SoloJam example scenarios illustrated differently.}
-		\label{fig:solojam}
-	\end{figure}
-
-	The solution to how this decentralized, coherent and interactive music system consist of elements inspired by the Economical Sciences. Namely:
-
-	\begin{enumerate}
-		\item Auctions (specifically the Vickrey auction)
-		\item Utility (profitability/deservedness measure)
-	\end{enumerate}
-
-	The function for utility is given by the expression:
-
-	\begin{equation}
-	u_i = \frac{c}{(1+a D_l)(1+b T_l)}
-	\end{equation}
-	\newline
-
-	It is essential with a properly designed utility function for the system to behave coherently e.g. This utility-function is inversely proportional with \textit{a)} differences between bidder and auctioneer's/leader's rhythm patterns $D_l$, and \textit{b)} the time/\#bars the leader has played its rhythm pattern $T_l$ - as well as constrained by and applied to a couple of other clauses (to ensure some wanted/avoid some unwanted effects).
-
-	"Shaking"-/"moving"-patterns (as registered/sensed by the devices' inertial units) are translated into rhythm patterns - which then are calculated a \textbf{utility score} (by the function as mentioned above and outlined in more detail in the paper) for, used as bid in an auction.
-
-	The winner of the auction will (when considering knowledge of the leader-rhythm-pattern, as we do when a = 1.0 instead of 0.0) be those rhythm patterns which are the closest rhythm-patterns (i.e. not completely equal) to the leader's rhythm-pattern (in terms of the Hammings-distance) - assuming e.g. that the participant didn't just play before another participant, nor that it had played its rhythm-pattern for a very long time. In the paper, we then notice how the authors study how \textbf{varying degrees of self-awareness} (a=1.0 versus a=0.0) affect the overall system dynamics -- then in the form of musical coherence, as well as decentralized circulation.
-
-	
-	\subsection{Musical robots: the Dr. Squiggles}
-	\label{dr_squiggles}
-	
-	M. J. Krzyzaniak and RITMO's musical robots, the Dr. Squiggles\footnote{\url{https://www.uio.no/ritmo/english/news-and-events/news/2021/drsquiggles.html} (accessed 2022.05.17)}, have been used in several music technology systems and projects previously.
-	
-	
-	\subsection{SoloJam Island}
-	\label{solojam_island}
-	
-	Corresponding 3D-models of the Dr. Squiggle robots, for simulation, were designed by Pierre Potel\footnote{\textit{SoloJam-Island}, \url{https://github.com/67K-You/SoloJam-Island} (accessed 2022.05.17)}.
-	
-	Combining the two above.
-
 % --- \section END. ---
