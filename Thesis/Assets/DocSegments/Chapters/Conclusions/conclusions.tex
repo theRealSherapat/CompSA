@@ -2,26 +2,37 @@
 \label{chap:conclusions}
 
 
-	% --- META INFO START: ---
+	% % --- META INFO START: ---
 
-	\besk{ Where I shall follow-up on my \textit{research questions} by a discussion of to which degree—and in what ways—the thesis-/project-work has answered them }
+	% \besk{ Where I shall follow-up on my \textit{research questions} by a discussion of to which degree—and in what ways—the thesis-/project-work has answered them }
 
-	\gjor{
-		Se på \tcol[gray]{(for kapittel-inspirasjon)}:
-		\begin{itemize}
-			\item Tønnes . MSc-thesis . Discussion-Ch.
-			\item Jim . 'how to write a master thesis.pdf' . 'Conclusions'.
-		\end{itemize}
-	}
+	% \gjor{
+		% Se på \tcol[gray]{(for kapittel-inspirasjon)}:
+		% \begin{itemize}
+			% \item Tønnes . MSc-thesis . Discussion-Ch.
+			% \item Jim . 'how to write a master thesis.pdf' . 'Conclusions'.
+		% \end{itemize}
+	% }
 
-	% --- META INFO STOP. ---
+	% % --- META INFO STOP. ---
 
 
 \section{General discussion}
 
+	As we can see from the results in the previous chapter, musical robot collectives achieve harmonic synchronization with various performance dependant on various robot collective or individual hyperparameter values.
+	
+	We see e.g. the recurring trend that the larger the robot collectives R we have (i.e. the larger $|R|$ we have), the more stable the robot collective seems to manage synchronizing to each other—compared to with lower collective sizes $|R|$.
+	
+	Perhaps not so surprisingly, performance both in terms of harmonic synchronization time as well as low error rates also tends to improve as we endow individual musical robots with larger self awareness scopes; the more of the closest neighbourhood each robot is self aware of, the higher the performance tends to be. However, there were also cases where not much improvement was seen in harmonic synchronization performance past certain points in self awareness scopes—even before robots having all their neighbours in their scope (i.e. global SA scope).
 
 
-\section{Conclusion}
+	\subsection{Conclusion}
+
+	To summarize, time synchronization (harmonic at that) in musical robots, modelled as pulse coupled oscillators, has been achieved in the newly developed synchronization simulator, utilizing some already existing methods for synchronizing both oscillator phases and oscillator frequencies.
+	
+	Although individual hyperparameters plays a role in terms of harmonic synchronization performance to a certain extent, what is often more decisive for in a stable manner achieving harmonic synchrony in an oscillator collective is the collective size $|R|$.
+	
+	Furthermore, musical robots need not to be globally connected in order to achieve harmonic synchronization often times, and one can even relax the connectivity whilst still achieving as good synchronization performance as globally connected robots. However, there still is an overarching trend of increasing harmonic synchronization performance the larger the self awareness scope of the individual musical robots are.
 
 
 	\subsection{Ethical reflections}
