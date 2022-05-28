@@ -24,6 +24,12 @@
 \section{Conclusion}
 
 
+	\subsection{Ethical reflections}
+	
+	One might get frightened by hearing robots or machines have become self aware. This can remind listeners of concepts like superintelligence or general artificial intelligence, which can have scary and unknown consequences if ever achieved.
+	
+	My personal view is that the work presented in this thesis probably holds potential for computing systems and robots to get more well defined and consise self awareness specifications, and hence might become more self aware as a consequence of such clarity. Furthermore, frameworks for computing systems inspired by psychology in terms of self awareness might potentially get us closer to achieving something resembling general artificial intelligence or a superintelligence. However, I do not fear of this happening in the near future or even the far future; I would like to echo what Andrew Ng, being one of the leading figures within the AI community, has been quoted to say regarding the possibility of an AI superintelligence: ``Worrying about AI evil superintelligence today is like worrying about overpopulation on the planet Mars. We haven’t even landed on the planet yet!'' I, like others, even think there is a safety argument to be had about self awareness having a larger focus in computational systems like robots, being that explainability (being a hot topic at the moment) can be further increased by considering computational self awareness in a computing system. However, I am very in favor of careful considerations and regulatory oversight from all parts of society in order for humans to ensure control and desired outcomes when it comes to both AI, and more specifically to topics like the one explored in this thesis being computational self awareness.
+
 
 \section{Further work}
 
@@ -31,7 +37,10 @@
 	Going from simulation to the real physical world, using M. J. Krzyzaniak and RITMO's  actual musical robots, the Dr. Squiggles (cf. \ref{dr_squiggles}). This would involve implementing or translating the software written for the simulated Dr. Squiggles in the Unity simulator environment into the physical hardware and interfaces available in the real Dr. Squiggle robots. Using an audio interface with the Dr. Squiggles robots in order to transmit or play audible ``fire'' signals would perhaps correspond to \textit{self awareness scope 2} as defined in this thesis, whereas \textit{self awareness scope 3} could possibly correspond in reality to communication technologies where messages are heard globally relatively instantaneously after it is transmitted, such as e.g. wireless local area networks (e.g. Wi-Fi) or—even faster—Ethernet internet cables.
 
 	\paragraph{Introduction of noise and epistemolgical challenges:}
-	In this music system, pulses (or firings) were designed in such a way that the other musical nodes would easily hear the distinct signals. We could have easily imagined a scenario where this would not be given; hence calling for more sophisticated methods for detecting and separating between actually separate (spatially) audio-sources. Epistemological explorations, related to e.g. Computational Auditory Scene Analysis (as mentioned in \cite{casa}) would then be of interest.
+	In this music system, pulses (or firings) were designed in such a way that the other musical nodes would easily hear the distinct signals. We could have easily imagined a scenario where this would not be given; hence calling for more sophisticated methods for detecting and separating between actually separate (spatially) audio-sources. Epistemological explorations, related to e.g. Computational Auditory Scene Analysis (as mentioned in \cite{casa}) would then be of interest. Some simple ways to introduce noise in the developed synchronization simulator would be to omit or skip, with a probability, notifying a robot by sending a ``fire'' or adjustment signal to it for self adjustment. In this way, it would be like robots randomly not managing to listen for all the ``fire'' signals being transmitted into the environment. One could then do a study on how well different musical robot collectives, in terms of e.g. self awareness scopes, would handle this additional challenge.
+	
+	\paragraph{Learning of internal models capturing self awareness knowledge:}
+	
 
 	\paragraph{Automatic and online (harmonic) fire sound generation:}
 	As alluded to in \ref{human_audible_fire_signals}, one possible avenue to explore in order to find harmonious chords or tones—when played together—in a more automatic approach, live and online during simulation, could be found through musical machine learning models predicting fitting and accompanying chords and harmonies (given a tone) in real-time, like the ones tested thoroughly in B. Wallace's interactive music system PSCA \cite{wallace_PSCA}. This was however not attempted in this thesis, as this was beyond the scope of the project.

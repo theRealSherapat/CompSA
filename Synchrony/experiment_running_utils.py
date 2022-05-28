@@ -4,7 +4,7 @@ import csv
 import numpy as np
 import multiprocessing as mp
 
-reservedProcessors = 2
+reservedProcessors = 0
 silent = True
 
 sampSize = 30
@@ -30,7 +30,7 @@ defaultHyperparamsDictionary = {'COLLSIZE'                              : 3,
                                 'BETAS'                                 : 0.4,
                                 'ADJ_OMEGAS'                            : 0,
                                 'MS'                                    : 5,
-                                'K_SS'                                  : 1000,
+                                'K_SS'                                  : 100000,
                                 'D_SS'                                  : 0
                                 } # the values of which have been found decent through empirical experience.
 

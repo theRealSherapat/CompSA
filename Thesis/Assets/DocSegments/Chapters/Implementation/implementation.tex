@@ -1,4 +1,4 @@
-\chapter{Implementation and experimental setup} % Method-equivalent.
+\chapter{Implementation and experimental setup}
 \label{chap:implementation}
 
 
@@ -186,6 +186,12 @@ Unity\footnote{Unity Version 2021.2.0f1 is used in the developed simulator.} is 
 			Different musical tones were recorded (again with a harp-instrument) and later edited into ``fire''-signals, as described above, with various signal lengths given their pitch.
 			The idea was to assign, online and dynamically throughout the simulation-run, ``fire''-signal-transformed musical tones with higher pitch (or waveform-frequencies) to musical robots with the highest oscillator-frequencies in the robot-collective.
 
+		\subsubsection{Physical robot instansiation}
+		
+		\begin{equation}\label{spawn_radius}
+			radius_{spawn} = \frac{|R|}{6} \cdot r_{width} + 4
+		\end{equation}
+
 % --- \section END. ---
 
 
@@ -208,7 +214,6 @@ Unity\footnote{Unity Version 2021.2.0f1 is used in the developed simulator.} is 
 	
 	
 	
-% SEKSJON 3, Presenting new methods I implemented myself for frequency-synchronization:
 \section{Synchronizing oscillator-frequencies}
 \label{sec:frequency_methods}
 
@@ -216,7 +221,27 @@ Unity\footnote{Unity Version 2021.2.0f1 is used in the developed simulator.} is 
 	
 	\tcol{We hence now introduce randomly initialized, non-constant, and heterogenous oscillator-frequencies in our musical agents. The agents are now required to synchronize their initially different and random frequencies, so that frequencies are ``legal'' and \textit{harmonically synchronized}. Such ``legal'' frequencies are described clearly in detail in Section \ref{sec:harmonic_synchrony}.}
 	
-	\tcol{Some implemented approaches for achieving this are presented now. Notice the increasing degree of \textit{Computational Self-Awareness} endowed in the methods.}
+	\textbf{Legal frequencies definition:} \nl
+
+	Building upon Nymoen's definition of harmonic synchronized oscillator frequencies (cf. \eqref{nymoen_legal_freqs}), a consise definition for the legal frequencies can be given as follows. All musical oscillators $i$, in a harmonically synchronized state, will have frequencies $\omega_i$ which are element in the mathematical set
+
+	\begin{equation}\label{impl_legal_freqs}
+	\Omega_{legal}(\omega_0) = \omega_{0} \cdot 2^{\mathbb{N}_0} = \{\omega_{0}, 2\omega_{0}, 4\omega_{0}, 8\omega_{0}, ...\} ,
+	\end{equation}
+
+	where $\omega_{0}$ is the lowest frequency in the oscillator collective (or the fundamental frequency if you will), and $\mathbb{N}_0$ are the natural numbers including the number zero. \nl
+
+	If e.g. the smallest oscillator frequency in the musical oscillator collective ($\omega_0$) was equal to 1.5Hz, \textit{legal} frequencies the rest of the oscillators in the collective could have would be $\Omega_{legal}$(1.5Hz) = \{1.5Hz, 3Hz, 6Hz, 12Hz, ...\}.
+
+	Hence, in terms of frequencies $\omega_i$ for all oscillators $i$ in the oscillator network, we have \textit{harmonically synchronized} and \textit{legal} oscillator frequencies $\omega_i$ if (and only if)
+
+	\begin{equation}\label{synced_freqs}
+	\omega_i \in \Omega_{legal}(\omega_0) , \forall i.
+	\end{equation} \nl
+
+	This state of \textit{harmonic synchrony} is then the system goal state K. Nymoen et al. achieve using their phase and frequency update functions, as explained in Sections \ref{sec:nymoen_phase_updates} and \ref{sec:nymoen_freq_updates}; and is also the target or goal state we want to continue achieving and experimenting for in this thesis.
+	
+	\textbf{Implementation details:} \nl
 	
 	In the newly proposed Unity simulator environment, the previously introduced self-assessed sync score $s(n)$ (in \ref{s_n}), encompassing the approach's main self awareness capabilities, is implemented as the median of a list containing \textit{m} error-scores $\epsilon$. Such an error score list of length $m$ is easily implemented by a list called \textit{errorBuffer}:
 	

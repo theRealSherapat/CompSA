@@ -72,7 +72,7 @@ Accomodating for these aspects then, K. Nymoen et al. took inspiration for coini
 		\caption{The frequency spectrogram of the audible waveform being a more-or-less monotone but non-pure G3-tone, hummed and recorded\protect\footnotemark  by me, as I tried to repeat the tone in \ref{fig:sub:G3_pure_waveform} with my voice.}
 		\label{fig:sub:G3_hummed_waveform}
 	\end{subfigure}
-	\caption[Frequency spectrograms illustrating the absence and presence of harmonics and overtones in audible waveforms.]{Frequency spectrograms of two different-sounding waveforms of the same G3-tone at 195.99 Hz. Note the absence and presence of harmonics and overtones in waveform \ref{fig:sub:G3_pure_waveform} and \ref{fig:sub:G3_hummed_waveform} respectively, as well as the integer-relationships between the fundamental (lowest) frequency and the harmonics in \ref{fig:sub:G3_hummed_waveform}. Frequencies in a harmonically synchronized oscillator collective will for the first $\phi$-problem resemble the frequencies in \ref{fig:sub:G3_pure_waveform}, where all frequencies are equal and constant. Conversely, when frequencies can be heterogenous and unequal, as in the $\phi$- \& $\omega$-problem, the frequencies in a harmonically synchronized oscillator collective will rather resemble, although not completely correspond to, the frequencies in \ref{fig:sub:G3_hummed_waveform}, where higher frequencies with integer relationships to the fundamental and lowest frequency can be present at the same time.}
+	\caption[Frequency spectrograms illustrating the absence and presence of harmonics and overtones in audible waveforms.]{Frequency spectrograms of two different-sounding waveforms of the same G3-tone at 195.99 Hz. Note the absence and presence of harmonics and overtones in waveform \ref{fig:sub:G3_pure_waveform} and \ref{fig:sub:G3_hummed_waveform} respectively, as well as the integer-relationships between the fundamental (lowest) frequency and the harmonics in \ref{fig:sub:G3_hummed_waveform}. Frequencies in a harmonically synchronized oscillator collective will for the first phase synchronization problem resemble the frequencies in \ref{fig:sub:G3_pure_waveform}, where all frequencies are equal and constant. Conversely, when frequencies can initially be heterogenous and unequal, as in the phase \textit{and} frequency synchronization problem, the frequencies in a harmonically synchronized oscillator collective will rather resemble, although not completely correspond to, the frequencies in \ref{fig:sub:G3_hummed_waveform}, where higher frequencies with integer relationships to the fundamental and lowest frequency can be present at the same time.}
 	\label{fig:frequency_spectrograms}
 \end{figure}
 
@@ -81,29 +81,15 @@ Accomodating for these aspects then, K. Nymoen et al. took inspiration for coini
  \stepcounter{footnote}\footnotetext{\url{https://github.com/theRealSherapat/CompSA/blob/main/CollectedData/Audio/G3_196Hz_humming.wav} (accessed 2022.05.22)}
 
 
-More accurately then and inspired by integer relationships in waveforms, although not exactly analogus to the example above in Figure \ref{fig:frequency_spectrograms}, Nymoen et al. describe \textit{legal} frequencies the oscillator frequencies has to lie within to be considered \textit{harmonically synchronized}: \nl
+More accurately then and inspired by integer relationships in waveforms, although not exactly analogus to the example above in Figure \ref{fig:frequency_spectrograms}, Nymoen et al. describe \textit{legal} frequencies the oscillator frequencies has to lie within to be considered \textit{harmonically synchronized}. Frequencies have to lie within 
 
-\textbf{Legal frequencies definition:} \nl
-
-All musical oscillators $i$, in a harmonically synchronized state, will have frequencies $\omega_i$ which are element in the mathematical set
-
-\begin{equation}\label{legal_freqs}
-\Omega_{legal}(\omega_0) = \omega_{0} \cdot 2^{\mathbb{N}_0} = \{\omega_{0}, 2\omega_{0}, 4\omega_{0}, 8\omega_{0}, ...\} ,
+\begin{equation}\label{nymoen_legal_freqs}
+\omega_{0} \cdot 2^{\mathbb{N}_0}, 
 \end{equation}
 
-where $\omega_{0}$ is the lowest frequency in the oscillator collective (or the fundamental frequency if you will), and $\mathbb{N}_0$ are the natural numbers including the number zero. \nl
+where $\omega_0$ represents the smallest oscillator frequency in the oscillator collective, and $\mathbb{N}_0$ are the natural numbers including the number zero.
 
-If e.g. the smallest oscillator frequency in the musical oscillator collective ($\omega_0$) was equal to 1.5Hz, \textit{legal} frequencies the rest of the oscillators in the collective could have would be $\Omega_{legal}$(1.5Hz) = \{1.5Hz, 3Hz, 6Hz, 12Hz, ...\}.
-
-Hence, in terms of frequencies $\omega_i$ for all oscillators $i$ in the oscillator network, we have \textit{harmonically synchronized} and \textit{legal} oscillator frequencies $\omega_i$ if (and only if)
-
-\begin{equation}\label{synced_freqs}
-\omega_i \in \Omega_{legal}(\omega_0) , \forall i.
-\end{equation} \nl
-
-Note that the only difference between this definition of \textit{legal oscillator frequencies} and the spectrogram example depicted in Figure \ref{fig:frequency_spectrograms} lies in that for the legal frequencies as defined in \eqref{legal_freqs}, higher frequencies can only have doubling integer relationships with the lowest fundamendal frequency (e.g. twice or four times as high), whereas the frequencies of the harmonics seen in the humanly hummed G3 tone (\ref{fig:sub:G3_hummed_waveform}) additionally had all other positive integer relationships (e.g. three or five times as high) with the fundamental frequency.
-
-This state of \textit{harmonic synchrony} is then the system goal state K. Nymoen et al. achieve using their phase and frequency update functions, as explained in Sections \ref{sec:nymoen_phase_updates} and \ref{sec:nymoen_freq_updates}; and is also the target or goal state we want to continue achieving and experimenting for in this thesis.
+Note that the only difference between Nymoen's definition of \textit{legal oscillator frequencies} and the spectrogram example depicted in Figure \ref{fig:frequency_spectrograms} lies in that for the legal frequencies as defined in \eqref{nymoen_legal_freqs}, higher frequencies can only have doubling integer relationships with the lowest fundamendal frequency (e.g. twice or four times as high), whereas the frequencies of the harmonics seen in the humanly hummed G3 tone (\ref{fig:sub:G3_hummed_waveform}) additionally had all other positive integer relationships (e.g. three or five times as high) with the fundamental frequency.
 
 	\subsection{Detecting harmonic synchrony}
 	\label{baseline:subsec:detecting_harmonic_sync}
