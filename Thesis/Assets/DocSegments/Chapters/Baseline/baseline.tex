@@ -2,12 +2,7 @@
 \label{chap:baseline}
 
 
-	% --- META INFO START: ---
-
-	\besk{ Mellomkapittel om allerede-eksisterende approaches og teori jeg brukte som starting point og som jeg verifiserer og sammenlikner med senere }
-
-	% --- META INFO STOP. ---
-
+\besk{ START CLEAN UP }
 
 Kristian Nymoen et al. showed in their paper titled \textit{Decentralized Harmonic Synchronization in Mobile Music Systems} \cite{nymoen_synch} how one can achieve synchronization (\textit{harmonic} at that, cf. \ref{sec:harmonic_synchrony}) of pulse coupled oscillators's initially unsynchronized phases and frequencies. This is done by endowing oscillators with self awareness capabilities amongst other measures. The platform Nymoen et al. achieved this on is shown in Figure \ref{fig:nymoen_fireflies_on_ios_devices}, as each firefly on their iOS devices initially start flashing unsynchronized and randomly, but then eventually manage to start firing synchronously\footnote{See video at \url{https://vimeo.com/67205605} (accessed 2022.05.17)}.
 
@@ -39,6 +34,8 @@ In this Active Music System, as shown in Figure \ref{fig:nymoen_fireflies_on_ios
         \item Werner-Allen's \textit{reachback firefly algorithm (RFA)}, involving collecting received fire events and updating frequency only every second round, as opposed to always updating frequency at once a fire event is received.
     \end{itemize}
 \end{itemize}
+
+\besk{ END CLEAN UP }
 
 As Nymoen designed update functions for synchronizing both phases and frequencies, not only were their firefly-inspired oscillators endowed with self awareness capabilities; they were also designed to adjust their phases and frequencies with (close to) 0 change half-way through the oscillator cycle. These (close to) 0 changes half-way through oscillators's cycles enable individual musical agents to play with different measures (e.g. half or 1/4th as fast) compared to other individuals—being characteristic for musical interaction with several musical individuals—as well as enabling the possibility of achieving the target state of harmonic synchrony (cf. \ref{sec:harmonic_synchrony}). Their contribution also differs from previous approaches in that Nymoen et al.'s fireflies only need to transmit ``fire'' signals every other phase climax, not every single phase climax; in other words, synchronization is achieved despite less communication.
 
@@ -110,24 +107,33 @@ This state of \textit{harmonic synchrony} is then the system goal state K. Nymoe
 
 	\subsection{Detecting harmonic synchrony}
 	\label{baseline:subsec:detecting_harmonic_sync}
-	In order to test and evaluate synchronization performance in their firefly-inspired oscillator-system, K. Nymoen et al. \cite{nymoen_synch} develop a measurement used to detect when the system has reached a state of synchrony. Using the firings of the fireflies, some well-defined conditions have to be met in order for the fireflies to be deemed \textit{harmonically synchronized}: \nl
+	In order to test and evaluate synchronization performance in their firefly-inspired oscillator-system, K. Nymoen et al. \cite{nymoen_synch} develop a measurement used to detect when the system has reached a state of synchrony. Using the firings of the fireflies, some key and well-defined conditions have to be met in order for the fireflies to be deemed \textit{harmonically synchronized}: \nl
 	
 	\textbf{Harmonic synchronizaton conditions:}
 	
 	\begin{itemize}
-		\item[] \textbf{Condition 1}: Firing may only happen within a short time period $t_f$.
-		\item[] \textbf{Condition 2}: All nodes must have fired at least once during the evaluation period.
-		\item[] \textbf{Condition 3}: Between each $t_f$, a period $t_q$ without fire events must be equally long $k$ times in a row.
+		\item[] \textbf{Condition 5)}: Firing may only happen within a short time period $t_f$.
+		\item[] \textbf{Condition 6)}: Between each $t_f$, a period $t_q$ without fire events must be equally long $k$ times in a row.
+		\item[] \textbf{Condition 7)}: All nodes must have fired at least once during the evaluation period.
 	\end{itemize}
 	\sep
 	
-	\tcol{By utilizing transmitted firings or pulses from the robots in our robot collective, these conditions can be enforced and checked throughout the synchronization process, in order to detect if the oscillator network becomes harmonically synchronized.}
+	Visually, these requirements are shown in Nymoen's sketch for detecting harmonic synchrony in Figure \ref{fig:nymoen_harm_sync_detect}.
 	
-	\tcol{For getting a better idea of how these conditions being met looks like, see the \textbf{Harmonic synchrony detection plot} in Figure \ref{fig:harmonic_synchrony_detection_plot} where the oscillators fulfill the abovementioned requirements right before ending the synchronization process.}
+	\begin{figure}[ht!]
+		\centering
+		\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/Baseline/Figures/Illustrations/NymoenHarmonicSyncDetectionSchema.pdf}
+		\caption[Nymoen et al.'s harmonic synchrony detection schema.]{Requirements needing to be fulfilled in order to have achieved the target state of harmonic synchrony in an oscillator (here meant by ``node'') collective. Image: K. Nymoen et al. \cite{nymoen_synch}.}
+		\label{fig:nymoen_harm_sync_detect}
+	\end{figure}
 	
-	\tcol{These requirements, amongst other illustrations in Nymoen et al.'s paper \cite{nymoen_synch}, thus constitutes a blueprint for the design of a performance or synchrony measurement able to detect the achievement of harmonic synchrony in a decentralized network of ``firing''—or pulse-coupled—oscillators. The time having passed from the start of the synchronization-process until the detection of harmonic synchrony will then be defined as the performance score, indicating how fast or slow the oscillators are at synchronizing.}
+	Steps \textbf{1) - 4)} are means to achieve \textbf{5) - 7)}.
 	
-	\tcol{The exact details of how such a performance or synchrony measurement is implemented for our musical multi-robot oscillator-network, in the synchronization-simulator, will be given in Section \ref{sec:detecting_harmonic_synchrony}.}
+	In summary, by utilizing transmitted firings or pulses from the robots in our robot collective, the aforementioned harmonic synchrony conditions can be enforced and checked throughout the synchronization process, in order to detect if, and in that case when, the oscillator network becomes harmonically synchronized. The time having passed from the start of the synchronization-process until the detection of harmonic synchrony will then be defined as the performance score, indicating how fast or slow the oscillators are at synchronizing.
+	
+	These harmonic synchrony requirements, as well as Nymoen's schema in Figure \ref{fig:nymoen_harm_sync_detect}, thus constitutes a blueprint for the design of a performance or synchrony measure able to detect the achievement of harmonic synchrony in a decentralized network of pulse coupled oscillators ``firing'' pulses in order to synchronize to each other; which is exactly what's implemented in this thesis's synchronization system explained further in Chapter \ref{chap:implementation}.
+	
+	The exact details of how such a performance / synchrony measure is implemented for the synchronization system in this thesis will be given in Section \ref{sec:detecting_harmonic_synchrony} in Chapter \ref{chap:implementation}.
 	
 % --- \section END. ---
 
@@ -143,22 +149,22 @@ This state of \textit{harmonic synchrony} is then the system goal state K. Nymoe
 	
 	\subsection{Synchronizing phases via phase adjustment}
 
-		\subsubsection{K. Nymoen's bi-directional phase adjustment} % or 'shifts', as used before.
-		\label{subsec:nymoen_phase_adjust}
+	\textbf{K. Nymoen's bi-directional phase adjustment} \nl % or 'shifts', as used before.
+	\label{subsec:nymoen_phase_adjust}
 
-		Apart from altering a similar phase adjustment function to the likes of Mirollo-Strogatz's phase adjustment function \eqref{strog_phase} so that theirs would cooperate well with the system's frequency adjustment in achieving their target goal of harmonic synchrony, K. Nymoen et al. \cite{nymoen_synch} here introduces an example of a bi directional phase adjustment method. The difference between a bi directional method of phase synchronization and a one directional one is that using bi directional phase adjustment, oscillators are simply adjusting each other's phases in an excitatory way; they only ``push'' other ocillators's phases further or higher (positive updates) when firing themselves, never ``holding'' or ``dragging'' them back (negative updates).
+	Apart from altering a similar phase adjustment function to the likes of Mirollo-Strogatz's phase adjustment function \eqref{strog_phase} sketched in Figure \ref{fig:mirollo_strogatz_phase_adj_sketch}, K. Nymoen et al. \cite{nymoen_synch} introduces an example of a bi directional phase adjustment method. This they do mainly so that their phase adjustment ($Adj_{\phi}$) method would cooperate well with their system's frequency adjustment, in order to achieving their target goal of harmonic synchrony. The difference between a bi directional method of phase synchronization and a one directional one is that using bi directional phase adjustment, oscillators are simply adjusting each other's phases in an excitatory way; they only ``push'' other ocillators's phases further or higher (positive updates) when firing themselves, never ``holding'' or ``dragging'' them back (negative updates).
 
-		Hence, this newer approach to phase adjustment works very similarly to the phase adjustment performed in the ``standard'' \textbf{\textit{Mirollo-Strogatz}} approach presented earlier; the only difference being that now, oscillators update their phases with the slightly more complex \textbf{phase update function \eqref{nymoen_phase}} when hearing a ``fire''-event from one of the other musical nodes — allowing for both larger, but also smaller, updated phases compared to the old phases:
+	Hence, this newer approach to phase adjustment works very similarly to the phase adjustment performed in the ``standard'' \textbf{\textit{Mirollo-Strogatz}} approach presented earlier; the only difference being that now, oscillators update their phases with the slightly more complex \textbf{phase update function \eqref{nymoen_phase}} when hearing a ``fire''-event from one of the other musical nodes — allowing for both larger, but also smaller, updated phases compared to the old phases:
 
-		\begin{equation}
-		\label{nymoen_phase}
-			\phi(t^+)=P(\phi(t)) = \phi(t) - \alpha \cdot sin(2\pi\phi(t)) \cdot | sin(2\pi\phi(t)) | ,
-		\end{equation} \nl
-		where $t^+$ denotes the time-step immediately after a ``fire''-event is heard, and $\phi(t)$ is the old frequency of the oscillator at time $t$.
+	\begin{equation}
+	\label{nymoen_phase}
+		\phi(t^+)=P(\phi(t)) = \phi(t) - \alpha \cdot sin(2\pi\phi(t)) \cdot | sin(2\pi\phi(t)) | ,
+	\end{equation} \nl
+	where $t^+$ denotes the time-step immediately after a ``fire''-event is heard, and $\phi(t)$ is the old frequency of the oscillator at time $t$.
 
-		The fact that new and updated phases can both be larger, but also smaller, compared to the old phases, is exactly what's meant by the phase-adjustment being \textbf{\textit{bi-directional}}, or as the authors call it in the paper as using both excitatory and inhibitory phase couplings between oscillators \cite{nymoen_synch}.
+	The fact that new and updated phases can both be larger, but also smaller, compared to the old phases, is exactly what's meant by the phase-adjustment being \textbf{\textit{bi-directional}}, or as the authors call it in the paper as using both excitatory and inhibitory phase couplings between oscillators \cite{nymoen_synch}.
 
-		The effects then of adjusting phases—upon hearing ``fire''-events, according to this newest update-function \eqref{nymoen_phase}—are that the nodes's updated phases $\phi(t^+)$, compared to their old phases $\phi(t)$, now get decreased if $\phi(t)$ is lower than 0.5, increased if $\phi(t)$ is higher than 0.5, and neither—at least almost—if the phases are close to $0.5$. This is due to the negative and positive sign of the sinewave-component in Equation \eqref{nymoen_phase}, as well as the last attenuating factor in it of $| sin(2\pi\phi) | \approx | sin(2\pi \frac{1}{2}) | = | sin(\pi) | = | 0 | = 0$, then if we have $\phi(t) \approx 0.5 = \frac{1}{2}$.
+	The effects then of adjusting phases—upon hearing ``fire''-events, according to this newest update-function \eqref{nymoen_phase}—are that the nodes's updated phases $\phi(t^+)$, compared to their old phases $\phi(t)$, now get decreased if $\phi(t)$ is lower than 0.5, increased if $\phi(t)$ is higher than 0.5, and neither—at least almost—if the phases are close to $0.5$. This is due to the negative and positive sign of the sinewave-component in Equation \eqref{nymoen_phase}, as well as the last attenuating factor in it of $| sin(2\pi\phi) | \approx | sin(2\pi \frac{1}{2}) | = | sin(\pi) | = | 0 | = 0$, then if we have $\phi(t) \approx 0.5 = \frac{1}{2}$.
 
 % --- \section END. ---
 
@@ -188,9 +194,6 @@ This state of \textit{harmonic synchrony} is then the system goal state K. Nymoe
 		\caption[]{An illustration of how frequencies are adjusted after each phase climax (i.e. $\phi=1$) using Nymoen et al.'s frequency update function. Reproduced from \cite{nymoen_synch}.}
 		\label{fig:nymoen_freq_adjust_illustration}
 	\end{figure}
-	
-		\besk{OPPRYDDET HITTIL}
-		% FORTSETT OPPUSSINGEN HERUNDER:
 	
 	When it comes to the temporality and timing of when these update functions are used and applied; Musical agents's phases get updated/adjusted immediately as ``fire''-/``flash''-events are perceived, whereas agents's frequencies do not get updated until the end of their oscillator-cycle (i.e. when having a phase-climax $\phi(t)=1$). This is also the reason why frequencies are updated discretely, not continuously. So-called H-values however, being ``contributions'' with which the frequencies are to be updated according to, are immediately calculated and accumulated when agents are perceiving a ``fire''-/``flash''-event — and then finally used for frequency-adjustment/-updating at phase-climaxes.
 	

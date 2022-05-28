@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import csv
 
+dataSampleSize = 30 # datapoints
+
 def main(CSV_filepath, plotFailuresPls):
     matrixOfCSVValues, csvHeader = parseDataFrom(CSV_filepath)
     
@@ -49,15 +51,21 @@ def getSampleStartIndexes(hugi_datamatrix):
     headerIndex = 0
     newDatasampleIndexes = []
     
-    hugi_covariate_datamatrix = hugi_datamatrix[:,2:-1]
+        # DYNAMIC SOLUTION, BUT NOT COMPATIBLE WITH DIFFERENTLY SIZED .CSV ROWS:
+    # hugi_covariate_datamatrix = hugi_datamatrix[:,2:-1]
     
-    previous_covariate_row = np.zeros(hugi_covariate_datamatrix.shape[1])
-    for rowInd, row in enumerate(hugi_covariate_datamatrix):
-        if not (previous_covariate_row == row).all():
-            newDatasampleIndexes.append(rowInd)
-            headerIndex = list((previous_covariate_row == row)).index(False)
+    # previous_covariate_row = np.zeros(hugi_covariate_datamatrix.shape[1])
+    # for rowInd, row in enumerate(hugi_covariate_datamatrix):
+        # if not (previous_covariate_row == row).all():
+            # newDatasampleIndexes.append(rowInd)
+            # headerIndex = list((previous_covariate_row == row)).index(False)
             
-        previous_covariate_row = row
+        # previous_covariate_row = row
+        
+    
+    # Naïve, but hopefully (if data samples are 30 data points big) working, workaround:
+    newDatasampleIndexes = [int(el) for el in [0]+list(np.arange(dataSampleSize-1, hugi_datamatrix.shape[0]-1, dataSampleSize))]
+    
     
     return newDatasampleIndexes, headerIndex
 
@@ -76,17 +84,18 @@ def parseDataFrom(csv_filename): # GOLDEN STANDARD
         csvHeader = csvHeader[2:] # only want covariates, so we slice out the measurement header entries.
         for row in csvReader:
             if numOfRows == 0:
-                arrayOfDatapoints = np.empty((1, len(row))) # initializing our numpy data-matrix when we know the number of columns to include in it
+                arrayOfDatapoints = np.empty((1, 2)) # initializing our numpy data-matrix when we know the number of columns to include in it
                 
                 
-        
-            col_array = np.array([])
-            for col_index in range(len(row)):
-                col_element_string = row[col_index].replace(',','.')
-                col_element = float(col_element_string)
-                col_array = np.append(col_array, col_element)
+            col_array = np.array([float(row[0].replace(',','.')), float(row[1].replace(',','.'))])
             
-            col_array = np.reshape(col_array, (1, len(row)))
+                # DYNAMIC SOLUTION, BUT NOT COMPATIBLE WITH DIFFERENTLY SIZED .CSV ROWS:
+            # for col_index in range(len(row)):
+                # col_element_string = row[col_index].replace(',','.')
+                # col_element = float(col_element_string)
+                # col_array = np.append(col_array, col_element)
+            
+            # col_array = np.reshape(col_array, (1, len(row)))
             arrayOfDatapoints = np.vstack((arrayOfDatapoints, col_array))
             
             numOfRows += 1

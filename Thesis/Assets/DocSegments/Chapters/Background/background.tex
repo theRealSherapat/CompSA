@@ -209,7 +209,7 @@ What exactly is self-awareness? Is it \textit{awareness} of a \textit{self}? If 
 
 			\begin{figure}[!ht]
 			\centering
-			\includegraphics[width=0.8\columnwidth]{Assets/DocSegments/Chapters/Background/Figures/Schema/cocoro.PNG}
+			\includegraphics[width=0.65\columnwidth]{Assets/DocSegments/Chapters/Background/Figures/Schema/cocoro.PNG}
 			\caption[CoCoRo: the self aware underwater robotic AUV swarm.]{CoCoRo: the self aware underwater robotic swarm consisting of AUVs alternating between completing missions at the seabed and returning to the surface level basestation. Figure reused from T. Schmickl et al.'s paper \cite{cocoro}.}
 			\label{fig:cocoro}
 			\end{figure}
@@ -232,25 +232,26 @@ Translating concepts from the Psychological field into the Computational field g
 
 	Lewis et al. \cite{sacs16_ch2} has introduced a basis and fundament for Computational Self-awareness and Self-expression, that is founded in the psychological literature on Self-Awareness (as presented in section \textbf{2}).
 
-	More specifically, they base their new notion of computational self-awareness on computationally translated versions of the key self-awareness concepts discussed in sub-sections \textbf{2.4}, \textbf{2.5}, and \textbf{2.6}, as well as \textbf{2.7}.
+	More specifically, they base their new notion of computational self-awareness on computationally translated versions of the key self-awareness concepts discussed in \tcol{sub-sections \textbf{2.4}, \textbf{2.5}, and \textbf{2.6}, as well as \textbf{2.7}}.
 
 	First off, public and private self-awareness now considers computational systems, instead of human selves -- but these definitions are still the same (only that now the \textit{self} is the \textit{computational system}).
 
-	Secondly, Neisser's five levels of Self-awareness is now translated into five corresponding levels, as shown in \ref{} below.
+	Secondly, Neisser's five levels of self awareness is now translated by P. Lewis et al. \cite{sacs16_ch2} into five corresponding levels, as shown in Figure \ref{fig:comp_SA_levels} below.
 
 	\begin{figure}[!htp]
-	\centering
-	\includegraphics[width=0.5\columnwidth]{Assets/DocSegments/Chapters/Background/Figures/Schema/SA_levels.pdf}
-	\caption{Translated levels of self awareness from psychology to computer engineering and robotics.}
+		\centering
+		\includegraphics[width=0.5\columnwidth]{Assets/DocSegments/Chapters/Background/Figures/Schema/SA_levels.pdf}
+		\caption[Translated levels of self awareness from psychology to computer engineering and robotics.]{Translated levels of self awareness from psychology to computer engineering and robotics. Figure credits: Lewis et al. \cite{sacs16_ch2}.}
+		\label{fig:comp_SA_levels}
 	\end{figure}
 
 	Thirdly, computational self-awareness can both be considered in individual agents/computing systems, or in arbitrary agent-collectives (consisting of several sub-collectives) -- as seen in \ref{fig:collective_SA} below.
 
 	\begin{figure}[!htp]
-	\centering
-	\includegraphics[width=\columnwidth]{Assets/DocSegments/Chapters/Background/Figures/Schema/collective_SA.pdf}
-	\caption[Collective self awareness schema.]{Collective self awareness schema, as entities can be seen as consisting of many sub-entities.}
-	\label{fig:collective_SA}
+		\centering
+		\includegraphics[width=\columnwidth]{Assets/DocSegments/Chapters/Background/Figures/Schema/collective_SA.pdf}
+		\caption[Collective self awareness schema.]{Collective self awareness schema, as entities can be seen as consisting of many sub-entities. Figure credits: Lewis et al. \cite{sacs16_ch2}.}
+		\label{fig:collective_SA}
 	\end{figure}
 
 	Lastly, \textit{Computational Self-Expression} is similarly defined as  (only now for a computing system as the \textit{self}) \textbf{behaviour based on \textit{computational} self-awareness}.
@@ -271,14 +272,13 @@ Translating concepts from the Psychological field into the Computational field g
 
 	Chandra et al. introduces their own new Reference Architecture for designing and describing Computational Self-Awareness and Self-Expression \cite{sacs16_ch4}. This abstract and conceptual framework has several advantages. Firstly, it provides a detailed and fine-grained separation of different self-awareness and self-expression processes -- and hence makes design- and engineering-questions easier and more methodical. Secondly, being a common language, it paves the way for identifying common architectural patterns used to design Comp. SA- \& SE-systems. Compared to other Self-Adaptive systems, it also includes the notions of Self-Awareness from the beginning (as the psychology literature suggests SA capabilities is more innate than simply an add-on). And due to the general and implementation-agnostic framework, it can be used on a wide variety of agents systems, or agent-collectives systems.
 
-	A schematic of the reference architecture is given below:
+	A schematic of this reference architecture is given below:
 
 	\begin{figure}[!htp]
-	\centering
-	\includegraphics[width=0.9\columnwidth]{Assets/DocSegments/Chapters/Background/Figures/Schema/SA_and_SE_architecture.pdf}
+		\centering
+		\includegraphics[width=0.9\columnwidth]{Assets/DocSegments/Chapters/Background/Figures/Schema/SA_and_SE_architecture.pdf}
+		\caption[A rererence architecture for a self aware, and self expressive, computing system.]{Chandra et al.'s \cite{sacs16_ch4} rererence architecture for a self aware, and self expressive, computing system. Figure credits: Lewis et al. \cite{sacs16_ch4}.}
 	\end{figure}
-
-	This is expounded in detail in \cite{sacs16_ch4}.
 
 
 	\subsection{Conceptual Framework}
@@ -374,7 +374,15 @@ Oscillators have been used to implement and model a plethora of systems, also bi
 		\subsubsection{Mirollo-Strogatz's ``standard'' phase adjustment} % or phase synchronization, or phase updates
 		\label{mirollo_strogatz_phase_adjust}
 		
-		One approach having been used to achieve this in the past is Mirollo-Strogatz's ``Standard'' phase-adjustment in oscillators \cite{mirollo_strogatz_PCO_synch}.
+		
+		One approach having been used to achieve this in the past is Mirollo-Strogatz's ``Standard'' phase adjustment in oscillators \cite{mirollo_strogatz_PCO_synch}, as seen a sketch of in Figure \ref{fig:mirollo_strogatz_phase_adj_sketch}.
+		
+		\begin{figure}[ht!]
+			\centering
+			\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/Background/Figures/Illustrations/MirolloStrogatzPhaseSync.pdf}
+			\caption[Sketch of Mirollo \& Strogatz's ``standard'' phase adjustment.]{A sketch of Mirollo \& Strogatz's ``standard'' phase adjustment. Figure credits: K. Nymoen et al. \cite{nymoen_synch}.}
+			\label{fig:mirollo_strogatz_phase_adj_sketch}
+		\end{figure}
 		
 		Each oscillator gets a new phase, $\phi(t^+) = P(\phi(t))$, accoring to the \textbf{phase update function \eqref{strog_phase}} upon perceiving a ``fire''-event from one of the other musical nodes:
 		
