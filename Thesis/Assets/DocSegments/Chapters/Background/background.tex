@@ -339,18 +339,20 @@ One branch of these types of natural phenomena observed and studied are the biol
 \section{Oscillators and oscillator-synchronization}
 
 
-	% --- META INFO START: ---
+	% % --- META INFO START: ---
 
-	\gjor{ Beskriv dette så godt at du kan snakke fritt om oscillatorers \textbf{faser} og \textbf{frekvenser} senere (i Implementation f.eks.), spesielt i tilfelle for noen ikke har vært borti det før, eller tatt et Signalbehandlings-kurs }
+	% \gjor{ Beskriv dette så godt at du kan snakke fritt om oscillatorers \textbf{faser} og \textbf{frekvenser} senere (i Implementation f.eks.), spesielt i tilfelle for noen ikke har vært borti det før, eller tatt et Signalbehandlings-kurs }
 
-	\gjor{ Skill på Pulse-coupled Oscillators, og Phase-coupled Oscillators. Nevn fordelene, spesielt for roboter, med å synkronisere seg basert på diskret tid [Sandsbots-paperet Kyrre sendte deg (iaff. slutt-tabellen), SandBots-arkitekturen som åpner for lave oppdaterings-rater], sammenliknet med kontinuerlig tid }
+	% \gjor{ Skill på Pulse-coupled Oscillators, og Phase-coupled Oscillators. Nevn fordelene, spesielt for roboter, med å synkronisere seg basert på diskret tid [Sandsbots-paperet Kyrre sendte deg (iaff. slutt-tabellen), SandBots-arkitekturen som åpner for lave oppdaterings-rater], sammenliknet med kontinuerlig tid }
 
-	\besk{ Teori og nyere cutting-edge/state-of-the-art metoder for fase-/frekvens-synkronisering i oscillatorer og liknende. Se Kristian Nymoens referanser \cite{nymoen_synch} og artikler funnet i denne veinen } \nl
+	% \besk{ Teori og nyere cutting-edge/state-of-the-art metoder for fase-/frekvens-synkronisering i oscillatorer og liknende. Se Kristian Nymoens referanser \cite{nymoen_synch} og artikler funnet i denne veinen } \nl
 
-	% --- META INFO STOP. ---
+	% % --- META INFO STOP. ---
 
 
 Oscillators have been used to implement and model a plethora of systems, also biological ones, ranging from designing the locomotion-patterns of swimming robot-amphibia through central pattern generators \cite{ijspeert_cpg}, ..., and as we have already established, modelling synchronously flashing or firing fireflies.
+
+Most importantly for this thesis, an oscillator mainly consists of phase value $\phi$ and a frequency value $\omega$, much like in a periodical signal like e.g. sin($\omega \cdot t + \phi)$. These particular aspects of oscillators will be explained further now.
 	
 	
 	\subsection{Phase and frequency}
@@ -397,14 +399,14 @@ Oscillators have been used to implement and model a plethora of systems, also bi
 		So, if e.g. $\alpha = 0.1$, then a musical oscillator's new and updated phase, immediately after hearing a ``fire''-signal from another oscillator, will be equal to $\phi(t^+) = P(\phi(t)) = (1 + 0.1)\phi(t) = 1.1\phi(t)$. 110\% of its old phase $\phi(t)$, that is. Hence, and in this way, the oscillator would be ``pushed'' to fire sooner than it would otherwise (as nodes fire once they have reached phase-climax $\phi(t)=1$).
 	
 	
-	\subsection{Frequency synchronization}
+	% \subsection{Frequency synchronization}
 	
-		% --- META INFO START: ---
+		% % --- META INFO START: ---
 	
-		\besk{ \tcol[gray]{(If relevant and wanted)} Previous approaches to Frequency-synchronization in oscillators (pulse- and/or phase-coupled) [nymoen-referanser e.g.] where the oscillators's frequencies are either equal and fixed, or where frequencies are bound to initialize and stay within a fixed interval/range. }
+		% \besk{ \tcol[gray]{(If relevant and wanted)} Previous approaches to Frequency-synchronization in oscillators (pulse- and/or phase-coupled) [nymoen-referanser e.g.] where the oscillators's frequencies are either equal and fixed, or where frequencies are bound to initialize and stay within a fixed interval/range. }
 		
-		\besk{ \tcol[gray]{(If it exists)} A ``simpler'' frequency synchronization approach, to solve the phase and frequency ($\phi$ \& $\omega$) problem with, without any self awareness components }
+		% \besk{ \tcol[gray]{(If it exists)} A ``simpler'' frequency synchronization approach, to solve the phase and frequency ($\phi$ \& $\omega$) problem with, without any self awareness components }
 	
-		% --- META INFO STOP. ---
+		% % --- META INFO STOP. ---
 	
 % --- \section END. ---

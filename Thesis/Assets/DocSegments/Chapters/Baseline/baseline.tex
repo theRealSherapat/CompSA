@@ -93,9 +93,9 @@ Note that the only difference between Nymoen's definition of \textit{legal oscil
 	
 	In summary, by utilizing transmitted firings or pulses from the robots in our robot collective, the aforementioned harmonic synchrony conditions can be enforced and checked throughout the synchronization process, in order to detect if, and in that case when, the oscillator network becomes harmonically synchronized. The time having passed from the start of the synchronization-process until the detection of harmonic synchrony will then be defined as the performance score, indicating how fast or slow the oscillators are at synchronizing.
 	
-	These harmonic synchrony requirements, as well as Nymoen's schema in Figure \ref{fig:nymoen_harm_sync_detect}, thus constitutes a blueprint for the design of a performance or synchrony measure able to detect the achievement of harmonic synchrony in a decentralized network of pulse coupled oscillators ``firing'' pulses in order to synchronize to each other; which is exactly what's implemented in this thesis's synchronization system explained further in Chapter \ref{chap:implementation}.
+	These harmonic synchrony requirements, as well as Nymoen's schema in Figure \ref{fig:nymoen_harm_sync_detect}, thus constitutes a blueprint for the design of a performance or synchrony measure able to detect the achievement of harmonic synchrony in a decentralized network of pulse coupled oscillators ``firing'' pulses in order to synchronize to each other; which is exactly what's implemented in this thesis's synchronization system to be explained further in Chapter \ref{chap:implementation}.
 	
-	The exact details of how such a performance / synchrony measure is implemented for the synchronization system in this thesis will be given in Section \ref{sec:detecting_harmonic_synchrony} in Chapter \ref{chap:implementation}.
+	% The exact details of how such a performance / synchrony measure is implemented for the synchronization system in this thesis will be given in Section \ref{sec:detecting_harmonic_synchrony} in Chapter \ref{chap:implementation}.
 	
 % —- \section END. —-
 
@@ -139,7 +139,7 @@ Note that the only difference between Nymoen's definition of \textit{legal oscil
 
 	Nymoen also achieved synchronizing the frequency values $\omega$ of oscillators, being the speed at which the oscillator cycles through its cycle or oscillator period at (cf. \eqref{phase_freq}).
 	
-	This they managed to do by as mentioned and amongs other measures implementing an aspect of \textit{self awareness} in terms of a \textit{synchrony self assessment} $s(n) given ``fire'' event $n$, representing how much or out of sync an individual robot is.
+	This they managed to do by as mentioned and amongs other measures implementing an aspect of \textit{self awareness} in terms of a \textit{synchrony self assessment} $s(n)$ given ``fire'' event $n$, representing how much or out of sync an individual robot is.
 	
 	It will then, having taken into account some middle steps as explained below, use this self assessed sync score $s(n)$ to obtain a frequency adjustment contribution $H(n)$ for ``fire'' event $n$, which will tell in what direction and how much the frequency should be adjusted. As many such $H(n)$ values will be calculated and accumulated in a firefly as said firefly hears fire events throughout its oscillator period / cycle—before they are used for frequency updating at the end of the cycle. This way of performing frequency updates are inspired by Werner-Allen's reachback firefly algorithm (RFA), simply meaning updates are postponed until the end of the cycle instead of happening immediately as a fire event is received.
 	
@@ -178,7 +178,9 @@ Note that the only difference between Nymoen's definition of \textit{legal oscil
 
 	where $t^+$ denotes the time-step immediately after phase-climax, $\omega_i(t)$ is the old frequency of the oscillator at time $t$, and $F(n) \in [-1,1]$ is a quantity denoting how much and in which direction an oscillator should update its frequency after having received its $n$th ``fire''-signal.
 
-	The following steps is how the aforementioned $F(n)$ value is found, and can also be refound in Algorithm \ref{AddNthFireEventsHToList} and \ref{RFAAdjustFrequency} in Chapter \ref{chap:implementation}:
+	The following steps is how the aforementioned $F(n)$ value is found: 
+	
+	%, and can also be refound in Algorithm \ref{AddNthFireEventsHToList} and \ref{RFAAdjustFrequency} in Chapter \ref{chap:implementation}:
 
 		\paragraph{Step 1: the ``in/out-of synch'' error measurement / score, $\epsilon(\phi(t))$}
 
