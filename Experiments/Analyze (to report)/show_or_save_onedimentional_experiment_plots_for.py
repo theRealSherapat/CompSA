@@ -9,7 +9,7 @@ from experiment_analysis_utils import *
 
 
 # Setting up the visual looks of the experiment plotting figure:
-labelSize = 16
+labelSize = 20
 rcParams['xtick.labelsize'] = labelSize
 rcParams['ytick.labelsize'] = labelSize
 
@@ -33,9 +33,17 @@ def generateTerminationtimesPlot(showPls, savePls, xlabelCovariate, xlabelValues
     
     # sns.violinplot(data=terminationTimesArrays) # x=xlabelCovariate
     
-    plt.boxplot(terminationTimesArrays, labels=xlabelValues) # Kan ha med whis=(0,100) for å få whiskerne til å dekke hele data-samplet (til og med outliersa).
-    plt.ylabel("harmonic synchronization time (sim s)", fontsize=16)
-    plt.xlabel(xlabelCovariate, fontsize=16)
+    termArrays = [[20.48, 20.65, 20.65, 20.49, 20.47, 20.63, 20.5 , 20.49, 20.48,
+       20.5 , 20.46, 20.46, 20.49, 20.46, 20.62, 20.47, 20.47, 20.66,
+       20.65, 20.55, 20.63, 20.48, 20.57, 20.47, 20.46, 20.5 , 20.49,
+       20.49, 20.48],[20.49, 37.41],[23.35],[20.46, 20.49, 20.61, 20.49, 20.46, 20.51, 20.5 , 20.65, 20.46,
+       20.5 , 20.5 , 20.47, 20.47, 20.47, 20.56, 20.49, 20.47, 20.48,
+       20.48, 20.46, 20.48, 20.5 , 20.46, 20.48, 20.54, 20.5 , 20.49,
+       20.47, 20.61, 20.48]]
+    
+    plt.boxplot(termArrays, labels=[1, 2, 3, 4]) # Kan ha med whis=(0,100) for å få whiskerne til å dekke hele data-samplet (til og med outliersa).
+    plt.ylabel("harmonic synchronization time (sim s)", fontsize=labelSize)
+    plt.xlabel("SA scope ratio (m, r, g)", fontsize=labelSize)
     
     if savePls:
         plt.savefig("SavedPlots/experiment_simtimes.svg", dpi=300, bbox_inches="tight")
@@ -47,17 +55,26 @@ def generateTerminationtimesPlot(showPls, savePls, xlabelCovariate, xlabelValues
 def generateSuccessScoresPlot(showPls, savePls, xlabelCovariate, xlabelValues, successScoresArrays):
     # Plotting synchronization error scores / rates in a barplot
     
+    successScoresLists = [[1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.,1., 1., 1.,1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.],
+    [1., 0., 0., 0., 1.,0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+    [0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0.,0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+    [0., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.,1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1., 1.]]
+    
+    # MIDTERSTE: [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+    # [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+    # [0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+    
     # Calculating the error scores (according to simple percentage of successful runs out of total runs formula):
     errorRatesInPercentages = []
-    for successArray in successScoresArrays:
+    for successArray in successScoresLists:
         successfulRuns = np.sum(successArray)
         totalRuns = len(successArray)
         errorPercentage = (1 - successfulRuns / totalRuns) * 100
         errorRatesInPercentages.append(errorPercentage)
     
-    plt.bar(xlabelValues, errorRatesInPercentages) # Kan ha med whis=(0,100) for å få whiskerne til å dekke hele data-samplet (til og med outliersa).
-    plt.ylabel("error rate (%)", fontsize=16)
-    plt.xlabel(xlabelCovariate, fontsize=16)
+    plt.bar([1, 2, 3, 4], errorRatesInPercentages) # Kan ha med whis=(0,100) for å få whiskerne til å dekke hele data-samplet (til og med outliersa).
+    plt.ylabel("error rate (%)", fontsize=labelSize)
+    plt.xlabel("SA scope ratio (m, r, g)", fontsize=labelSize)
     
     
     if savePls:
@@ -77,7 +94,7 @@ def retrieveCommandLineArguments():
     return showPls, savePls, xlabelCovariate, xlabelValues
 
 if __name__ == "__main__":
-    """ Arg: the number of datasamples we have. """
+    """ . """
     
     # Arg1: (int) show figure in a window (1: yes, 0:no).
     # Arg2: (int) save figure to .svg (1: yes, 0:no).
@@ -87,6 +104,6 @@ if __name__ == "__main__":
     showPls, savePls, xlabelCovariate, xlabelValues = retrieveCommandLineArguments()
     
     terminationTimesArrays, successScoresArrays = loadBinaries()
-    
+    print("terminationTimesArrays:", terminationTimesArrays, "successScoresArrays:",successScoresArrays)
 
     main(showPls, savePls, xlabelCovariate, xlabelValues, terminationTimesArrays, successScoresArrays)

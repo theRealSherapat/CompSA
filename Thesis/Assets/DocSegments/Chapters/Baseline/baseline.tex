@@ -1,6 +1,7 @@
 \chapter{Baseline}
 \label{chap:baseline}
 
+In this chapter, a particularly important and already existing approach for the synchronizing oscillators phases $\phi$ and frequencies $\omega$ in oscillator networks is presented. The type of synchronization, \textit{harmonic} that is, will be continued to be used in this thesis and used as the goal state also for the Dr. Squiggle system at hand. Furthermore, the baseline authors's synchronization methods will also serve as a foundation for synchronization experimentation later on, as these are implemented in the novel Dr. Squiggle synchronization simulator.
 
 In this Active Music System, as shown in Figure \ref{fig:nymoen_fireflies_on_ios_devices}, decentralized harmonic synchronization of a dynamic and arbitrary number of musical nodes (modelled as pulse-coupled oscillators) — involving indirect coordination through stigmergy, as well as self-awareness through knowledge regarding itself internally and in publicly in the context of other nodes — is achieved.
 
@@ -22,7 +23,7 @@ First, the relatively new system target state of \textit{harmonic synchrony} wil
 \section{System target state: harmonic synchrony}
 \label{sec:harmonic_synchrony}
 
-The state of harmonic synchrony is defined \cite{nymoen_synch} as the state in which all agents in the musical collective ``fire'' or ``flash'', as described in Subsection \ref{subsec:fire_signal}, at an even and underlying interval or pulse, a certain number of times in a row. This is not to say all agents will have to ``fire''/``flash'' simultaneously, as has traditionally been the case for strict synchronization in pulse-coupled oscillators \cite{}. How legal and harmonically synchronized oscillator frequencies and phases look like will be described in this Section.
+The state of harmonic synchrony is defined \cite{nymoen_synch} as the state in which all agents in the musical collective ``fire'' or ``flash'', as described in Subsection \ref{subsec:fire_signal}, at an even and underlying interval or pulse, a certain number of times in a row. This is not to say all agents will have to ``fire''/``flash'' simultaneously, as has traditionally been the case for strict synchronization in pulse-coupled oscillators. How legal and harmonically synchronized oscillator frequencies and phases look like will be described in this Section.
 
 As one is designing and creating an interactive music technology system, one might want to encourage and allow for the playing of various musical instruments at various rhythms/paces, as it might be quite boring if all instruments were played at the exact same measure or pulse. As K. Nymoen et al. \cite{nymoen_synch} reason while discussing their own interactive ``Firefly'' music-system as well as coining the term of \textit{harmonic synchrony}: \nl
 
@@ -139,7 +140,7 @@ Note that the only difference between Nymoen's definition of \textit{legal oscil
 
 	Nymoen also achieved synchronizing the frequency values $\omega$ of oscillators, being the speed at which the oscillator cycles through its cycle or oscillator period at (cf. \eqref{phase_freq}).
 	
-	This they managed to do by as mentioned and amongs other measures implementing an aspect of \textit{self awareness} in terms of a \textit{synchrony self assessment} $s(n)$ given ``fire'' event $n$, representing how much or out of sync an individual robot is.
+	This they managed to do by as mentioned and amongst other measures implementing an aspect of \textit{self awareness} in terms of a \textit{synchrony self assessment} $s(n)$ given ``fire'' event $n$, representing how much or out of sync an individual robot is.
 	
 	It will then, having taken into account some middle steps as explained below, use this self assessed sync score $s(n)$ to obtain a frequency adjustment contribution $H(n)$ for ``fire'' event $n$, which will tell in what direction and how much the frequency should be adjusted. As many such $H(n)$ values will be calculated and accumulated in a firefly as said firefly hears fire events throughout its oscillator period / cycle—before they are used for frequency updating at the end of the cycle. This way of performing frequency updates are inspired by Werner-Allen's reachback firefly algorithm (RFA), simply meaning updates are postponed until the end of the cycle instead of happening immediately as a fire event is received.
 	

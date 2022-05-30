@@ -334,13 +334,13 @@ Unity\footnote{Unity Version 2021.2.0f1 is used in the developed simulator.} is 
 
 	The whole detection of harmonic synchrony in all its simplicity boils down to utilizing Unity's concept of Coroutines, meaning a process that can go on and be distributed across multiple frames in the simulator, as well as the firing of the robots as they every second phase climax ($\phi=1$) transmit a fire signal the simulator picks up on. As this in itself took several hundred lines of code\footnote{\url{https://github.com/theRealSherapat/CompSA} (accessed 2022.05.29)} to implement, the exact details of how it is implemented will not be expounded here.
 
-	The performance measurement is used in the synchrony simulator to evaluate and test the multi-robot collective's ability to achieve harmonic synchronization. As mentioned in Subsection \ref{baseline:subsec:detecting_harmonic_sync}, K. Nymoen et al.'s requirements and illustrations (cf. Figure \ref{fig:nymoen_harm_sync_detect}) for achieving \textit{harmonic synchrony} serve as a blueprint or guide for how to similarly implement our synchrony or performance measurement. This performance measurement should be able, during synchronization simulation, to detect if harmonic synchronization has been achieved in our decentralized oscillator network. The successful triggering of this detection will then in turn terminate the synchronization simulation run and save to a dataset the time it took to synchronize (the performance score), in the case of a ``synchronization success'' — an example of which can be seen in Figure \ref{fig:harmonic_synchrony_detection_plot}. In this figure, one can see at which times (sim s) the musical robots fired during a synchrony simulation run ending up in either harmonic synchrony, or as a ``synchronization fail.''
+	The performance measurement is used in the synchrony simulator to evaluate and test the multi-robot collective's ability to achieve harmonic synchronization. As mentioned in Subsection \ref{baseline:subsec:detecting_harmonic_sync}, K. Nymoen et al.'s requirements and illustrations (cf. Figure \ref{fig:nymoen_harm_sync_detect}) for achieving \textit{harmonic synchrony} serve as a blueprint or guide for how to similarly implement our synchrony or performance measurement. This performance measurement should be able, during synchronization simulation, to detect if harmonic synchronization has been achieved in our decentralized oscillator network. The successful triggering of this detection will then in turn terminate the synchronization simulation run and save to a dataset the time it took to synchronize (the performance score), in the case of a ``synchronization success.''
 
 	The resulting and corresponding performance scores obtained using this performance measurement will then take values of the termination time (sim s) it takes for the robot collective, from the start of the synchronization simulation, to achieve the system target state of \textit{harmonic synchrony}, as specified in Section \ref{sec:harmonic_synchrony}.
 
-	Now if \textbf{Conditions 5)-7)} from Subsection \ref{subsec:harmonic_synchrony} are kept, we have harmonic synchrony.
+	Now if \textbf{Conditions 5)-7)} from Subsection \ref{baseline:subsec:detecting_harmonic_sync} are kept and fulfilled, we have achieved harmonic synchrony.
 
-	My specific implementation of the synchrony measurement essentially consists of enforcing all the requirements or rules listed in \ref{subsec:harmonic_synchrony}, given some constant $t_f$- and $k$-values (e.g. $80ms$ and $8$ respectively \cite{nymoen_synch}). And again—to recall from \ref{subsec:harmonic_synchrony}—$t_f$ is the short time-window within which nodes are allowed to fire at each beat, and $k$ represents how many times nodes have to fire at even underlying pulses/beats in a row without changing the $t_q$-period—before becoming harmonically synchronized.
+	My specific implementation of the synchrony measurement essentially consists of enforcing all the requirements or rules listed in \ref{baseline:subsec:detecting_harmonic_sync}, given some constant $t_f$- and $k$-values (e.g. $80ms$ and $8$ respectively \cite{nymoen_synch}). And again—to recall from \ref{baseline:subsec:detecting_harmonic_sync}—$t_f$ is the short time-window within which nodes are allowed to fire at each beat, and $k$ represents how many times nodes have to fire at even underlying pulses/beats in a row without changing the $t_q$-period—before becoming harmonically synchronized.
 
 	The requirement of firing evenly $k$ times in a row with identical $t_q$-periods can be—and in fact is in our implementation—enforced by incrementing an integer variable \textit{towards\_k\_counter} after a `legal' $t_f$-window has occured (i.e. one or more nodes fired inbetween the onset and ending of the $t_f$-window), and conversely by resetting \textit{towards\_k\_counter} to 0 when an illegally transmitted firing was heard during a `silent' (or so it was supposed to be at least) $t_q$-window, hence restarting the synchrony-detection process—as can be seen occuring several times in Figure \ref{fig:harmonic_synch_evolution}.
 	
@@ -353,17 +353,17 @@ Unity\footnote{Unity Version 2021.2.0f1 is used in the developed simulator.} is 
 
 	Note that in the specific simulation run in Figure \ref{fig:harmonic_synch_evolution}, the robots were on their way to achieve harmonic synchrony five times before the 10th second of the synchronization-simulation already, but since one or more of them fired `illegally' (i.e. inside a $t_q$-window), they were consequently `punished'—or rather deemed `not synchronized enough yet'—by getting their counter reset to 0. Eventually however, through further phase and frequency synchronization, the multi robot collective was in this case after 12.5 seconds able to achieve harmonic synchrony, when the ``even beat'' counter became equal to $k$, as well as all other requirements for achieving \textit{harmonic synchrony} was met. Note that this gives us a sense of how synchronized the robot collective is over time; the more even beats the robots have in a row, the closer they are to achieving harmonic synchrony.
 
-	Initially, the $t_q$-period/-window is not initialized, as it entirely depends on the frequencies to which the robot-collective converges to; however, when an illegal firing (i.e. a firing perceived during a $t_q$-window) occurs—$t_q$ is also then reset itself to a hopefully more correct value, given by the following formula, which is visually explained further in the schema in Figure \ref{fig:t_q_schema}:
+	% Initially, the $t_q$-period/-window is not initialized, as it entirely depends on the frequencies to which the robot-collective converges to; however, when an illegal firing (i.e. a firing perceived during a $t_q$-window) occurs—$t_q$ is also then reset itself to a hopefully more correct value, given by the following formula:
 
-	\begin{equation}
-	\label{t_q_definition}
-	\begin{array}{rrclcl}
-	t_q^* & = & late\_t_q^*\_defining\_timevalue - early\_t_q^*\_defining\_timevalue - t_f \\
-	& = & median(t_1^`, t_2^`, ..., t_m^`) - median(t_1, t_2, ..., t_n) - t_f , \\
-	\end{array}
-	\end{equation}
+	% \begin{equation}
+	% \label{t_q_definition}
+	% \begin{array}{rrclcl}
+	% t_q^* & = & late\_t_q^*\_defining\_timevalue - early\_t_q^*\_defining\_timevalue - t_f \\
+	% & = & median(t_1^`, t_2^`, ..., t_m^`) - median(t_1, t_2, ..., t_n) - t_f , \\
+	% \end{array}
+	% \end{equation}
 
-	where $n$ fire-events were recorded during the earlier $t_f$-window, and $m$ fire-events were recorded during the later $t_f$-window.
+	% where $n$ fire-events were recorded during the earlier $t_f$-window, and $m$ fire-events were recorded during the later $t_f$-window.
 	
 	If a certain amount of time, e.g. 5 simulation minutes \cite{nymoen_synch}, has gone without the detection of harmonic synchrony occuring, the simulation run is terminated as a ``fail''.
 

@@ -24,11 +24,11 @@ Mirollo \& Strogatz & None  \\
 \label{tab:phase_sync}
 \end{center}
 
-	\subsection{Initial validation}
+	% \subsection{Initial validation}
 	
-	To see that synchronization is actually happening like intended, relevant quantities and simulation values are recorded for a phase synchronization simulation run in Unity and displayed in Figure \ref{fig:initial_phase_validation}.
+	% To see that synchronization is actually happening like intended, relevant quantities and simulation values are recorded for a phase synchronization simulation run in Unity and displayed in Figure \ref{fig:initial_phase_validation}.
 	
-	% \tcol[blue]{FYLL INN.}
+	% % \tcol[blue]{FYLL INN.}
 	
 	\subsection{Reproducing baseline results}
 	
@@ -59,7 +59,12 @@ Mirollo \& Strogatz & None  \\
 			\label{fig:baseline_reproducing_phase_sync_for_alpha}
 		\end{figure}
 		
+		As we can see here, the average synchronization times lie just above 20 simulation seconds, which is almost twice as much as the average synchronization time as in the baseline results. However, synchronization performance, as it does in the baseline author's results, also here increases as the phase coupling constant $\alpha$ increases. We see both that robot collectives of $|R|=6$ manage to synchronize harmonically to each other faster, as well as more successfully (with smaller error rates).
+		
 		\paragraph{Experiment analysis:\nl}
+		
+		What we then found in this baseline reproducing experiment was that even though we did not attain exactly as good synchronization times as the authors of the baseline approach \cite{nymoen_synch}, we did observe the same phenomenon; being that a larger phase coupling constant $\alpha$—telling every robot how much to adjust their phases $\phi$ when hearing a fire event—leads to better performing synchronization. This is at least the case for $|R|=6$.
+		
 	
 	\subsection{Hyperparameter tuning}
 	
@@ -133,7 +138,7 @@ Mirollo \& Strogatz & None  \\
 		
 		So far in this chapter and section, we have only run experiments for pure phase synchronization, the $\phi$ problem, with Mirollo-Strogatz's method of phase adjustment, like described in \ref{mirollo_strogatz_phase_adjust}. With this method of phase synchronization, robots are simply adjusting phases in an excitatory way; they only ``push'' other ocillators's phases further or higher when firing themselves, never ``holding'' or ``dragging'' them back.
 		
-		Now, in order to investigate the validity of the claimed [] benefits of performing bi directional phase adjustments—both excitatory and inhibitory—like that of Nymoen's phase adjustment (see \ref{subsec:nymoen_phase_adjust}), an experiment comparing these two aforementioned phase adjustment methods thus follows.
+		Now, in order to investigate the validity of the claimed \cite{bi_directional_adj, nymoen_synch} benefits of performing bi directional phase adjustments—both excitatory and inhibitory—like that of Nymoen's phase adjustment (see \ref{subsec:nymoen_phase_adjust}), an experiment comparing these two aforementioned phase adjustment methods thus follows.
 		
 		Empirically speaking based on previous results in phase synchronization experiments, in particular the ones shown in Figure \ref{fig:baseline_reproducing_phase_sync_for_alpha} and \ref{fig:phase_sync_hyperparam_tuning_experiment}, arguably the best values so far for $\alpha$ (i.e. $\alpha=0.8$) and $t_{ref}^{dyn}$ (i.e. $t_{ref}^{dyn}=0.1$) will be reused here for Mirollo-Strogatz's phase synchronization runs.
 		
@@ -181,7 +186,7 @@ Mirollo \& Strogatz & None  \\
 		
 		\paragraph{Experiment analysis:\nl}
 		
-		In this specific case, what this latter observation of seemingly increasing robustness given increasing collective sizes $|R|$ points to is perhaps that the system's robustness and stability is increasing as collective size increases—being a strength classically advocated for in the multi agent systems and swarm systems literature []; as well as being found in e.g. robustness degrees in networks where you in the one case have a single point of failure versus many redundant paths and edges between your nodes [].
+		In this specific case, what this latter observation of seemingly increasing robustness given increasing collective sizes $|R|$ points to is perhaps that the system's robustness and stability is increasing as collective size increases—being a strength classically advocated for in the multi agent systems and swarm systems literature; akin to being found in e.g. robustness degrees in networks where you in the one case have a single point of failure versus in the other case many redundant paths and edges between your nodes.
 		
 		As we see, the synchronization simulator in Unity is able to synchronize with a lot of agents, still without having broken the simulation yet. Comparatively, Nymoen et al. \cite{nymoen_synch} only experimented with 6 oscillator nodes in their firefly system.
 
@@ -201,11 +206,13 @@ Mirollo \& Strogatz & None  \\
 		\subsubsection{Self awareness scope tuning}
 		\label{phase_sync_SA_scopes_tuning}
 
-		In order to find out whether global connections in the pulse coupled oscillators is necessary to maintain performance in harmonic synchronization, in addition to finding some good values for a simulation breaking experiment where we will try to scale collective sizes $|R|$ as much as possible for robot collectives with varying self awareness scopes, varying \textit{self awareness scopes} (as introduced in \ref{SA_scopes_implemented}) are now experimented with.
+		In order to find out whether global connections in the pulse coupled oscillators is necessary to maintain performance in harmonic synchronization, varying \textit{self awareness scopes} (as introduced in \ref{SA_scopes_implemented}) are now experimented with.
+		
+		% in addition to finding some good values for a simulation breaking experiment where we will try to scale collective sizes $|R|$ as much as possible for robot collectives with varying self awareness scopes
 		
 		
 		
-			\paragraph{$k_s$ nearest neighbour SA scope experiment}
+			\paragraph{1) $k_s$ nearest neighbour SA scope experiment}
 			
 				\paragraph{Experiment setup:\nl}
 				
@@ -238,10 +245,18 @@ Mirollo \& Strogatz & None  \\
 
 				As we can see on the x axis in Figure \ref{fig:phase_sync_k_s_SA_scope_tuning}, we here plot harmonic synchronization scores per neighbour percentage $k_s/(|R|-1)$, which tells us the ratio of closest neighbours each robot listens to for fire signals out of all neighbours |R|-1 — or in other words the size of its self awareness scope, not given in absolute number of neighbours $k_s$, but in terms of the percentage of its neighbours.
 				
-				% \paragraph{Experiment analysis:\nl}
+				We definitely notice a trend here; the broader and larger self awareness scopes are (when more of the $k_s$ nearest neighbours are being listened to in each robot for adjustment signals), the more stable and higher performing the harmonic synchronization generally is—both in terms of harmonic synchronization time, as well as for error rates. However, we also at least for larger collective sizes $|R|$ see that not too much performance in harmonic synchronization is gained by increasing the self awareness scopes further—e.g. after $k_s/(|R|-1)=0.4$.
+				
+				We also see that after $k_s/(|R|-1)=0.4$, average harmonic synchronization times lie around 20 seconds (sim s), which is then similar average synchronization times as found when using Mirollo \& Strogatz's synchronization function in earlier experiments.
+				
+				\paragraph{Experiment analysis:\nl}
+				
+				Given the trend where we saw where increased self awareness scopes lead to generally more stable and increased harmonic synchronization performance—we here have a solid pointer to that more awareness of ones neighbourhood and environment is beneficial for performance of a task.
+				
+				But also, given that not much further improvement in synchronization performance was achieved after each robot had 40\% of their closest neighbours in their self awareness scope, such a reduced self awareness scope actually shows to be sufficient for achieving harmonic synchrony despite such a reduced self awareness scope. Given that we achieve similar synchronization times with $k_s/(|R|-1)=40\%$ as we do for globally connected robots in e.g. Figure \ref{fig:baseline_reproducing_phase_sync_for_alpha}, this implies that global self awareness scopes in these cases are actually rendundant, and the robots manage to solve their task with less constrained connections.
+				
 				 
-				 
-			\paragraph{$d_s$ radial SA scope experiment}
+			\paragraph{2) $d_s$ radial SA scope experiment}
 			
 				\paragraph{Experiment setup:\nl}
 				
@@ -258,44 +273,48 @@ Mirollo \& Strogatz & None  \\
 				
 				As we see after $d_s=65.6$, not much performance gain—if any—seems to be achieved by increasing the self awareness scope $d_s$ further.
 				
+				But also here we see the recurring trend; the larger the self awareness scopes in individual musical robots are, the more stable or well performing synchronizations the robot collectives achieve.
+				
 				\paragraph{Experiment analysis:\nl}
 				
 				Now, since we here tested with fixed $d_s$ values instead of e.g. $d_s$-percentages like we did for $k_s$ in experiment \ref{fig:phase_sync_k_s_SA_scope_tuning} above, it is clear that we will not get a increasing scaling of self awareness proportional to the varying collective sizes $|R|$. This is primarily due to how the spawning radius musical robots are instantiated within (cf. \eqref{spawn_radius}) increases as collective sizes $|R|$ increases. This means that even for the third $d_s$ value (i.e. 45.6), collectives R with $|R|=3$ having $radius_{spawn}=13.65$ Unity physical units (cf. equation \eqref{spawn_radius}) already practically have global self awareness scopes. For this reason and in hindsight, it might have been more fruitful to also here—instead of fixed $d_s$ values per $|R|$—test for neighbour percentages in radial self awareness scopes (i.e. $d_s/(|R|-1)$).
+				
+				Given the recurrence of the increased neighbourhood awareness trend, in that larger self awareness scopes generally increases performance in harmonic synchronization, again points to that increased physical or social environment awareness leads to increased performance in achieving goal state or by achieving something—specifically harmonic synchrony in our case.
 	
 	
-		\subsubsection{Simulation breaking experiment}
+		% \subsubsection{Simulation breaking experiment}
 		
-			\paragraph{Experiment setup:\nl}
+			% \paragraph{Experiment setup:\nl}
 			
-			In order to test the limits of the developed synchronization simulator, we will here investigate the effects of scaling and exploding the musical robot collective size $|R|$—also given some various self awareness scopes found worthwhile to further investigate in the previous experiments in \ref{exp:phasesync:increasing_SA_deg}.
+			% In order to test the limits of the developed synchronization simulator, we will here investigate the effects of scaling and exploding the musical robot collective size $|R|$—also given some various self awareness scopes found worthwhile to further investigate in the previous experiments in \ref{exp:phasesync:increasing_SA_deg}.
 			
-			The self awareness scope value of $k_s=0.1$ was chosen in order to have a sense of measurement and comparison, in order to see that in fact robot collectives might still manage to synchronize even though they listen to only one neighbouring robot's fire signals for self adjustment; but probably with way less performance comparatively to larger self awareness scopes. Furthermore, the value of $d_s=75$ is chosen to be further experimented with, as not much improvement was seen after this point for robot collectives in the relevant results in Figure \ref{fig:phase_sync_d_s_SA_scope_tuning}. And finally, the maximum size of self awareness scopes there is, the global self awareness scopes were set in the individual robots in the collective.
+			% The self awareness scope value of $k_s=0.1$ was chosen in order to have a sense of measurement and comparison, in order to see that in fact robot collectives might still manage to synchronize even though they listen to only one neighbouring robot's fire signals for self adjustment; but probably with way less performance comparatively to larger self awareness scopes. Furthermore, the value of $d_s=75$ is chosen to be further experimented with, as not much improvement was seen after this point for robot collectives in the relevant results in Figure \ref{fig:phase_sync_d_s_SA_scope_tuning}. And finally, the maximum size of self awareness scopes there is, the global self awareness scopes were set in the individual robots in the collective.
 			
-			Additional experiment hyperparameters apart from $Adj_\phi$ = Mirollo \& Strogatz and $Adj_\omega$ = None, as mentioned in the start of Section \ref{sec:phase_sync}, can be seen in Table \ref{tab:phase_sync_collsize_explosion}. Experiment results after running simulations in Unity can thus be seen in Figure \ref{}.
+			% Additional experiment hyperparameters apart from $Adj_\phi$ = Mirollo \& Strogatz and $Adj_\omega$ = None, as mentioned in the start of Section \ref{sec:phase_sync}, can be seen in Table \ref{tab:phase_sync_collsize_explosion}. Experiment results after running simulations in Unity can thus be seen in Figure \ref{}.
 			
-			\begin{center}
-			\begin{tabular}{ |c|c|c|c|c|c|c| } 
-			\hline
-			$\alpha$ & $\beta$ & $t_{ref}^{dyn}$ & $t_f$ & $k$ & $t_{max}$ \\
-			\hline
-			0.8 & 0 & 10\% & 80ms & 8 & 5min \\
-			\hline
-			\end{tabular}
-			\captionof{table}{Hyperparameter setup for collective size explosion $\phi$ synchronization experiment.}
-			\label{tab:phase_sync_collsize_explosion}
-			\end{center}
+			% \begin{center}
+			% \begin{tabular}{ |c|c|c|c|c|c|c| } 
+			% \hline
+			% $\alpha$ & $\beta$ & $t_{ref}^{dyn}$ & $t_f$ & $k$ & $t_{max}$ \\
+			% \hline
+			% 0.8 & 0 & 10\% & 80ms & 8 & 5min \\
+			% \hline
+			% \end{tabular}
+			% \captionof{table}{Hyperparameter setup for collective size explosion $\phi$ synchronization experiment.}
+			% \label{tab:phase_sync_collsize_explosion}
+			% \end{center}
 			
-			\paragraph{Experiment results:\nl}
+			% \paragraph{Experiment results:\nl}
 			
-			\tcol[blue]{FYLL INN!}
-			% \begin{figure}[ht!]
-				% \centering
-				% \includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/}
-				% \caption[Experiment results for $\phi$ synchronization collective size explosion experiment.]{Performance times (left) given in average harmonic synchronization times (sim s) with standard deviation, given varying collective sizes $|R|$ and self awareness scopes. Corresponding error rates (right) are based on 30 individual runs per collective size $|R|$ and self awareness scope value evaluated for.}
-				% \label{fig:phase_sync_collsize_explosion}
-			% \end{figure}
+			% \tcol[blue]{FYLL INN!}
+			% % \begin{figure}[ht!]
+				% % \centering
+				% % \includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/}
+				% % \caption[Experiment results for $\phi$ synchronization collective size explosion experiment.]{Performance times (left) given in average harmonic synchronization times (sim s) with standard deviation, given varying collective sizes $|R|$ and self awareness scopes. Corresponding error rates (right) are based on 30 individual runs per collective size $|R|$ and self awareness scope value evaluated for.}
+				% % \label{fig:phase_sync_collsize_explosion}
+			% % \end{figure}
 			
-			\paragraph{Experiment analysis:\nl}
+			% \paragraph{Experiment analysis:\nl}
 	
 	
 		\subsubsection{Heterogenous self awareness scopes experiment}
@@ -345,16 +364,25 @@ Mirollo \& Strogatz & None  \\
 	
 			\paragraph{Experiment results:\nl}
 			
-			\tcol[blue]{FYLL INN!}
-			% \begin{figure}[ht!]
-				% \centering
-				% \includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/}
-				% \caption[Experiment results for $\phi$ synchronization heterogenous SA scopes experiment.]{Performance times (left) given in average harmonic synchronization times (sim s) with standard deviation, given varying self awareness scope ratios $(m, r, g)$. Corresponding error rates (right) are based on 30 individual runs per SA scope ratio.}
-				% \label{fig:phase_sync_heterogenous_SA_scopes}
-			% \end{figure}
+			\begin{figure}[ht!]
+				\centering
+				\includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/heterogenous_robots_SA_scopes_experiment.pdf}
+				\caption[Experiment results for $\phi$ synchronization heterogenous SA scopes experiment.]{Performance times (left) given in harmonic synchronization times (sim s) in a boxplot, given varying self awareness scope ratios $(m, r, g)$. Corresponding error rates (right) are based on 30 individual runs per SA scope ratio.}
+				\label{fig:phase_sync_heterogenous_SA_scopes}
+			\end{figure}
+			
+			As we here can see, robot collectives of size $|R|=15$ achieve harmonic synchrony with varying degrees of self awareness; namely with varying self awareness scopes. The mixes of robot SA scopes represented by the SA scope ratios \textit{(m,r,g)} reads from ``least neighbour self aware'' to ``most neighbour self aware.'' In the outer points, musical robots all have either minimal SA scopes (i.e. \textit{(1, 0, 0)}), or they all have global SA scopes (i.e. \textit{(0, 0, 1)}). Some robot collectives with neighbour awareness inbetween these are also explored, as seen in the middle of the outer points.
+			
+			What we can observe, is how synchronization is the most stable and well performing when robot collectives are homogenous in their self awareness scopes (i.e. for the purely minimal or global SA scopes collective). From the second least self aware robot collective (i.e. $(m,r,g)=(0.65,0.25,0.1)$) and onwards to the most self aware robot collective, we see the similar trend as seen before in terms of increased synchronization performance given increased self awareness scopes. However, the error rates are extremely high in the heterogenous robot collectives; the second most self aware robot collective (i.e. $(m,r,g)=(0.1,0.25,0.65)$) only managed to achieve harmonic synchronization once, and not many more were achieved by the second least self aware robot collective either.
 			
 			\paragraph{Experiment analysis:\nl}
-	
+			
+			Hence, we found that for the system and synchronization simulator at hand, utilizing heterogenous self awareness scopes with varying degrees did not yield increased performance—or even similar performance as homogenous robot collectives in terms of SA scopes.
+			
+			For the synchronziation simulator developed in Unity, it might be beneficial to stick to homogenous self awareness scopes in the musical robots for this reason.
+
+\np	
+
 % --- \section END. ---
 
 
@@ -376,11 +404,13 @@ Nymoen & Nymoen  \\
 \end{center}
 
 
-	\subsection{Initial validation}
+	% \subsection{Initial validation}
 	
-	To see that synchronization is actually happening like intended, some relevant quantities and simulation values are recorded for a phase synchronization simulation run in Unity and displayed in \ref{}.
+	% To see that synchronization is actually happening like intended, some relevant quantities and simulation values are recorded for a phase synchronization simulation run in Unity and displayed in Figure \ref{}.
 	
-	\tcol[blue]{FYLL INN.}
+	% \tcol[blue]{FYLL INN.}
+	
+	% % In the third last figure, one can see at which times (sim s) the musical robots fired during a synchrony simulation run.
 	
 
 	\subsection{Reproducing baseline results}
@@ -418,7 +448,15 @@ Nymoen & Nymoen  \\
 				\label{fig:baseline_reproducing_phase_and_freq_sync_for_alpha}
 			\end{figure}
 			
-			% \paragraph{Experiment analysis:\nl}
+			\paragraph{Experiment analysis:\nl}
+			
+			Similarly here, synchronization performance, as it does in the baseline author's results, also here increases as the frequency coupling constant $\beta$ increases. We see that robot collectives of $|R|=6$ manage to synchronize harmonically to each other faster, although less successfully (with larger error rates).
+			
+			However we here also did not achieve any better results than the author of the baseline approach.
+		
+			\paragraph{Experiment analysis:\nl}
+			
+			What we then found in this baseline reproducing experiment was that even though we did not attain exactly as good synchronization times as the authors of the baseline approach \cite{nymoen_synch}, we did observe the same phenomenon; being that a larger frequency coupling constant $\beta$—telling every robot how much to adjust their frequencies $\omega$ when hearing a fire event—leads to faster albeit more risky and less successful synchronization. This is at least the case for $|R|=6$.
 		
 		
 		\subsubsection{Hopefully stabler ordering by phase couplings experiment}
@@ -454,7 +492,8 @@ Nymoen & Nymoen  \\
 				\label{fig:stable_baseline_reproducing_phase_and_freq_sync_for_alpha}
 			\end{figure}
 			
-			% \paragraph{Experiment analysis:\nl}
+			As we can see, this yielded better and more stable results as expected. We will hence continue using these values from now on.
+			
 			
 	
 		\subsubsection{Ordering by frequency couplings experiment}
@@ -507,7 +546,7 @@ Nymoen & Nymoen  \\
 		
 		Similarly to in the experiments in \ref{phase_sync_SA_scopes_tuning} we here want find out whether global connections in the pulse coupled oscillators really is necessary to maintain performance in harmonic synchronization, but for this time in the second and more complex ($\phi \& \omega$) synchronization problem.
 		
-			\paragraph{$k_s$ nearest neighbour SA scope experiment\nl}
+			\paragraph{1) $k_s$ nearest neighbour SA scope experiment\nl}
 			
 				\paragraph{Experiment setup:\nl}
 			
@@ -551,13 +590,11 @@ Nymoen & Nymoen  \\
 				Not much improvement in harmonic synchronization time or error rate is seen beyond the point where individual musical robots $r_i$ have 80\% of their neighbours in their self awareness scopes, and so perhaps it might be sufficient in musical robot collectives that each robot litstens and is connected to 80\% of its closes neighbours, relaxing the globally connectivity assumption.
 				
 			
-			\paragraph{$d_s$ radial SA scope experiment}
+			\paragraph{2) $d_s$ radial SA scope experiment}
 				
 				\paragraph{Experiment setup:\nl}
 				
 				Results can be seen in Figure \ref{fig:phase_and_freq_sync_d_s_SA_scope_tuning}.
-				
-				\paragraph{Experiment results:\nl}
 				
 				\begin{figure}[ht!]
 					\centering

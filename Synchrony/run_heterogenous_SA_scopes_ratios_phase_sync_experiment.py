@@ -9,44 +9,51 @@ mostInterestingAndValidRadialSAScopeDSValue = 0.17*2*collsizeSpawningRadius
 GLOBAL_VALUE = 10000000
 
 def main():
-    # 30 RUNS MED DET MINST OPPMERKSOMME ROBOT KOLLEKTIVET (m, r, g) = (1.0, 0.0, 0.0):
-    k_ss_values, d_ss_values = getCollsizeSAScopeRatioImplementationValues(mostInterestingCollsizeForHeterogenousSAScopeExperiment, (1.0, 0.0, 0.0))
-    assignNonDefaultHyperparameters(collsize=mostInterestingCollsizeForHeterogenousSAScopeExperiment, k_ss=k_ss_values, d_ss=d_ss_values, adj_phis=0, adj_omegas=0, alphas=0.8, betas=0)
-    runNumberOfSimulationRuns(sampSize)
+    # # 30 RUNS MED DET MINST OPPMERKSOMME ROBOT KOLLEKTIVET (m, r, g) = (1.0, 0.0, 0.0):
+    # k_ss_values, d_ss_values = getCollsizeSAScopeRatioImplementationValues(mostInterestingCollsizeForHeterogenousSAScopeExperiment, (1.0, 0.0, 0.0))
+    # assignNonDefaultHyperparameters(collsize=mostInterestingCollsizeForHeterogenousSAScopeExperiment, k_ss=k_ss_values, d_ss=d_ss_values, adj_phis=0, adj_omegas=0, alphas=0.8, betas=0)
+    # runNumberOfSimulationRuns(sampSize)
     
-        # BARTRE FOR TESTING:
-    # print("\nk_ss_values with len",len(k_ss_values),":",k_ss_values, " , and d_ss_values with len",len(d_ss_values),":",d_ss_values)
+        # # BARTRE FOR TESTING:
+    # # print("\nk_ss_values with len",len(k_ss_values),":",k_ss_values, " , and d_ss_values with len",len(d_ss_values),":",d_ss_values)
     
     
-    k_ss_values, d_ss_values = getCollsizeSAScopeRatioImplementationValues(mostInterestingCollsizeForHeterogenousSAScopeExperiment, (0.65, 0.25, 0.1))
-    assignNonDefaultHyperparameters(collsize=mostInterestingCollsizeForHeterogenousSAScopeExperiment, k_ss=k_ss_values, d_ss=d_ss_values, adj_phis=0, adj_omegas=0, alphas=0.8, betas=0)
-    runNumberOfSimulationRuns(sampSize)
+    # k_ss_values, d_ss_values = getCollsizeSAScopeRatioImplementationValues(mostInterestingCollsizeForHeterogenousSAScopeExperiment, (0.65, 0.25, 0.1))
+    # assignNonDefaultHyperparameters(collsize=mostInterestingCollsizeForHeterogenousSAScopeExperiment, k_ss=k_ss_values, d_ss=d_ss_values, adj_phis=0, adj_omegas=0, alphas=0.8, betas=0)
+    # runNumberOfSimulationRuns(sampSize)
     
-    # BARTRE FOR TESTING:
-    # print("\nk_ss_values with len",len(k_ss_values),":",k_ss_values, " , and d_ss_values with len",len(d_ss_values),":",d_ss_values)
+    # # BARTRE FOR TESTING:
+    # # print("\nk_ss_values with len",len(k_ss_values),":",k_ss_values, " , and d_ss_values with len",len(d_ss_values),":",d_ss_values)
     
-    # 30 RUNS MED ET LITT MER OPPMERKSOMT ROBOT KOLLEKTIV (m, r, g) = (0.4, 0.4, 0.2):
-    k_ss_values, d_ss_values = getCollsizeSAScopeRatioImplementationValues(mostInterestingCollsizeForHeterogenousSAScopeExperiment, (0.4, 0.4, 0.2))
-    assignNonDefaultHyperparameters(collsize=mostInterestingCollsizeForHeterogenousSAScopeExperiment, k_ss=k_ss_values, d_ss=d_ss_values, adj_phis=0, adj_omegas=0, alphas=0.8, betas=0)
-    runNumberOfSimulationRuns(sampSize)
     
-    # BARTRE FOR TESTING:
-    # print("\nk_ss_values with len",len(k_ss_values),":",k_ss_values, " , and d_ss_values with len",len(d_ss_values),":",d_ss_values)
+    # # 30 RUNS MED ET LITT MER OPPMERKSOMT ROBOT KOLLEKTIV (m, r, g) = (0.4, 0.4, 0.2):
+    # k_ss_values, d_ss_values = getCollsizeSAScopeRatioImplementationValues(mostInterestingCollsizeForHeterogenousSAScopeExperiment, (0.4, 0.4, 0.2))
+    # assignNonDefaultHyperparameters(collsize=mostInterestingCollsizeForHeterogenousSAScopeExperiment, k_ss=k_ss_values, d_ss=d_ss_values, adj_phis=0, adj_omegas=0, alphas=0.8, betas=0)
+    # runNumberOfSimulationRuns(sampSize)
     
-    k_ss_values, d_ss_values = getCollsizeSAScopeRatioImplementationValues(mostInterestingCollsizeForHeterogenousSAScopeExperiment, (0.33, 0.33, 0.33))
-    assignNonDefaultHyperparameters(collsize=mostInterestingCollsizeForHeterogenousSAScopeExperiment, k_ss=k_ss_values, d_ss=d_ss_values, adj_phis=0, adj_omegas=0, alphas=0.8, betas=0)
-    runNumberOfSimulationRuns(sampSize)
+    # # BARTRE FOR TESTING:
+    # # print("\nk_ss_values with len",len(k_ss_values),":",k_ss_values, " , and d_ss_values with len",len(d_ss_values),":",d_ss_values)
     
-    # BARTRE FOR TESTING:
-    # print("\nk_ss_values with len",len(k_ss_values),":",k_ss_values, " , and d_ss_values with len",len(d_ss_values),":",d_ss_values)
+    
+    # k_ss_values, d_ss_values = getCollsizeSAScopeRatioImplementationValues(mostInterestingCollsizeForHeterogenousSAScopeExperiment, (0.33, 0.33, 0.33))
+    # assignNonDefaultHyperparameters(collsize=mostInterestingCollsizeForHeterogenousSAScopeExperiment, k_ss=k_ss_values, d_ss=d_ss_values, adj_phis=0, adj_omegas=0, alphas=0.8, betas=0)
+    # runNumberOfSimulationRuns(sampSize)
+    
+    # # BARTRE FOR TESTING:
+    # # print("\nk_ss_values with len",len(k_ss_values),":",k_ss_values, " , and d_ss_values with len",len(d_ss_values),":",d_ss_values)
+    
+    
+    
+    
     
     # 30 RUNS MED ET MER OPPMERKSOMT ROBOT KOLLEKTIV (m, r, g) = (0.2, 0.4, 0.4):
     k_ss_values, d_ss_values = getCollsizeSAScopeRatioImplementationValues(mostInterestingCollsizeForHeterogenousSAScopeExperiment, (0.2, 0.4, 0.4))
     assignNonDefaultHyperparameters(collsize=mostInterestingCollsizeForHeterogenousSAScopeExperiment, k_ss=k_ss_values, d_ss=d_ss_values, adj_phis=0, adj_omegas=0, alphas=0.8, betas=0)
-    runNumberOfSimulationRuns(sampSize)
+    runNumberOfSimulationRuns(sampSize-24)
     
     # BARTRE FOR TESTING:
     # print("\nk_ss_values with len",len(k_ss_values),":",k_ss_values, " , and d_ss_values with len",len(d_ss_values),":",d_ss_values)
+    
     
     k_ss_values, d_ss_values = getCollsizeSAScopeRatioImplementationValues(mostInterestingCollsizeForHeterogenousSAScopeExperiment, (0.1, 0.25, 0.65))
     assignNonDefaultHyperparameters(collsize=mostInterestingCollsizeForHeterogenousSAScopeExperiment, k_ss=k_ss_values, d_ss=d_ss_values, adj_phis=0, adj_omegas=0, alphas=0.8, betas=0)
@@ -55,6 +62,7 @@ def main():
     # BARTRE FOR TESTING:
     # print("\nk_ss_values with len",len(k_ss_values),":",k_ss_values, " , and d_ss_values with len",len(d_ss_values),":",d_ss_values)
     
+    
     # 30 RUNS MED DET MEST OPPMERKSOMNE ROBOT KOLLEKTIVET (m, r, g) = (0.0, 0.0, 1.0):
     k_ss_values, d_ss_values = getCollsizeSAScopeRatioImplementationValues(mostInterestingCollsizeForHeterogenousSAScopeExperiment, (0.0, 0.0, 1.0))
     assignNonDefaultHyperparameters(collsize=mostInterestingCollsizeForHeterogenousSAScopeExperiment, k_ss=k_ss_values, d_ss=d_ss_values, adj_phis=0, adj_omegas=0, alphas=0.8, betas=0)
@@ -62,6 +70,14 @@ def main():
     
     # BARTRE FOR TESTING:
     # print("\nk_ss_values with len",len(k_ss_values),":",k_ss_values, " , and d_ss_values with len",len(d_ss_values),":",d_ss_values)
+    
+    
+    
+    
+    # KJØRER RESTEN AV DET UFERDIGE COLLSIZE EXPLOSION PHASE SYNC EXPERIMENTET:
+    
+    os.system("py run_SA_scope_collsize_explosion_phase_sync_experiment.py")
+    
     
 def getCollsizeSAScopeRatioImplementationValues(collsize, minRadiGlobalRatio):
     """ Returns a scalar (if homogenous agents) or lists (if heterogenous agents) values for the SA scopes, corresponding to the given minRadiGlobalRatio. """
