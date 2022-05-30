@@ -190,9 +190,13 @@ Unity\footnote{Unity Version 2021.2.0f1 is used in the developed simulator.} is 
 
 \section{Synchronizing oscillator phases}
 \label{sec:phase_methods}
-	If we first assume constant and equal oscillator frequencies in our agents, we can take a look at how the agents adjust their initially random phases in order to synchronize to each other. Examples of how phase synchronization can look are given in Figure \ref{fig:strog_phase} and \ref{fig:nymoen_phase}.
+	If we first assume constant and equal oscillator frequencies in our agents, we can take a look at how the agents adjust their initially random phases in order to synchronize to each other. Examples of how phase synchronization can look are given in Figure \ref{fig:strog_phase} and \ref{fig:nymoen_phase}. A more formal requirement and definition for phases to be deemed harmonically synchronized is also given below.
 	
-	For both of the implemented phase synchronization methods, Mirollo \& Strogatz and Nymoen's, the timing of when the update functions are used and applied is the same; Musical agents's phases get updated immediately as ``fire'' events from neighbouring robots are perceived.
+	For both of the implemented phase synchronization methods, Mirollo \& Strogatz and Nymoen's, the timing of when the update functions are used and applied is the same; Musical agents's phases get updated immediately as ``fire'' events from neighbouring robots are perceived. \nl
+	
+	\textbf{Legal phases definition:} \nl
+
+	In an oscillator collective with heterogenous oscillator frequencies $\omega_i$, oscillator phases $\phi_i$ are harmonically synchronized when all oscillators's phase climaxes (i.e. $\phi=1$) or resets (i.e. $\phi=0$) occur exactly $T_{min} \cdot \mathbb{N}$ seconds later after $t_{synced}$, where $T_{min}=1/\omega_{max}$ for the highest oscillator frequency in the collective $\omega_{max}$, $t_{synced}$ is the time after the oscillator collective has become harmonically synchronized and the oscillator with the highest frequency $\omega_{max}$ has a phase climax or reset, and $\mathbb{N}$ are all natural (positive integer) numbers.
 	
 		\subsection{Implementing and verifying Mirollo-Strogatz's phase adjustment} % used '-adjustment' before
 		
@@ -219,12 +223,7 @@ Unity\footnote{Unity Version 2021.2.0f1 is used in the developed simulator.} is 
 			\includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/Validations/KNymoenPhaseAdjustmentSecondTry.pdf}
 			\caption[Illustration of Nymoen's bi-directional phase adjustment ($Adj_{\phi}$) method.]{Bi-directional phase-adjustment with Nymoen's approach}
 			\label{fig:nymoen_phase}
-		\end{figure}
-
-	\textbf{Legal phases definition:} \nl
-
-	\tcol[blue]{FYLL INN DEN NYE MATEMATISKE BESKRIVELSEN DU KOM FRAM TIL HER OM DAGEN} \nl
-	
+		\end{figure}	
 	
 	
 \section{Synchronizing oscillator frequencies}
@@ -264,110 +263,108 @@ Unity\footnote{Unity Version 2021.2.0f1 is used in the developed simulator.} is 
 	This state of \textit{harmonic synchrony} is then the system goal state K. Nymoen et al. achieve using their phase and frequency update functions, as explained in Sections \ref{sec:nymoen_phase_updates} and \ref{sec:nymoen_freq_updates}; and is also the target or goal state we want to continue achieving and experimenting for in this thesis.
 	
 	
-	% \textbf{Implementation details:} \nl
+	\textbf{Implementation details:} \nl
 	
-	% In the newly proposed Unity simulator environment, the previously introduced self-assessed sync score $s(n)$ (in \ref{s_n}), encompassing the approach's main self awareness capabilities, is implemented as the median of a list containing \textit{m} error-scores $\epsilon$. Such an error score list of length $m$ is easily implemented by a list called \textit{errorBuffer}:
+	In the newly proposed Unity simulator environment, the previously introduced self-assessed sync score $s(n)$ (in \ref{s_n}), encompassing the approach's main self awareness capabilities, is implemented as the median of a list containing \textit{m} error-scores $\epsilon$. Such an error score list of length $m$ is easily implemented by a list called \textit{errorBuffer}:
 	
-	% \begin{equation}
-	% \label{error_buffer}
-		% errorBuffer = \{\epsilon(n), \epsilon(n-1), ... , \epsilon(n-m)\},
-	% \end{equation} \nl
+	\begin{equation}
+	\label{error_buffer}
+		errorBuffer = \{\epsilon(n), \epsilon(n-1), ... , \epsilon(n-m)\},
+	\end{equation} \nl
 	
-	% then leading to:
+	then leading to:
 	
-	% \begin{equation}
-	% \label{self_assessed_synch}
-		% \begin{array}{rrclcl}
-		% s(n) & = & median(errorBuffer) \\ 
-		% & = & median(\{\epsilon(n), \epsilon(n-1), ... , \epsilon(n-m)\}) \in [0, 1],
-		% \end{array}
-	% \end{equation} \nl
+	\begin{equation}
+	\label{self_assessed_synch}
+		\begin{array}{rrclcl}
+		s(n) & = & median(errorBuffer) \\ 
+		& = & median(\{\epsilon(n), \epsilon(n-1), ... , \epsilon(n-m)\}) \in [0, 1],
+		\end{array}
+	\end{equation} \nl
 	
-	% where $n$ is the latest observed ``fire-event'', and $m$ is the number of the last observed ``fire''-events we would like to take into account when calculating the self-assessed synch-score. \nl
+	where $n$ is the latest observed ``fire-event'', and $m$ is the number of the last observed ``fire''-events we would like to take into account when calculating the self-assessed synch-score. \nl
 	
-	% Regarding the ``frequency-update-contributions'' (the $H$-values described in \ref{H_n}) in my Unity-simulator, all the calculated H-values are accumulated and stored in an initially empty C\#-list (of floats), referred to as $H(n)$, at once they are calculated. The $H(n)$-list is then consecutively ``cleared out'' or ``flushed'' when its H-values have been used for the current period's frequency adjustment (i.e. at the phase climax, when $\phi(t)=1$), and is then ready to accumulate new H-values during the next period.
+	Regarding the ``frequency-update-contributions'' (the $H$-values described in \ref{H_n}) in my Unity-simulator, all the calculated H-values are accumulated and stored in an initially empty C\#-list (of floats), referred to as $H(n)$, at once they are calculated. The $H(n)$-list is then consecutively ``cleared out'' or ``flushed'' when its H-values have been used for the current period's frequency adjustment (i.e. at the phase climax, when $\phi(t)=1$), and is then ready to accumulate new H-values during the next period.
 	
-	% By using K. Nymoen et al.'s frequency adjustment method, synchronization of initially random frequencies in our newly developed Unity simulator is achieved.
+	By using K. Nymoen et al.'s frequency adjustment method, synchronization of initially random frequencies in our newly developed Unity simulator is achieved.
 	
-	% The details of how the Dr. Squiggles in Unity adjust and eventually synchronize (harmonically) their oscillator frequencies, is shown in Algorithm \ref{AddNthFireEventsHToList} and \ref{RFAAdjustFrequency}. Algorithm \ref{AddNthFireEventsHToList} outlines how the ``frequency adjustment contributions'' $H$ get calculated as soon as the Dr. Squiggles hear a neighbour Dr. Squiggle sending a ``fire'' signal; whereas Algorithm \ref{RFAAdjustFrequency} shows how these previously calculated $H(n)$ values are used to obtain the new and updated oscillator frequency $\omega_i(t^+)$ with which individual oscillators assign their frequencies to after each phase climax (i.e. when $\phi=1$).
+	The details of how the Dr. Squiggles in Unity adjust and eventually synchronize (harmonically) their oscillator frequencies, is shown in Algorithm \ref{AddNthFireEventsHToList} and \ref{RFAAdjustFrequency}. Algorithm \ref{AddNthFireEventsHToList} outlines how the ``frequency adjustment contributions'' $H$ get calculated as soon as the Dr. Squiggles hear a neighbour Dr. Squiggle sending a ``fire'' signal; whereas Algorithm \ref{RFAAdjustFrequency} shows how these previously calculated $H(n)$ values are used to obtain the new and updated oscillator frequency $\omega_i(t^+)$ with which individual oscillators assign their frequencies to after each phase climax (i.e. when $\phi=1$).
 	
-	% \begin{algorithm}
-	% \caption{Calculating frequency update contributions $H$ for a robot}\label{AddNthFireEventsHToList}
-	% \begin{algorithmic}[1]
-	% \Procedure{}{$\phi(t), m$}
-		% \If {not in refractory period}
-			% \State $\epsilon \gets$ sin$(\pi \phi(t))^2$ \Comment{\tcol[gray]{Step 1}} % $n$th fire event's error score at time $t$
-		% \Else
-			% \State $\epsilon \gets 0$
-		% \EndIf
-		% \State $\epsilon$ is added to $errorBuffer$
-		% \State $s \gets$ median$\{\epsilon(n), \epsilon(n-1), ..., \epsilon(n-m)\}$ \Comment{\tcol[gray]{Step 2}}
-		% \State $\rho \gets -$sin$(2\pi\phi(t))$ \Comment{\tcol[gray]{Step 3}}
-		% \State $H \gets \rho \cdot s $ \Comment{\tcol[gray]{Step 4}}
-		% \State $H$ is added to list $H(n)$
-	% \EndProcedure
-	% \end{algorithmic}
-	% \end{algorithm}
+	\begin{algorithm}
+	\caption{Calculating frequency update contributions $H$ for a robot}\label{AddNthFireEventsHToList}
+	\begin{algorithmic}[1]
+	\Procedure{}{$\phi(t), m$}
+		\If {not in refractory period}
+			\State $\epsilon \gets$ sin$(\pi \phi(t))^2$ \Comment{\tcol[gray]{Step 1}} % $n$th fire event's error score at time $t$
+		\Else
+			\State $\epsilon \gets 0$
+		\EndIf
+		\State $\epsilon$ is added to $errorBuffer$
+		\State $s \gets$ median$\{\epsilon(n), \epsilon(n-1), ..., \epsilon(n-m)\}$ \Comment{\tcol[gray]{Step 2}}
+		\State $\rho \gets -$sin$(2\pi\phi(t))$ \Comment{\tcol[gray]{Step 3}}
+		\State $H \gets \rho \cdot s $ \Comment{\tcol[gray]{Step 4}}
+		\State $H$ is added to list $H(n)$
+	\EndProcedure
+	\end{algorithmic}
+	\end{algorithm}
 	
-	% \begin{algorithm}
-	% \caption{Updating robot frequency with calculated $H$ contributions}\label{RFAAdjustFrequency}
-	% \begin{algorithmic}[1]
-	% \Procedure{}{$H(n), \beta$}
-		% \State $cycleHSum \gets 0$ \Comment{\tcol[gray]{Step 5 started}}
-		% \State $y \gets$ length$(H(n))$
-		% \ForAll {$ H \in H(n) $}
-			% \State $cycleHSum \gets cycleHSum + H$
-		% \EndFor
-		% \State $F(n) \gets 0$
-		% \If {$y$ not $0$}
-			% \State $F(n) \gets \beta \cdot cycleHSum / y$ \Comment{\tcol[gray]{Step 5 finished}}
-		% \EndIf
-		% \State Emptying $H(n)$ \Comment{\tcol[gray]{for new contributions next oscillator cycle}}
-		% \State $\omega_i(t^+) \gets \omega_i(t) \cdot 2^{F(n)}$
-	% \EndProcedure
-	% \end{algorithmic}
-	% \end{algorithm}
+	\begin{algorithm}
+	\caption{Updating robot frequency with calculated $H$ contributions}\label{RFAAdjustFrequency}
+	\begin{algorithmic}[1]
+	\Procedure{}{$H(n), \beta$}
+		\State $cycleHSum \gets 0$ \Comment{\tcol[gray]{Step 5 started}}
+		\State $y \gets$ length$(H(n))$
+		\ForAll {$ H \in H(n) $}
+			\State $cycleHSum \gets cycleHSum + H$
+		\EndFor
+		\State $F(n) \gets 0$
+		\If {$y$ not $0$}
+			\State $F(n) \gets \beta \cdot cycleHSum / y$ \Comment{\tcol[gray]{Step 5 finished}}
+		\EndIf
+		\State Emptying $H(n)$ \Comment{\tcol[gray]{for new contributions next oscillator cycle}}
+		\State $\omega_i(t^+) \gets \omega_i(t) \cdot 2^{F(n)}$
+	\EndProcedure
+	\end{algorithmic}
+	\end{algorithm}
 	
 	
 
-	% % SEKSJON 4: Presenting the measurement (yardstick?) used to evaluate the implemented methods:
-% \section{Detecting harmonic synchrony}
-% \label{sec:detecting_harmonic_synchrony}
+\section{Detecting harmonic synchrony}
+\label{sec:detecting_harmonic_synchrony}
 
-	% The performance measurement will be used in our synchrony-simulator to evaluate and test the multi-robot collective's ability to harmonically synchronize to each other. As mentioned in Subsection \ref{baseline:subsec:detecting_harmonic_sync}, K. Nymoen et al.'s requirements and illustrations \cite{nymoen_synch} for achieving \textit{harmonic synchrony} serve as a blueprint or guide for how to similarly implement our synchrony or performance measurement. This performance measurement should be able, during synchronization-simulation, to detect if harmonic synchronization has been achieved in our decentralized oscillator-network. The successful triggering of this detection will then in turn terminate the synchronization simulation run and save to a dataset the time it took to synchronize (the performance score), in the case of a `synchronization-success' — an example of which can be seen in Figure \ref{fig:harmonic_synchrony_detection_plot}. In this figure, one can see at which times (sim s) the musical robots fired during a synchrony simulation run ending up in either harmonic synchrony, or as a ``synchronization fail.'
+	The whole detection of harmonic synchrony in all its simplicity boils down to utilizing Unity's concept of Coroutines, meaning a process that can go on and be distributed across multiple frames in the simulator, as well as the firing of the robots as they every second phase climax ($\phi=1$) transmit a fire signal the simulator picks up on. As this in itself took several hundred lines of code\footnote{\url{https://github.com/theRealSherapat/CompSA} (accessed 2022.05.29)} to implement, the exact details of how it is implemented will not be expounded here.
 
-	% The resulting and corresponding performance scores obtained using this performance measurement will then take values of the simulation time (s) it takes for the robot collective, from the start of the synchronization simulation, to achieve the system target state of \textit{harmonic synchrony}, as specified in Section \ref{sec:harmonic_synchrony}.
+	The performance measurement is used in the synchrony simulator to evaluate and test the multi-robot collective's ability to achieve harmonic synchronization. As mentioned in Subsection \ref{baseline:subsec:detecting_harmonic_sync}, K. Nymoen et al.'s requirements and illustrations (cf. Figure \ref{fig:nymoen_harm_sync_detect}) for achieving \textit{harmonic synchrony} serve as a blueprint or guide for how to similarly implement our synchrony or performance measurement. This performance measurement should be able, during synchronization simulation, to detect if harmonic synchronization has been achieved in our decentralized oscillator network. The successful triggering of this detection will then in turn terminate the synchronization simulation run and save to a dataset the time it took to synchronize (the performance score), in the case of a ``synchronization success'' — an example of which can be seen in Figure \ref{fig:harmonic_synchrony_detection_plot}. In this figure, one can see at which times (sim s) the musical robots fired during a synchrony simulation run ending up in either harmonic synchrony, or as a ``synchronization fail.''
 
-	% Now if \textbf{Conditions 1-3} from Subsection \ref{subsec:harmonic_synchrony} are kept, we have harmonic synchrony.
+	The resulting and corresponding performance scores obtained using this performance measurement will then take values of the termination time (sim s) it takes for the robot collective, from the start of the synchronization simulation, to achieve the system target state of \textit{harmonic synchrony}, as specified in Section \ref{sec:harmonic_synchrony}.
 
-	% My specific implementation of the synchrony measurement essentially consists of enforcing all the requirements or rules listed in \ref{subsec:harmonic_synchrony}, given some constant $t_f$- and $k$-values (e.g. $80ms$ and $8$ respectively \cite{nymoen_synch}). And again—to recall from \ref{subsec:harmonic_synchrony}—$t_f$ is the short time-window within which nodes are allowed to fire at each beat, and $k$ represents how many times nodes have to fire at even underlying pulses/beats in a row without changing the $t_q$-period—before becoming harmonically synchronized.
+	Now if \textbf{Conditions 5)-7)} from Subsection \ref{subsec:harmonic_synchrony} are kept, we have harmonic synchrony.
 
-	% The requirement of firing evenly $k$ times in a row with identical $t_q$-periods can be—and in fact is in our implementation—enforced by incrementing an integer variable \textit{towards\_k\_counter} after a `legal' $t_f$-window has occured (i.e. one or more nodes fired inbetween the onset and ending of the $t_f$-window), and conversely by resetting \textit{towards\_k\_counter} to 0 when an illegally transmitted firing was heard during a `silent' (or so it was supposed to be at least) $t_q$-window, hence restarting the synchrony-detection process—as can be seen occuring several times in Figure \ref{fig:harmonic_synch_evolution}.
+	My specific implementation of the synchrony measurement essentially consists of enforcing all the requirements or rules listed in \ref{subsec:harmonic_synchrony}, given some constant $t_f$- and $k$-values (e.g. $80ms$ and $8$ respectively \cite{nymoen_synch}). And again—to recall from \ref{subsec:harmonic_synchrony}—$t_f$ is the short time-window within which nodes are allowed to fire at each beat, and $k$ represents how many times nodes have to fire at even underlying pulses/beats in a row without changing the $t_q$-period—before becoming harmonically synchronized.
+
+	The requirement of firing evenly $k$ times in a row with identical $t_q$-periods can be—and in fact is in our implementation—enforced by incrementing an integer variable \textit{towards\_k\_counter} after a `legal' $t_f$-window has occured (i.e. one or more nodes fired inbetween the onset and ending of the $t_f$-window), and conversely by resetting \textit{towards\_k\_counter} to 0 when an illegally transmitted firing was heard during a `silent' (or so it was supposed to be at least) $t_q$-window, hence restarting the synchrony-detection process—as can be seen occuring several times in Figure \ref{fig:harmonic_synch_evolution}.
 	
-	% \subsection{Harmonic synchrony evolution plot}
-	% \begin{figure}[h]
-		% \centering
-		% \includegraphics[width=0.85\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/Explanations/SynchronyEvolutionPlot.pdf}
-		% \caption[Simulation run plot: harmonic synchrony evolution plot.]{A \textbf{synchrony evolution plot}, displaying the temporal recording of the \textit{towards\_k\_counter} variable throughout a synchrony simulation run in Unity. The counter is incremented as the robot collective fires evenly within `legal' $t_f$ windows, and is conversely reset to 0 if illegal firings during `silent' $t_q$ windows are heard.}
-		% \label{fig:harmonic_synch_evolution}
-	% \end{figure}
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.85\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/Explanations/SynchronyEvolutionPlot.pdf}
+		\caption[Simulation run plot: harmonic synchrony evolution plot.]{A \textbf{synchrony evolution plot}, displaying the temporal recording of the \textit{towards\_k\_counter} variable throughout a synchrony simulation run in Unity. The counter is incremented as the robot collective fires evenly within `legal' $t_f$ windows, and is conversely reset to 0 if illegal firings during `silent' $t_q$ windows are heard.}
+		\label{fig:harmonic_synch_evolution}
+	\end{figure}
 
-	% \tcol[red]{Note that in this specific simulation run above, the agents were on their way to achieve harmonic synchrony five times before the 10th second of the synchronization-simulation already, but since one or more of them fired `illegally' (i.e. inside a $t_q$-window), they were consequently `punished'—or rather deemed `not synchronized enough yet'—by getting their counter reset to 0. Eventually however,  through further phase- \& frequency-synchronization, the multi robot collective was in this case after 12.5 seconds able to achieve harmonic synchrony, when \textit{towards\_k\_counter} became equal to $k$, as well as all other requirements for achieving \textit{harmonic synchrony} was met. Note that this gives us a sense of how synchronized the robot collective is over time; the more even beats the robots have in a row, the more synchronized they are.}
+	Note that in the specific simulation run in Figure \ref{fig:harmonic_synch_evolution}, the robots were on their way to achieve harmonic synchrony five times before the 10th second of the synchronization-simulation already, but since one or more of them fired `illegally' (i.e. inside a $t_q$-window), they were consequently `punished'—or rather deemed `not synchronized enough yet'—by getting their counter reset to 0. Eventually however, through further phase and frequency synchronization, the multi robot collective was in this case after 12.5 seconds able to achieve harmonic synchrony, when the ``even beat'' counter became equal to $k$, as well as all other requirements for achieving \textit{harmonic synchrony} was met. Note that this gives us a sense of how synchronized the robot collective is over time; the more even beats the robots have in a row, the closer they are to achieving harmonic synchrony.
 
-	% Initially, the $t_q$-period/-window is not initialized, as it entirely depends on the frequencies to which the robot-collective converges to; however, when an illegal firing (i.e. a firing perceived during a $t_q$-window) occurs—$t_q$ is also then reset itself to a hopefully more correct value, given by the following formula, which is visually explained further in the schema in Figure \ref{fig:t_q_schema}:
+	Initially, the $t_q$-period/-window is not initialized, as it entirely depends on the frequencies to which the robot-collective converges to; however, when an illegal firing (i.e. a firing perceived during a $t_q$-window) occurs—$t_q$ is also then reset itself to a hopefully more correct value, given by the following formula, which is visually explained further in the schema in Figure \ref{fig:t_q_schema}:
 
-	% \begin{equation}
-	% \label{t_q_definition}
-	% \begin{array}{rrclcl}
-	% t_q^* & = & late\_t_q^*\_defining\_timevalue - early\_t_q^*\_defining\_timevalue - t_f \\
-	% & = & median(t_1^`, t_2^`, ..., t_m^`) - median(t_1, t_2, ..., t_n) - t_f , \\
-	% \end{array}
-	% \end{equation}
+	\begin{equation}
+	\label{t_q_definition}
+	\begin{array}{rrclcl}
+	t_q^* & = & late\_t_q^*\_defining\_timevalue - early\_t_q^*\_defining\_timevalue - t_f \\
+	& = & median(t_1^`, t_2^`, ..., t_m^`) - median(t_1, t_2, ..., t_n) - t_f , \\
+	\end{array}
+	\end{equation}
 
-	% where $n$ fire-events were recorded during the earlier $t_f$-window, and $m$ fire-events were recorded during the later $t_f$-window.
+	where $n$ fire-events were recorded during the earlier $t_f$-window, and $m$ fire-events were recorded during the later $t_f$-window.
 	
-	% If a certain amount of time, e.g. 5 simulation minutes \cite{nymoen_synch}, has gone without the detection of harmonic synchrony occuring, the simulation run is terminated as a ``fail''.
-
-	% The whole detection of harmonic synchrony in all its simplicity boils down to utilizing Unity's concept of Coroutines, meaning a process that can go on and be distributed across multiple frames in the simulator, as well as the firing of the robots as they every second phase climax ($\phi=1$) transmit a fire signal the simulator picks up on. As this in itself took several hundred lines of code\footnote{\url{https://github.com/theRealSherapat/CompSA} (accessed 2022.05.29)} to implement, the exact details of how it is implemented will not be expounded here.
+	If a certain amount of time, e.g. 5 simulation minutes \cite{nymoen_synch}, has gone without the detection of harmonic synchrony occuring, the simulation run is terminated as a ``fail''.
 
 
