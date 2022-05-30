@@ -8,51 +8,6 @@ The main performance scores presented in this chapter will consist of synchroniz
 As previously mentioned, relating to the different robot colors like turquoise, red, and green, all robots are homogenous apartly from the visual; all individual robots have for experiments the same hyperparameters unless otherwise is explicitly stated.
 
 
-
-% \section{Data visualization for simulation runs}
-
-	% % --- META INFO START: ---
-
-	% \besk{Der jeg forklarer SimRun-plotsa mine som jeg kun skal bruke samlet med screenshots av synkroniseringsruns før vs. etter én gang for 1) Phase sync og 2) Phase and frequency sync, og ellers bare evt. (sub-)plots av dersom det er hensiktsmessig og ikke overflødig og rotete}
-
-	% % --- META INFO STOP. ---
-
-% In order to see what is hidden under the hood of the simulation throughout the entire simulation run, certain central collective and individual robot values (e.g. each robots's oscillator phases $\phi$ and frequencies $\omega$) are saved to .CSV files. Followingly, these values are easily plotted for simulation time (s) with simple Python scripts after the synchronization simulation has terminated. These \textit{simulation run plots}, analyzing individual synchronization simulation runs, are now presented and explained.
-
-	% \subsection{Phase plot}
-	% \gjor{ FYLL INN }
-
-
-	% \subsection{Frequency plot}
-	% \begin{figure}
-		% \centering
-		% \includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/Explanations/FrequencySynchronizationPlot.pdf}
-		% \caption[Simulation run plot: frequency plot.]{Frequency synchronization for five robots in a Unity synchronization simulation run achieving harmonic synchrony after 30 seconds. Note how the legal harmonic frequencies (dashed gray lines) are defined by the lowest—fundamental—frequency $\omega_0$ in the robot collective fluctuating slightly below 1Hz, correctly leading to the legal frequencies right below 2 and 4 Hz.}
-		% \label{fig:frequency_synch}
-	% \end{figure}
-
-
-	% \subsection{Harmonic synchrony detection plot}
-	% \begin{figure}
-		% \centering
-		% \includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/Explanations/HarmonicSynchronyDetectionPlot.pdf}
-		% \caption[Simulation run plot: harmonic synchrony detection plot.]{\textbf{Harmonic synchrony detection plot}: recording a detection of harmonic synchrony. The steps and events of \textbf{I)} through \textbf{VII)} can also be seen commented in pseudocode []. \tcol[red]{Initial red area represents the ``start-up''-period where no (gray) $t_q$-value is defined yet. \textbf{I)} First robot firing, initiating a process of defining such a ``silent'' time-window $t_q$ within which no nodes are allowed to fire, and a whole ``legal-firing'' $t_f$-window (here shaded in white and only 80ms long, as in \cite{nymoen_synch}) ensues. \textbf{II)} At least one robot firing, and with their firing-time(s) giving us the \textit{early $t_q$-defining} time-value (see schema below), as well as triggering second whole $t_f$-window to ensue. \textbf{III)} At least one robot firing after the \textit{early $t_q$-defining} time-value was found, hence (with their firing-time(s)) giving us the \textit{late $t_q$-defining} time-value right before using these when finishing the on-started process of defining the ``silent'' time-window $t_q$; triggering a half (due to stabilization purposes by future centering of fire-events) $t_f$-window to ensue. \textbf{IV)} A robot is caught firing illegally during a ``silent'' $t_q$-window and hence resets the \textit{towards\_k\_counter}-variable, as well as (re-) starts a process like in \textbf{I)} for (re-) defining a new $t_q$-value. \textbf{V)} Firing after this point only happens during short ``legal-firing'' $t_f$-windows, so \textbf{Condition 1} (cf. \ref{subsec:harmonic_synchrony}) is held. \textbf{VI)} All robots have fired at least once during the evaluation-period, so \textbf{Condition 2} is held. \textbf{VII)} The robot collective has fired legally and evenly, without resetting $t_q$, $k$ (equal to 8 in this case) times in a row, so \textbf{Condition 3} is fulfilled — and harmonic synchrony is thus achieved and detected after 21.9 seconds of synchronization.}}
-		% \label{fig:harmonic_synchrony_detection_plot}
-	% \end{figure}
-
-
-	% \subsection{Harmonic synchrony evolution plot}
-	% \begin{figure}[h]
-		% \centering
-		% \includegraphics[width=0.85\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/Explanations/SynchronyEvolutionPlot.pdf}
-		% \caption[Simulation run plot: harmonic synchrony evolution plot.]{A \textbf{synchrony evolution plot}, displaying the temporal recording of the \textit{towards\_k\_counter} variable throughout a synchrony simulation-run in Unity. The counter is incremented as the robot collective fires evenly within `legal' $t_f$ windows, and is conversely reset to 0 if illegal firings during `silent' $t_q$ windows are heard.}
-		% \label{fig:harmonic_synch_evolution}
-	% \end{figure}
-
-	% \tcol[red]{Note that in this specific simulation run above, the agents were on their way to achieve harmonic synchrony five times before the 10th second of the synchronization-simulation already, but since one or more of them fired `illegally' (i.e. inside a $t_q$-window), they were consequently `punished'—or rather deemed `not synchronized enough yet'—by getting their counter reset to 0. Eventually however,  through further phase- \& frequency-synchronization, the multi robot collective was in this case after 12.5 seconds able to achieve harmonic synchrony, when \textit{towards\_k\_counter} became equal to $k$, as well as all other requirements for achieving \textit{harmonic synchrony} was met. Note that this gives us a sense of how synchronized the robot collective is over time; the more even beats the robots have in a row, the more synchronized they are.}
-
-	
-
 \section{Phase synchronization}
 \label{sec:phase_sync}
 This is the section where experiments attempting to synchronize for the first and simpler problem, namely synchronizing only the phases $\phi_i$ of all agents $i$, are presented and analyzed resuls for. These are then experiments where all musical robots have an equal and fixed frequency, only adjusting phases, in order to entrain to synchronize their phases to each other until reaching the target state of harmonic synchrony. Or in other words, all experiments in this phase synchronization section have the two hyperparameters shown in Table \ref{tab:phase_sync} in addition to the individual experiment hyperparameters listed.
@@ -71,56 +26,9 @@ Mirollo \& Strogatz & None  \\
 
 	\subsection{Initial validation}
 	
-	To see that synchronization is actually happening like intended, some relevant quantities and simulation values are recorded for a phase synchronization simulation run in Unity and displayed in Figure \ref{fig:strog_phase} and \ref{fig:nymoen_phase}.
+	To see that synchronization is actually happening like intended, relevant quantities and simulation values are recorded for a phase synchronization simulation run in Unity and displayed in Figure \ref{fig:initial_phase_validation}.
 	
 	% \tcol[blue]{FYLL INN.}
-		% MATS:
-	% \begin{figure}[ht!]
-	% \centering
-		% \begin{subfigure}[t]{.5\textwidth}
-			% \centering\captionsetup{width=.9\linewidth}%
-			% \includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Simulations/squiggles_unsynched_in_simulation.jpg}
-			% \caption{Screenshot from the very beginning of a Synchronization-simulation.}
-			% \label{fig:first_idea:second_fig:unsynched}
-		% \end{subfigure}%
-		% \begin{subfigure}[t]{.5\textwidth}
-			% \centering\captionsetup{width=.9\linewidth}%
-			% \includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/Implementation/Figures/Simulations/squiggles_synched_in_simulation.jpg}
-			% \caption{Screenshot from the same Synchronization-simulation as in \ref{fig:first_idea:second_fig:unsynched}, a few moments later.}
-			% \label{fig:first_idea:second_fig:synched}
-		% \end{subfigure}
-	% \caption[Synchronization-example/-screenshots from simulation in Unity]{From simulation: An example of the system target goal of harmonic synchrony being achieved in a musical robot collective, where oscillator-frequencies $\omega$ are constant and equal (1Hz), or in other words synchronized already, but oscillator-phases $\phi$ are unsynchronized and initially uniformly random numbers $\in [0,1]$. \nl
-	% At first in \ref{fig:first_idea:second_fig:unsynched}, we see the agents firing, i.e. blinking with their eyes and turning their body yellow, asynchronously at first. Only two robots, one with pink and one with red tentacles, fire synchronously so far. Seconds later in \ref{fig:first_idea:second_fig:synched}, after having listened to each others's adjustment-signals and adjusted themselves accordingly, all agents now fire simultaneously and synchronously.}
-	% \label{fig:first_idea:second_fig}
-	% \end{figure}
-	
-	
-		\subsubsection{Verifying Mirollo-Strogatz's phase-adjustment} % used '-adjustment' before
-		
-		Mirollo-Strogatz's approach for synchronizing phases in oscillators, as introduced in \ref{mirollo_strogatz_phase_adjust}, is implemented in the Unity simulator, and each agent is endowed with \textbf{phase update function \eqref{strog_phase}} with which they adjust themselves according to when perceiving a ``fire''-signal as described above.
-		
-		The verification that this works in the newly built synchronization-simulator was performed by dumping all agents's phase-values $\phi(t)$ during simulation-runs. A plot of these $\phi(t)$-values, evolving through simulation-time in seconds, is shown in Figure \ref{fig:strog_phase}.
-		
-		\begin{figure}[h]
-			\centering
-			\includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/Validations/MirolloStrogatzPhaseAdjustmentSecondTry.pdf}
-			\caption[Illustration of Mirollo \& Strogatz's ``standard'' phase adjustment ($Adj_{\phi}$) method.]{``Standard'' phase adjustment with Mirollo-Strogatz's approach}
-			\label{fig:strog_phase}
-		\end{figure}
-		
-		
-		\subsubsection{Verifying Nymoen's bi-directional phase adjustment} % used 'Shifts' before
-		
-		Nymoen's approach for synchronizing phases in oscillators, as introduced in Section \ref{subsec:nymoen_phase_adjust}, is implemented in Unity, and each agent is endowed with \textbf{phase update function \eqref{nymoen_phase}} with which they adjust themselves according to when perceiving a ``fire''-event as described above.
-		
-		The verification that this works in the newly set-up simulator-environment was performed by analysing carefully all the agents's phase-values $\phi(t)$ throughout a simulation-run. Such an analysis/plot can be seen in Figure \ref{fig:nymoen_phase}.
-		
-		\begin{figure}[h]
-			\centering
-			\includegraphics[width=0.9\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/Validations/KNymoenPhaseAdjustmentSecondTry.pdf}
-			\caption[Illustration of Nymoen's bi-directional phase adjustment ($Adj_{\phi}$) method.]{Bi-directional phase-adjustment with Nymoen's approach}
-			\label{fig:nymoen_phase}
-		\end{figure}
 	
 	\subsection{Reproducing baseline results}
 	
@@ -348,20 +256,104 @@ Mirollo \& Strogatz & None  \\
 					\label{fig:phase_sync_d_s_SA_scope_tuning}
 				\end{figure}
 				
-				% \paragraph{Experiment analysis:\nl}
+				As we see after $d_s=65.6$, not much performance gain—if any—seems to be achieved by increasing the self awareness scope $d_s$ further.
+				
+				\paragraph{Experiment analysis:\nl}
+				
+				Now, since we here tested with fixed $d_s$ values instead of e.g. $d_s$-percentages like we did for $k_s$ in experiment \ref{fig:phase_sync_k_s_SA_scope_tuning} above, it is clear that we will not get a increasing scaling of self awareness proportional to the varying collective sizes $|R|$. This is primarily due to how the spawning radius musical robots are instantiated within (cf. \eqref{spawn_radius}) increases as collective sizes $|R|$ increases. This means that even for the third $d_s$ value (i.e. 45.6), collectives R with $|R|=3$ having $radius_{spawn}=13.65$ Unity physical units (cf. equation \eqref{spawn_radius}) already practically have global self awareness scopes. For this reason and in hindsight, it might have been more fruitful to also here—instead of fixed $d_s$ values per $|R|$—test for neighbour percentages in radial self awareness scopes (i.e. $d_s/(|R|-1)$).
 	
 	
-		% \subsubsection{Simulation breaking experiment}
+		\subsubsection{Simulation breaking experiment}
 		
-			% \paragraph{Experiment setup:\nl}
+			\paragraph{Experiment setup:\nl}
 			
-			% In order to test the limits of the developed synchronization simulator, we will here investigate the effects of scaling and exploding the musical robot collective size $|R|$—also given some various self awareness scopes found worthwhile to further investigate in the previous experiments in \ref{exp:phasesync:increasing_SA_deg}.
+			In order to test the limits of the developed synchronization simulator, we will here investigate the effects of scaling and exploding the musical robot collective size $|R|$—also given some various self awareness scopes found worthwhile to further investigate in the previous experiments in \ref{exp:phasesync:increasing_SA_deg}.
 			
-			% The self awareness scope value of $k_s=0.1$ was chosen in order to have a sense of measurement and comparison, in order to see that in fact robot collectives might still manage to synchronize even though they listen to only one neighbouring robot's fire signals for self adjustment; but probably with way less performance comparatively to larger self awareness scopes. Furthermore, the value of $d_s=75$ is chosen to be further experimented with, as not much improvement was seen after this point for robot collectives in the relevant results in Figure \ref{fig:phase_sync_d_s_SA_scope_tuning}. And finally, the maximum size of self awareness scopes there is, the global self awareness scopes were set in the individual robots in the collective.
+			The self awareness scope value of $k_s=0.1$ was chosen in order to have a sense of measurement and comparison, in order to see that in fact robot collectives might still manage to synchronize even though they listen to only one neighbouring robot's fire signals for self adjustment; but probably with way less performance comparatively to larger self awareness scopes. Furthermore, the value of $d_s=75$ is chosen to be further experimented with, as not much improvement was seen after this point for robot collectives in the relevant results in Figure \ref{fig:phase_sync_d_s_SA_scope_tuning}. And finally, the maximum size of self awareness scopes there is, the global self awareness scopes were set in the individual robots in the collective.
 			
-			% \paragraph{Experiment results:\nl}
+			Additional experiment hyperparameters apart from $Adj_\phi$ = Mirollo \& Strogatz and $Adj_\omega$ = None, as mentioned in the start of Section \ref{sec:phase_sync}, can be seen in Table \ref{tab:phase_sync_collsize_explosion}. Experiment results after running simulations in Unity can thus be seen in Figure \ref{}.
 			
-			% \paragraph{Experiment analysis:\nl}
+			\begin{center}
+			\begin{tabular}{ |c|c|c|c|c|c|c| } 
+			\hline
+			$\alpha$ & $\beta$ & $t_{ref}^{dyn}$ & $t_f$ & $k$ & $t_{max}$ \\
+			\hline
+			0.8 & 0 & 10\% & 80ms & 8 & 5min \\
+			\hline
+			\end{tabular}
+			\captionof{table}{Hyperparameter setup for collective size explosion $\phi$ synchronization experiment.}
+			\label{tab:phase_sync_collsize_explosion}
+			\end{center}
+			
+			\paragraph{Experiment results:\nl}
+			
+			\tcol[blue]{FYLL INN!}
+			% \begin{figure}[ht!]
+				% \centering
+				% \includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/}
+				% \caption[Experiment results for $\phi$ synchronization collective size explosion experiment.]{Performance times (left) given in average harmonic synchronization times (sim s) with standard deviation, given varying collective sizes $|R|$ and self awareness scopes. Corresponding error rates (right) are based on 30 individual runs per collective size $|R|$ and self awareness scope value evaluated for.}
+				% \label{fig:phase_sync_collsize_explosion}
+			% \end{figure}
+			
+			\paragraph{Experiment analysis:\nl}
+	
+	
+		\subsubsection{Heterogenous self awareness scopes experiment}
+		
+			\paragraph{Experiment setup:\nl}
+			
+			In order to test whether actually globally connected oscillators are neccssary to maintain harmonic synchronization performance, or whether more relaxed and less constrained connections in the oscillators still lead to similar performance in harmonic synchronization peformance—heterogenous robot collectives with varying degrees of self awareness scopes will be explored here.
+			
+			First, relatively un-aware robot collectives (i.e. where musical robots have small or narrow self awareness scopes) are given the task of harmonically synchronizing to each other. Then, a more neighbour-aware robot collective (with some robots having larger self awareness scopes) is to harmonically synchronize; and so on for more and more self aware robot collectives.
+			
+			We will see whether the intuition that more knowledge about ones neighbourhood or environment will lead to increased performance, or whether performance is still maintained despite less awareness in robots of their neighbourhood.
+			
+			The nearest neighbour SA scope value of $k_s/(|R|-1)=0.4$ will be used in this experiment for the smallest or minimal self awareness scope—referred to as the \textit{minimal SA scope}. This value of 0.4 (corresponding to 40\% of each robots's closest neighbour robots) is chosen due to its good results in Figure \ref{fig:phase_sync_k_s_SA_scope_tuning}, as performance is barely increased after that point. Consequently, the collective size $|R|=15$ is selected for this experiment again due to this value's performance results in Figure \ref{fig:phase_sync_k_s_SA_scope_tuning}; in Figure \ref{fig:phase_sync_k_s_SA_scope_tuning}, collective size $|R|=15$ yielded the most interesting and varying behaviour, and compared to larger collective sizes one can with $|R|=15$ not simply blame good performance on the ``strength of numbers'', as larger collective sizes generally seem to synchronize more steadily. The radial self awareness scope value $d_s=65.6$ is chosen due to the lack of further improvement in performance scores in the relevant experiment shown results for in Figure \ref{fig:phase_sync_d_s_SA_scope_tuning}. However; given the lesson learned that it might be more fruitful to test for neighbour percentages when it comes to self awareness scopes, the corresponding percentage for $|R|=200$ and $d_s=65.6$ in the aforementioned experiment (cf. Figure \ref{fig:phase_sync_d_s_SA_scope_tuning}), is chosen for the \textit{radial self awareness scope} in this experiment. Hence, we introduce the radial SA scope percentage as follows:
+			
+			\begin{equation}\label{radial_SA_scope_perc}
+			d_s^\%:=d_s/(2 \cdot radius_{spawn}),
+			\end{equation}
+			
+			where $d_s$ is the radius (physical Unity units) within which the robot in question will listen to neighbours's fire signals for adjusting itself, and the robot collective instantiation radius $radius_{spawn}$ is defined in equation \eqref{spawn_radius}. By using the found values of $d_s=65.6$ and $|R|=200 \implies radius_{spawn}=194$, we then acquire our desired $d_s^\%=65.6/(2 \cdot 194)=0.17=17\%$.
+
+			In other words, if a musical robot has a radial SA scope of $d_s^\%=17\%$, it implies that this robot will listen to (for ``fire'' signals) from all neighbouring robots with a radius of less than 17\% times the diameter of the spawning area (i.e. $2 \cdot radius_{spawn}$).
+			
+			And finally, robots will increasingly also have \textit{global self awareness scopes}, as these are the most \textit{neighbour aware} robot collectives.
+			
+			Hence, and since we now will give heterogenous robot collectives the task of synchronizing harmonically to each other, robot collectives's individual robot self awareness scopes will now as a whole consist of ratios on the form:
+			
+			\begin{equation}\label{SA_scopes_ratios}
+			(minimal, radial, global) = (m, r, g)
+			\end{equation}
+			
+			where the \textit{minimal}, \textit{radial}, and \textit{global} self awareness scopes are as defined above. E.g., the least self aware robot collective imaginable would in this case be one of SA scopes $(1.0, 0.0, 0.0)$ (i.e. $|R|*1.0$ robots would have the \textit{minimal} SA scope, and $|R|*0.0=0$ robots would have \textit{radial} or \textit{global} SA scopes), whereas the most imaginable self aware robot collective would have self awareness scopes $(0.0, 0.0, 1.0)$. These two will serve as the boundaries within which we want to test for various percentages of self awareness scopes, given the three percentages $m$, $r$, and $g$.
+			
+			The other hyperparameter values for this heterogenous SA scopes experiment is given in Table \ref{tab:phase_sync_heterogenous_SA_scopes}. The synchronization results obtained by running experiments in the Unity simulator is shown in Figure \ref{fig:phase_sync_heterogenous_SA_scopes}.
+			
+			\begin{center}
+			\begin{tabular}{ |c|c|c|c|c|c|c| } 
+			\hline
+			$\alpha$ & $\beta$ & $t_{ref}^{dyn}$ & $t_f$ & $k$ & $t_{max}$ \\
+			\hline
+			0.8 & 0 & 10\% & 80ms & 8 & 5min \\
+			\hline
+			\end{tabular}
+			\captionof{table}{Hyperparameter setup for heterogenous SA scopes $\phi$ synchronization experiment.}
+			\label{tab:phase_sync_heterogenous_SA_scopes}
+			\end{center}
+	
+	
+			\paragraph{Experiment results:\nl}
+			
+			\tcol[blue]{FYLL INN!}
+			% \begin{figure}[ht!]
+				% \centering
+				% \includegraphics[width=\linewidth]{Assets/DocSegments/Chapters/ExperimentsAndResults/Figures/PerfScores/}
+				% \caption[Experiment results for $\phi$ synchronization heterogenous SA scopes experiment.]{Performance times (left) given in average harmonic synchronization times (sim s) with standard deviation, given varying self awareness scope ratios $(m, r, g)$. Corresponding error rates (right) are based on 30 individual runs per SA scope ratio.}
+				% \label{fig:phase_sync_heterogenous_SA_scopes}
+			% \end{figure}
+			
+			\paragraph{Experiment analysis:\nl}
 	
 % --- \section END. ---
 
@@ -384,11 +376,11 @@ Nymoen & Nymoen  \\
 \end{center}
 
 
-	% \subsection{Initial validation}
+	\subsection{Initial validation}
 	
-	% To see that synchronization is actually happening like intended, some relevant quantities and simulation values are recorded for a phase synchronization simulation run in Unity and displayed in \ref{}.
+	To see that synchronization is actually happening like intended, some relevant quantities and simulation values are recorded for a phase synchronization simulation run in Unity and displayed in \ref{}.
 	
-	% \tcol[blue]{FYLL INN.}
+	\tcol[blue]{FYLL INN.}
 	
 
 	\subsection{Reproducing baseline results}

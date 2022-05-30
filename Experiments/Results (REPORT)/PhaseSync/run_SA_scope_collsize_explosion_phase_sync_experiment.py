@@ -1,9 +1,16 @@
 from experiment_running_utils import *
 
 def main():
-    collsizes = [2, 3, 6, 10, 15, 25, 40, 50, 75, 100, 150, 200, 350, 500, 750, 1000, 1250, 1500, 2000]
+    xtickValues = [2, 3, 6, 10, 15, 25, 40, 50, 75, 100, 150, 200, 350, 500, 750, 1000, 1250]
     
-    for collSize_val in collsizes:
+    # Global SA scope:
+    assignNonDefaultHyperparameters(collsize=collSize_val, k_ss=10000000, d_ss=0, adj_phis=0, adj_omegas=0, alphas=0.8, betas=0)
+    
+    runNumberOfSimulationRuns(sampSize)
+    
+    extraXTickValues = [1600, 3200, 6400, 12800, 25600]
+    
+    for collSize_val in extraXTickValues:
         # k_s=1 nearest neighbour SA scope:
         assignNonDefaultHyperparameters(collsize=collSize_val, k_ss=1, d_ss=0, adj_phis=0, adj_omegas=0, alphas=0.8, betas=0)
         
@@ -15,7 +22,7 @@ def main():
         runNumberOfSimulationRuns(sampSize)
     
         # Global SA scope:
-        assignNonDefaultHyperparameters(collsize=collSize_val, adj_phis=0, adj_omegas=0, alphas=0.8, betas=0)
+        assignNonDefaultHyperparameters(collsize=collSize_val, k_ss=10000000, d_ss=0, adj_phis=0, adj_omegas=0, alphas=0.8, betas=0)
         
         runNumberOfSimulationRuns(sampSize)
     

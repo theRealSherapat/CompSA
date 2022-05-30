@@ -75,7 +75,7 @@ public class AgentManager : MonoBehaviour {
 
     // General Meta:
                     // REMEMBER TO KEEP MANUALLY TRACK OF:
-    private string wantedHyperparamsPath = Directory.GetCurrentDirectory() + "\\" + "wantedHyperparametersForSimulationRunEditor.csv"; // sin / con Editor
+    private string wantedHyperparamsPath = Directory.GetCurrentDirectory() + "\\" + "wantedHyperparametersForSimulationRun.csv"; // sin / con Editor
     private static int atSimRun = 0;
     private System.Random randGen;
 
@@ -784,9 +784,10 @@ public class AgentManager : MonoBehaviour {
         headerStartStubs.Add("D_S_");
 
         foreach (string headerStartStub in headerStartStubs) {
-            for (int i = 1; i <= collectiveSize; i++) {
-                performanceAndCovariatesHeader.Add(headerStartStub + i);
-            }
+            performanceAndCovariatesHeader.Add(headerStartStub + "Homog");
+            //for (int i = 1; i <= collectiveSize; i++) {
+            //    performanceAndCovariatesHeader.Add(headerStartStub + i);
+            //}
         }
         //string startStub = ;
         
@@ -885,38 +886,51 @@ public class AgentManager : MonoBehaviour {
 
 
         // Adding Individual/Agent/Robot Hyper-parameters/Covariates that I know before simulating: wantedAlphas wantedAdjPhis wantedBetas wantedAdjOmegas wantedMs wantedKss wantedDss
+            // Jalla fix for the slow .CSV saving:
+        performanceAndCovariateValues.Add(wantedAlphas[0]);
+        //foreach (float alphaValue in wantedAlphas) {
+        //    performanceAndCovariateValues.Add(alphaValue);
+        //}
 
-        foreach (float alphaValue in wantedAlphas) {
-            performanceAndCovariateValues.Add(alphaValue);
-        }
+            // Jalla fix for the slow .CSV saving:
+        performanceAndCovariateValues.Add(System.Convert.ToSingle((int)wantedAdjPhis[0]));
+        //foreach (phaseSyncEnum adj_phi in wantedAdjPhis) {
+        //    float ADJ_PHI_value = System.Convert.ToSingle((int)adj_phi);
+        //    performanceAndCovariateValues.Add(ADJ_PHI_value);
+        //}
 
-        foreach (phaseSyncEnum adj_phi in wantedAdjPhis) {
-            float ADJ_PHI_value = System.Convert.ToSingle((int)adj_phi);
-            performanceAndCovariateValues.Add(ADJ_PHI_value);
-        }
+            // Jalla fix for the slow .CSV saving:
+        performanceAndCovariateValues.Add(wantedBetas[0]);
+        //foreach (float betaValue in wantedBetas) {
+        //    performanceAndCovariateValues.Add(betaValue);
+        //}
 
-        foreach (float betaValue in wantedBetas) {
-            performanceAndCovariateValues.Add(betaValue);
-        }
+            // Jalla fix for the slow .CSV saving:
+        performanceAndCovariateValues.Add(System.Convert.ToSingle((int)wantedAdjOmegas[0]));
+        //foreach (frequencySyncEnum adj_omega in wantedAdjOmegas) {
+        //    float ADJ_OMEGA_value = System.Convert.ToSingle((int)adj_omega);
+        //    performanceAndCovariateValues.Add(ADJ_OMEGA_value);
+        //}
 
-        foreach (frequencySyncEnum adj_omega in wantedAdjOmegas) {
-            float ADJ_OMEGA_value = System.Convert.ToSingle((int)adj_omega);
-            performanceAndCovariateValues.Add(ADJ_OMEGA_value);
-        }
+            // Jalla fix for the slow .CSV saving:
+        performanceAndCovariateValues.Add(System.Convert.ToSingle(wantedMs[0]));
+        //foreach (int mValue in wantedMs) {
+        //    float M_value = System.Convert.ToSingle(mValue);
+        //    performanceAndCovariateValues.Add(M_value);
+        //}
 
-        foreach (int mValue in wantedMs) {
-            float M_value = System.Convert.ToSingle(mValue);
-            performanceAndCovariateValues.Add(M_value);
-        }
+            // Jalla fix for the slow .CSV saving:
+        performanceAndCovariateValues.Add(System.Convert.ToSingle(wantedKss[0]));
+        //foreach (int kSValue in wantedKss) {
+        //    float K_S_value = System.Convert.ToSingle(kSValue);
+        //    performanceAndCovariateValues.Add(K_S_value);
+        //}
 
-        foreach (int kSValue in wantedKss) {
-            float K_S_value = System.Convert.ToSingle(kSValue);
-            performanceAndCovariateValues.Add(K_S_value);
-        }
-
-        foreach (float dSValue in wantedDss) {
-            performanceAndCovariateValues.Add(dSValue);
-        }
+            // Jalla fix for the slow .CSV saving:
+        performanceAndCovariateValues.Add(wantedDss[0]);
+        //foreach (float dSValue in wantedDss) {
+        //    performanceAndCovariateValues.Add(dSValue);
+        //}
 
         // COMMENT OUT IF YOU WANT TO SAVE DATAPOINTS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         // Saving one datapoint, a.k.a. writing one .CSV-row (Measurements, Covariates) to the .CSV-file at the datasetPath:

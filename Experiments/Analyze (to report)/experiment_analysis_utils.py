@@ -18,14 +18,14 @@ def countDatasamplesInFolderPath(path):
 def loadBinaries():
     no_of_datasamples = countDatasamplesInFolderPath("ConvertedBinaries/")
     
-    # Loading the termination times (or simulation times if 'plotFails = 0' when you converted binaries):
+    # Loading the synchronization times (or termination times if 'plotFails = 0' when you converted binaries):
     terminationTimesArrays = []
     
     for binaryDatasampleIndex in range(no_of_datasamples):
         terminationTimesArrays.append(np.load("ConvertedBinaries/dataSampleBinary_terminationTimes_" + str(binaryDatasampleIndex) + ".npy"))
         
         
-    # Loading the termination times (or simulation times if 'plotFails = 0' when you converted binaries):
+    # Loading the synchronization times (or termination times if 'plotFails = 0' when you converted binaries):
     successScoresArrays = []
     
     for binaryDatasampleIndex in range(no_of_datasamples):

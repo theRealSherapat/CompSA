@@ -20,9 +20,9 @@ def main():
     # print("\nk_ss_values with len",len(k_ss_values),":",k_ss_values, " , and d_ss_values with len",len(d_ss_values),":",d_ss_values)
     
     
-    k_ss_values, d_ss_values = getCollsizeSAScopeRatioImplementationValues(mostInterestingCollsizeForHeterogenousSAScopeExperiment, (0.65, 0.25, 0.1))
-    assignNonDefaultHyperparameters(collsize=mostInterestingCollsizeForHeterogenousSAScopeExperiment, k_ss=k_ss_values, d_ss=d_ss_values, adj_phis=1, adj_omegas=1, alphas=0.2, betas=0.7)
-    runNumberOfSimulationRuns(sampSize)
+    # k_ss_values, d_ss_values = getCollsizeSAScopeRatioImplementationValues(mostInterestingCollsizeForHeterogenousSAScopeExperiment, (0.65, 0.25, 0.1))
+    # assignNonDefaultHyperparameters(collsize=mostInterestingCollsizeForHeterogenousSAScopeExperiment, k_ss=k_ss_values, d_ss=d_ss_values, adj_phis=1, adj_omegas=1, alphas=0.2, betas=0.7)
+    # runNumberOfSimulationRuns(sampSize)
     
     
     
@@ -32,9 +32,9 @@ def main():
     runNumberOfSimulationRuns(sampSize)
     
     
-    k_ss_values, d_ss_values = getCollsizeSAScopeRatioImplementationValues(mostInterestingCollsizeForHeterogenousSAScopeExperiment, (0.33, 0.33, 0.33))
-    assignNonDefaultHyperparameters(collsize=mostInterestingCollsizeForHeterogenousSAScopeExperiment, k_ss=k_ss_values, d_ss=d_ss_values, adj_phis=1, adj_omegas=1, alphas=0.2, betas=0.7)
-    runNumberOfSimulationRuns(sampSize)
+    # k_ss_values, d_ss_values = getCollsizeSAScopeRatioImplementationValues(mostInterestingCollsizeForHeterogenousSAScopeExperiment, (0.33, 0.33, 0.33))
+    # assignNonDefaultHyperparameters(collsize=mostInterestingCollsizeForHeterogenousSAScopeExperiment, k_ss=k_ss_values, d_ss=d_ss_values, adj_phis=1, adj_omegas=1, alphas=0.2, betas=0.7)
+    # runNumberOfSimulationRuns(sampSize)
     
     
     # 30 RUNS MED ET MER OPPMERKSOMT ROBOT KOLLEKTIV (m, r, g) = (0.2, 0.4, 0.4):
@@ -43,9 +43,9 @@ def main():
     runNumberOfSimulationRuns(sampSize)
     
     
-    k_ss_values, d_ss_values = getCollsizeSAScopeRatioImplementationValues(mostInterestingCollsizeForHeterogenousSAScopeExperiment, (0.1, 0.25, 0.65))
-    assignNonDefaultHyperparameters(collsize=mostInterestingCollsizeForHeterogenousSAScopeExperiment, k_ss=k_ss_values, d_ss=d_ss_values, adj_phis=1, adj_omegas=1, alphas=0.2, betas=0.7)
-    runNumberOfSimulationRuns(sampSize)
+    # k_ss_values, d_ss_values = getCollsizeSAScopeRatioImplementationValues(mostInterestingCollsizeForHeterogenousSAScopeExperiment, (0.1, 0.25, 0.65))
+    # assignNonDefaultHyperparameters(collsize=mostInterestingCollsizeForHeterogenousSAScopeExperiment, k_ss=k_ss_values, d_ss=d_ss_values, adj_phis=1, adj_omegas=1, alphas=0.2, betas=0.7)
+    # runNumberOfSimulationRuns(sampSize)
     
     
     # 30 RUNS MED DET MEST OPPMERKSOMNE ROBOT KOLLEKTIVET (m, r, g) = (0.0, 0.0, 1.0):

@@ -219,6 +219,12 @@ What exactly is self awareness? Is it \textit{awareness} of a \textit{self}? If 
 
 			Lukas Esterle et al. \cite{sa_and_se_camera_networks} has demonstrated how the fundamental concepts and building blocks of Computational Self-Awareness and Self-Expression can handle resource-critical- as well as communication- and utility-tradeoffs, maintaining network topologies, performing distributed object detection, performing tracking handover, as well as achieving more Pareto-efficient outcomes. They also believe these capabilities are not exclusive to camera networks — but are in fact confident these technologies (of computational SA and SE) can enable "\textit{other types of systems and networks to meet a multitude of requirements with respect to functionality, flexibility, performance, resource usage, costs, reliability, and safety}" \cite{sa_and_se_camera_networks}.
 			
+			
+			\paragraph{Increased local neighbourhood self awareness}
+			
+			J. Cao et al. \cite{LINDA} found that as they increased agents's degree of \textit{local neighbour awareness} in a multi-agent reinforcement learning (MARL) scenario, they obtained higher collective performance and cooperation playing a challenging video game (StarCraft II).
+
+			
 % --- \section END. ---
 
 
@@ -269,8 +275,9 @@ Translating concepts from the Psychological field into the Computational field g
 
 	— in accordance with \textit{higher-level goals}, which may also be subject to change.
 
+	The last part of point 1. in Kounev \& Lewis et al.'s above definition of self aware computing systems, mentioning ``ongoing basis'', is key. It is not enough for a computing system to simply possess data or pre-programmed knowledge to be considered self aware; the computing system needs to be able to collect, analyze, and learn knowledge from subjective data continually on an ongoing basis to be considered \textit{self aware}.
 
-	\subsection{Reference Architecture}
+	\subsection{Reference architecture}
 
 	Chandra et al. introduces their own new Reference Architecture for designing and describing Computational Self-Awareness and Self-Expression \cite{sacs16_ch4}. This abstract and conceptual framework has several advantages. Firstly, it provides a detailed and fine-grained separation of different self awareness and self-expression processes — and hence makes design- and engineering-questions easier and more methodical. Secondly, being a common language, it paves the way for identifying common architectural patterns used to design Comp. SA- \& SE-systems. Compared to other Self-Adaptive systems, it also includes the notions of Self-Awareness from the beginning (as the psychology literature suggests SA capabilities is more innate than simply an add-on). And due to the general and implementation-agnostic framework, it can be used on a wide variety of agents systems, or agent-collectives systems.
 
@@ -283,11 +290,12 @@ Translating concepts from the Psychological field into the Computational field g
 	\end{figure}
 
 
-	\subsection{Conceptual Framework}
+	\subsection{Conceptual framework}
+	\label{conceptual_SA_framework}
 
 	Lewis et al. \cite{sacs17_ch3} introduces an inclusive and extensive Conceptual Framework, built and based on the psychological foundation and basis \textit{(as well as expanding on the Reference Architecture)}, as introduced earlier in this section.
 
-	This Conceptual Framework is based on the following three high-level concepts/tenets:
+	This conceptual framework is based on the following three high-level concepts and tenets:
 	\begin{enumerate}
 		\item \textbf{Levels} of self awareness
 		\begin{itemize}
