@@ -184,7 +184,7 @@ Note that the only difference between Nymoen's definition of \textit{legal oscil
 	
 	%, and can also be refound in Algorithm \ref{AddNthFireEventsHToList} and \ref{RFAAdjustFrequency} in Chapter \ref{chap:implementation}:
 
-		\paragraph{Step 1: the ``in/out-of synch'' error measurement / score, $\epsilon(\phi(t))$}
+		\paragraph{Step 1: $\epsilon$, the ``in-/out-of synch'' error measurement score \nl}
 
 		Describing the error measurements at the n-th ``fire''-event, we introduce an error measurement function.
 
@@ -205,12 +205,12 @@ Note that the only difference between Nymoen's definition of \textit{legal oscil
 
 		As we can see from this error-function, the error-score is close to 0 when the oscillator phase $\phi_i(t)$ is itself close to 0 or 1 (i.e. the oscillator either just fired/flashed, or is about to fire/flash very soon). This implies that if it was only short time ago since we just fired, or conversely if there is only short time left until we will fire, we are not much in error or \textit{out-of-synch}. 
 
-		The error-score is the largest when an oscillator perceives a ``fire''-signal while being half-way through its own phase (i.e. having phase $\phi(t)=0.5$). We could also then ask ourselves, does not this go against the main/target goal of the system, being \textit{harmonic synchrony} — if agents are allowed to be ``half as fast'' as each other? We could imagine a completely ``legal'' and harmonically synchronous scenario where two agents have half and double the frequency of each other. The oscillator with half the frequency of the faster oscillator would then have phase $\phi(t)=0.5$ when it would hear the faster oscillator ``fire''/``flash'' — leading to its Error-score $\epsilon(0.5) = sin^2(\pi/2) = 1$, which then makes it seem like the slower oscillator is maximally out of synch, when it is actually perfectly and harmonically synchronized. This calls out for an attenuating mechanism in our frequency update function, in order to ``cancel out'' this contribution so that perfectly harmonically synchronized agents will not be adjusted further despite their high Error-measurement. As we will see below, exactly such an attenuating mechanism is utilized in our frequency-adjustment method.
+		The error-score is the largest when an oscillator perceives a ``fire''-signal while being half-way through its own phase (i.e. having phase $\phi(t)=0.5$). We could also then ask ourselves, does not this go against the main/target goal of the system, being \textit{harmonic synchrony} — if agents are allowed to be ``half as fast'' as each other? We could imagine a completely ``legal'' and harmonically synchronous scenario where two agents have half and double the frequency of each other. The oscillator with half the frequency of the faster oscillator would then have phase $\phi(t)=0.5$ when it would hear the faster oscillator ``fire''/``flash'' — leading to its error score $\epsilon(0.5) = sin^2(\pi/2) = 1$, which then makes it seem like the slower oscillator is maximally out of synch, when it is actually perfectly and harmonically synchronized. This calls out for an attenuating mechanism in our frequency update function, in order to ``cancel out'' this contribution so that perfectly harmonically synchronized agents will not be adjusted further despite their high Error-measurement. As we will see below, exactly such an attenuating mechanism is utilized in our frequency-adjustment method.
 
 		This error-measurement/-score forms the basis and fundament for the first component of self-awareness, being the \textit{self-assessed synchrony-score} $s(n)$.
 
 
-		\paragraph{Step 2: The first self-awareness component, s(n)}
+		\paragraph{Step 2: $s$, the self-awareness component \nl}
 		\label{s_n}
 		This aforementioned self-assessed synchrony-score, $s(n)$, is in fact simply the median of error-scores $\epsilon$.
 
@@ -218,7 +218,7 @@ Note that the only difference between Nymoen's definition of \textit{legal oscil
 
 		In other words, each oscillator hence has a way to assess themselves in how much in- or out-of-synch they believe they are compared to the rest of the agents. This is then the first level of self-awareness in the design.
 
-		\paragraph{Step 3: frequency update amplitude- \& sign-factor, $\rho(n)$}
+		\paragraph{Step 3: $\rho$, the frequency update amplitude \& sign factor \nl}
 
 		Describing the amplitude and sign of the frequency-modification of the n-th ``fire-event'' received. It is used to say something about in which direction, and in how much, the frequency should be adjusted.
 
@@ -240,7 +240,7 @@ Note that the only difference between Nymoen's definition of \textit{legal oscil
 		Acts as an attenuating factor, when $\phi(t)\approx0.5$, in the making of the H-value — supporting the goal of \textit{harmonic synchrony}.
 		
 
-		\paragraph{Step 4: the H-value, and the H(n)-list}
+		\paragraph{Step 4: $H$, the frequency update contribution \nl}
 		\label{H_n}
 
 		The following value, acting as ``frequency update contributions'', is then as previously mentioned calculated immediately after the oscillator perceives another oscillator's ``flashing'' signal:
@@ -269,7 +269,7 @@ Note that the only difference between Nymoen's definition of \textit{legal oscil
 		Especially interesting cases are when we have $\phi(n)\approx0.5 \implies \rho(n)\approx\pm0$, as well as the last $m$ Error-scores $\epsilon(n)$ being close to 0, also leading to $s(n)\approx0$. In both of these two cases the entire frequency-adjustment contribution $H$ would be cancelled out, due to harmonic synchronization (legally hearing a ``fire'' event half-way through ones own phase) in the first case, and due to not being out of synch in the latter (having low Error-Measurements). Cancelling out the frequency adjustment contribution in these cases is then not something bad, but something wanted and something that makes sense. If these $H$-values then are cancelled out or very small, it is indicative of that nodes are already in \textit{harmonic synchrony}, and hence should not be ``adjusted away'' from this goal state. On the other side, if these $H$-values then are different (e.g. closer to -1 and 1), it is indicative of that nodes are not yet in \textit{harmonic synchrony}, and that they hence should be ``adjusted closer'' to the goal state.
 		
 
-		\paragraph{The final step: the frequency update function, $\omega_i(t^+)$}
+		\paragraph{Final step: bringing it all together \nl}
 		
 		Now, we can pull it all together, for Nymoen et al.'s Frequency Adjustment approach for achieving harmonic synchrony with initially randomized and heterogenous frequencies.
 
