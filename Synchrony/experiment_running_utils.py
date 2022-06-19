@@ -5,7 +5,7 @@ import numpy as np
 import multiprocessing as mp
 
 reservedProcessors = 0
-silent = True
+silent = False
 
 sampSize = 30
 

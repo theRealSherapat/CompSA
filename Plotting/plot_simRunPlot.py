@@ -3,6 +3,7 @@ import numpy as np
 import csv
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
+import matplotlib.colors as mcolors
 
 
 """ GLOBAL STUFF: """
@@ -10,25 +11,30 @@ from matplotlib import rcParams
 labelSize = 12
 rcParams['xtick.labelsize'] = labelSize
 rcParams['ytick.labelsize'] = labelSize
-wantedLineWidth = 3
+wantedLineWidth = 2
 
 defaultFigureWidth = 8 # inches
 defaultFigureHeight = 6
 
-useCurrentSamplingRate = False
-useDummySourceFolder = True
+useCurrentHyperparameters = True
+useDummySourceFolder = False
 proper_save_folder = "./SavedPlots/"
 
 samplingRate = 100
+k = 8
 collsize = 0
 terminationTime = 300
 t_f = 0.08
 
 # Variabler som bestemmer for hvor høye kollektivstørrelser mellomrommene mellom yticksa skal økes:
-tenStepYLabelLimit = 50
-fiveStepYLabelLimit = 30
+tenStepYLabelLimit = 35
+fiveStepYLabelLimit = 20
 
-colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k']
+# colors = ['r', 'g', 'b', 'c', 'm', 'y', 'k']
+colors = []
+for key in mcolors.TABLEAU_COLORS:
+    colors.append(key)
+# colors = colors[::9] # candidates: 4, 5
 symbols = ['X', 'o', 's', 'p', 'P', 'D', '|', '*'] # symmetric markers
 
 fig = None
@@ -66,9 +72,9 @@ def plotPhases(t, phaseDataMatrix):
     # Printing out Phase-data for each musical robot:
     for col_index in range(phaseDataMatrix.shape[1]):
         labelString = "musical robot " + str(col_index+1)
-        axs[0].plot(t, phaseDataMatrix[:,col_index], label=labelString)
+        axs[0].plot(t, phaseDataMatrix[:,col_index], label=labelString, linewidth=wantedLineWidth-1, color=colors[col_index%len(colors)])
     
-    axs[0].set_ylabel("φ(t)", fontweight='bold', fontsize=labelSize)
+    axs[0].set_ylabel(r"$\it{\bf{φ}}$($\it{t}$)", fontsize=labelSize)
 
 """"""
 
@@ -80,8 +86,8 @@ def plotFrequencies(t, frequencyDataMatrix):
     # Printing out Frequency-data
     for col_index in range(frequencyDataMatrix.shape[1]):
         labelString = "musical robot " + str(col_index+1)
-        axs[1].plot(t, frequencyDataMatrix[:,col_index], label=labelString)
-    axs[1].set_ylabel("ω (Hz)", fontweight='bold', fontsize=labelSize)
+        axs[1].plot(t, frequencyDataMatrix[:,col_index], label=labelString, color=colors[col_index%len(colors)])
+    axs[1].set_ylabel(r"$\it{\bf{ω}}$($\it{t}$)", fontsize=labelSize)
     
     # Scatter-plotting the legal multiples frequencies are allowed to lie on (defined by the lowest fundamental frequency)
     scatterPlotLegalMultiples(t, frequencyDataMatrix)
@@ -89,7 +95,7 @@ def plotFrequencies(t, frequencyDataMatrix):
 def scatterPlotLegalMultiples(timeArray, freqsDataMatrix):
     lowestFrequenciesAcrossRun = freqsDataMatrix.min(axis=1)
     
-    numberOfValidFrequenciesWanted = 3
+    numberOfValidFrequenciesWanted = 4
     validFrequenciesList = []
     
     for validFrequencyLayerIndex in range(1,numberOfValidFrequenciesWanted):
@@ -116,10 +122,9 @@ def plotHarmonicSynchronyDetectionSubplot(zoomed_in_times, zoomed_in_t_f_is_now_
     plotAllAgentData(zoomed_in_times, zoomed_in_harmDetPlotMatrix)
     
     axs[2].set_xlim(zoomed_in_times[0], zoomed_in_times[-1])
-    axs[2].set_ylabel("f(t)", fontweight='bold', fontsize=labelSize)
-    # axs[2].set_yticks(yticks)
+    axs[2].set_ylabel(r"$\bf{f}$($\it{t}$)", fontsize=labelSize)
+    axs[2].set_yticks(get_y_ticks(collsize))
     # axs[2].set_yticks(["$f_1(t)$", "$f_2(t)$", "$f_3(t)$", "$f_4(t)$", "$f_5(t)$", "$f_6(t)$"])
-    axs[2].invert_yaxis() # FJÆRN MEG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 def shade_time_intervals(inds, startShadingAtTime, stopShadingAtTime):
     # indexes -> non-blind simulation times (sim s).
@@ -272,6 +277,26 @@ def getZoomedInHarmDetPlotTimeValues(t_interesting_start, t_interesting_end, tim
     
     return times[t_interesting_start_index:t_interesting_end_index], t_f_is_now_samples[t_interesting_start_index:t_interesting_end_index], datapointArray[t_interesting_start_index:t_interesting_end_index,:]
 
+def get_y_ticks(no_of_agents):
+    if no_of_agents > tenStepYLabelLimit: # Going over to just marking/ytick-labeling every tenth agent-#
+        # OLD ATTEMPT:
+            # arr = np.arange(1, no_of_agents+1, round(no_of_agents/20))
+            # arr = np.append(arr, no_of_agents)
+        
+        arr = np.arange(0, no_of_agents, 10)
+        arr[0] = 1
+        if arr[-1] != no_of_agents:
+            arr = np.append(arr, no_of_agents)
+    elif no_of_agents > fiveStepYLabelLimit:
+        arr = np.arange(0, no_of_agents, 5)
+        arr[0] = 1
+        if arr[-1] != no_of_agents:
+            arr = np.append(arr, no_of_agents)
+    else:
+        arr = range(1, no_of_agents+1)
+    
+    return arr
+
 """"""
 
 
@@ -280,7 +305,10 @@ def getZoomedInHarmDetPlotTimeValues(t_interesting_start, t_interesting_end, tim
 
 def plotSynchronyEvolutionSubplot(t, towards_k_counter):
     axs[3].plot(t, towards_k_counter, linewidth=wantedLineWidth)
-    axs[3].set_ylabel("# even beats", fontsize=labelSize)
+    axs[3].set_ylabel("$\it{k\ counter}$", fontsize=labelSize)
+    axs[3].set_yticks([0, k])
+    axs[3].yaxis.grid(which="minor",alpha=0.8)
+    axs[3].yaxis.grid(True)
 
 """"""
 
@@ -329,15 +357,17 @@ def getPlainZoomedInXTimeValues(t_interesting_start, t_interesting_end, times, d
     
     return times[t_interesting_start_index:t_interesting_end_index], datapointArray[t_interesting_start_index:t_interesting_end_index,:]
 
-def getCurrentSamplingRateFromHyperparameterCSV():
+def getCurrentHyperparametersFromHyperparameterCSV():
     extractedSampleRate = 0
     
     with open('./../Synchrony/wantedHyperparametersForSimulationRun.csv', newline='') as csvfile:
         readr = csv.reader(csvfile, delimiter=';')
         next(readr, None) # to skip the header
-        extractedSampleRate = int(next(readr)[11].replace(",","."))
+        hyperparamRow = next(readr)
+        extractedSampleRate = int(hyperparamRow[11].replace(",","."))
+        extractedK = int(hyperparamRow[5])
     
-    return extractedSampleRate
+    return extractedSampleRate, extractedK
 
 def getTime(time_sample_index, sampling_rate):
     return time_sample_index / sampling_rate
@@ -382,7 +412,9 @@ if __name__ == "__main__":
     """ Arguments:
             simRun (int)        : the simulation-run from the latest Unity-run
             show_fig_pls (int)  : whether or not we want to show the resulting figure/plot.
-            save_fig_pls (int) : whether or not we want to save the resulting figure/plot.
+            save_fig_pls (int)  : whether or not we want to save the resulting figure/plot.
+            timestamp (float)   : the time point during the simulation run around which we want to focus on.
+            radius (float)      : the two-sided width in the simulation run data we want to plot.
     """
     
     # Getting command line arguments:
@@ -393,12 +425,11 @@ if __name__ == "__main__":
     if useDummySourceFolder:
         filepath_source_folder = "./DummyData/"
     else:
-        filepath_source_folder = "../../Synchrony/SavedData/"
+        filepath_source_folder = "../Synchrony/SavedData/"
     
     # If you want to automatically retrieve and assign the current data saving sampling rate:
-    if useCurrentSamplingRate:
-        samplingRate = getCurrentSamplingRateFromHyperparameterCSV()
-    
+    if useCurrentHyperparameters:
+        samplingRate, k = getCurrentHyperparametersFromHyperparameterCSV()
     
     """ Harmonic synchrony detection plot related: """
     
@@ -418,9 +449,9 @@ if __name__ == "__main__":
     
     # Initializing plt Figure and subplots:
     fig = plt.figure()
-    gs = fig.add_gridspec(4, width_ratios=[1], height_ratios=[1, 1, harm_sync_det_plot_ratio, 1], hspace=0.35)
+    gs = fig.add_gridspec(4, width_ratios=[1], height_ratios=[1, 1, harm_sync_det_plot_ratio, 1], hspace=0.25)
     axs = gs.subplots(sharex=True)
-    axs[3].set_xlabel("t (sim s)", fontsize=labelSize) # simulation time (s)
+    axs[3].set_xlabel("$\it{t}$ (sim s)", fontsize=labelSize)
     
     # fig, axs = plt.subplots(4,1, figsize=(defaultFigureWidth,defaultFigureWidth*3/4+h_star)) # (width, height) sizes in inches
     
